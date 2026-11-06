@@ -1,0 +1,49 @@
+{
+  "name": "@mentari/database",
+  "version": "1.0.0",
+  "private": true,
+  "description": "Prisma schema, migrations and seed for MentariSmartParent",
+  "main": "./dist/index.js",
+  "types": "./dist/index.d.ts",
+  "scripts": {
+    "db:generate": "prisma generate && node scripts/patch-generated.mjs",
+    "db:generate:mysql": "PRISMA_SCHEMA=prisma/schema.prisma prisma generate --schema prisma/schema.prisma && node scripts/patch-generated.mjs",
+    "db:push": "node scripts/push-wasm.mjs",
+    "db:push:mysql": "prisma db push --config prisma.config.mysql.ts",
+    "db:seed": "tsx prisma/seed.ts",
+    "db:reset": "rm -f dev.db && node scripts/push-wasm.mjs && pnpm db:seed",
+    "lint": "echo 'database: no lint configured'",
+    "build": "tsup src/index.ts --format cjs --dts --sourcemap --clean --external @prisma/client --external @prisma/adapter-libsql --external @prisma/adapter-mariadb --external @libsql/client --external mariadb",
+    "dev": "tsup src/index.ts --format cjs --dts --watch --external @prisma/client",
+    "prepublishOnly": "pnpm build"
+  },
+  "dependencies": {
+    "@libsql/client": "^0.18.0",
+    "@prisma/adapter-libsql": "^7.10.1",
+    "@prisma/adapter-mariadb": "^7.10.1",
+    "@prisma/client": "^7.10.1",
+    "@prisma/driver-adapter-utils": "^7.10.1",
+    "mariadb": "^3.5.5"
+  },
+  "devDependencies": {
+    "@prisma/schema-engine-wasm": "@prisma/schema-engine-wasm@8.1.0-1.d1b3f377ca835d73fd50954a5e22128b9ebdd6b8",
+    "@types/bcryptjs": "^3.0.0",
+    "@types/node": "20",
+    "bcryptjs": "^3.0.3",
+    "prisma": "^7.10.1",
+    "tsup": "8",
+    "tsx": "^4.19.0",
+    "typescript": "^5.5.0"
+  },
+  "exports": {
+    ".": {
+      "types": "./dist/index.d.ts",
+      "require": "./dist/index.js",
+      "default": "./dist/index.js"
+    }
+  },
+  "files": [
+    "dist",
+    "prisma"
+  ]
+}

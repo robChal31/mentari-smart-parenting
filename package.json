@@ -1,26 +1,25 @@
 {
   "name": "mentari-smart-parenting",
-  "version": "0.1.0",
+  "version": "1.0.0",
   "private": true,
+  "description": "MentariSmartParent — Parenting Knowledge Hub by Mentari Group. Monorepo: apps/web (Next.js) + apps/api (NestJS) + packages/shared + packages/database.",
+  "packageManager": "pnpm@9.15.9",
   "scripts": {
-    "dev": "next dev",
-    "build": "next build",
-    "start": "next start",
-    "lint": "eslint"
-  },
-  "dependencies": {
-    "next": "16.4.5",
-    "react": "19.3.0",
-    "react-dom": "19.3.0"
+    "build": "turbo build",
+    "dev": "turbo dev",
+    "dev:web": "turbo dev --filter=@mentari/web",
+    "dev:api": "turbo dev --filter=@mentari/api",
+    "lint": "turbo lint",
+    "db:generate": "pnpm --filter=@mentari/database db:generate",
+    "db:push": "pnpm --filter=@mentari/database db:push",
+    "db:seed": "pnpm --filter=@mentari/database db:seed",
+    "db:setup": "pnpm db:generate && pnpm db:push && pnpm db:seed",
+    "setup": "pnpm install && pnpm db:setup"
   },
   "devDependencies": {
-    "@tailwindcss/turbopack": "^4",
-    "@types/node": "^20",
-    "@types/react": "^19",
-    "@types/react-dom": "^19",
-    "eslint": "^9",
-    "eslint-config-next": "16.4.5",
-    "tailwindcss": "^4",
-    "typescript": "^5"
+    "turbo": "^2.11.10"
+  },
+  "engines": {
+    "node": ">=20"
   }
 }
