@@ -1,6 +1,6 @@
 {
-  "name": "mentari-smart-parenting",
-  "version": "0.1.0",
+  "name": "@mentari/web",
+  "version": "1.0.0",
   "private": true,
   "scripts": {
     "dev": "next dev",
@@ -25,5 +25,6 @@
     "eslint-config-next": "16.4.5",
     "tailwindcss": "^4",
     "typescript": "^5"
-  }
+  },
+  "description": "MentariSmartParent web — Next.js App Router storefront + dashboards"
 }
