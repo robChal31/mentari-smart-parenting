@@ -30,10 +30,13 @@ Browser **tidak pernah** memanggil NestJS langsung — semua API call lewat `/ap
 
 Prasyarat: **Node ≥ 20** dan **pnpm 9**.
 
+> **Penting:** gunakan **pnpm**, bukan `npm install` (repo ini pnpm workspace; `package-lock.json` diabaikan git).
+
 ```bash
 pnpm install        # install seluruh workspace
 pnpm db:setup       # generate client + push schema ke SQLite + seed (idempotent)
-pnpm dev            # turbo dev → web http://localhost:3000 · api http://localhost:4000/api/v1
+pnpm dev            # web http://localhost:3000 · api http://localhost:4000/api/v1
+                    # (first build @mentari/shared & @mentari/database otomatis)
 ```
 
 Atau per app: `pnpm dev:web` / `pnpm dev:api`.
@@ -69,15 +72,22 @@ Lihat [`.env.example`](.env.example). Minimal production: `DATABASE_URL` (mysql)
 | Perintah | Fungsi |
 |---|---|
 | `pnpm db:setup` | generate + push (SQLite dev) + seed |
-| `pnpm db:push` | push skema tanpa Prisma CLI (lihat catatan offline di bawah) |
+| `pnpm db:push` | push skema SQLite via schema-engine WASM (`@prisma/schema-engine-wasm`, tanpa jaringan — jalur default) |
+| `pnpm db:push:cli` | `prisma db push` standar (perlu unduh schema-engine dari `binaries.prisma.sh`) |
 | `pnpm db:seed` | wipe & re-seed data demo (25 konten, 7 produk, 23 milestone, dst.) |
-| `pnpm db:reset` | hapus dev.db, push ulang, seed |
+| `pnpm db:reset` | hapus dev.db, push ulang (WASM), seed |
+| `pnpm db:reset:cli` | `db:reset` versi Prisma CLI standar |
 
-> **Catatan offline**: sandbox pengembangan ini tidak bisa mengunduh `binaries.prisma.sh`, jadi
-> `prisma generate` berjalan dengan engine bypass ad-hoc dan `db:push` diimplementasikan via
-> `packages/database/scripts/push-wasm.mjs` (menggerakkan schema-engine WASM secara manual).
-> Dengan akses jaringan normal, perintah Prisma standar bekerja seperti biasa — `prisma db push`
-> dan migrasi tetap menjadi jalur production yang direkomendasikan.
+> Catatan: setelah `pnpm db:generate`, folder `packages/database/src/generated` bisa tampak
+> berubah di git (artifact generator Prisma) — jangan di-commit kecuali memang disengaja.
+
+> **Catatan engine Prisma**: `pnpm db:push`/`db:reset` berjalan 100% offline lewat schema-engine
+> WASM (`packages/database/scripts/push-wasm.mjs`) dengan `@prisma/schema-engine-wasm` dipin sebagai
+> devDependency `@mentari/database` — tidak perlu jaringan ke `binaries.prisma.sh`. Jika Anda
+> lebih suka jalur resmi, `pnpm --filter=@mentari/database db:push:cli` memakai `prisma db push`
+> standar (membutuhkan unduh schema-engine dari internet). Jalur production (MySQL) tetap lewat
+> `db:push:mysql`. `pnpm dev` sengaja menjalankan web + api via `pnpm -r --parallel` (bukan turbo)
+> agar tidak bergantung pada binary native turbo — turbo masih dipakai untuk `pnpm build`/`pnpm lint`.
 
 ## API ringkas (`/api/v1`)
 

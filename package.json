@@ -5,19 +5,16 @@
   "description": "MentariSmartParent — Parenting Knowledge Hub by Mentari Group. Monorepo: apps/web (Next.js) + apps/api (NestJS) + packages/shared + packages/database.",
   "packageManager": "pnpm@9.15.9",
   "scripts": {
-    "build": "turbo build",
-    "dev": "turbo dev",
-    "dev:web": "turbo dev --filter=@mentari/web",
-    "dev:api": "turbo dev --filter=@mentari/api",
-    "lint": "turbo lint",
+    "build": "pnpm --filter=@mentari/shared --filter=@mentari/database build && pnpm --filter=@mentari/api build && pnpm --filter=@mentari/web build",
+    "dev": "pnpm --filter=@mentari/shared --filter=@mentari/database build && pnpm -r --parallel --filter=@mentari/web --filter=@mentari/api dev",
+    "dev:web": "pnpm --filter=@mentari/shared build && pnpm --filter=@mentari/web dev",
+    "dev:api": "pnpm --filter=@mentari/shared --filter=@mentari/database build && pnpm --filter=@mentari/api dev",
+    "lint": "pnpm -r lint",
     "db:generate": "pnpm --filter=@mentari/database db:generate",
     "db:push": "pnpm --filter=@mentari/database db:push",
     "db:seed": "pnpm --filter=@mentari/database db:seed",
     "db:setup": "pnpm db:generate && pnpm db:push && pnpm db:seed",
     "setup": "pnpm install && pnpm db:setup"
-  },
-  "devDependencies": {
-    "turbo": "^2.11.10"
   },
   "engines": {
     "node": ">=20"
