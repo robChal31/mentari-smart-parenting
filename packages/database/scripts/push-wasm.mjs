@@ -10,7 +10,8 @@
  * Usage: node scripts/push-wasm.mjs [schema path] [database url] [--force]
  *   defaults: schema=prisma/schema.sqlite.prisma  url=$DATABASE_URL or file:./dev.db
  *   works for file:/libsql:/mysql:/postgres(ql): URLs — adapter is picked from the scheme.
- *   For Supabase: node scripts/push-wasm.mjs prisma/schema.postgres.prisma "$SUPABASE_DATABASE_URL"
+ *   For Supabase: set SUPABASE_DATABASE_URL in your root .env, then
+ *   pnpm db:push:supabase   (no shell-specific env syntax required)
  */
 import { readFileSync } from 'node:fs';
 import path from 'node:path';
@@ -20,6 +21,15 @@ import { PrismaLibSql } from '@prisma/adapter-libsql';
 import { PrismaMariaDb } from '@prisma/adapter-mariadb';
 import { PrismaPg } from '@prisma/adapter-pg';
 import { bindMigrationAwareSqlAdapterFactory } from '@prisma/driver-adapter-utils';
+
+// Auto-load the nearest .env walking upward (cwd → … → repo root).
+// Existing environment variables win. Node ≥ 20.12.
+for (let dir = process.cwd(); ; ) {
+  try { process.loadEnvFile(path.join(dir, '.env')); break; } catch {}
+  const parent = path.dirname(dir);
+  if (parent === dir) break;
+  dir = parent;
+}
 
 const root = path.resolve(path.dirname(fileURLToPath(import.meta.url)), '..');
 const args = process.argv.slice(2);

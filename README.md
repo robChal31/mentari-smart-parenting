@@ -63,6 +63,7 @@ Atau per app: `pnpm dev:web` / `pnpm dev:api`.
    - **Supabase Postgres**: set `SUPABASE_DATABASE_URL` ke *direct connection* (port 5432, bukan pooler 6543), lalu `pnpm --filter=@mentari/database db:push:supabase` (schema-engine WASM, jalan tanpa unduh binary) atau `pnpm --filter=@mentari/database db:push:supabase:cli`. Untuk runtime aplikasi set `DATABASE_URL=postgresql://…` — client factory memilih adapter `@prisma/adapter-pg` otomatis dari scheme URL (`file:` → SQLite, `mysql://` → MariaDB, `postgres(ql)://` → pg).
    - **Seed ke Supabase**: `DATABASE_URL=postgresql://… pnpm --filter=@mentari/database db:seed` (pakai akun service/direksi postgres, bukan anon).
    - RLS: aplikasi tidak mengakses tabel secara langsung dari browser — semua lewat API dengan koneksi owner DB, jadi Row Level Security boleh tetap nonaktif; jangan pernah expose connection string ke `NEXT_PUBLIC_*`.
+   - **`.env` root otomatis di-load**: API, `db:push`, `db:seed`, `db:push:supabase`, dan config Prisma CLI memuat `.env` terdekat dengan walk-up dari cwd (built-in `process.loadEnvFile`, Node ≥ 20.12) — satu `.env` di root repo cukup, termasuk di Windows PowerShell/CMD. Tidak perlu syntax khusus shell (`DATABASE_URL=… pnpm …` itu khusus bash dan **tidak** jalan di PowerShell). Variabel environment yang sudah di-set di shell menang atas isi `.env`. Khusus web: Next.js **tidak** membaca root `.env` — set `NEXT_PUBLIC_SITE_URL` / `API_INTERNAL_URL` di `apps/web/.env.local` atau env hosting.
 2. **Auth (Supabase)**: set `SUPABASE_JWT_SECRET` di API. Token Supabase (aud `authenticated`) otomatis diverifikasi di `JwtAuthGuard`; user lokal di-provision on-the-fly saat login pertama.
 3. **Web**: `NEXT_PUBLIC_SITE_URL`, `API_INTERNAL_URL` (URL internal service API). Browser tetap same-origin lewat rewrites.
 4. **Seed**: `pnpm db:seed` memakai bcrypt untuk password default — **ganti password demo sebelum go-live**.
@@ -70,6 +71,21 @@ Atau per app: `pnpm dev:web` / `pnpm dev:api`.
 ### Environment variables
 
 Lihat [`.env.example`](.env.example). Minimal production: `DATABASE_URL` (`mysql://…` atau `postgresql://…`), `JWT_SECRET` **atau** `SUPABASE_JWT_SECRET`, `CORS_ORIGIN`, `NEXT_PUBLIC_SITE_URL`, `API_INTERNAL_URL`. Untuk push skema ke Supabase: `SUPABASE_DATABASE_URL` (direct 5432).
+
+### Catatan untuk Windows
+
+```powershell
+# Setelah git pull yang mengubah dependencies — selalu:
+pnpm install          # tanpa ini: Error "Cannot find module '@prisma/adapter-pg'" dsb.
+
+# Isi .env di ROOT repo (bukan .env.example — file itu cuma template, jangan isi kredensial asli!)
+# Lalu cukup:
+pnpm --filter=@mentari/database db:push:supabase   # buat tabel di Supabase
+pnpm --filter=@mentari/database db:seed            # isi data demo (opsional)
+```
+
+Fallback kalau auto-load tidak bekerja (custom shell, dst): pakai syntax PowerShell:
+`$env:SUPABASE_DATABASE_URL="postgresql://…"; pnpm --filter=@mentari/database db:push:supabase`
 
 ## Perintah database
 

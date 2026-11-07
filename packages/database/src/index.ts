@@ -8,6 +8,9 @@
 //                             (use the direct 5432 connection or pgBouncer with
 //                             pgbouncer=true; pooled 6543 works for queries)
 // ============================================================
+import './env';
+import { loadEnvFiles } from './env';
+loadEnvFiles(__dirname);
 import path from 'node:path';
 import { PrismaLibSql } from '@prisma/adapter-libsql';
 import { PrismaMariaDb } from '@prisma/adapter-mariadb';
