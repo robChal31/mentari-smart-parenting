@@ -1,8 +1,8 @@
 "use client";
 
 import type { ProductDto } from "@mentari/shared";
-import { ArrowRight, BookOpen, BadgePercent, Sparkles, GraduationCap, Languages, MonitorPlay } from "lucide-react";
-import { formatPrice, PRODUCT_TYPE_LABELS } from "@/lib/format";
+import { ArrowRight, BookOpen, GraduationCap, Languages, MonitorPlay } from "lucide-react";
+import { useDictionary } from "@/components/i18n-provider";
 
 const TYPE_ICONS: Record<string, React.ReactNode> = {
   BOOK_NATIONAL: <BookOpen size={26} />,
@@ -43,6 +43,8 @@ export function ProductCard({
   contentId?: string;
   compact?: boolean;
 }) {
+  const dict = useDictionary();
+
   function trackClick() {
     try {
       const token = typeof window !== "undefined" ? window.localStorage.getItem("mentari.token") : null;
@@ -68,11 +70,11 @@ export function ProductCard({
       onClick={trackClick}
       className="mt-auto inline-flex items-center justify-center gap-1.5 rounded-xl bg-secondary px-3 py-2 text-[11px] font-bold text-white transition hover:bg-secondary-deep"
     >
-      {product.ctaText ?? "Lihat di Mentari"} <ArrowRight size={12} aria-hidden />
+      {product.ctaText ?? dict.recommendations.seeOnMentari} <ArrowRight size={12} aria-hidden />
     </a>
   ) : (
     <span className="mt-auto inline-flex items-center justify-center gap-1.5 rounded-xl bg-sand px-3 py-2 text-[11px] font-bold text-muted">
-      Segera hadir
+      {dict.recommendations.comingSoon}
     </span>
   );
 
@@ -93,7 +95,7 @@ export function ProductCard({
         </span>
         <div className="min-w-0">
           <p className="text-[9px] font-extrabold uppercase tracking-[0.14em] text-accent-deep">
-            {PRODUCT_TYPE_LABELS[product.type] ?? product.type}
+            {(dict.productTypes as Record<string, string>)[product.type] ?? product.type}
           </p>
           <p className={`${compact ? "line-clamp-2 text-xs" : "line-clamp-2 text-[13px]"} font-bold leading-snug text-ink`}>
             {product.name}
@@ -103,18 +105,6 @@ export function ProductCard({
       {!compact && product.shortDescription && (
         <p className="line-clamp-2 text-[11px] leading-4 text-muted">{product.shortDescription}</p>
       )}
-      <div className="flex items-center gap-2">
-        {product.price !== null && product.price !== undefined && product.price > 0 ? (
-          <span className="inline-flex items-center gap-1 text-sm font-extrabold text-secondary">
-            {product.isFeatured && <BadgePercent size={13} className="text-primary" aria-hidden />}
-            {formatPrice(product.price, product.currency)}
-          </span>
-        ) : (
-          <span className="inline-flex items-center gap-1 text-[11px] font-bold text-accent-deep">
-            <Sparkles size={11} /> {formatPrice(product.price, product.currency)}
-          </span>
-        )}
-      </div>
       {cta}
     </div>
   );

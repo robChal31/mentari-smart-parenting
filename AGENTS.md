@@ -10,9 +10,8 @@ products (books, digital learning, assessments).
 - **Monorepo**: Turborepo with pnpm
 - **Frontend**: Next.js 14+ (App Router, RSC, TypeScript)
 - **Backend**: NestJS (TypeScript, modular architecture)
-- **Database**: MySQL via Prisma ORM
-- **Auth**: Supabase Auth (JWT-based)
-- **Storage**: Supabase Storage (images, thumbnails)
+- **Database**: MySQL (production) or Supabase Postgres via Prisma ORM — SQLite for local dev
+- **Auth**: Supabase Auth (JWT-based) — the NestJS guard verifies HS256 Supabase tokens directly; a dev HS256 issuer exists for local work
 - **Styling**: Tailwind CSS
 - **State**: Zustand (client-side)
 - **Forms**: React Hook Form + Zod

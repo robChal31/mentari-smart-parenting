@@ -56,6 +56,8 @@ export function serializeProduct(p: any): ProductDto {
     externalUrl: p.externalUrl ?? null,
     ctaText: p.ctaText ?? null,
     isFeatured: Boolean(p.isFeatured),
+    isActive: p.isActive === undefined ? true : Boolean(p.isActive),
+    deletedAt: p.deletedAt ? new Date(p.deletedAt).toISOString() : null,
     sortOrder: p.sortOrder ?? 0,
     ageGroups: p.ageGroups?.map((ag: any) => serializeAgeGroup(ag.ageGroup ?? ag)),
   };

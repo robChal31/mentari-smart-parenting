@@ -148,15 +148,6 @@ export class AuthService {
       where: { id: profile.id },
       data: { totalPoints: { increment: badge.points } },
     });
-    await prisma.notification.create({
-      data: {
-        userId,
-        title: `Badge baru: ${badge.name}!`,
-        body: badge.description ?? 'Selamat atas pencapaian baru Anda.',
-        type: 'BADGE_EARNED',
-        actionUrl: '/profile',
-      },
-    });
   }
 
   /** Daily streak bookkeeping, called on login. */

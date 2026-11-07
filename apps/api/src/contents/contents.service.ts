@@ -96,7 +96,7 @@ export class ContentsService {
       videoUrl: row.videoUrl ?? null,
       metaTitle: row.metaTitle ?? null,
       metaDescription: row.metaDescription ?? null,
-      recommendedProducts: manualProducts.map((r) => serializeProduct(r.product)),
+      recommendedProducts: manualProducts.filter((r) => r.product && (r.product as any).isActive !== false && !(r.product as any).deletedAt).map((r) => serializeProduct(r.product)),
       relatedContents: relatedRaw.map(serializeContentSummary),
     };
   }

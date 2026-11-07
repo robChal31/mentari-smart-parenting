@@ -18,7 +18,6 @@ import { CommunityModule } from './community/community.module';
 import { GamificationModule } from './gamification/gamification.module';
 import { AnalyticsModule } from './analytics/analytics.module';
 import { AdminModule } from './admin/admin.module';
-import { NotificationsModule } from './notifications/notifications.module';
 
 @Module({
   imports: [
@@ -38,7 +37,6 @@ import { NotificationsModule } from './notifications/notifications.module';
     GamificationModule,
     AnalyticsModule,
     AdminModule,
-    NotificationsModule,
   ],
   providers: [
     { provide: APP_GUARD, useClass: JwtAuthGuard },

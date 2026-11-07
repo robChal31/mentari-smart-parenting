@@ -1,16 +1,19 @@
 import Link from "next/link";
 import { Sun } from "lucide-react";
 import { NewsletterForm } from "./newsletter-form";
+import { getDictionary } from "@/lib/i18n/get-dictionary";
 
-export function SiteFooter() {
+export async function SiteFooter() {
+  const { dict } = await getDictionary();
+
   return (
     <footer className="mt-16 bg-secondary text-white/85">
       {/* Newsletter band */}
       <div className="border-b border-white/10">
         <div className="mx-auto grid max-w-7xl gap-6 px-4 py-10 sm:px-6 md:grid-cols-2 md:items-center">
           <div>
-            <p className="font-heading text-lg font-bold text-white">Kabar Mentari — setiap Jumat, 5 menit</p>
-            <p className="mt-1 text-sm text-white/70">Rangkuman tips parenting tervalidasi ahli, langsung ke inbox Anda. Gratis, tanpa spam.</p>
+            <p className="font-heading text-lg font-bold text-white">{dict.footer.newsletterTitle}</p>
+            <p className="mt-1 text-sm text-white/70">{dict.footer.newsletterSub}</p>
           </div>
           <NewsletterForm compact />
         </div>
@@ -24,44 +27,42 @@ export function SiteFooter() {
             </span>
             <p className="font-heading font-extrabold text-white">MentariSmartParent</p>
           </div>
-          <p className="mt-3 text-sm leading-6 text-white/65">
-            Sahabat tumbuh-kembang anak Indonesia — konten parenting berbasis bukti dari psikolog, dokter anak, dan pendidik.
-          </p>
+          <p className="mt-3 text-sm leading-6 text-white/65">{dict.footer.tagline}</p>
         </div>
-        <nav aria-label="Jelajah">
-          <p className="text-xs font-bold uppercase tracking-[0.16em] text-accent">Jelajah</p>
+        <nav aria-label={dict.footer.exploreCol}>
+          <p className="text-xs font-bold uppercase tracking-[0.16em] text-accent">{dict.footer.exploreCol}</p>
           <FooterLinks links={[
-            ["/contents", "Artikel & Video"],
-            ["/learning-paths", "Learning Path"],
-            ["/perkembangan", "Milestone Perkembangan"],
-            ["/komunitas", "Komunitas Orang Tua"],
-            ["/produk", "Rekomendasi Produk Mentari"],
+            ["/contents", dict.footer.articles],
+            ["/learning-paths", dict.nav.learningPath],
+            ["/development", dict.footer.developmentMilestones],
+            ["/community", dict.footer.communityParents],
+            ["/products", dict.footer.productsRecommendation],
           ]} />
         </nav>
-        <nav aria-label="Bantuan">
-          <p className="text-xs font-bold uppercase tracking-[0.16em] text-accent">Bantuan</p>
+        <nav aria-label={dict.footer.helpCol}>
+          <p className="text-xs font-bold uppercase tracking-[0.16em] text-accent">{dict.footer.helpCol}</p>
           <FooterLinks links={[
-            ["/tentang", "Tentang Kami"],
-            ["/bantuan", "Pusat Bantuan & FAQ"],
-            ["/kebijakan-privasi", "Kebijakan Privasi"],
-            ["/syarat-ketentuan", "Syarat & Ketentuan"],
+            ["/about", dict.footer.aboutUs],
+            ["/help", dict.footer.helpFaq],
+            ["/privacy", dict.footer.privacy],
+            ["/terms", dict.footer.terms],
           ]} />
         </nav>
         <div>
-          <p className="text-xs font-bold uppercase tracking-[0.16em] text-accent">Untuk Orang Tua</p>
+          <p className="text-xs font-bold uppercase tracking-[0.16em] text-accent">{dict.footer.parentsCol}</p>
           <FooterLinks links={[
-            ["/daftar", "Buat Akun Gratis"],
-            ["/masuk", "Masuk"],
-            ["/profil", "Profil & Bookmark"],
-            ["/produk", "Teacher Academy & Produk Mentari"],
+            ["/register", dict.footer.createAccount],
+            ["/login", dict.nav.login],
+            ["/profile", dict.footer.profileBookmarks],
+            ["/products", dict.footer.teacherAcademy],
           ]} />
         </div>
       </div>
 
       <div className="border-t border-white/10">
         <div className="mx-auto flex max-w-7xl flex-col gap-2 px-4 py-4 text-xs text-white/50 sm:flex-row sm:items-center sm:justify-between sm:px-6">
-          <p>© {new Date().getFullYear()} MentariSmartParent · Mentari Group. Seluruh hak cipta dilindungi.</p>
-          <p>Konten disusun oleh tenaga ahli berlisensi. Bukan pengganti diagnosis medis.</p>
+          <p>© {new Date().getFullYear()} MentariSmartParent · Mentari Group. {dict.footer.rights}</p>
+          <p>{dict.footer.disclaimer}</p>
         </div>
       </div>
     </footer>

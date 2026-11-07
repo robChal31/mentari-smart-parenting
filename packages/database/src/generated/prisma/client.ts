@@ -161,8 +161,3 @@ export type ContentView = Prisma.ContentViewModel
  * 
  */
 export type ProductClick = Prisma.ProductClickModel
-/**
- * Model Notification
- * 
- */
-export type Notification = Prisma.NotificationModel
