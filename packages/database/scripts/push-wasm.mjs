@@ -9,12 +9,16 @@
  *
  * Usage: node scripts/push-wasm.mjs [schema path] [database url] [--force]
  *   defaults: schema=prisma/schema.sqlite.prisma  url=$DATABASE_URL or file:./dev.db
+ *   works for file:/libsql:/mysql:/postgres(ql): URLs — adapter is picked from the scheme.
+ *   For Supabase: node scripts/push-wasm.mjs prisma/schema.postgres.prisma "$SUPABASE_DATABASE_URL"
  */
 import { readFileSync } from 'node:fs';
 import path from 'node:path';
 import { fileURLToPath } from 'node:url';
 import { SchemaEngine } from '@prisma/schema-engine-wasm';
 import { PrismaLibSql } from '@prisma/adapter-libsql';
+import { PrismaMariaDb } from '@prisma/adapter-mariadb';
+import { PrismaPg } from '@prisma/adapter-pg';
 import { bindMigrationAwareSqlAdapterFactory } from '@prisma/driver-adapter-utils';
 
 const root = path.resolve(path.dirname(fileURLToPath(import.meta.url)), '..');
@@ -23,12 +27,19 @@ const force = args.includes('--force');
 const positional = args.filter((a) => !a.startsWith('--'));
 const schemaPath = positional[0] ?? 'prisma/schema.sqlite.prisma';
 const schemaAbs = path.resolve(root, schemaPath);
-const url = positional[1] ?? process.env.DATABASE_URL ?? 'file:./dev.db';
+const url = positional[1] ?? process.env.SUPABASE_DATABASE_URL ?? process.env.DATABASE_URL ?? 'file:./dev.db';
 const content = readFileSync(schemaAbs, 'utf8');
 
 console.log(`Pushing ${schemaPath} -> ${url}`);
 
-const adapter = bindMigrationAwareSqlAdapterFactory(new PrismaLibSql({ url }));
+function makeAdapter(rawUrl) {
+  if (rawUrl.startsWith('mysql://')) return bindMigrationAwareSqlAdapterFactory(new PrismaMariaDb(rawUrl));
+  if (rawUrl.startsWith('postgres://') || rawUrl.startsWith('postgresql://')) {
+    return bindMigrationAwareSqlAdapterFactory(new PrismaPg({ connectionString: rawUrl }));
+  }
+  return bindMigrationAwareSqlAdapterFactory(new PrismaLibSql({ url: rawUrl }));
+}
+const adapter = makeAdapter(url);
 const engine = await SchemaEngine.new(
   { datamodels: [[schemaAbs, content]] },
   (err) => console.error('[schema-engine error]', err),

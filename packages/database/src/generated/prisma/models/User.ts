@@ -9,8 +9,8 @@
  * 🟢 You can import this file directly.
  */
 import type * as runtime from "@prisma/client/runtime/client"
-import type * as $Enums from "../enums.ts"
-import type * as Prisma from "../internal/prismaNamespace.ts"
+import type * as $Enums from "../enums"
+import type * as Prisma from "../internal/prismaNamespace"
 
 /**
  * Model User
@@ -245,7 +245,6 @@ export type UserWhereInput = {
   communityThreads?: Prisma.CommunityThreadListRelationFilter
   communityComments?: Prisma.CommunityCommentListRelationFilter
   gamificationProfile?: Prisma.XOR<Prisma.GamificationProfileNullableScalarRelationFilter, Prisma.GamificationProfileWhereInput> | null
-  notifications?: Prisma.NotificationListRelationFilter
 }
 
 export type UserOrderByWithRelationInput = {
@@ -268,7 +267,6 @@ export type UserOrderByWithRelationInput = {
   communityThreads?: Prisma.CommunityThreadOrderByRelationAggregateInput
   communityComments?: Prisma.CommunityCommentOrderByRelationAggregateInput
   gamificationProfile?: Prisma.GamificationProfileOrderByWithRelationInput
-  notifications?: Prisma.NotificationOrderByRelationAggregateInput
 }
 
 export type UserWhereUniqueInput = Prisma.AtLeast<{
@@ -294,7 +292,6 @@ export type UserWhereUniqueInput = Prisma.AtLeast<{
   communityThreads?: Prisma.CommunityThreadListRelationFilter
   communityComments?: Prisma.CommunityCommentListRelationFilter
   gamificationProfile?: Prisma.XOR<Prisma.GamificationProfileNullableScalarRelationFilter, Prisma.GamificationProfileWhereInput> | null
-  notifications?: Prisma.NotificationListRelationFilter
 }, "id" | "supabaseId" | "email">
 
 export type UserOrderByWithAggregationInput = {
@@ -353,7 +350,6 @@ export type UserCreateInput = {
   communityThreads?: Prisma.CommunityThreadCreateNestedManyWithoutUserInput
   communityComments?: Prisma.CommunityCommentCreateNestedManyWithoutUserInput
   gamificationProfile?: Prisma.GamificationProfileCreateNestedOneWithoutUserInput
-  notifications?: Prisma.NotificationCreateNestedManyWithoutUserInput
 }
 
 export type UserUncheckedCreateInput = {
@@ -376,7 +372,6 @@ export type UserUncheckedCreateInput = {
   communityThreads?: Prisma.CommunityThreadUncheckedCreateNestedManyWithoutUserInput
   communityComments?: Prisma.CommunityCommentUncheckedCreateNestedManyWithoutUserInput
   gamificationProfile?: Prisma.GamificationProfileUncheckedCreateNestedOneWithoutUserInput
-  notifications?: Prisma.NotificationUncheckedCreateNestedManyWithoutUserInput
 }
 
 export type UserUpdateInput = {
@@ -399,7 +394,6 @@ export type UserUpdateInput = {
   communityThreads?: Prisma.CommunityThreadUpdateManyWithoutUserNestedInput
   communityComments?: Prisma.CommunityCommentUpdateManyWithoutUserNestedInput
   gamificationProfile?: Prisma.GamificationProfileUpdateOneWithoutUserNestedInput
-  notifications?: Prisma.NotificationUpdateManyWithoutUserNestedInput
 }
 
 export type UserUncheckedUpdateInput = {
@@ -422,7 +416,6 @@ export type UserUncheckedUpdateInput = {
   communityThreads?: Prisma.CommunityThreadUncheckedUpdateManyWithoutUserNestedInput
   communityComments?: Prisma.CommunityCommentUncheckedUpdateManyWithoutUserNestedInput
   gamificationProfile?: Prisma.GamificationProfileUncheckedUpdateOneWithoutUserNestedInput
-  notifications?: Prisma.NotificationUncheckedUpdateManyWithoutUserNestedInput
 }
 
 export type UserCreateManyInput = {
@@ -647,20 +640,6 @@ export type UserUpdateOneWithoutProductClicksNestedInput = {
   update?: Prisma.XOR<Prisma.XOR<Prisma.UserUpdateToOneWithWhereWithoutProductClicksInput, Prisma.UserUpdateWithoutProductClicksInput>, Prisma.UserUncheckedUpdateWithoutProductClicksInput>
 }
 
-export type UserCreateNestedOneWithoutNotificationsInput = {
-  create?: Prisma.XOR<Prisma.UserCreateWithoutNotificationsInput, Prisma.UserUncheckedCreateWithoutNotificationsInput>
-  connectOrCreate?: Prisma.UserCreateOrConnectWithoutNotificationsInput
-  connect?: Prisma.UserWhereUniqueInput
-}
-
-export type UserUpdateOneRequiredWithoutNotificationsNestedInput = {
-  create?: Prisma.XOR<Prisma.UserCreateWithoutNotificationsInput, Prisma.UserUncheckedCreateWithoutNotificationsInput>
-  connectOrCreate?: Prisma.UserCreateOrConnectWithoutNotificationsInput
-  upsert?: Prisma.UserUpsertWithoutNotificationsInput
-  connect?: Prisma.UserWhereUniqueInput
-  update?: Prisma.XOR<Prisma.XOR<Prisma.UserUpdateToOneWithWhereWithoutNotificationsInput, Prisma.UserUpdateWithoutNotificationsInput>, Prisma.UserUncheckedUpdateWithoutNotificationsInput>
-}
-
 export type UserCreateWithoutChildrenInput = {
   id?: string
   supabaseId?: string | null
@@ -680,7 +659,6 @@ export type UserCreateWithoutChildrenInput = {
   communityThreads?: Prisma.CommunityThreadCreateNestedManyWithoutUserInput
   communityComments?: Prisma.CommunityCommentCreateNestedManyWithoutUserInput
   gamificationProfile?: Prisma.GamificationProfileCreateNestedOneWithoutUserInput
-  notifications?: Prisma.NotificationCreateNestedManyWithoutUserInput
 }
 
 export type UserUncheckedCreateWithoutChildrenInput = {
@@ -702,7 +680,6 @@ export type UserUncheckedCreateWithoutChildrenInput = {
   communityThreads?: Prisma.CommunityThreadUncheckedCreateNestedManyWithoutUserInput
   communityComments?: Prisma.CommunityCommentUncheckedCreateNestedManyWithoutUserInput
   gamificationProfile?: Prisma.GamificationProfileUncheckedCreateNestedOneWithoutUserInput
-  notifications?: Prisma.NotificationUncheckedCreateNestedManyWithoutUserInput
 }
 
 export type UserCreateOrConnectWithoutChildrenInput = {
@@ -740,7 +717,6 @@ export type UserUpdateWithoutChildrenInput = {
   communityThreads?: Prisma.CommunityThreadUpdateManyWithoutUserNestedInput
   communityComments?: Prisma.CommunityCommentUpdateManyWithoutUserNestedInput
   gamificationProfile?: Prisma.GamificationProfileUpdateOneWithoutUserNestedInput
-  notifications?: Prisma.NotificationUpdateManyWithoutUserNestedInput
 }
 
 export type UserUncheckedUpdateWithoutChildrenInput = {
@@ -762,7 +738,6 @@ export type UserUncheckedUpdateWithoutChildrenInput = {
   communityThreads?: Prisma.CommunityThreadUncheckedUpdateManyWithoutUserNestedInput
   communityComments?: Prisma.CommunityCommentUncheckedUpdateManyWithoutUserNestedInput
   gamificationProfile?: Prisma.GamificationProfileUncheckedUpdateOneWithoutUserNestedInput
-  notifications?: Prisma.NotificationUncheckedUpdateManyWithoutUserNestedInput
 }
 
 export type UserCreateWithoutBookmarksInput = {
@@ -784,7 +759,6 @@ export type UserCreateWithoutBookmarksInput = {
   communityThreads?: Prisma.CommunityThreadCreateNestedManyWithoutUserInput
   communityComments?: Prisma.CommunityCommentCreateNestedManyWithoutUserInput
   gamificationProfile?: Prisma.GamificationProfileCreateNestedOneWithoutUserInput
-  notifications?: Prisma.NotificationCreateNestedManyWithoutUserInput
 }
 
 export type UserUncheckedCreateWithoutBookmarksInput = {
@@ -806,7 +780,6 @@ export type UserUncheckedCreateWithoutBookmarksInput = {
   communityThreads?: Prisma.CommunityThreadUncheckedCreateNestedManyWithoutUserInput
   communityComments?: Prisma.CommunityCommentUncheckedCreateNestedManyWithoutUserInput
   gamificationProfile?: Prisma.GamificationProfileUncheckedCreateNestedOneWithoutUserInput
-  notifications?: Prisma.NotificationUncheckedCreateNestedManyWithoutUserInput
 }
 
 export type UserCreateOrConnectWithoutBookmarksInput = {
@@ -844,7 +817,6 @@ export type UserUpdateWithoutBookmarksInput = {
   communityThreads?: Prisma.CommunityThreadUpdateManyWithoutUserNestedInput
   communityComments?: Prisma.CommunityCommentUpdateManyWithoutUserNestedInput
   gamificationProfile?: Prisma.GamificationProfileUpdateOneWithoutUserNestedInput
-  notifications?: Prisma.NotificationUpdateManyWithoutUserNestedInput
 }
 
 export type UserUncheckedUpdateWithoutBookmarksInput = {
@@ -866,7 +838,6 @@ export type UserUncheckedUpdateWithoutBookmarksInput = {
   communityThreads?: Prisma.CommunityThreadUncheckedUpdateManyWithoutUserNestedInput
   communityComments?: Prisma.CommunityCommentUncheckedUpdateManyWithoutUserNestedInput
   gamificationProfile?: Prisma.GamificationProfileUncheckedUpdateOneWithoutUserNestedInput
-  notifications?: Prisma.NotificationUncheckedUpdateManyWithoutUserNestedInput
 }
 
 export type UserCreateWithoutCommunityThreadsInput = {
@@ -888,7 +859,6 @@ export type UserCreateWithoutCommunityThreadsInput = {
   productClicks?: Prisma.ProductClickCreateNestedManyWithoutUserInput
   communityComments?: Prisma.CommunityCommentCreateNestedManyWithoutUserInput
   gamificationProfile?: Prisma.GamificationProfileCreateNestedOneWithoutUserInput
-  notifications?: Prisma.NotificationCreateNestedManyWithoutUserInput
 }
 
 export type UserUncheckedCreateWithoutCommunityThreadsInput = {
@@ -910,7 +880,6 @@ export type UserUncheckedCreateWithoutCommunityThreadsInput = {
   productClicks?: Prisma.ProductClickUncheckedCreateNestedManyWithoutUserInput
   communityComments?: Prisma.CommunityCommentUncheckedCreateNestedManyWithoutUserInput
   gamificationProfile?: Prisma.GamificationProfileUncheckedCreateNestedOneWithoutUserInput
-  notifications?: Prisma.NotificationUncheckedCreateNestedManyWithoutUserInput
 }
 
 export type UserCreateOrConnectWithoutCommunityThreadsInput = {
@@ -948,7 +917,6 @@ export type UserUpdateWithoutCommunityThreadsInput = {
   productClicks?: Prisma.ProductClickUpdateManyWithoutUserNestedInput
   communityComments?: Prisma.CommunityCommentUpdateManyWithoutUserNestedInput
   gamificationProfile?: Prisma.GamificationProfileUpdateOneWithoutUserNestedInput
-  notifications?: Prisma.NotificationUpdateManyWithoutUserNestedInput
 }
 
 export type UserUncheckedUpdateWithoutCommunityThreadsInput = {
@@ -970,7 +938,6 @@ export type UserUncheckedUpdateWithoutCommunityThreadsInput = {
   productClicks?: Prisma.ProductClickUncheckedUpdateManyWithoutUserNestedInput
   communityComments?: Prisma.CommunityCommentUncheckedUpdateManyWithoutUserNestedInput
   gamificationProfile?: Prisma.GamificationProfileUncheckedUpdateOneWithoutUserNestedInput
-  notifications?: Prisma.NotificationUncheckedUpdateManyWithoutUserNestedInput
 }
 
 export type UserCreateWithoutCommunityCommentsInput = {
@@ -992,7 +959,6 @@ export type UserCreateWithoutCommunityCommentsInput = {
   productClicks?: Prisma.ProductClickCreateNestedManyWithoutUserInput
   communityThreads?: Prisma.CommunityThreadCreateNestedManyWithoutUserInput
   gamificationProfile?: Prisma.GamificationProfileCreateNestedOneWithoutUserInput
-  notifications?: Prisma.NotificationCreateNestedManyWithoutUserInput
 }
 
 export type UserUncheckedCreateWithoutCommunityCommentsInput = {
@@ -1014,7 +980,6 @@ export type UserUncheckedCreateWithoutCommunityCommentsInput = {
   productClicks?: Prisma.ProductClickUncheckedCreateNestedManyWithoutUserInput
   communityThreads?: Prisma.CommunityThreadUncheckedCreateNestedManyWithoutUserInput
   gamificationProfile?: Prisma.GamificationProfileUncheckedCreateNestedOneWithoutUserInput
-  notifications?: Prisma.NotificationUncheckedCreateNestedManyWithoutUserInput
 }
 
 export type UserCreateOrConnectWithoutCommunityCommentsInput = {
@@ -1052,7 +1017,6 @@ export type UserUpdateWithoutCommunityCommentsInput = {
   productClicks?: Prisma.ProductClickUpdateManyWithoutUserNestedInput
   communityThreads?: Prisma.CommunityThreadUpdateManyWithoutUserNestedInput
   gamificationProfile?: Prisma.GamificationProfileUpdateOneWithoutUserNestedInput
-  notifications?: Prisma.NotificationUpdateManyWithoutUserNestedInput
 }
 
 export type UserUncheckedUpdateWithoutCommunityCommentsInput = {
@@ -1074,7 +1038,6 @@ export type UserUncheckedUpdateWithoutCommunityCommentsInput = {
   productClicks?: Prisma.ProductClickUncheckedUpdateManyWithoutUserNestedInput
   communityThreads?: Prisma.CommunityThreadUncheckedUpdateManyWithoutUserNestedInput
   gamificationProfile?: Prisma.GamificationProfileUncheckedUpdateOneWithoutUserNestedInput
-  notifications?: Prisma.NotificationUncheckedUpdateManyWithoutUserNestedInput
 }
 
 export type UserCreateWithoutGamificationProfileInput = {
@@ -1096,7 +1059,6 @@ export type UserCreateWithoutGamificationProfileInput = {
   productClicks?: Prisma.ProductClickCreateNestedManyWithoutUserInput
   communityThreads?: Prisma.CommunityThreadCreateNestedManyWithoutUserInput
   communityComments?: Prisma.CommunityCommentCreateNestedManyWithoutUserInput
-  notifications?: Prisma.NotificationCreateNestedManyWithoutUserInput
 }
 
 export type UserUncheckedCreateWithoutGamificationProfileInput = {
@@ -1118,7 +1080,6 @@ export type UserUncheckedCreateWithoutGamificationProfileInput = {
   productClicks?: Prisma.ProductClickUncheckedCreateNestedManyWithoutUserInput
   communityThreads?: Prisma.CommunityThreadUncheckedCreateNestedManyWithoutUserInput
   communityComments?: Prisma.CommunityCommentUncheckedCreateNestedManyWithoutUserInput
-  notifications?: Prisma.NotificationUncheckedCreateNestedManyWithoutUserInput
 }
 
 export type UserCreateOrConnectWithoutGamificationProfileInput = {
@@ -1156,7 +1117,6 @@ export type UserUpdateWithoutGamificationProfileInput = {
   productClicks?: Prisma.ProductClickUpdateManyWithoutUserNestedInput
   communityThreads?: Prisma.CommunityThreadUpdateManyWithoutUserNestedInput
   communityComments?: Prisma.CommunityCommentUpdateManyWithoutUserNestedInput
-  notifications?: Prisma.NotificationUpdateManyWithoutUserNestedInput
 }
 
 export type UserUncheckedUpdateWithoutGamificationProfileInput = {
@@ -1178,7 +1138,6 @@ export type UserUncheckedUpdateWithoutGamificationProfileInput = {
   productClicks?: Prisma.ProductClickUncheckedUpdateManyWithoutUserNestedInput
   communityThreads?: Prisma.CommunityThreadUncheckedUpdateManyWithoutUserNestedInput
   communityComments?: Prisma.CommunityCommentUncheckedUpdateManyWithoutUserNestedInput
-  notifications?: Prisma.NotificationUncheckedUpdateManyWithoutUserNestedInput
 }
 
 export type UserCreateWithoutContentViewsInput = {
@@ -1200,7 +1159,6 @@ export type UserCreateWithoutContentViewsInput = {
   communityThreads?: Prisma.CommunityThreadCreateNestedManyWithoutUserInput
   communityComments?: Prisma.CommunityCommentCreateNestedManyWithoutUserInput
   gamificationProfile?: Prisma.GamificationProfileCreateNestedOneWithoutUserInput
-  notifications?: Prisma.NotificationCreateNestedManyWithoutUserInput
 }
 
 export type UserUncheckedCreateWithoutContentViewsInput = {
@@ -1222,7 +1180,6 @@ export type UserUncheckedCreateWithoutContentViewsInput = {
   communityThreads?: Prisma.CommunityThreadUncheckedCreateNestedManyWithoutUserInput
   communityComments?: Prisma.CommunityCommentUncheckedCreateNestedManyWithoutUserInput
   gamificationProfile?: Prisma.GamificationProfileUncheckedCreateNestedOneWithoutUserInput
-  notifications?: Prisma.NotificationUncheckedCreateNestedManyWithoutUserInput
 }
 
 export type UserCreateOrConnectWithoutContentViewsInput = {
@@ -1260,7 +1217,6 @@ export type UserUpdateWithoutContentViewsInput = {
   communityThreads?: Prisma.CommunityThreadUpdateManyWithoutUserNestedInput
   communityComments?: Prisma.CommunityCommentUpdateManyWithoutUserNestedInput
   gamificationProfile?: Prisma.GamificationProfileUpdateOneWithoutUserNestedInput
-  notifications?: Prisma.NotificationUpdateManyWithoutUserNestedInput
 }
 
 export type UserUncheckedUpdateWithoutContentViewsInput = {
@@ -1282,7 +1238,6 @@ export type UserUncheckedUpdateWithoutContentViewsInput = {
   communityThreads?: Prisma.CommunityThreadUncheckedUpdateManyWithoutUserNestedInput
   communityComments?: Prisma.CommunityCommentUncheckedUpdateManyWithoutUserNestedInput
   gamificationProfile?: Prisma.GamificationProfileUncheckedUpdateOneWithoutUserNestedInput
-  notifications?: Prisma.NotificationUncheckedUpdateManyWithoutUserNestedInput
 }
 
 export type UserCreateWithoutProductClicksInput = {
@@ -1304,7 +1259,6 @@ export type UserCreateWithoutProductClicksInput = {
   communityThreads?: Prisma.CommunityThreadCreateNestedManyWithoutUserInput
   communityComments?: Prisma.CommunityCommentCreateNestedManyWithoutUserInput
   gamificationProfile?: Prisma.GamificationProfileCreateNestedOneWithoutUserInput
-  notifications?: Prisma.NotificationCreateNestedManyWithoutUserInput
 }
 
 export type UserUncheckedCreateWithoutProductClicksInput = {
@@ -1326,7 +1280,6 @@ export type UserUncheckedCreateWithoutProductClicksInput = {
   communityThreads?: Prisma.CommunityThreadUncheckedCreateNestedManyWithoutUserInput
   communityComments?: Prisma.CommunityCommentUncheckedCreateNestedManyWithoutUserInput
   gamificationProfile?: Prisma.GamificationProfileUncheckedCreateNestedOneWithoutUserInput
-  notifications?: Prisma.NotificationUncheckedCreateNestedManyWithoutUserInput
 }
 
 export type UserCreateOrConnectWithoutProductClicksInput = {
@@ -1364,7 +1317,6 @@ export type UserUpdateWithoutProductClicksInput = {
   communityThreads?: Prisma.CommunityThreadUpdateManyWithoutUserNestedInput
   communityComments?: Prisma.CommunityCommentUpdateManyWithoutUserNestedInput
   gamificationProfile?: Prisma.GamificationProfileUpdateOneWithoutUserNestedInput
-  notifications?: Prisma.NotificationUpdateManyWithoutUserNestedInput
 }
 
 export type UserUncheckedUpdateWithoutProductClicksInput = {
@@ -1386,111 +1338,6 @@ export type UserUncheckedUpdateWithoutProductClicksInput = {
   communityThreads?: Prisma.CommunityThreadUncheckedUpdateManyWithoutUserNestedInput
   communityComments?: Prisma.CommunityCommentUncheckedUpdateManyWithoutUserNestedInput
   gamificationProfile?: Prisma.GamificationProfileUncheckedUpdateOneWithoutUserNestedInput
-  notifications?: Prisma.NotificationUncheckedUpdateManyWithoutUserNestedInput
-}
-
-export type UserCreateWithoutNotificationsInput = {
-  id?: string
-  supabaseId?: string | null
-  email: string
-  fullName: string
-  passwordHash?: string | null
-  avatarUrl?: string | null
-  phone?: string | null
-  role?: string
-  isActive?: boolean
-  lastLoginAt?: Date | string | null
-  createdAt?: Date | string
-  updatedAt?: Date | string
-  children?: Prisma.ChildCreateNestedManyWithoutUserInput
-  bookmarks?: Prisma.BookmarkCreateNestedManyWithoutUserInput
-  contentViews?: Prisma.ContentViewCreateNestedManyWithoutUserInput
-  productClicks?: Prisma.ProductClickCreateNestedManyWithoutUserInput
-  communityThreads?: Prisma.CommunityThreadCreateNestedManyWithoutUserInput
-  communityComments?: Prisma.CommunityCommentCreateNestedManyWithoutUserInput
-  gamificationProfile?: Prisma.GamificationProfileCreateNestedOneWithoutUserInput
-}
-
-export type UserUncheckedCreateWithoutNotificationsInput = {
-  id?: string
-  supabaseId?: string | null
-  email: string
-  fullName: string
-  passwordHash?: string | null
-  avatarUrl?: string | null
-  phone?: string | null
-  role?: string
-  isActive?: boolean
-  lastLoginAt?: Date | string | null
-  createdAt?: Date | string
-  updatedAt?: Date | string
-  children?: Prisma.ChildUncheckedCreateNestedManyWithoutUserInput
-  bookmarks?: Prisma.BookmarkUncheckedCreateNestedManyWithoutUserInput
-  contentViews?: Prisma.ContentViewUncheckedCreateNestedManyWithoutUserInput
-  productClicks?: Prisma.ProductClickUncheckedCreateNestedManyWithoutUserInput
-  communityThreads?: Prisma.CommunityThreadUncheckedCreateNestedManyWithoutUserInput
-  communityComments?: Prisma.CommunityCommentUncheckedCreateNestedManyWithoutUserInput
-  gamificationProfile?: Prisma.GamificationProfileUncheckedCreateNestedOneWithoutUserInput
-}
-
-export type UserCreateOrConnectWithoutNotificationsInput = {
-  where: Prisma.UserWhereUniqueInput
-  create: Prisma.XOR<Prisma.UserCreateWithoutNotificationsInput, Prisma.UserUncheckedCreateWithoutNotificationsInput>
-}
-
-export type UserUpsertWithoutNotificationsInput = {
-  update: Prisma.XOR<Prisma.UserUpdateWithoutNotificationsInput, Prisma.UserUncheckedUpdateWithoutNotificationsInput>
-  create: Prisma.XOR<Prisma.UserCreateWithoutNotificationsInput, Prisma.UserUncheckedCreateWithoutNotificationsInput>
-  where?: Prisma.UserWhereInput
-}
-
-export type UserUpdateToOneWithWhereWithoutNotificationsInput = {
-  where?: Prisma.UserWhereInput
-  data: Prisma.XOR<Prisma.UserUpdateWithoutNotificationsInput, Prisma.UserUncheckedUpdateWithoutNotificationsInput>
-}
-
-export type UserUpdateWithoutNotificationsInput = {
-  id?: Prisma.StringFieldUpdateOperationsInput | string
-  supabaseId?: Prisma.NullableStringFieldUpdateOperationsInput | string | null
-  email?: Prisma.StringFieldUpdateOperationsInput | string
-  fullName?: Prisma.StringFieldUpdateOperationsInput | string
-  passwordHash?: Prisma.NullableStringFieldUpdateOperationsInput | string | null
-  avatarUrl?: Prisma.NullableStringFieldUpdateOperationsInput | string | null
-  phone?: Prisma.NullableStringFieldUpdateOperationsInput | string | null
-  role?: Prisma.StringFieldUpdateOperationsInput | string
-  isActive?: Prisma.BoolFieldUpdateOperationsInput | boolean
-  lastLoginAt?: Prisma.NullableDateTimeFieldUpdateOperationsInput | Date | string | null
-  createdAt?: Prisma.DateTimeFieldUpdateOperationsInput | Date | string
-  updatedAt?: Prisma.DateTimeFieldUpdateOperationsInput | Date | string
-  children?: Prisma.ChildUpdateManyWithoutUserNestedInput
-  bookmarks?: Prisma.BookmarkUpdateManyWithoutUserNestedInput
-  contentViews?: Prisma.ContentViewUpdateManyWithoutUserNestedInput
-  productClicks?: Prisma.ProductClickUpdateManyWithoutUserNestedInput
-  communityThreads?: Prisma.CommunityThreadUpdateManyWithoutUserNestedInput
-  communityComments?: Prisma.CommunityCommentUpdateManyWithoutUserNestedInput
-  gamificationProfile?: Prisma.GamificationProfileUpdateOneWithoutUserNestedInput
-}
-
-export type UserUncheckedUpdateWithoutNotificationsInput = {
-  id?: Prisma.StringFieldUpdateOperationsInput | string
-  supabaseId?: Prisma.NullableStringFieldUpdateOperationsInput | string | null
-  email?: Prisma.StringFieldUpdateOperationsInput | string
-  fullName?: Prisma.StringFieldUpdateOperationsInput | string
-  passwordHash?: Prisma.NullableStringFieldUpdateOperationsInput | string | null
-  avatarUrl?: Prisma.NullableStringFieldUpdateOperationsInput | string | null
-  phone?: Prisma.NullableStringFieldUpdateOperationsInput | string | null
-  role?: Prisma.StringFieldUpdateOperationsInput | string
-  isActive?: Prisma.BoolFieldUpdateOperationsInput | boolean
-  lastLoginAt?: Prisma.NullableDateTimeFieldUpdateOperationsInput | Date | string | null
-  createdAt?: Prisma.DateTimeFieldUpdateOperationsInput | Date | string
-  updatedAt?: Prisma.DateTimeFieldUpdateOperationsInput | Date | string
-  children?: Prisma.ChildUncheckedUpdateManyWithoutUserNestedInput
-  bookmarks?: Prisma.BookmarkUncheckedUpdateManyWithoutUserNestedInput
-  contentViews?: Prisma.ContentViewUncheckedUpdateManyWithoutUserNestedInput
-  productClicks?: Prisma.ProductClickUncheckedUpdateManyWithoutUserNestedInput
-  communityThreads?: Prisma.CommunityThreadUncheckedUpdateManyWithoutUserNestedInput
-  communityComments?: Prisma.CommunityCommentUncheckedUpdateManyWithoutUserNestedInput
-  gamificationProfile?: Prisma.GamificationProfileUncheckedUpdateOneWithoutUserNestedInput
 }
 
 
@@ -1505,7 +1352,6 @@ export type UserCountOutputType = {
   productClicks: number
   communityThreads: number
   communityComments: number
-  notifications: number
 }
 
 export type UserCountOutputTypeSelect<ExtArgs extends runtime.Types.Extensions.InternalArgs = runtime.Types.Extensions.DefaultArgs> = {
@@ -1515,7 +1361,6 @@ export type UserCountOutputTypeSelect<ExtArgs extends runtime.Types.Extensions.I
   productClicks?: boolean | UserCountOutputTypeCountProductClicksArgs
   communityThreads?: boolean | UserCountOutputTypeCountCommunityThreadsArgs
   communityComments?: boolean | UserCountOutputTypeCountCommunityCommentsArgs
-  notifications?: boolean | UserCountOutputTypeCountNotificationsArgs
 }
 
 /**
@@ -1570,13 +1415,6 @@ export type UserCountOutputTypeCountCommunityCommentsArgs<ExtArgs extends runtim
   where?: Prisma.CommunityCommentWhereInput
 }
 
-/**
- * UserCountOutputType without action
- */
-export type UserCountOutputTypeCountNotificationsArgs<ExtArgs extends runtime.Types.Extensions.InternalArgs = runtime.Types.Extensions.DefaultArgs> = {
-  where?: Prisma.NotificationWhereInput
-}
-
 
 export type UserSelect<ExtArgs extends runtime.Types.Extensions.InternalArgs = runtime.Types.Extensions.DefaultArgs> = runtime.Types.Extensions.GetSelect<{
   id?: boolean
@@ -1598,7 +1436,6 @@ export type UserSelect<ExtArgs extends runtime.Types.Extensions.InternalArgs = r
   communityThreads?: boolean | Prisma.User$communityThreadsArgs<ExtArgs>
   communityComments?: boolean | Prisma.User$communityCommentsArgs<ExtArgs>
   gamificationProfile?: boolean | Prisma.User$gamificationProfileArgs<ExtArgs>
-  notifications?: boolean | Prisma.User$notificationsArgs<ExtArgs>
   _count?: boolean | Prisma.UserCountOutputTypeDefaultArgs<ExtArgs>
 }, ExtArgs["result"]["user"]>
 
@@ -1656,7 +1493,6 @@ export type UserInclude<ExtArgs extends runtime.Types.Extensions.InternalArgs = 
   communityThreads?: boolean | Prisma.User$communityThreadsArgs<ExtArgs>
   communityComments?: boolean | Prisma.User$communityCommentsArgs<ExtArgs>
   gamificationProfile?: boolean | Prisma.User$gamificationProfileArgs<ExtArgs>
-  notifications?: boolean | Prisma.User$notificationsArgs<ExtArgs>
   _count?: boolean | Prisma.UserCountOutputTypeDefaultArgs<ExtArgs>
 }
 export type UserIncludeCreateManyAndReturn<ExtArgs extends runtime.Types.Extensions.InternalArgs = runtime.Types.Extensions.DefaultArgs> = {}
@@ -1672,7 +1508,6 @@ export type $UserPayload<ExtArgs extends runtime.Types.Extensions.InternalArgs =
     communityThreads: Prisma.$CommunityThreadPayload<ExtArgs>[]
     communityComments: Prisma.$CommunityCommentPayload<ExtArgs>[]
     gamificationProfile: Prisma.$GamificationProfilePayload<ExtArgs> | null
-    notifications: Prisma.$NotificationPayload<ExtArgs>[]
   }
   scalars: runtime.Types.Extensions.GetPayloadResult<{
     id: string
@@ -2088,7 +1923,6 @@ export interface Prisma__UserClient<T, Null = never, ExtArgs extends runtime.Typ
   communityThreads<T extends Prisma.User$communityThreadsArgs<ExtArgs> = {}>(args?: Prisma.Subset<T, Prisma.User$communityThreadsArgs<ExtArgs>>): Prisma.PrismaPromise<runtime.Types.Result.GetResult<Prisma.$CommunityThreadPayload<ExtArgs>, T, "findMany", GlobalOmitOptions> | Null>
   communityComments<T extends Prisma.User$communityCommentsArgs<ExtArgs> = {}>(args?: Prisma.Subset<T, Prisma.User$communityCommentsArgs<ExtArgs>>): Prisma.PrismaPromise<runtime.Types.Result.GetResult<Prisma.$CommunityCommentPayload<ExtArgs>, T, "findMany", GlobalOmitOptions> | Null>
   gamificationProfile<T extends Prisma.User$gamificationProfileArgs<ExtArgs> = {}>(args?: Prisma.Subset<T, Prisma.User$gamificationProfileArgs<ExtArgs>>): Prisma.Prisma__GamificationProfileClient<runtime.Types.Result.GetResult<Prisma.$GamificationProfilePayload<ExtArgs>, T, "findUniqueOrThrow", GlobalOmitOptions> | null, null, ExtArgs, GlobalOmitOptions>
-  notifications<T extends Prisma.User$notificationsArgs<ExtArgs> = {}>(args?: Prisma.Subset<T, Prisma.User$notificationsArgs<ExtArgs>>): Prisma.PrismaPromise<runtime.Types.Result.GetResult<Prisma.$NotificationPayload<ExtArgs>, T, "findMany", GlobalOmitOptions> | Null>
   /**
    * Attaches callbacks for the resolution and/or rejection of the Promise.
    * @param onfulfilled The callback to execute when the Promise is resolved.
@@ -2681,30 +2515,6 @@ export type User$gamificationProfileArgs<ExtArgs extends runtime.Types.Extension
    */
   include?: Prisma.GamificationProfileInclude<ExtArgs> | null
   where?: Prisma.GamificationProfileWhereInput
-}
-
-/**
- * User.notifications
- */
-export type User$notificationsArgs<ExtArgs extends runtime.Types.Extensions.InternalArgs = runtime.Types.Extensions.DefaultArgs> = {
-  /**
-   * Select specific fields to fetch from the Notification
-   */
-  select?: Prisma.NotificationSelect<ExtArgs> | null
-  /**
-   * Omit specific fields from the Notification
-   */
-  omit?: Prisma.NotificationOmit<ExtArgs> | null
-  /**
-   * Choose, which related nodes to fetch as well
-   */
-  include?: Prisma.NotificationInclude<ExtArgs> | null
-  where?: Prisma.NotificationWhereInput
-  orderBy?: Prisma.NotificationOrderByWithRelationInput | Prisma.NotificationOrderByWithRelationInput[]
-  cursor?: Prisma.NotificationWhereUniqueInput
-  take?: number
-  skip?: number
-  distinct?: Prisma.NotificationScalarFieldEnum | Prisma.NotificationScalarFieldEnum[]
 }
 
 /**

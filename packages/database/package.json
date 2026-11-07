@@ -16,14 +16,17 @@
     "db:reset": "node -e \"require('fs').rmSync('dev.db', { force: true })\" && pnpm db:push && pnpm db:seed",
     "db:reset:cli": "node -e \"require('fs').rmSync('dev.db', { force: true })\" && pnpm db:push:cli && pnpm db:seed",
     "lint": "echo 'database: no lint configured'",
-    "build": "tsup src/index.ts --format cjs --dts --sourcemap --clean --external @prisma/client --external @prisma/adapter-libsql --external @prisma/adapter-mariadb --external @libsql/client --external mariadb",
+    "build": "tsup src/index.ts --format cjs --dts --sourcemap --clean --external @prisma/client --external @prisma/adapter-libsql --external @prisma/adapter-mariadb --external @prisma/adapter-pg --external pg --external @libsql/client --external mariadb",
     "dev": "tsup src/index.ts --format cjs --dts --watch --external @prisma/client",
-    "prepublishOnly": "pnpm build"
+    "prepublishOnly": "pnpm build",
+    "db:push:supabase": "node scripts/push-wasm.mjs prisma/schema.postgres.prisma",
+    "db:push:supabase:cli": "prisma db push --skip-generate --config prisma.config.supabase.ts"
   },
   "dependencies": {
     "@libsql/client": "^0.18.0",
     "@prisma/adapter-libsql": "^7.10.1",
     "@prisma/adapter-mariadb": "^7.10.1",
+    "@prisma/adapter-pg": "7.10.1",
     "@prisma/client": "^7.10.1",
     "@prisma/driver-adapter-utils": "^7.10.1",
     "mariadb": "^3.5.5"

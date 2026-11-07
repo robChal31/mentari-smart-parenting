@@ -2,18 +2,18 @@
 
 **Sahabat tumbuh kembang anak Indonesia** — platform knowledge hub parenting berbasis bukti, terintegrasi katalog produk Mentari Group.
 
-Monorepo: **Next.js 16 (RSC) web** + **NestJS 11 API** + **shared Zod contracts** + **Prisma database** (MySQL untuk production, SQLite untuk development lokal — berjalan penuh offline di repo ini).
+Monorepo: **Next.js 16 (RSC) web** + **NestJS 11 API** + **shared Zod contracts** + **Prisma database** (SQLite untuk dev lokal — berjalan penuh offline; MySQL atau [Supabase](#production-deployment) Postgres untuk production). Web UI bilingual: **Bahasa Indonesia** (default) dan **English** (cookie `mentari.locale`, switcher di header).
 
 ## Arsitektur
 
 ```
 mentari-smart-parenting/
 ├── apps/
-│   ├── web/          @mentari/web  — Next.js App Router (RSC), UI Bahasa Indonesia, mobile-first
+│   ├── web/          @mentari/web  — Next.js App Router (RSC), UI bilingual id/en, mobile-first
 │   └── api/          @mentari/api  — NestJS REST API, prefix /api/v1, envelope { success, data, meta?, error? }
 └── packages/
     ├── shared/       @mentari/shared   — tipe DTO, konstanta, Zod validators (dipakai FE & BE)
-    └── database/     @mentari/database — Prisma schema (MySQL prod + SQLite dev), seed data kaya
+    └── database/     @mentari/database — Prisma schema (SQLite dev + MySQL prod + Supabase/Postgres), seed data kaya
 ```
 
 Aliran request di production:
@@ -21,7 +21,7 @@ Aliran request di production:
 ```
 Browser → Next.js (apps/web)
             ├─ RSC / generateMetadata  → API internal (API_INTERNAL_URL) untuk SSR konten (SEO)
-            └─ /api/* (rewrite proxy)  → NestJS → Prisma → MySQL / Supabase Auth (JWT verify)
+            └─ /api/* (rewrite proxy)  → NestJS → Prisma → SQLite (dev) / MySQL / Supabase Postgres · JWT verify (Supabase Auth)
 ```
 
 Browser **tidak pernah** memanggil NestJS langsung — semua API call lewat `/api/v1/*` di origin yang sama.
@@ -53,19 +53,23 @@ Atau per app: `pnpm dev:web` / `pnpm dev:api`.
 
 - **P0** — Auth (register/login/forgot), Browse & Detail konten (SSR + SEO meta + JSON-LD), Rekomendasi produk otomatis untuk setiap konten (`Rekomendasi dari Mentari`, 4 placement), Admin CMS (`/admin`: overview analytics, kelola konten/produk/pengguna, mapping konten↔produk).
 - **P1** — Profil anak multi-child + usia otomatis → age-group matching, Search, Bookmark, filter kategori/usia/tipe, fully responsive + skeleton loading.
-- **P2** (seeded & berfungsi) — Learning Paths (checklist progres), Milestone tracker per anak, Gamification (poin, streak harian, level, 10 badge), Community forum (thread, komentar, like), Notifikasi in-app.
+- **P2** (seeded & berfungsi) — Learning Paths (checklist progres), Milestone tracker per anak, Gamification (poin, streak harian, level, 10 badge), Community forum (thread, komentar, like).
 - **Analytics** — views konten 30/14 hari (grafik di admin), klik produk dengan konteks sumber.
 
 ## Production deployment
 
-1. **Database (MySQL)**: schema production ada di `packages/database/prisma/schema.prisma`. Deploy: `mysql … < packages/database/prisma/setup.sql` (jika ada) atau `PRISMA_SCHEMA=prisma/schema.prisma pnpm --filter=@mentari/database db:push:mysql` dengan `DATABASE_URL=mysql://…`.
+1. **Database**: ada tiga skema — `schema.sqlite.prisma` (dev lokal), `schema.prisma` (MySQL production), `schema.postgres.prisma` (Supabase / PostgreSQL). Pilih salah satu:
+   - **MySQL**: `DATABASE_URL=mysql://… pnpm --filter=@mentari/database db:push:mysql`.
+   - **Supabase Postgres**: set `SUPABASE_DATABASE_URL` ke *direct connection* (port 5432, bukan pooler 6543), lalu `pnpm --filter=@mentari/database db:push:supabase` (schema-engine WASM, jalan tanpa unduh binary) atau `pnpm --filter=@mentari/database db:push:supabase:cli`. Untuk runtime aplikasi set `DATABASE_URL=postgresql://…` — client factory memilih adapter `@prisma/adapter-pg` otomatis dari scheme URL (`file:` → SQLite, `mysql://` → MariaDB, `postgres(ql)://` → pg).
+   - **Seed ke Supabase**: `DATABASE_URL=postgresql://… pnpm --filter=@mentari/database db:seed` (pakai akun service/direksi postgres, bukan anon).
+   - RLS: aplikasi tidak mengakses tabel secara langsung dari browser — semua lewat API dengan koneksi owner DB, jadi Row Level Security boleh tetap nonaktif; jangan pernah expose connection string ke `NEXT_PUBLIC_*`.
 2. **Auth (Supabase)**: set `SUPABASE_JWT_SECRET` di API. Token Supabase (aud `authenticated`) otomatis diverifikasi di `JwtAuthGuard`; user lokal di-provision on-the-fly saat login pertama.
 3. **Web**: `NEXT_PUBLIC_SITE_URL`, `API_INTERNAL_URL` (URL internal service API). Browser tetap same-origin lewat rewrites.
 4. **Seed**: `pnpm db:seed` memakai bcrypt untuk password default — **ganti password demo sebelum go-live**.
 
 ### Environment variables
 
-Lihat [`.env.example`](.env.example). Minimal production: `DATABASE_URL` (mysql), `JWT_SECRET` **atau** `SUPABASE_JWT_SECRET`, `CORS_ORIGIN`, `NEXT_PUBLIC_SITE_URL`, `API_INTERNAL_URL`.
+Lihat [`.env.example`](.env.example). Minimal production: `DATABASE_URL` (`mysql://…` atau `postgresql://…`), `JWT_SECRET` **atau** `SUPABASE_JWT_SECRET`, `CORS_ORIGIN`, `NEXT_PUBLIC_SITE_URL`, `API_INTERNAL_URL`. Untuk push skema ke Supabase: `SUPABASE_DATABASE_URL` (direct 5432).
 
 ## Perintah database
 
@@ -77,6 +81,8 @@ Lihat [`.env.example`](.env.example). Minimal production: `DATABASE_URL` (mysql)
 | `pnpm db:seed` | wipe & re-seed data demo (25 konten, 7 produk, 23 milestone, dst.) |
 | `pnpm db:reset` | hapus dev.db, push ulang (WASM), seed |
 | `pnpm db:reset:cli` | `db:reset` versi Prisma CLI standar |
+| `pnpm --filter=@mentari/database db:push:supabase` | push `schema.postgres.prisma` ke Supabase/Postgres via WASM (offline-safe, pakai `SUPABASE_DATABASE_URL`) |
+| `pnpm --filter=@mentari/database db:push:supabase:cli` | jalur Prisma CLI standar untuk skema Supabase |
 
 > Catatan: setelah `pnpm db:generate`, folder `packages/database/src/generated` bisa tampak
 > berubah di git (artifact generator Prisma) — jangan di-commit kecuali memang disengaja.
@@ -107,9 +113,8 @@ Rate-limit-friendly, validasi Zod di boundary (`@mentari/shared`), RBAC via `@Ro
 | Learning Path | `GET /learning-paths`, `GET /learning-paths/:slug` |
 | Komunitas | `GET/POST /community/threads`, `GET /community/threads/:id`, `POST /community/threads/:id/comments`, `POST /community/threads/:id/like` |
 | Gamifikasi | `GET /gamification/me`, `GET /gamification/badges` |
-| Notifikasi | `GET /notifications`, `PATCH /notifications/:id/read`, `PATCH /notifications/read-all` |
 | Analytics | `POST /analytics/product-clicks` (public) |
-| Admin (`ADMIN`/`EDITOR`) | `GET /admin/overview`, CRUD `/admin/contents` · `/admin/products` · `/admin/categories`, `GET /admin/users` + `PATCH /admin/users/:id/role` (ADMIN), content↔product mappings |
+| Admin (`ADMIN`/`EDITOR`) | `GET /admin/overview`, CRUD `/admin/contents` · `/admin/products` · `/admin/categories`, `DELETE /admin/products/:id` (soft-delete) + `PATCH /admin/products/:id/restore`, `GET /admin/users` + `PATCH /admin/users/:id/role` (ADMIN), content↔product mappings |
 
 Prioritas mesin rekomendasi: **1)** mapping manual konten↔produk (`ContentProduct`, relevanceScore) → **2)** kecocokan age-group produk↔konten → **3)** fallback produk unggulan.
 

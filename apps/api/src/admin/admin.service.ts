@@ -46,8 +46,8 @@ export class AdminService {
       prisma.user.count(),
       prisma.content.count(),
       prisma.content.count({ where: { status: 'PUBLISHED' } }),
-      prisma.product.count(),
-      prisma.product.count({ where: { isActive: true } }),
+      prisma.product.count({ where: { deletedAt: null } }),
+      prisma.product.count({ where: { isActive: true, deletedAt: null } }),
       prisma.child.count(),
       prisma.contentView.count({ where: { createdAt: { gte: since } } }),
       prisma.productClick.count({ where: { createdAt: { gte: since } } }),
@@ -287,8 +287,16 @@ export class AdminService {
   async deactivateProduct(id: string) {
     const existing = await prisma.product.findUnique({ where: { id } });
     if (!existing) throw new NotFoundException({ code: 'NOT_FOUND', message: 'Produk tidak ditemukan.' });
-    await prisma.product.update({ where: { id }, data: { isActive: false } });
-    return { deactivated: true };
+    // Soft delete — hidden from the public catalogue & recommendations, kept for analytics.
+    await prisma.product.update({ where: { id }, data: { isActive: false, deletedAt: new Date() } });
+    return { deleted: true };
+  }
+
+  async restoreProduct(id: string) {
+    const existing = await prisma.product.findUnique({ where: { id } });
+    if (!existing) throw new NotFoundException({ code: 'NOT_FOUND', message: 'Produk tidak ditemukan.' });
+    await prisma.product.update({ where: { id }, data: { isActive: true, deletedAt: null } });
+    return { restored: true };
   }
 
   // ---------- Categories ----------

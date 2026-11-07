@@ -4,11 +4,13 @@ import { useEffect, useState } from "react";
 import { Bookmark, BookmarkCheck } from "lucide-react";
 import { apiData, getToken } from "@/lib/client-api";
 import { useAuth } from "./auth-provider";
+import { useDictionary } from "./i18n-provider";
 import { useRouter } from "next/navigation";
 
 export function BookmarkButton({ contentId }: { contentId: string }) {
   const { user } = useAuth();
   const router = useRouter();
+  const dict = useDictionary();
   const [saved, setSaved] = useState(false);
   const [busy, setBusy] = useState(false);
   const [ready, setReady] = useState(false);
@@ -32,7 +34,7 @@ export function BookmarkButton({ contentId }: { contentId: string }) {
 
   async function toggle() {
     if (!user) {
-      router.push(`/masuk?next=${encodeURIComponent(window.location.pathname)}`);
+      router.push(`/login?next=${encodeURIComponent(window.location.pathname)}`);
       return;
     }
     setBusy(true);
@@ -60,7 +62,7 @@ export function BookmarkButton({ contentId }: { contentId: string }) {
       }`}
     >
       {saved ? <BookmarkCheck size={15} aria-hidden /> : <Bookmark size={15} aria-hidden />}
-      {saved ? "Tersimpan" : "Simpan"}
+      {saved ? dict.common.saved : dict.common.save}
     </button>
   );
 }
