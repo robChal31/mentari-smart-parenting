@@ -65,8 +65,12 @@ Atau per app: `pnpm dev:web` / `pnpm dev:api`.
      2. set `SUPABASE_DATABASE_URL` di `.env` root ke *direct connection* (port 5432, bukan pooler 6543) — **jangan** biarkan placeholder template (push akan berhenti dengan error jelas dari script, atau error WASM yang samar).
      3. `pnpm --filter=@mentari/database db:push:supabase` (schema-engine WASM, tanpa unduh binary) atau `db:push:supabase:cli`.
      4. `DATABASE_URL=postgresql://… pnpm --filter=@mentari/database db:seed` untuk data demo (opsional).
-     5. Mau kembali ke dev SQLite? `pnpm --filter=@mentari/database db:generate && pnpm --filter=@mentari/database build`.
-     6. Untuk runtime aplikasi set `DATABASE_URL=postgresql://…` — client factory memilih adapter `@prisma/adapter-pg` otomatis dari scheme URL (`file:` → SQLite, `mysql://` → MariaDB, `postgres(ql)://` → pg). Password tidak pernah di-log penuh (URL dimask oleh script push).
+     5. Jika `db:push:supabase` gagal dengan `Column type 'char' could not be deserialized…` (bug WASM schema-engine vs hosted Postgres — describe gagal bahkan pada database kosong), lewati push dan terapkan DDL secara langsung:
+        a. `pnpm --filter=@mentari/database db:ddl:postgres` — menghasilkan `packages/database/prisma/schema.postgres.sql` (script dari empty → schema; **tidak** menulis ke database, hanya membaca untuk deteksi versi).
+        b. Buka **Supabase Dashboard → SQL Editor**, tempel isi `schema.postgres.sql`, jalankan. (Atau `psql "<url>" -v ON_ERROR_STOP=1 -f prisma/schema.postgres.sql`.)
+        c. Lanjut ke langkah 4 (`db:seed`).
+     6. Mau kembali ke dev SQLite? `pnpm --filter=@mentari/database db:generate && pnpm --filter=@mentari/database build`.
+     7. Untuk runtime aplikasi set `DATABASE_URL=postgresql://…` — client factory memilih adapter `@prisma/adapter-pg` otomatis dari scheme URL (`file:` → SQLite, `mysql://` → MariaDB, `postgres(ql)://` → pg). Password tidak pernah di-log penuh (URL dimask oleh script push).
    - **Seed ke Supabase**: `DATABASE_URL=postgresql://… pnpm --filter=@mentari/database db:seed` (pakai akun service/direksi postgres, bukan anon).
    - RLS: aplikasi tidak mengakses tabel secara langsung dari browser — semua lewat API dengan koneksi owner DB, jadi Row Level Security boleh tetap nonaktif; jangan pernah expose connection string ke `NEXT_PUBLIC_*`.
    - **`.env` root otomatis di-load**: API, `db:push`, `db:seed`, `db:push:supabase`, dan config Prisma CLI memuat `.env` terdekat dengan walk-up dari cwd (built-in `process.loadEnvFile`, Node ≥ 20.12) — satu `.env` di root repo cukup, termasuk di Windows PowerShell/CMD. Tidak perlu syntax khusus shell (`DATABASE_URL=… pnpm …` itu khusus bash dan **tidak** jalan di PowerShell). Variabel environment yang sudah di-set di shell menang atas isi `.env`. Khusus web: Next.js **tidak** membaca root `.env` — set `NEXT_PUBLIC_SITE_URL` / `API_INTERNAL_URL` di `apps/web/.env.local` atau env hosting.

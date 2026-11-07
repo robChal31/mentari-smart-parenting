@@ -50,3 +50,6 @@ next-env.d.ts
 *.sqlite-journal
 packages/database/prisma/*.db
 packages/database/dev.db
+
+# Generated DDL dump (db:ddl:postgres)
+packages/database/prisma/schema.postgres.sql
