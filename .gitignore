@@ -48,3 +48,4 @@ next-env.d.ts
 *.sqlite
 *.sqlite-journal
 packages/database/prisma/*.db
+packages/database/dev.db
