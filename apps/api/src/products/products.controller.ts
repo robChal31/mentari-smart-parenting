@@ -15,6 +15,7 @@ export class ProductsController {
   ) {
     const where: Record<string, unknown> = {
       isActive: true,
+      deletedAt: null,
       ...(type ? { type: type.toUpperCase() } : {}),
       ...(featured === 'true' ? { isFeatured: true } : {}),
       ...(ageGroup ? { ageGroups: { some: { ageGroup: { slug: ageGroup } } } } : {}),
@@ -31,7 +32,7 @@ export class ProductsController {
   @Get(':slug')
   async detail(@Param('slug') slug: string) {
     const product = await prisma.product.findFirst({
-      where: { slug, isActive: true },
+      where: { slug, isActive: true, deletedAt: null },
       include: { ageGroups: { include: { ageGroup: true } } },
     });
     if (!product) throw new NotFoundException({ code: 'NOT_FOUND', message: 'Produk tidak ditemukan.' });

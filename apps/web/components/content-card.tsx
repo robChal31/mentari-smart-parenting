@@ -2,13 +2,15 @@ import Link from "next/link";
 import type { ContentSummaryDto } from "@mentari/shared";
 import { BookOpenText, Eye, Flame, Headphones, Lightbulb, NotebookPen, Play, Sparkles, Clock } from "lucide-react";
 import { formatDate, formatDuration, formatViews } from "@/lib/format";
+import { getDictionary } from "@/lib/i18n/get-dictionary";
+import { format } from "@/lib/i18n/format";
 
-const TYPE_META: Record<string, { label: string; icon: React.ReactNode; chip: string }> = {
-  VIDEO: { label: "Video", icon: <Play size={12} fill="currentColor" />, chip: "bg-red-50 text-red-600" },
-  ARTICLE: { label: "Artikel", icon: <BookOpenText size={12} />, chip: "bg-secondary-soft text-secondary" },
-  INFOGRAPHIC: { label: "Infografis", icon: <Sparkles size={12} />, chip: "bg-purple-50 text-purple-700" },
-  TIPS: { label: "Tips", icon: <Lightbulb size={12} />, chip: "bg-amber-50 text-amber-700" },
-  ACTIVITY: { label: "Aktivitas", icon: <NotebookPen size={12} />, chip: "bg-accent-soft text-accent-deep" },
+const TYPE_ICONS: Record<string, React.ReactNode> = {
+  VIDEO: <Play size={12} fill="currentColor" />,
+  ARTICLE: <BookOpenText size={12} />,
+  INFOGRAPHIC: <Sparkles size={12} />,
+  TIPS: <Lightbulb size={12} />,
+  ACTIVITY: <NotebookPen size={12} />,
 };
 
 // Deterministic warm gradient per content id for the thumbnail block.
@@ -26,10 +28,12 @@ function gradientFor(id: string): string {
   return THUMB_GRADIENTS[hash % THUMB_GRADIENTS.length];
 }
 
-export function ContentCard({ content, priority = false }: { content: ContentSummaryDto; priority?: boolean }) {
-  const meta = TYPE_META[content.type] ?? TYPE_META.ARTICLE;
+export async function ContentCard({ content, priority = false }: { content: ContentSummaryDto; priority?: boolean }) {
+  const { locale, dict } = await getDictionary();
+  const typeIcon = TYPE_ICONS[content.type] ?? TYPE_ICONS.ARTICLE;
+  const typeLabel = (dict.contentTypes as Record<string, string>)[content.type] ?? content.type;
   const category = content.categories[0];
-  const duration = formatDuration(content.videoDuration);
+  const duration = formatDuration(content.videoDuration, dict.time);
 
   return (
     <Link
@@ -42,7 +46,7 @@ export function ContentCard({ content, priority = false }: { content: ContentSum
         <span aria-hidden className="absolute -bottom-10 right-6 h-32 w-32 rounded-full bg-white/30 blur-2xl" />
         <div className="absolute inset-0 flex flex-col items-center justify-center gap-2 p-4 text-center">
           <span className="inline-flex items-center gap-1.5 rounded-full bg-white/85 px-3 py-1 text-[10px] font-extrabold uppercase tracking-[0.14em] text-secondary backdrop-blur">
-            {meta.icon} {meta.label}
+            {typeIcon} {typeLabel}
           </span>
           {duration && (
             <span className="inline-flex items-center gap-1 rounded-full bg-secondary/85 px-2.5 py-0.5 text-[10px] font-bold text-white">
@@ -52,10 +56,10 @@ export function ContentCard({ content, priority = false }: { content: ContentSum
         </div>
         {content.isFeatured && (
           <span className="absolute right-3 top-3 inline-flex items-center gap-1 rounded-full bg-primary px-2.5 py-1 text-[10px] font-extrabold uppercase tracking-wide text-white shadow">
-            <Flame size={11} fill="currentColor" /> Populer
+            <Flame size={11} fill="currentColor" /> {dict.contentCard.featured}
           </span>
         )}
-        {priority && <span className="sr-only">Konten unggulan</span>}
+        {priority && <span className="sr-only">{dict.contentCard.featuredSr}</span>}
       </div>
 
       <div className="flex flex-1 flex-col gap-2 p-4">
@@ -65,15 +69,15 @@ export function ContentCard({ content, priority = false }: { content: ContentSum
               {category.name}
             </span>
           )}
-          <span className="text-muted">{formatDate(content.publishedAt)}</span>
+          <span className="text-muted">{formatDate(content.publishedAt, locale)}</span>
         </div>
         <h3 className="line-clamp-2 font-heading text-[0.98rem] font-bold leading-snug text-ink transition-colors group-hover:text-secondary">
           {content.title}
         </h3>
         {content.excerpt && <p className="line-clamp-2 text-xs leading-5 text-muted">{content.excerpt}</p>}
         <div className="mt-auto flex items-center gap-3 border-t border-sand/80 pt-2.5 text-[10px] font-medium text-muted">
-          <span className="inline-flex items-center gap-1"><Eye size={11} /> {formatViews(content.viewCount)}</span>
-          {content.readTime && <span className="inline-flex items-center gap-1"><Headphones size={11} className="hidden" />{content.readTime} mnt baca</span>}
+          <span className="inline-flex items-center gap-1"><Eye size={11} /> {formatViews(content.viewCount, dict.time)}</span>
+          {content.readTime && <span className="inline-flex items-center gap-1"><Headphones size={11} className="hidden" />{format(dict.contentCard.minutesRead, { minutes: content.readTime })}</span>}
           {content.authorName && <span className="truncate">· {content.authorName.split(",")[0]}</span>}
         </div>
       </div>

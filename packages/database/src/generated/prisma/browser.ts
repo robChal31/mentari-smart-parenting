@@ -13,10 +13,10 @@
  * 🟢 You can import this file directly.
  */
 
-import * as Prisma from './internal/prismaNamespaceBrowser.ts'
+import * as Prisma from './internal/prismaNamespaceBrowser'
 export { Prisma }
-export * as $Enums from './enums.ts'
-export * from './enums.ts';
+export * as $Enums from './enums'
+export * from './enums';
 /**
  * Model User
  * 
@@ -137,8 +137,3 @@ export type ContentView = Prisma.ContentViewModel
  * 
  */
 export type ProductClick = Prisma.ProductClickModel
-/**
- * Model Notification
- * 
- */
-export type Notification = Prisma.NotificationModel

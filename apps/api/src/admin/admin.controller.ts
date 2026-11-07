@@ -102,6 +102,11 @@ export class AdminController {
     return this.admin.deactivateProduct(id).then((data) => ok(data));
   }
 
+  @Patch('products/:id/restore')
+  restoreProduct(@Param('id') id: string) {
+    return this.admin.restoreProduct(id).then((data) => ok(data));
+  }
+
   // ---------- Categories ----------
   @Post('categories')
   createCategory(@Body(new ZodValidationPipe(createCategorySchema)) body: CreateCategoryInput) {

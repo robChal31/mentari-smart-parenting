@@ -1,39 +1,42 @@
 "use client";
 
 import Link from "next/link";
-import { useRouter } from "next/navigation";
+import { usePathname, useRouter } from "next/navigation";
 import { useEffect, useRef, useState } from "react";
 import {
   BookOpenCheck,
   CalendarCheck2,
   ChevronDown,
+  Globe,
   LayoutDashboard,
   LogOut,
   Menu,
-  Rocket,
   Search,
-  ShieldCheck,
   User,
-  Users,
   X,
 } from "lucide-react";
 import { Logo } from "./logo";
 import { useAuth } from "./auth-provider";
-
-const NAV = [
-  { href: "/contents", label: "Jelajah Konten" },
-  { href: "/learning-paths", label: "Learning Path" },
-  { href: "/perkembangan", label: "Perkembangan" },
-  { href: "/komunitas", label: "Komunitas" },
-];
+import { useDictionary, useLocale } from "@/components/i18n-provider";
+import { LOCALE_COOKIE, LOCALE_COOKIE_MAX_AGE, type Locale } from "@/lib/i18n/config";
 
 export function SiteHeader() {
   const router = useRouter();
+  const pathname = usePathname();
   const { user, isLoading, logout } = useAuth();
+  const dict = useDictionary();
+  const locale = useLocale();
   const [menuOpen, setMenuOpen] = useState(false);
   const [query, setQuery] = useState("");
   const [accountOpen, setAccountOpen] = useState(false);
   const accountRef = useRef<HTMLDivElement>(null);
+
+  const NAV = [
+    { href: "/contents", label: dict.nav.explore },
+    { href: "/learning-paths", label: dict.nav.learningPath },
+    { href: "/development", label: dict.nav.development },
+    { href: "/community", label: dict.nav.community },
+  ];
 
   useEffect(() => {
     function onClick(event: MouseEvent) {
@@ -43,14 +46,51 @@ export function SiteHeader() {
     return () => document.removeEventListener("mousedown", onClick);
   }, []);
 
+  useEffect(() => {
+    setMenuOpen(false);
+    setAccountOpen(false);
+  }, [pathname]);
+
   function submitSearch(event: React.FormEvent) {
     event.preventDefault();
     const q = query.trim();
-    router.push(q ? `/cari?q=${encodeURIComponent(q)}` : "/cari");
+    router.push(q ? `/search?q=${encodeURIComponent(q)}` : "/search");
     setMenuOpen(false);
   }
 
+  function switchLocale() {
+    const next: Locale = locale === "id" ? "en" : "id";
+    document.cookie = `${LOCALE_COOKIE}=${next}; path=/; max-age=${LOCALE_COOKIE_MAX_AGE}; samesite=lax`;
+    router.refresh();
+  }
+
   const canAdmin = user && (user.role === "ADMIN" || user.role === "EDITOR");
+  const isActive = (href: string) => pathname === href || pathname.startsWith(`${href}/`);
+
+  const desktopLink = (active: boolean) =>
+    `rounded-full px-3 py-2 text-sm font-semibold transition ${
+      active
+        ? "bg-secondary text-white shadow-sm"
+        : "text-ink/80 hover:bg-primary-soft hover:text-primary-deep"
+    }`;
+  const mobileLink = (active: boolean) =>
+    `rounded-2xl border px-4 py-3 text-sm font-semibold transition ${
+      active
+        ? "border-secondary bg-secondary text-white"
+        : "border-sand bg-white text-secondary"
+    }`;
+
+  const localeToggle = (
+    <button
+      onClick={switchLocale}
+      aria-label={dict.language.switchAria}
+      title={dict.language.switchAria}
+      className="inline-flex items-center gap-1.5 rounded-full border border-sand bg-white px-3 py-2 text-xs font-extrabold uppercase tracking-[0.12em] text-secondary shadow-sm transition hover:border-secondary hover:text-primary-deep"
+    >
+      <Globe size={15} aria-hidden />
+      {locale === "id" ? dict.language.en : dict.language.id}
+    </button>
+  );
 
   return (
     <header className="sticky top-0 z-50 border-b border-sand bg-cream/90 backdrop-blur-lg">
@@ -58,13 +98,9 @@ export function SiteHeader() {
         <div className="flex h-16 items-center gap-3 sm:h-[4.25rem] sm:gap-6">
           <Logo />
 
-          <nav className="ml-2 hidden items-center gap-1 lg:flex" aria-label="Navigasi utama">
+          <nav className="ml-2 hidden items-center gap-1 lg:flex" aria-label={dict.nav.mainNavAria}>
             {NAV.map((item) => (
-              <Link
-                key={item.href}
-                href={item.href}
-                className="rounded-full px-3 py-2 text-sm font-semibold text-ink/80 transition hover:bg-primary-soft hover:text-primary-deep"
-              >
+              <Link key={item.href} href={item.href} aria-current={isActive(item.href) ? "page" : undefined} className={desktopLink(isActive(item.href))}>
                 {item.label}
               </Link>
             ))}
@@ -77,14 +113,15 @@ export function SiteHeader() {
                 type="search"
                 value={query}
                 onChange={(e) => setQuery(e.target.value)}
-                placeholder="Cari topik, mis. tantrum…"
-                aria-label="Cari konten"
+                placeholder={dict.nav.searchPlaceholder}
+                aria-label={dict.nav.searchAria}
                 className="w-full bg-transparent text-sm outline-none placeholder:text-muted/70"
               />
             </label>
           </form>
 
           <div className="hidden items-center gap-2 md:flex">
+            {localeToggle}
             {isLoading ? (
               <div className="skeleton h-9 w-24" />
             ) : user ? (
@@ -107,11 +144,11 @@ export function SiteHeader() {
                       <p className="truncate text-sm font-bold text-secondary">{user.fullName}</p>
                       <p className="truncate text-xs text-muted">{user.email}</p>
                     </div>
-                    <MenuLink href="/profil" icon={<User size={16} />} label="Profil Saya" onNavigate={() => setAccountOpen(false)} />
-                    <MenuLink href="/perkembangan" icon={<CalendarCheck2 size={16} />} label="Milestone Anak" onNavigate={() => setAccountOpen(false)} />
-                    <MenuLink href="/profil#bookmark" icon={<BookOpenCheck size={16} />} label="Bookmark" onNavigate={() => setAccountOpen(false)} />
+                    <MenuLink href="/profile" icon={<User size={16} />} label={dict.nav.profile} onNavigate={() => setAccountOpen(false)} />
+                    <MenuLink href="/development" icon={<CalendarCheck2 size={16} />} label={dict.nav.milestones} onNavigate={() => setAccountOpen(false)} />
+                    <MenuLink href="/profile#bookmark" icon={<BookOpenCheck size={16} />} label={dict.nav.bookmarks} onNavigate={() => setAccountOpen(false)} />
                     {canAdmin && (
-                      <MenuLink href="/admin" icon={<LayoutDashboard size={16} />} label="Admin CMS" onNavigate={() => setAccountOpen(false)} accent />
+                      <MenuLink href="/admin" icon={<LayoutDashboard size={16} />} label={dict.nav.adminCms} onNavigate={() => setAccountOpen(false)} accent />
                     )}
                     <button
                       onClick={() => {
@@ -122,34 +159,37 @@ export function SiteHeader() {
                       className="flex w-full items-center gap-2 border-t border-sand px-4 py-3 text-left text-sm font-medium text-red-600 transition hover:bg-red-50"
                       role="menuitem"
                     >
-                      <LogOut size={16} aria-hidden /> Keluar
+                      <LogOut size={16} aria-hidden /> {dict.nav.logout}
                     </button>
                   </div>
                 )}
               </div>
             ) : (
               <>
-                <Link href="/masuk" className="rounded-full px-4 py-2 text-sm font-bold text-secondary transition hover:bg-secondary-soft">
-                  Masuk
+                <Link href="/login" className="rounded-full px-4 py-2 text-sm font-bold text-secondary transition hover:bg-secondary-soft">
+                  {dict.nav.login}
                 </Link>
                 <Link
-                  href="/daftar"
+                  href="/register"
                   className="rounded-full bg-primary px-4 py-2 text-sm font-bold text-white shadow-[0_4px_14px_rgba(255,107,53,0.35)] transition hover:bg-primary-deep"
                 >
-                  Daftar Gratis
+                  {dict.nav.register}
                 </Link>
               </>
             )}
           </div>
 
-          <button
-            className="ml-auto rounded-xl p-2 text-ink md:hidden"
-            onClick={() => setMenuOpen((v) => !v)}
-            aria-label={menuOpen ? "Tutup menu" : "Buka menu"}
-            aria-expanded={menuOpen}
-          >
-            {menuOpen ? <X size={22} /> : <Menu size={22} />}
-          </button>
+          <div className="ml-auto flex items-center gap-2 md:hidden">
+            {localeToggle}
+            <button
+              className="rounded-xl p-2 text-ink"
+              onClick={() => setMenuOpen((v) => !v)}
+              aria-label={menuOpen ? dict.nav.closeMenu : dict.nav.openMenu}
+              aria-expanded={menuOpen}
+            >
+              {menuOpen ? <X size={22} /> : <Menu size={22} />}
+            </button>
+          </div>
         </div>
 
         {/* Mobile panel */}
@@ -162,8 +202,8 @@ export function SiteHeader() {
                   type="search"
                   value={query}
                   onChange={(e) => setQuery(e.target.value)}
-                  placeholder="Cari topik parenting…"
-                  aria-label="Cari konten"
+                  placeholder={dict.nav.searchPlaceholderMobile}
+                  aria-label={dict.nav.searchAria}
                   className="w-full bg-transparent text-sm outline-none"
                 />
               </label>
@@ -174,7 +214,8 @@ export function SiteHeader() {
                   key={item.href}
                   href={item.href}
                   onClick={() => setMenuOpen(false)}
-                  className="rounded-2xl border border-sand bg-white px-4 py-3 text-sm font-semibold text-secondary"
+                  aria-current={isActive(item.href) ? "page" : undefined}
+                  className={mobileLink(isActive(item.href))}
                 >
                   {item.label}
                 </Link>
@@ -183,8 +224,8 @@ export function SiteHeader() {
             <div className="mt-3 flex gap-2">
               {user ? (
                 <>
-                  <Link href="/profil" onClick={() => setMenuOpen(false)} className="flex flex-1 items-center justify-center gap-2 rounded-2xl bg-secondary px-4 py-3 text-sm font-bold text-white">
-                    <User size={16} /> Profil
+                  <Link href="/profile" onClick={() => setMenuOpen(false)} className="flex flex-1 items-center justify-center gap-2 rounded-2xl bg-secondary px-4 py-3 text-sm font-bold text-white">
+                    <User size={16} /> {dict.nav.profile}
                   </Link>
                   <button
                     onClick={() => {
@@ -194,16 +235,16 @@ export function SiteHeader() {
                     }}
                     className="flex flex-1 items-center justify-center gap-2 rounded-2xl border border-sand bg-white px-4 py-3 text-sm font-bold text-red-600"
                   >
-                    <LogOut size={16} /> Keluar
+                    <LogOut size={16} /> {dict.nav.logout}
                   </button>
                 </>
               ) : (
                 <>
-                  <Link href="/masuk" onClick={() => setMenuOpen(false)} className="flex flex-1 items-center justify-center rounded-2xl border border-secondary px-4 py-3 text-sm font-bold text-secondary">
-                    Masuk
+                  <Link href="/login" onClick={() => setMenuOpen(false)} className="flex flex-1 items-center justify-center rounded-2xl border border-secondary px-4 py-3 text-sm font-bold text-secondary">
+                    {dict.nav.login}
                   </Link>
-                  <Link href="/daftar" onClick={() => setMenuOpen(false)} className="flex flex-1 items-center justify-center rounded-2xl bg-primary px-4 py-3 text-sm font-bold text-white">
-                    Daftar Gratis
+                  <Link href="/register" onClick={() => setMenuOpen(false)} className="flex flex-1 items-center justify-center rounded-2xl bg-primary px-4 py-3 text-sm font-bold text-white">
+                    {dict.nav.register}
                   </Link>
                 </>
               )}

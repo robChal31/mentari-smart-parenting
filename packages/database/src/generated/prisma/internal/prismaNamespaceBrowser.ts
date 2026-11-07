@@ -17,8 +17,8 @@
 
 import * as runtime from "@prisma/client/runtime/index-browser"
 
-export type * from '../models.ts'
-export type * from './prismaNamespace.ts'
+export type * from '../models'
+export type * from './prismaNamespace'
 
 export const Decimal = runtime.Decimal
 
@@ -74,8 +74,7 @@ export const ModelName = {
   Badge: 'Badge',
   UserBadge: 'UserBadge',
   ContentView: 'ContentView',
-  ProductClick: 'ProductClick',
-  Notification: 'Notification'
+  ProductClick: 'ProductClick'
 } as const
 
 export type ModelName = (typeof ModelName)[keyof typeof ModelName]
@@ -259,7 +258,8 @@ export const ProductScalarFieldEnum = {
   isFeatured: 'isFeatured',
   sortOrder: 'sortOrder',
   createdAt: 'createdAt',
-  updatedAt: 'updatedAt'
+  updatedAt: 'updatedAt',
+  deletedAt: 'deletedAt'
 } as const
 
 export type ProductScalarFieldEnum = (typeof ProductScalarFieldEnum)[keyof typeof ProductScalarFieldEnum]
@@ -419,20 +419,6 @@ export const ProductClickScalarFieldEnum = {
 } as const
 
 export type ProductClickScalarFieldEnum = (typeof ProductClickScalarFieldEnum)[keyof typeof ProductClickScalarFieldEnum]
-
-
-export const NotificationScalarFieldEnum = {
-  id: 'id',
-  userId: 'userId',
-  title: 'title',
-  body: 'body',
-  type: 'type',
-  isRead: 'isRead',
-  actionUrl: 'actionUrl',
-  createdAt: 'createdAt'
-} as const
-
-export type NotificationScalarFieldEnum = (typeof NotificationScalarFieldEnum)[keyof typeof NotificationScalarFieldEnum]
 
 
 export const SortOrder = {

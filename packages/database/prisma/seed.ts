@@ -8,7 +8,7 @@ import bcrypt from 'bcryptjs';
 import { prisma } from '../src/index';
 import {
   AGE_GROUPS, CATEGORIES, CONTENTS, PRODUCTS, MILESTONES, BADGES,
-  LEARNING_PATHS, THREADS, NOTIFICATIONS,
+  LEARNING_PATHS, THREADS,
 } from './seed-data';
 
 // Deterministic PRNG for reproducible analytics seed data
@@ -30,7 +30,6 @@ async function main() {
   // ---------- wipe (FK-safe order) ----------
   await prisma.childMilestone.deleteMany();
   await prisma.milestone.deleteMany();
-  await prisma.notification.deleteMany();
   await prisma.userBadge.deleteMany();
   await prisma.gamificationProfile.deleteMany();
   await prisma.bookmark.deleteMany();
@@ -359,12 +358,6 @@ async function main() {
     clickRows += 1;
   }
   console.log(`✓ ${viewRows} content views & ${clickRows} product clicks (30 days)`);
-
-  // ---------- notifications for demo user ----------
-  for (const n of NOTIFICATIONS) {
-    await prisma.notification.create({ data: { ...n, userId: demo.id } });
-  }
-  console.log(`✓ ${NOTIFICATIONS.length} notifications`);
 
   console.log('\n✅ Seed complete. Login demo: demo@mentari.id / mentari123 · admin: admin@mentari.id / mentari123');
 }

@@ -7,6 +7,8 @@ import {
 import { api } from "@/lib/api";
 import { renderContentBody } from "@/lib/content-body";
 import { formatDate, formatDuration, formatViews } from "@/lib/format";
+import { getDictionary } from "@/lib/i18n/get-dictionary";
+import { format } from "@/lib/i18n/format";
 import { ContentCard } from "@/components/content-card";
 import { RecommendationsPanel } from "@/components/recommendations-panel";
 import { BookmarkButton } from "@/components/bookmark-button";
@@ -20,8 +22,9 @@ interface PageProps {
 
 export async function generateMetadata({ params }: PageProps): Promise<Metadata> {
   const { slug } = await params;
+  const { dict } = await getDictionary();
   const content = await api.contentBySlug(slug);
-  if (!content) return { title: "Konten tidak ditemukan" };
+  if (!content) return { title: dict.contentDetail.notFound };
   const description = content.metaDescription ?? content.excerpt ?? undefined;
   return {
     title: content.metaTitle ?? content.title,
@@ -39,13 +42,14 @@ export async function generateMetadata({ params }: PageProps): Promise<Metadata>
 
 export default async function ContentDetailPage({ params }: PageProps) {
   const { slug } = await params;
+  const { locale, dict } = await getDictionary();
   const content = await api.contentBySlug(slug);
   if (!content) notFound();
 
   const sidebarProducts = content.recommendedProducts.slice(0, 3);
   const bottomProducts = content.recommendedProducts.slice(3);
   const inlineProduct = content.recommendedProducts.length >= 3 ? content.recommendedProducts[0] : null;
-  const duration = formatDuration(content.videoDuration);
+  const duration = formatDuration(content.videoDuration, dict.time);
 
   const jsonLd = {
     "@context": "https://schema.org",
@@ -67,9 +71,9 @@ export default async function ContentDetailPage({ params }: PageProps) {
 
       {/* Breadcrumb */}
       <nav aria-label="Breadcrumb" className="flex items-center gap-1 text-[11px] font-semibold text-muted">
-        <Link href="/" className="transition hover:text-primary">Beranda</Link>
+        <Link href="/" className="transition hover:text-primary">{dict.contentDetail.home}</Link>
         <ChevronRight size={12} aria-hidden />
-        <Link href="/contents" className="transition hover:text-primary">Konten</Link>
+        <Link href="/contents" className="transition hover:text-primary">{dict.contentDetail.contents}</Link>
         {content.categories[0] && (
           <>
             <ChevronRight size={12} aria-hidden />
@@ -117,14 +121,14 @@ export default async function ContentDetailPage({ params }: PageProps) {
                 {(content.authorName ?? "M").split(" ").filter(Boolean).slice(0, 2).map((w) => w[0]).join("").toUpperCase()}
               </span>
               <span>
-                <span className="block text-sm font-bold text-ink">{content.authorName ?? "Tim Mentari"}</span>
-                <span className="block text-[11px] text-muted">{content.authorTitle ?? "Tim Editorial Mentari"}</span>
+                <span className="block text-sm font-bold text-ink">{content.authorName ?? dict.contentDetail.byline}</span>
+                <span className="block text-[11px] text-muted">{content.authorTitle ?? dict.contentDetail.editorialTeam}</span>
               </span>
             </div>
             <div className="flex flex-wrap items-center gap-3 text-[11px] font-medium text-muted">
-              <span className="inline-flex items-center gap-1"><CalendarDays size={12} aria-hidden />{formatDate(content.publishedAt)}</span>
-              {content.readTime && <span className="inline-flex items-center gap-1"><Clock size={12} aria-hidden />{content.readTime} mnt baca</span>}
-              <span className="inline-flex items-center gap-1"><Eye size={12} aria-hidden />{formatViews(content.viewCount)} dilihat</span>
+              <span className="inline-flex items-center gap-1"><CalendarDays size={12} aria-hidden />{formatDate(content.publishedAt, locale)}</span>
+              {content.readTime && <span className="inline-flex items-center gap-1"><Clock size={12} aria-hidden />{format(dict.contentDetail.minutesRead, { minutes: content.readTime })}</span>}
+              <span className="inline-flex items-center gap-1"><Eye size={12} aria-hidden />{format(dict.contentDetail.viewsSeen, { views: formatViews(content.viewCount, dict.time) })}</span>
               {duration && <span className="inline-flex items-center gap-1"><Clock size={12} aria-hidden />{duration}</span>}
             </div>
             <div className="ml-auto">
@@ -163,8 +167,7 @@ export default async function ContentDetailPage({ params }: PageProps) {
                 source="INLINE"
                 contentId={content.id}
                 compact
-                title="Rekomendasi dari Mentari"
-                subtitle="Produk yang relevan dengan isi artikel ini"
+                subtitle={dict.recommendations.subtitleInline}
               />
             </div>
           )}
@@ -176,7 +179,7 @@ export default async function ContentDetailPage({ params }: PageProps) {
               {content.tags.map((tag) => (
                 <Link
                   key={tag}
-                  href={`/cari?q=${encodeURIComponent(tag)}`}
+                  href={`/search?q=${encodeURIComponent(tag)}`}
                   className="rounded-full border border-sand bg-white px-3 py-1.5 text-[11px] font-semibold text-muted transition hover:border-primary/40 hover:text-primary"
                 >
                   #{tag}
@@ -200,12 +203,12 @@ export default async function ContentDetailPage({ params }: PageProps) {
               </span>
               <div>
                 <p className="inline-flex items-center gap-1.5 text-[10px] font-extrabold uppercase tracking-[0.16em] text-accent-deep">
-                  <BadgeCheck size={12} aria-hidden /> Penulis Terverifikasi
+                  <BadgeCheck size={12} aria-hidden /> {dict.contentDetail.verifiedAuthor}
                 </p>
                 <p className="mt-1 font-heading text-base font-bold text-secondary">{content.authorName}</p>
                 <p className="text-xs text-muted">{content.authorTitle}</p>
                 <p className="mt-2 text-xs leading-5 text-muted">
-                  Seluruh konten MentariSmartParent ditulis atau ditinjau oleh tenaga ahli berlisensi dan diperbarui berkala sesuai panduan terbaru.
+                  {dict.contentDetail.authorBoxText}
                 </p>
               </div>
             </div>
@@ -220,18 +223,16 @@ export default async function ContentDetailPage({ params }: PageProps) {
                 products={sidebarProducts}
                 source="SIDEBAR"
                 contentId={content.id}
-                title="Rekomendasi dari Mentari"
-                subtitle="Dipilih khusus untuk konten ini — buku, kelas, dan asesmen Mentari Group"
+                subtitle={dict.recommendations.subtitleContent}
               />
             )}
             <div className="rounded-3xl border border-sand bg-white p-5">
-              <p className="font-heading text-sm font-extrabold text-secondary">Tentang MentariSmartParent</p>
+              <p className="font-heading text-sm font-extrabold text-secondary">{dict.contentDetail.aboutTitle}</p>
               <p className="mt-1.5 text-xs leading-5 text-muted">
-                Platform parenting untuk keluarga Indonesia — konten berbasis bukti, rekomendasi produk Mentari Group,
-                dan komunitas orang tua yang hangat.
+                {dict.contentDetail.aboutText}
               </p>
-              <Link href="/tentang" className="mt-3 inline-flex items-center gap-1 text-[11px] font-bold text-primary hover:underline">
-                Kenali kami lebih dekat →
+              <Link href="/about" className="mt-3 inline-flex items-center gap-1 text-[11px] font-bold text-primary hover:underline">
+                {dict.contentDetail.knowMore}
               </Link>
             </div>
           </div>
@@ -241,7 +242,7 @@ export default async function ContentDetailPage({ params }: PageProps) {
       {/* ===== Related contents ===== */}
       {content.relatedContents.length > 0 && (
         <section className="mt-12 border-t border-sand pt-8" aria-labelledby="related-heading">
-          <h2 id="related-heading" className="font-heading text-xl font-extrabold text-secondary">Baca juga</h2>
+          <h2 id="related-heading" className="font-heading text-xl font-extrabold text-secondary">{dict.contentDetail.readAlso}</h2>
           <div className="mt-4 grid grid-cols-1 gap-5 sm:grid-cols-2 lg:grid-cols-4">
             {content.relatedContents.map((related) => <ContentCard key={related.id} content={related} />)}
           </div>

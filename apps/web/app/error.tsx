@@ -2,8 +2,11 @@
 
 import { useEffect } from "react";
 import { TriangleAlert } from "lucide-react";
+import { useDictionary } from "@/components/i18n-provider";
 
 export default function GlobalError({ error, reset }: { error: Error & { digest?: string }; reset: () => void }) {
+  const dict = useDictionary();
+
   useEffect(() => {
     console.error("[mentari] route error", error);
   }, [error]);
@@ -13,15 +16,13 @@ export default function GlobalError({ error, reset }: { error: Error & { digest?
       <span className="grid h-16 w-16 place-items-center rounded-3xl bg-primary-soft text-primary">
         <TriangleAlert size={30} aria-hidden />
       </span>
-      <h1 className="mt-6 font-heading text-2xl font-extrabold text-secondary">Ups, ada yang tidak beres</h1>
-      <p className="mt-2 text-sm leading-6 text-muted">
-        Kami gagal memuat halaman ini. Coba muat ulang — kalau masih gagal, tim Mentari sedang kami minta cek.
-      </p>
+      <h1 className="mt-6 font-heading text-2xl font-extrabold text-secondary">{dict.errors.errorTitle}</h1>
+      <p className="mt-2 text-sm leading-6 text-muted">{dict.errors.errorSub}</p>
       <button
         onClick={reset}
         className="mt-6 rounded-2xl bg-primary px-6 py-3 text-sm font-bold text-white transition hover:bg-primary-deep"
       >
-        Muat Ulang Halaman
+        {dict.errors.retry}
       </button>
     </div>
   );

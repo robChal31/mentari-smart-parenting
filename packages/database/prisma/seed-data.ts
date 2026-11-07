@@ -966,8 +966,3 @@ export const THREADS: Array<{
   },
 ];
 
-export const NOTIFICATIONS = [
-  { title: 'Konten baru: Panduan MPASI 6 Bulan', body: 'Artikel terbaru sesuai usia anak Anda sudah terbit.', type: 'NEW_CONTENT', actionUrl: '/content/panduan-mpasi-6-bulan' },
-  { title: 'Badge baru: Langkah Pertama! 🎉', body: 'Anda mendapatkan badge Langkah Pertama (+10 poin).', type: 'BADGE_EARNED', actionUrl: '/profile' },
-  { title: 'Jadwal imunisasi bayi Anda', body: 'Jangan lupa, jadwal imunisasi 9 bulan sudah dekat.', type: 'MILESTONE_REMINDER', actionUrl: '/profile/children' },
-];

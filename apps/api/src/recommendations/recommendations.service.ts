@@ -20,12 +20,14 @@ export class RecommendationsService {
       orderBy: [{ sortOrder: 'asc' }, { relevanceScore: 'desc' }],
     });
 
-    const results: RecommendationDto[] = manual.map((row) => ({
-      product: serializeProduct(row.product),
-      placement: row.placement as RecommendationDto['placement'],
-      relevanceScore: row.relevanceScore,
-      source: 'manual',
-    }));
+    const results: RecommendationDto[] = manual
+      .filter((row) => row.product && row.product.isActive !== false && !row.product.deletedAt)
+      .map((row) => ({
+        product: serializeProduct(row.product),
+        placement: row.placement as RecommendationDto['placement'],
+        relevanceScore: row.relevanceScore,
+        source: 'manual',
+      }));
 
     const needed = limit - results.length;
     if (needed <= 0) return results.slice(0, limit);
@@ -42,6 +44,7 @@ export class RecommendationsService {
       const matches = await prisma.product.findMany({
         where: {
           isActive: true,
+          deletedAt: null,
           id: { notIn: [...existingIds] },
           ageGroups: { some: { ageGroupId: { in: ageGroupIds } } },
         },
@@ -63,7 +66,7 @@ export class RecommendationsService {
     const remaining = limit - results.length;
     if (remaining > 0) {
       const featured = await prisma.product.findMany({
-        where: { isActive: true, isFeatured: true, id: { notIn: [...existingIds] } },
+        where: { isActive: true, deletedAt: null, isFeatured: true, id: { notIn: [...existingIds] } },
         include: { ageGroups: { include: { ageGroup: true } } },
         orderBy: [{ sortOrder: 'asc' }],
         take: remaining,
@@ -103,13 +106,13 @@ export class RecommendationsService {
 
     const products = targetGroupIds.size
       ? await prisma.product.findMany({
-          where: { isActive: true, ageGroups: { some: { ageGroupId: { in: [...targetGroupIds] } } } },
+          where: { isActive: true, deletedAt: null, ageGroups: { some: { ageGroupId: { in: [...targetGroupIds] } } } },
           include: { ageGroups: { include: { ageGroup: true } } },
           orderBy: [{ isFeatured: 'desc' }, { sortOrder: 'asc' }],
           take: limit,
         })
       : await prisma.product.findMany({
-          where: { isActive: true, isFeatured: true },
+          where: { isActive: true, deletedAt: null, isFeatured: true },
           include: { ageGroups: { include: { ageGroup: true } } },
           orderBy: [{ sortOrder: 'asc' }],
           take: limit,

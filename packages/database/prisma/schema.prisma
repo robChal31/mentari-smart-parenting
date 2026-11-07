@@ -41,7 +41,6 @@ model User {
   communityThreads CommunityThread[]
   communityComments CommunityComment[]
   gamificationProfile GamificationProfile?
-  notifications   Notification[]
 
   @@map("users")
 }
@@ -280,6 +279,7 @@ model Product {
   sortOrder       Int           @default(0) @map("sort_order")
   createdAt       DateTime      @default(now()) @map("created_at")
   updatedAt       DateTime      @updatedAt @map("updated_at")
+  deletedAt       DateTime?     @map("deleted_at")
 
   ageGroups       ProductAgeGroup[]
   contents        ContentProduct[]
@@ -520,33 +520,4 @@ model ProductClick {
 
   @@index([productId, createdAt])
   @@map("product_clicks")
-}
-
-// ============================================
-// NOTIFICATIONS
-// ============================================
-
-model Notification {
-  id          String    @id @default(uuid())
-  userId      String    @map("user_id")
-  title       String
-  body        String    @db.Text
-  type        NotificationType
-  isRead      Boolean   @default(false) @map("is_read")
-  actionUrl   String?   @map("action_url")
-  createdAt   DateTime  @default(now()) @map("created_at")
-
-  user        User      @relation(fields: [userId], references: [id], onDelete: Cascade)
-
-  @@index([userId, isRead, createdAt])
-  @@map("notifications")
-}
-
-enum NotificationType {
-  NEW_CONTENT
-  MILESTONE_REMINDER
-  BADGE_EARNED
-  COMMUNITY_REPLY
-  PRODUCT_RECOMMENDATION
-  SYSTEM
 }

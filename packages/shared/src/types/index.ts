@@ -70,6 +70,8 @@ export interface ProductDto {
   externalUrl?: string | null;
   ctaText?: string | null;
   isFeatured: boolean;
+  isActive?: boolean;
+  deletedAt?: string | null;
   sortOrder: number;
   ageGroups?: AgeGroupDto[];
 }
