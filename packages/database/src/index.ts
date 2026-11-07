@@ -27,20 +27,42 @@ function resolveSqliteUrl(url: string): string {
   return `file:${absolute}`;
 }
 
+/** Wrap client construction to print an actionable message on provider mismatch. */
+function withProviderHint(build: () => PrismaClient): PrismaClient {
+  try {
+    return build();
+  } catch (error) {
+    const message = error instanceof Error ? error.message : String(error);
+    if (/not compatible with the provider/i.test(message)) {
+      throw new Error([
+        message,
+        '',
+        'Hint: the committed Prisma client is generated for ONE provider (SQLite by default).',
+        'Regenerate it for your target database, then rebuild & restart:',
+        '  • local dev (SQLite):  pnpm --filter=@mentari/database db:generate',
+        '  • Supabase (Postgres): pnpm --filter=@mentari/database db:generate:postgres',
+        '  • MySQL:               pnpm --filter=@mentari/database db:generate:mysql',
+        '  then:                  pnpm --filter=@mentari/database build',
+      ].join('\n'));
+    }
+    throw error;
+  }
+}
+
 export function createPrismaClient(
   databaseUrl: string = process.env.DATABASE_URL ?? 'file:./dev.db',
 ): PrismaClient {
   if (databaseUrl.startsWith('file:') || databaseUrl.startsWith('libsql:')) {
     const adapter = new PrismaLibSql({ url: resolveSqliteUrl(databaseUrl) });
-    return new PrismaClient({ adapter });
+    return withProviderHint(() => new PrismaClient({ adapter }));
   }
   if (databaseUrl.startsWith('mysql://')) {
     const adapter = new PrismaMariaDb(databaseUrl);
-    return new PrismaClient({ adapter });
+    return withProviderHint(() => new PrismaClient({ adapter }));
   }
   if (databaseUrl.startsWith('postgres://') || databaseUrl.startsWith('postgresql://')) {
     const adapter = new PrismaPg({ connectionString: databaseUrl });
-    return new PrismaClient({ adapter });
+    return withProviderHint(() => new PrismaClient({ adapter }));
   }
   throw new Error(
     `Unsupported DATABASE_URL scheme. Use file:./dev.db (sqlite), mysql://user:pass@host:3306/db, or postgresql://… (Supabase). Got: ${databaseUrl}`,

@@ -38,9 +38,22 @@ const positional = args.filter((a) => !a.startsWith('--'));
 const schemaPath = positional[0] ?? 'prisma/schema.sqlite.prisma';
 const schemaAbs = path.resolve(root, schemaPath);
 const url = positional[1] ?? process.env.SUPABASE_DATABASE_URL ?? process.env.DATABASE_URL ?? 'file:./dev.db';
+// Refuse the .env.example placeholder — otherwise the WASM engine dies with an
+// opaque "External error id#0" and (worse) would print your real password into
+// terminal logs if we logged the raw URL.
+if (url.includes('<') || url.includes('>')) {
+  console.error([
+    'ERROR: the database URL still contains .env.example placeholders.',
+    'Edit the ROOT .env and use a real connection string, e.g.',
+    '  SUPABASE_DATABASE_URL="postgresql://postgres:<your-db-password>@db.<your-project-ref>.supabase.co:5432/postgres"',
+    'Never run with the template copied as-is.',
+  ].join('\n'));
+  process.exit(1);
+}
+const maskedUrl = url.replace(/(:\/\/[^:/\s]+:)[^@/\s]*(@)/, '$1***$2');
 const content = readFileSync(schemaAbs, 'utf8');
 
-console.log(`Pushing ${schemaPath} -> ${url}`);
+console.log(`Pushing ${schemaPath} -> ${maskedUrl}`);
 
 function makeAdapter(rawUrl) {
   if (rawUrl.startsWith('mysql://')) return bindMigrationAwareSqlAdapterFactory(new PrismaMariaDb(rawUrl));
