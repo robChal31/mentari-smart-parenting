@@ -246,7 +246,7 @@ export class AdminService {
         price: input.price ?? null,
         currency: input.currency ?? 'IDR',
         thumbnailUrl: input.thumbnailUrl ?? null,
-        images: input.images ? JSON.stringify(input.images) : null,
+        images: input.images ? JSON.stringify(input.images) : undefined,
         externalUrl: input.externalUrl ?? null,
         ctaText: input.ctaText ?? null,
         isFeatured: input.isFeatured ?? false,
@@ -277,7 +277,7 @@ export class AdminService {
     if (!existing) throw new NotFoundException({ code: 'NOT_FOUND', message: 'Produk tidak ditemukan.' });
     const { ageGroupSlugs, images, price, ...rest } = input;
     const data: Record<string, unknown> = { ...rest };
-    if (images !== undefined) data.images = images ? JSON.stringify(images) : null;
+    if (images !== undefined) data.images = images ? JSON.stringify(images) : '[]';
     if (price !== undefined) data.price = price ?? null;
     await prisma.product.update({ where: { id }, data });
     if (ageGroupSlugs !== undefined) await this.syncProductAgeGroups(id, ageGroupSlugs);
