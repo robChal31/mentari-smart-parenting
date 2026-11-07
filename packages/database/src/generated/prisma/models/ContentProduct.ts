@@ -41,7 +41,7 @@ export type ContentProductMinAggregateOutputType = {
   contentId: string | null
   productId: string | null
   relevanceScore: number | null
-  placement: string | null
+  placement: $Enums.RecommendationPlacement | null
   sortOrder: number | null
   createdAt: Date | null
 }
@@ -51,7 +51,7 @@ export type ContentProductMaxAggregateOutputType = {
   contentId: string | null
   productId: string | null
   relevanceScore: number | null
-  placement: string | null
+  placement: $Enums.RecommendationPlacement | null
   sortOrder: number | null
   createdAt: Date | null
 }
@@ -200,7 +200,7 @@ export type ContentProductGroupByOutputType = {
   contentId: string
   productId: string
   relevanceScore: number
-  placement: string
+  placement: $Enums.RecommendationPlacement
   sortOrder: number
   createdAt: Date
   _count: ContentProductCountAggregateOutputType | null
@@ -233,7 +233,7 @@ export type ContentProductWhereInput = {
   contentId?: Prisma.StringFilter<"ContentProduct"> | string
   productId?: Prisma.StringFilter<"ContentProduct"> | string
   relevanceScore?: Prisma.FloatFilter<"ContentProduct"> | number
-  placement?: Prisma.StringFilter<"ContentProduct"> | string
+  placement?: Prisma.EnumRecommendationPlacementFilter<"ContentProduct"> | $Enums.RecommendationPlacement
   sortOrder?: Prisma.IntFilter<"ContentProduct"> | number
   createdAt?: Prisma.DateTimeFilter<"ContentProduct"> | Date | string
   content?: Prisma.XOR<Prisma.ContentScalarRelationFilter, Prisma.ContentWhereInput>
@@ -261,7 +261,7 @@ export type ContentProductWhereUniqueInput = Prisma.AtLeast<{
   contentId?: Prisma.StringFilter<"ContentProduct"> | string
   productId?: Prisma.StringFilter<"ContentProduct"> | string
   relevanceScore?: Prisma.FloatFilter<"ContentProduct"> | number
-  placement?: Prisma.StringFilter<"ContentProduct"> | string
+  placement?: Prisma.EnumRecommendationPlacementFilter<"ContentProduct"> | $Enums.RecommendationPlacement
   sortOrder?: Prisma.IntFilter<"ContentProduct"> | number
   createdAt?: Prisma.DateTimeFilter<"ContentProduct"> | Date | string
   content?: Prisma.XOR<Prisma.ContentScalarRelationFilter, Prisma.ContentWhereInput>
@@ -291,7 +291,7 @@ export type ContentProductScalarWhereWithAggregatesInput = {
   contentId?: Prisma.StringWithAggregatesFilter<"ContentProduct"> | string
   productId?: Prisma.StringWithAggregatesFilter<"ContentProduct"> | string
   relevanceScore?: Prisma.FloatWithAggregatesFilter<"ContentProduct"> | number
-  placement?: Prisma.StringWithAggregatesFilter<"ContentProduct"> | string
+  placement?: Prisma.EnumRecommendationPlacementWithAggregatesFilter<"ContentProduct"> | $Enums.RecommendationPlacement
   sortOrder?: Prisma.IntWithAggregatesFilter<"ContentProduct"> | number
   createdAt?: Prisma.DateTimeWithAggregatesFilter<"ContentProduct"> | Date | string
 }
@@ -299,7 +299,7 @@ export type ContentProductScalarWhereWithAggregatesInput = {
 export type ContentProductCreateInput = {
   id?: string
   relevanceScore?: number
-  placement?: string
+  placement?: $Enums.RecommendationPlacement
   sortOrder?: number
   createdAt?: Date | string
   content: Prisma.ContentCreateNestedOneWithoutProductsInput
@@ -311,7 +311,7 @@ export type ContentProductUncheckedCreateInput = {
   contentId: string
   productId: string
   relevanceScore?: number
-  placement?: string
+  placement?: $Enums.RecommendationPlacement
   sortOrder?: number
   createdAt?: Date | string
 }
@@ -319,7 +319,7 @@ export type ContentProductUncheckedCreateInput = {
 export type ContentProductUpdateInput = {
   id?: Prisma.StringFieldUpdateOperationsInput | string
   relevanceScore?: Prisma.FloatFieldUpdateOperationsInput | number
-  placement?: Prisma.StringFieldUpdateOperationsInput | string
+  placement?: Prisma.EnumRecommendationPlacementFieldUpdateOperationsInput | $Enums.RecommendationPlacement
   sortOrder?: Prisma.IntFieldUpdateOperationsInput | number
   createdAt?: Prisma.DateTimeFieldUpdateOperationsInput | Date | string
   content?: Prisma.ContentUpdateOneRequiredWithoutProductsNestedInput
@@ -331,7 +331,7 @@ export type ContentProductUncheckedUpdateInput = {
   contentId?: Prisma.StringFieldUpdateOperationsInput | string
   productId?: Prisma.StringFieldUpdateOperationsInput | string
   relevanceScore?: Prisma.FloatFieldUpdateOperationsInput | number
-  placement?: Prisma.StringFieldUpdateOperationsInput | string
+  placement?: Prisma.EnumRecommendationPlacementFieldUpdateOperationsInput | $Enums.RecommendationPlacement
   sortOrder?: Prisma.IntFieldUpdateOperationsInput | number
   createdAt?: Prisma.DateTimeFieldUpdateOperationsInput | Date | string
 }
@@ -341,7 +341,7 @@ export type ContentProductCreateManyInput = {
   contentId: string
   productId: string
   relevanceScore?: number
-  placement?: string
+  placement?: $Enums.RecommendationPlacement
   sortOrder?: number
   createdAt?: Date | string
 }
@@ -349,7 +349,7 @@ export type ContentProductCreateManyInput = {
 export type ContentProductUpdateManyMutationInput = {
   id?: Prisma.StringFieldUpdateOperationsInput | string
   relevanceScore?: Prisma.FloatFieldUpdateOperationsInput | number
-  placement?: Prisma.StringFieldUpdateOperationsInput | string
+  placement?: Prisma.EnumRecommendationPlacementFieldUpdateOperationsInput | $Enums.RecommendationPlacement
   sortOrder?: Prisma.IntFieldUpdateOperationsInput | number
   createdAt?: Prisma.DateTimeFieldUpdateOperationsInput | Date | string
 }
@@ -359,7 +359,7 @@ export type ContentProductUncheckedUpdateManyInput = {
   contentId?: Prisma.StringFieldUpdateOperationsInput | string
   productId?: Prisma.StringFieldUpdateOperationsInput | string
   relevanceScore?: Prisma.FloatFieldUpdateOperationsInput | number
-  placement?: Prisma.StringFieldUpdateOperationsInput | string
+  placement?: Prisma.EnumRecommendationPlacementFieldUpdateOperationsInput | $Enums.RecommendationPlacement
   sortOrder?: Prisma.IntFieldUpdateOperationsInput | number
   createdAt?: Prisma.DateTimeFieldUpdateOperationsInput | Date | string
 }
@@ -511,10 +511,14 @@ export type FloatFieldUpdateOperationsInput = {
   divide?: number
 }
 
+export type EnumRecommendationPlacementFieldUpdateOperationsInput = {
+  set?: $Enums.RecommendationPlacement
+}
+
 export type ContentProductCreateWithoutContentInput = {
   id?: string
   relevanceScore?: number
-  placement?: string
+  placement?: $Enums.RecommendationPlacement
   sortOrder?: number
   createdAt?: Date | string
   product: Prisma.ProductCreateNestedOneWithoutContentsInput
@@ -524,7 +528,7 @@ export type ContentProductUncheckedCreateWithoutContentInput = {
   id?: string
   productId: string
   relevanceScore?: number
-  placement?: string
+  placement?: $Enums.RecommendationPlacement
   sortOrder?: number
   createdAt?: Date | string
 }
@@ -536,6 +540,7 @@ export type ContentProductCreateOrConnectWithoutContentInput = {
 
 export type ContentProductCreateManyContentInputEnvelope = {
   data: Prisma.ContentProductCreateManyContentInput | Prisma.ContentProductCreateManyContentInput[]
+  skipDuplicates?: boolean
 }
 
 export type ContentProductUpsertWithWhereUniqueWithoutContentInput = {
@@ -562,7 +567,7 @@ export type ContentProductScalarWhereInput = {
   contentId?: Prisma.StringFilter<"ContentProduct"> | string
   productId?: Prisma.StringFilter<"ContentProduct"> | string
   relevanceScore?: Prisma.FloatFilter<"ContentProduct"> | number
-  placement?: Prisma.StringFilter<"ContentProduct"> | string
+  placement?: Prisma.EnumRecommendationPlacementFilter<"ContentProduct"> | $Enums.RecommendationPlacement
   sortOrder?: Prisma.IntFilter<"ContentProduct"> | number
   createdAt?: Prisma.DateTimeFilter<"ContentProduct"> | Date | string
 }
@@ -570,7 +575,7 @@ export type ContentProductScalarWhereInput = {
 export type ContentProductCreateWithoutProductInput = {
   id?: string
   relevanceScore?: number
-  placement?: string
+  placement?: $Enums.RecommendationPlacement
   sortOrder?: number
   createdAt?: Date | string
   content: Prisma.ContentCreateNestedOneWithoutProductsInput
@@ -580,7 +585,7 @@ export type ContentProductUncheckedCreateWithoutProductInput = {
   id?: string
   contentId: string
   relevanceScore?: number
-  placement?: string
+  placement?: $Enums.RecommendationPlacement
   sortOrder?: number
   createdAt?: Date | string
 }
@@ -592,6 +597,7 @@ export type ContentProductCreateOrConnectWithoutProductInput = {
 
 export type ContentProductCreateManyProductInputEnvelope = {
   data: Prisma.ContentProductCreateManyProductInput | Prisma.ContentProductCreateManyProductInput[]
+  skipDuplicates?: boolean
 }
 
 export type ContentProductUpsertWithWhereUniqueWithoutProductInput = {
@@ -614,7 +620,7 @@ export type ContentProductCreateManyContentInput = {
   id?: string
   productId: string
   relevanceScore?: number
-  placement?: string
+  placement?: $Enums.RecommendationPlacement
   sortOrder?: number
   createdAt?: Date | string
 }
@@ -622,7 +628,7 @@ export type ContentProductCreateManyContentInput = {
 export type ContentProductUpdateWithoutContentInput = {
   id?: Prisma.StringFieldUpdateOperationsInput | string
   relevanceScore?: Prisma.FloatFieldUpdateOperationsInput | number
-  placement?: Prisma.StringFieldUpdateOperationsInput | string
+  placement?: Prisma.EnumRecommendationPlacementFieldUpdateOperationsInput | $Enums.RecommendationPlacement
   sortOrder?: Prisma.IntFieldUpdateOperationsInput | number
   createdAt?: Prisma.DateTimeFieldUpdateOperationsInput | Date | string
   product?: Prisma.ProductUpdateOneRequiredWithoutContentsNestedInput
@@ -632,7 +638,7 @@ export type ContentProductUncheckedUpdateWithoutContentInput = {
   id?: Prisma.StringFieldUpdateOperationsInput | string
   productId?: Prisma.StringFieldUpdateOperationsInput | string
   relevanceScore?: Prisma.FloatFieldUpdateOperationsInput | number
-  placement?: Prisma.StringFieldUpdateOperationsInput | string
+  placement?: Prisma.EnumRecommendationPlacementFieldUpdateOperationsInput | $Enums.RecommendationPlacement
   sortOrder?: Prisma.IntFieldUpdateOperationsInput | number
   createdAt?: Prisma.DateTimeFieldUpdateOperationsInput | Date | string
 }
@@ -641,7 +647,7 @@ export type ContentProductUncheckedUpdateManyWithoutContentInput = {
   id?: Prisma.StringFieldUpdateOperationsInput | string
   productId?: Prisma.StringFieldUpdateOperationsInput | string
   relevanceScore?: Prisma.FloatFieldUpdateOperationsInput | number
-  placement?: Prisma.StringFieldUpdateOperationsInput | string
+  placement?: Prisma.EnumRecommendationPlacementFieldUpdateOperationsInput | $Enums.RecommendationPlacement
   sortOrder?: Prisma.IntFieldUpdateOperationsInput | number
   createdAt?: Prisma.DateTimeFieldUpdateOperationsInput | Date | string
 }
@@ -650,7 +656,7 @@ export type ContentProductCreateManyProductInput = {
   id?: string
   contentId: string
   relevanceScore?: number
-  placement?: string
+  placement?: $Enums.RecommendationPlacement
   sortOrder?: number
   createdAt?: Date | string
 }
@@ -658,7 +664,7 @@ export type ContentProductCreateManyProductInput = {
 export type ContentProductUpdateWithoutProductInput = {
   id?: Prisma.StringFieldUpdateOperationsInput | string
   relevanceScore?: Prisma.FloatFieldUpdateOperationsInput | number
-  placement?: Prisma.StringFieldUpdateOperationsInput | string
+  placement?: Prisma.EnumRecommendationPlacementFieldUpdateOperationsInput | $Enums.RecommendationPlacement
   sortOrder?: Prisma.IntFieldUpdateOperationsInput | number
   createdAt?: Prisma.DateTimeFieldUpdateOperationsInput | Date | string
   content?: Prisma.ContentUpdateOneRequiredWithoutProductsNestedInput
@@ -668,7 +674,7 @@ export type ContentProductUncheckedUpdateWithoutProductInput = {
   id?: Prisma.StringFieldUpdateOperationsInput | string
   contentId?: Prisma.StringFieldUpdateOperationsInput | string
   relevanceScore?: Prisma.FloatFieldUpdateOperationsInput | number
-  placement?: Prisma.StringFieldUpdateOperationsInput | string
+  placement?: Prisma.EnumRecommendationPlacementFieldUpdateOperationsInput | $Enums.RecommendationPlacement
   sortOrder?: Prisma.IntFieldUpdateOperationsInput | number
   createdAt?: Prisma.DateTimeFieldUpdateOperationsInput | Date | string
 }
@@ -677,7 +683,7 @@ export type ContentProductUncheckedUpdateManyWithoutProductInput = {
   id?: Prisma.StringFieldUpdateOperationsInput | string
   contentId?: Prisma.StringFieldUpdateOperationsInput | string
   relevanceScore?: Prisma.FloatFieldUpdateOperationsInput | number
-  placement?: Prisma.StringFieldUpdateOperationsInput | string
+  placement?: Prisma.EnumRecommendationPlacementFieldUpdateOperationsInput | $Enums.RecommendationPlacement
   sortOrder?: Prisma.IntFieldUpdateOperationsInput | number
   createdAt?: Prisma.DateTimeFieldUpdateOperationsInput | Date | string
 }
@@ -755,7 +761,7 @@ export type $ContentProductPayload<ExtArgs extends runtime.Types.Extensions.Inte
     contentId: string
     productId: string
     relevanceScore: number
-    placement: string
+    placement: $Enums.RecommendationPlacement
     sortOrder: number
     createdAt: Date
   }, ExtArgs["result"]["contentProduct"]>
@@ -1187,7 +1193,7 @@ export interface ContentProductFieldRefs {
   readonly contentId: Prisma.FieldRef<"ContentProduct", 'String'>
   readonly productId: Prisma.FieldRef<"ContentProduct", 'String'>
   readonly relevanceScore: Prisma.FieldRef<"ContentProduct", 'Float'>
-  readonly placement: Prisma.FieldRef<"ContentProduct", 'String'>
+  readonly placement: Prisma.FieldRef<"ContentProduct", 'RecommendationPlacement'>
   readonly sortOrder: Prisma.FieldRef<"ContentProduct", 'Int'>
   readonly createdAt: Prisma.FieldRef<"ContentProduct", 'DateTime'>
 }
@@ -1424,6 +1430,7 @@ export type ContentProductCreateManyArgs<ExtArgs extends runtime.Types.Extension
    * The data used to create many ContentProducts.
    */
   data: Prisma.ContentProductCreateManyInput | Prisma.ContentProductCreateManyInput[]
+  skipDuplicates?: boolean
 }
 
 /**
@@ -1442,6 +1449,7 @@ export type ContentProductCreateManyAndReturnArgs<ExtArgs extends runtime.Types.
    * The data used to create many ContentProducts.
    */
   data: Prisma.ContentProductCreateManyInput | Prisma.ContentProductCreateManyInput[]
+  skipDuplicates?: boolean
   /**
    * Choose, which related nodes to fetch as well
    */

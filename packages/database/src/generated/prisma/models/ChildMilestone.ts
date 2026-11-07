@@ -478,6 +478,7 @@ export type ChildMilestoneCreateOrConnectWithoutChildInput = {
 
 export type ChildMilestoneCreateManyChildInputEnvelope = {
   data: Prisma.ChildMilestoneCreateManyChildInput | Prisma.ChildMilestoneCreateManyChildInput[]
+  skipDuplicates?: boolean
 }
 
 export type ChildMilestoneUpsertWithWhereUniqueWithoutChildInput = {
@@ -534,6 +535,7 @@ export type ChildMilestoneCreateOrConnectWithoutMilestoneInput = {
 
 export type ChildMilestoneCreateManyMilestoneInputEnvelope = {
   data: Prisma.ChildMilestoneCreateManyMilestoneInput | Prisma.ChildMilestoneCreateManyMilestoneInput[]
+  skipDuplicates?: boolean
 }
 
 export type ChildMilestoneUpsertWithWhereUniqueWithoutMilestoneInput = {
@@ -1366,6 +1368,7 @@ export type ChildMilestoneCreateManyArgs<ExtArgs extends runtime.Types.Extension
    * The data used to create many ChildMilestones.
    */
   data: Prisma.ChildMilestoneCreateManyInput | Prisma.ChildMilestoneCreateManyInput[]
+  skipDuplicates?: boolean
 }
 
 /**
@@ -1384,6 +1387,7 @@ export type ChildMilestoneCreateManyAndReturnArgs<ExtArgs extends runtime.Types.
    * The data used to create many ChildMilestones.
    */
   data: Prisma.ChildMilestoneCreateManyInput | Prisma.ChildMilestoneCreateManyInput[]
+  skipDuplicates?: boolean
   /**
    * Choose, which related nodes to fetch as well
    */

@@ -1094,6 +1094,7 @@ export type TagCreateManyArgs<ExtArgs extends runtime.Types.Extensions.InternalA
    * The data used to create many Tags.
    */
   data: Prisma.TagCreateManyInput | Prisma.TagCreateManyInput[]
+  skipDuplicates?: boolean
 }
 
 /**
@@ -1112,6 +1113,7 @@ export type TagCreateManyAndReturnArgs<ExtArgs extends runtime.Types.Extensions.
    * The data used to create many Tags.
    */
   data: Prisma.TagCreateManyInput | Prisma.TagCreateManyInput[]
+  skipDuplicates?: boolean
 }
 
 /**

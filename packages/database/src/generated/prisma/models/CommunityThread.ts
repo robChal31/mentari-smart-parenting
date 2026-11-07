@@ -632,6 +632,7 @@ export type CommunityThreadCreateOrConnectWithoutUserInput = {
 
 export type CommunityThreadCreateManyUserInputEnvelope = {
   data: Prisma.CommunityThreadCreateManyUserInput | Prisma.CommunityThreadCreateManyUserInput[]
+  skipDuplicates?: boolean
 }
 
 export type CommunityThreadUpsertWithWhereUniqueWithoutUserInput = {
@@ -1601,6 +1602,7 @@ export type CommunityThreadCreateManyArgs<ExtArgs extends runtime.Types.Extensio
    * The data used to create many CommunityThreads.
    */
   data: Prisma.CommunityThreadCreateManyInput | Prisma.CommunityThreadCreateManyInput[]
+  skipDuplicates?: boolean
 }
 
 /**
@@ -1619,6 +1621,7 @@ export type CommunityThreadCreateManyAndReturnArgs<ExtArgs extends runtime.Types
    * The data used to create many CommunityThreads.
    */
   data: Prisma.CommunityThreadCreateManyInput | Prisma.CommunityThreadCreateManyInput[]
+  skipDuplicates?: boolean
   /**
    * Choose, which related nodes to fetch as well
    */

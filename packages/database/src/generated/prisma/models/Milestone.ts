@@ -39,7 +39,7 @@ export type MilestoneMinAggregateOutputType = {
   title: string | null
   description: string | null
   ageGroupId: string | null
-  category: string | null
+  category: $Enums.MilestoneCategory | null
   sortOrder: number | null
   createdAt: Date | null
 }
@@ -49,7 +49,7 @@ export type MilestoneMaxAggregateOutputType = {
   title: string | null
   description: string | null
   ageGroupId: string | null
-  category: string | null
+  category: $Enums.MilestoneCategory | null
   sortOrder: number | null
   createdAt: Date | null
 }
@@ -196,7 +196,7 @@ export type MilestoneGroupByOutputType = {
   title: string
   description: string | null
   ageGroupId: string
-  category: string
+  category: $Enums.MilestoneCategory
   sortOrder: number
   createdAt: Date
   _count: MilestoneCountAggregateOutputType | null
@@ -229,7 +229,7 @@ export type MilestoneWhereInput = {
   title?: Prisma.StringFilter<"Milestone"> | string
   description?: Prisma.StringNullableFilter<"Milestone"> | string | null
   ageGroupId?: Prisma.StringFilter<"Milestone"> | string
-  category?: Prisma.StringFilter<"Milestone"> | string
+  category?: Prisma.EnumMilestoneCategoryFilter<"Milestone"> | $Enums.MilestoneCategory
   sortOrder?: Prisma.IntFilter<"Milestone"> | number
   createdAt?: Prisma.DateTimeFilter<"Milestone"> | Date | string
   ageGroup?: Prisma.XOR<Prisma.AgeGroupScalarRelationFilter, Prisma.AgeGroupWhereInput>
@@ -256,7 +256,7 @@ export type MilestoneWhereUniqueInput = Prisma.AtLeast<{
   title?: Prisma.StringFilter<"Milestone"> | string
   description?: Prisma.StringNullableFilter<"Milestone"> | string | null
   ageGroupId?: Prisma.StringFilter<"Milestone"> | string
-  category?: Prisma.StringFilter<"Milestone"> | string
+  category?: Prisma.EnumMilestoneCategoryFilter<"Milestone"> | $Enums.MilestoneCategory
   sortOrder?: Prisma.IntFilter<"Milestone"> | number
   createdAt?: Prisma.DateTimeFilter<"Milestone"> | Date | string
   ageGroup?: Prisma.XOR<Prisma.AgeGroupScalarRelationFilter, Prisma.AgeGroupWhereInput>
@@ -286,7 +286,7 @@ export type MilestoneScalarWhereWithAggregatesInput = {
   title?: Prisma.StringWithAggregatesFilter<"Milestone"> | string
   description?: Prisma.StringNullableWithAggregatesFilter<"Milestone"> | string | null
   ageGroupId?: Prisma.StringWithAggregatesFilter<"Milestone"> | string
-  category?: Prisma.StringWithAggregatesFilter<"Milestone"> | string
+  category?: Prisma.EnumMilestoneCategoryWithAggregatesFilter<"Milestone"> | $Enums.MilestoneCategory
   sortOrder?: Prisma.IntWithAggregatesFilter<"Milestone"> | number
   createdAt?: Prisma.DateTimeWithAggregatesFilter<"Milestone"> | Date | string
 }
@@ -295,7 +295,7 @@ export type MilestoneCreateInput = {
   id?: string
   title: string
   description?: string | null
-  category: string
+  category: $Enums.MilestoneCategory
   sortOrder?: number
   createdAt?: Date | string
   ageGroup: Prisma.AgeGroupCreateNestedOneWithoutMilestonesInput
@@ -307,7 +307,7 @@ export type MilestoneUncheckedCreateInput = {
   title: string
   description?: string | null
   ageGroupId: string
-  category: string
+  category: $Enums.MilestoneCategory
   sortOrder?: number
   createdAt?: Date | string
   childMilestones?: Prisma.ChildMilestoneUncheckedCreateNestedManyWithoutMilestoneInput
@@ -317,7 +317,7 @@ export type MilestoneUpdateInput = {
   id?: Prisma.StringFieldUpdateOperationsInput | string
   title?: Prisma.StringFieldUpdateOperationsInput | string
   description?: Prisma.NullableStringFieldUpdateOperationsInput | string | null
-  category?: Prisma.StringFieldUpdateOperationsInput | string
+  category?: Prisma.EnumMilestoneCategoryFieldUpdateOperationsInput | $Enums.MilestoneCategory
   sortOrder?: Prisma.IntFieldUpdateOperationsInput | number
   createdAt?: Prisma.DateTimeFieldUpdateOperationsInput | Date | string
   ageGroup?: Prisma.AgeGroupUpdateOneRequiredWithoutMilestonesNestedInput
@@ -329,7 +329,7 @@ export type MilestoneUncheckedUpdateInput = {
   title?: Prisma.StringFieldUpdateOperationsInput | string
   description?: Prisma.NullableStringFieldUpdateOperationsInput | string | null
   ageGroupId?: Prisma.StringFieldUpdateOperationsInput | string
-  category?: Prisma.StringFieldUpdateOperationsInput | string
+  category?: Prisma.EnumMilestoneCategoryFieldUpdateOperationsInput | $Enums.MilestoneCategory
   sortOrder?: Prisma.IntFieldUpdateOperationsInput | number
   createdAt?: Prisma.DateTimeFieldUpdateOperationsInput | Date | string
   childMilestones?: Prisma.ChildMilestoneUncheckedUpdateManyWithoutMilestoneNestedInput
@@ -340,7 +340,7 @@ export type MilestoneCreateManyInput = {
   title: string
   description?: string | null
   ageGroupId: string
-  category: string
+  category: $Enums.MilestoneCategory
   sortOrder?: number
   createdAt?: Date | string
 }
@@ -349,7 +349,7 @@ export type MilestoneUpdateManyMutationInput = {
   id?: Prisma.StringFieldUpdateOperationsInput | string
   title?: Prisma.StringFieldUpdateOperationsInput | string
   description?: Prisma.NullableStringFieldUpdateOperationsInput | string | null
-  category?: Prisma.StringFieldUpdateOperationsInput | string
+  category?: Prisma.EnumMilestoneCategoryFieldUpdateOperationsInput | $Enums.MilestoneCategory
   sortOrder?: Prisma.IntFieldUpdateOperationsInput | number
   createdAt?: Prisma.DateTimeFieldUpdateOperationsInput | Date | string
 }
@@ -359,7 +359,7 @@ export type MilestoneUncheckedUpdateManyInput = {
   title?: Prisma.StringFieldUpdateOperationsInput | string
   description?: Prisma.NullableStringFieldUpdateOperationsInput | string | null
   ageGroupId?: Prisma.StringFieldUpdateOperationsInput | string
-  category?: Prisma.StringFieldUpdateOperationsInput | string
+  category?: Prisma.EnumMilestoneCategoryFieldUpdateOperationsInput | $Enums.MilestoneCategory
   sortOrder?: Prisma.IntFieldUpdateOperationsInput | number
   createdAt?: Prisma.DateTimeFieldUpdateOperationsInput | Date | string
 }
@@ -415,6 +415,10 @@ export type MilestoneListRelationFilter = {
 
 export type MilestoneOrderByRelationAggregateInput = {
   _count?: Prisma.SortOrder
+}
+
+export type EnumMilestoneCategoryFieldUpdateOperationsInput = {
+  set?: $Enums.MilestoneCategory
 }
 
 export type IntFieldUpdateOperationsInput = {
@@ -485,7 +489,7 @@ export type MilestoneCreateWithoutChildMilestonesInput = {
   id?: string
   title: string
   description?: string | null
-  category: string
+  category: $Enums.MilestoneCategory
   sortOrder?: number
   createdAt?: Date | string
   ageGroup: Prisma.AgeGroupCreateNestedOneWithoutMilestonesInput
@@ -496,7 +500,7 @@ export type MilestoneUncheckedCreateWithoutChildMilestonesInput = {
   title: string
   description?: string | null
   ageGroupId: string
-  category: string
+  category: $Enums.MilestoneCategory
   sortOrder?: number
   createdAt?: Date | string
 }
@@ -521,7 +525,7 @@ export type MilestoneUpdateWithoutChildMilestonesInput = {
   id?: Prisma.StringFieldUpdateOperationsInput | string
   title?: Prisma.StringFieldUpdateOperationsInput | string
   description?: Prisma.NullableStringFieldUpdateOperationsInput | string | null
-  category?: Prisma.StringFieldUpdateOperationsInput | string
+  category?: Prisma.EnumMilestoneCategoryFieldUpdateOperationsInput | $Enums.MilestoneCategory
   sortOrder?: Prisma.IntFieldUpdateOperationsInput | number
   createdAt?: Prisma.DateTimeFieldUpdateOperationsInput | Date | string
   ageGroup?: Prisma.AgeGroupUpdateOneRequiredWithoutMilestonesNestedInput
@@ -532,7 +536,7 @@ export type MilestoneUncheckedUpdateWithoutChildMilestonesInput = {
   title?: Prisma.StringFieldUpdateOperationsInput | string
   description?: Prisma.NullableStringFieldUpdateOperationsInput | string | null
   ageGroupId?: Prisma.StringFieldUpdateOperationsInput | string
-  category?: Prisma.StringFieldUpdateOperationsInput | string
+  category?: Prisma.EnumMilestoneCategoryFieldUpdateOperationsInput | $Enums.MilestoneCategory
   sortOrder?: Prisma.IntFieldUpdateOperationsInput | number
   createdAt?: Prisma.DateTimeFieldUpdateOperationsInput | Date | string
 }
@@ -541,7 +545,7 @@ export type MilestoneCreateWithoutAgeGroupInput = {
   id?: string
   title: string
   description?: string | null
-  category: string
+  category: $Enums.MilestoneCategory
   sortOrder?: number
   createdAt?: Date | string
   childMilestones?: Prisma.ChildMilestoneCreateNestedManyWithoutMilestoneInput
@@ -551,7 +555,7 @@ export type MilestoneUncheckedCreateWithoutAgeGroupInput = {
   id?: string
   title: string
   description?: string | null
-  category: string
+  category: $Enums.MilestoneCategory
   sortOrder?: number
   createdAt?: Date | string
   childMilestones?: Prisma.ChildMilestoneUncheckedCreateNestedManyWithoutMilestoneInput
@@ -564,6 +568,7 @@ export type MilestoneCreateOrConnectWithoutAgeGroupInput = {
 
 export type MilestoneCreateManyAgeGroupInputEnvelope = {
   data: Prisma.MilestoneCreateManyAgeGroupInput | Prisma.MilestoneCreateManyAgeGroupInput[]
+  skipDuplicates?: boolean
 }
 
 export type MilestoneUpsertWithWhereUniqueWithoutAgeGroupInput = {
@@ -590,7 +595,7 @@ export type MilestoneScalarWhereInput = {
   title?: Prisma.StringFilter<"Milestone"> | string
   description?: Prisma.StringNullableFilter<"Milestone"> | string | null
   ageGroupId?: Prisma.StringFilter<"Milestone"> | string
-  category?: Prisma.StringFilter<"Milestone"> | string
+  category?: Prisma.EnumMilestoneCategoryFilter<"Milestone"> | $Enums.MilestoneCategory
   sortOrder?: Prisma.IntFilter<"Milestone"> | number
   createdAt?: Prisma.DateTimeFilter<"Milestone"> | Date | string
 }
@@ -599,7 +604,7 @@ export type MilestoneCreateManyAgeGroupInput = {
   id?: string
   title: string
   description?: string | null
-  category: string
+  category: $Enums.MilestoneCategory
   sortOrder?: number
   createdAt?: Date | string
 }
@@ -608,7 +613,7 @@ export type MilestoneUpdateWithoutAgeGroupInput = {
   id?: Prisma.StringFieldUpdateOperationsInput | string
   title?: Prisma.StringFieldUpdateOperationsInput | string
   description?: Prisma.NullableStringFieldUpdateOperationsInput | string | null
-  category?: Prisma.StringFieldUpdateOperationsInput | string
+  category?: Prisma.EnumMilestoneCategoryFieldUpdateOperationsInput | $Enums.MilestoneCategory
   sortOrder?: Prisma.IntFieldUpdateOperationsInput | number
   createdAt?: Prisma.DateTimeFieldUpdateOperationsInput | Date | string
   childMilestones?: Prisma.ChildMilestoneUpdateManyWithoutMilestoneNestedInput
@@ -618,7 +623,7 @@ export type MilestoneUncheckedUpdateWithoutAgeGroupInput = {
   id?: Prisma.StringFieldUpdateOperationsInput | string
   title?: Prisma.StringFieldUpdateOperationsInput | string
   description?: Prisma.NullableStringFieldUpdateOperationsInput | string | null
-  category?: Prisma.StringFieldUpdateOperationsInput | string
+  category?: Prisma.EnumMilestoneCategoryFieldUpdateOperationsInput | $Enums.MilestoneCategory
   sortOrder?: Prisma.IntFieldUpdateOperationsInput | number
   createdAt?: Prisma.DateTimeFieldUpdateOperationsInput | Date | string
   childMilestones?: Prisma.ChildMilestoneUncheckedUpdateManyWithoutMilestoneNestedInput
@@ -628,7 +633,7 @@ export type MilestoneUncheckedUpdateManyWithoutAgeGroupInput = {
   id?: Prisma.StringFieldUpdateOperationsInput | string
   title?: Prisma.StringFieldUpdateOperationsInput | string
   description?: Prisma.NullableStringFieldUpdateOperationsInput | string | null
-  category?: Prisma.StringFieldUpdateOperationsInput | string
+  category?: Prisma.EnumMilestoneCategoryFieldUpdateOperationsInput | $Enums.MilestoneCategory
   sortOrder?: Prisma.IntFieldUpdateOperationsInput | number
   createdAt?: Prisma.DateTimeFieldUpdateOperationsInput | Date | string
 }
@@ -733,7 +738,7 @@ export type $MilestonePayload<ExtArgs extends runtime.Types.Extensions.InternalA
     title: string
     description: string | null
     ageGroupId: string
-    category: string
+    category: $Enums.MilestoneCategory
     sortOrder: number
     createdAt: Date
   }, ExtArgs["result"]["milestone"]>
@@ -1165,7 +1170,7 @@ export interface MilestoneFieldRefs {
   readonly title: Prisma.FieldRef<"Milestone", 'String'>
   readonly description: Prisma.FieldRef<"Milestone", 'String'>
   readonly ageGroupId: Prisma.FieldRef<"Milestone", 'String'>
-  readonly category: Prisma.FieldRef<"Milestone", 'String'>
+  readonly category: Prisma.FieldRef<"Milestone", 'MilestoneCategory'>
   readonly sortOrder: Prisma.FieldRef<"Milestone", 'Int'>
   readonly createdAt: Prisma.FieldRef<"Milestone", 'DateTime'>
 }
@@ -1402,6 +1407,7 @@ export type MilestoneCreateManyArgs<ExtArgs extends runtime.Types.Extensions.Int
    * The data used to create many Milestones.
    */
   data: Prisma.MilestoneCreateManyInput | Prisma.MilestoneCreateManyInput[]
+  skipDuplicates?: boolean
 }
 
 /**
@@ -1420,6 +1426,7 @@ export type MilestoneCreateManyAndReturnArgs<ExtArgs extends runtime.Types.Exten
    * The data used to create many Milestones.
    */
   data: Prisma.MilestoneCreateManyInput | Prisma.MilestoneCreateManyInput[]
+  skipDuplicates?: boolean
   /**
    * Choose, which related nodes to fetch as well
    */

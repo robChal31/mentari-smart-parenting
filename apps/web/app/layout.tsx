@@ -6,7 +6,7 @@ import { I18nProvider } from "@/components/i18n-provider";
 import { getDictionary } from "@/lib/i18n/get-dictionary";
 import "./globals.css";
 
-const SITE = process.env.NEXT_PUBLIC_SITE_URL ?? "http://localhost:3000";
+const SITE = process.env.NEXT_PUBLIC_SITE_URL ?? "http://localhost:3001";
 
 export async function generateMetadata(): Promise<Metadata> {
   const { locale, dict } = await getDictionary();

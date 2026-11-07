@@ -516,6 +516,7 @@ export type ContentViewCreateOrConnectWithoutUserInput = {
 
 export type ContentViewCreateManyUserInputEnvelope = {
   data: Prisma.ContentViewCreateManyUserInput | Prisma.ContentViewCreateManyUserInput[]
+  skipDuplicates?: boolean
 }
 
 export type ContentViewUpsertWithWhereUniqueWithoutUserInput = {
@@ -572,6 +573,7 @@ export type ContentViewCreateOrConnectWithoutContentInput = {
 
 export type ContentViewCreateManyContentInputEnvelope = {
   data: Prisma.ContentViewCreateManyContentInput | Prisma.ContentViewCreateManyContentInput[]
+  skipDuplicates?: boolean
 }
 
 export type ContentViewUpsertWithWhereUniqueWithoutContentInput = {
@@ -1404,6 +1406,7 @@ export type ContentViewCreateManyArgs<ExtArgs extends runtime.Types.Extensions.I
    * The data used to create many ContentViews.
    */
   data: Prisma.ContentViewCreateManyInput | Prisma.ContentViewCreateManyInput[]
+  skipDuplicates?: boolean
 }
 
 /**
@@ -1422,6 +1425,7 @@ export type ContentViewCreateManyAndReturnArgs<ExtArgs extends runtime.Types.Ext
    * The data used to create many ContentViews.
    */
   data: Prisma.ContentViewCreateManyInput | Prisma.ContentViewCreateManyInput[]
+  skipDuplicates?: boolean
   /**
    * Choose, which related nodes to fetch as well
    */

@@ -9,7 +9,85 @@
 * 🟢 You can import this file directly.
 */
 
+export const UserRole = {
+  USER: 'USER',
+  ADMIN: 'ADMIN',
+  EDITOR: 'EDITOR',
+  MODERATOR: 'MODERATOR'
+} as const
+
+export type UserRole = (typeof UserRole)[keyof typeof UserRole]
 
 
-// This file is empty because there are no enums in the schema.
-export {}
+export const Gender = {
+  MALE: 'MALE',
+  FEMALE: 'FEMALE'
+} as const
+
+export type Gender = (typeof Gender)[keyof typeof Gender]
+
+
+export const MilestoneCategory = {
+  COGNITIVE: 'COGNITIVE',
+  PHYSICAL: 'PHYSICAL',
+  SOCIAL_EMOTIONAL: 'SOCIAL_EMOTIONAL',
+  LANGUAGE: 'LANGUAGE',
+  CREATIVE: 'CREATIVE'
+} as const
+
+export type MilestoneCategory = (typeof MilestoneCategory)[keyof typeof MilestoneCategory]
+
+
+export const ContentType = {
+  VIDEO: 'VIDEO',
+  ARTICLE: 'ARTICLE',
+  INFOGRAPHIC: 'INFOGRAPHIC',
+  TIPS: 'TIPS',
+  ACTIVITY: 'ACTIVITY'
+} as const
+
+export type ContentType = (typeof ContentType)[keyof typeof ContentType]
+
+
+export const ContentStatus = {
+  DRAFT: 'DRAFT',
+  PUBLISHED: 'PUBLISHED',
+  ARCHIVED: 'ARCHIVED',
+  SCHEDULED: 'SCHEDULED'
+} as const
+
+export type ContentStatus = (typeof ContentStatus)[keyof typeof ContentStatus]
+
+
+export const ProductType = {
+  BOOK_NATIONAL: 'BOOK_NATIONAL',
+  BOOK_INTERNATIONAL: 'BOOK_INTERNATIONAL',
+  BOOK_SELF_PUBLISHED: 'BOOK_SELF_PUBLISHED',
+  BOOK_STORYBOOK: 'BOOK_STORYBOOK',
+  DIGITAL_LEARNING: 'DIGITAL_LEARNING',
+  ENGLISH_ASSESSMENT: 'ENGLISH_ASSESSMENT',
+  TEACHER_ACADEMY: 'TEACHER_ACADEMY',
+  OTHER: 'OTHER'
+} as const
+
+export type ProductType = (typeof ProductType)[keyof typeof ProductType]
+
+
+export const RecommendationPlacement = {
+  SIDEBAR: 'SIDEBAR',
+  INLINE: 'INLINE',
+  BOTTOM: 'BOTTOM',
+  OVERLAY: 'OVERLAY',
+  BANNER: 'BANNER'
+} as const
+
+export type RecommendationPlacement = (typeof RecommendationPlacement)[keyof typeof RecommendationPlacement]
+
+
+export const Difficulty = {
+  BEGINNER: 'BEGINNER',
+  INTERMEDIATE: 'INTERMEDIATE',
+  ADVANCED: 'ADVANCED'
+} as const
+
+export type Difficulty = (typeof Difficulty)[keyof typeof Difficulty]

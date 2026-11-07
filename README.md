@@ -35,7 +35,7 @@ Prasyarat: **Node ≥ 20** dan **pnpm 9**.
 ```bash
 pnpm install        # install seluruh workspace
 pnpm db:setup       # generate client + push schema ke SQLite + seed (idempotent)
-pnpm dev            # web http://localhost:3000 · api http://localhost:4000/api/v1
+pnpm dev            # web http://localhost:3001 · api http://localhost:4000/api/v1
                     # (first build @mentari/shared & @mentari/database otomatis)
 ```
 
@@ -152,8 +152,8 @@ curl localhost:4000/api/v1/contents?limit=2
 TOKEN=$(curl -s -X POST localhost:4000/api/v1/auth/login -H 'content-type: application/json' \
   -d '{"email":"demo@mentari.id","password":"mentari123"}' | python3 -c 'import sys,json;print(json.load(sys.stdin)["data"]["accessToken"])')
 curl localhost:4000/api/v1/auth/me -H "authorization: Bearer $TOKEN"
-curl localhost:3000/                 # SSR home (200, berisi konten nyata)
-curl localhost:3000/api/v1/categories # proxy web → api
+curl localhost:3001/                 # SSR home (200, berisi konten nyata)
+curl localhost:3001/api/v1/categories # proxy web → api
 ```
 
 ## Catatan desain

@@ -46,8 +46,8 @@ export type ContentMinAggregateOutputType = {
   slug: string | null
   excerpt: string | null
   body: string | null
-  type: string | null
-  status: string | null
+  type: $Enums.ContentType | null
+  status: $Enums.ContentStatus | null
   thumbnailUrl: string | null
   videoUrl: string | null
   videoDuration: number | null
@@ -72,8 +72,8 @@ export type ContentMaxAggregateOutputType = {
   slug: string | null
   excerpt: string | null
   body: string | null
-  type: string | null
-  status: string | null
+  type: $Enums.ContentType | null
+  status: $Enums.ContentStatus | null
   thumbnailUrl: string | null
   videoUrl: string | null
   videoDuration: number | null
@@ -305,8 +305,8 @@ export type ContentGroupByOutputType = {
   slug: string
   excerpt: string | null
   body: string | null
-  type: string
-  status: string
+  type: $Enums.ContentType
+  status: $Enums.ContentStatus
   thumbnailUrl: string | null
   videoUrl: string | null
   videoDuration: number | null
@@ -354,8 +354,8 @@ export type ContentWhereInput = {
   slug?: Prisma.StringFilter<"Content"> | string
   excerpt?: Prisma.StringNullableFilter<"Content"> | string | null
   body?: Prisma.StringNullableFilter<"Content"> | string | null
-  type?: Prisma.StringFilter<"Content"> | string
-  status?: Prisma.StringFilter<"Content"> | string
+  type?: Prisma.EnumContentTypeFilter<"Content"> | $Enums.ContentType
+  status?: Prisma.EnumContentStatusFilter<"Content"> | $Enums.ContentStatus
   thumbnailUrl?: Prisma.StringNullableFilter<"Content"> | string | null
   videoUrl?: Prisma.StringNullableFilter<"Content"> | string | null
   videoDuration?: Prisma.IntNullableFilter<"Content"> | number | null
@@ -423,8 +423,8 @@ export type ContentWhereUniqueInput = Prisma.AtLeast<{
   title?: Prisma.StringFilter<"Content"> | string
   excerpt?: Prisma.StringNullableFilter<"Content"> | string | null
   body?: Prisma.StringNullableFilter<"Content"> | string | null
-  type?: Prisma.StringFilter<"Content"> | string
-  status?: Prisma.StringFilter<"Content"> | string
+  type?: Prisma.EnumContentTypeFilter<"Content"> | $Enums.ContentType
+  status?: Prisma.EnumContentStatusFilter<"Content"> | $Enums.ContentStatus
   thumbnailUrl?: Prisma.StringNullableFilter<"Content"> | string | null
   videoUrl?: Prisma.StringNullableFilter<"Content"> | string | null
   videoDuration?: Prisma.IntNullableFilter<"Content"> | number | null
@@ -490,8 +490,8 @@ export type ContentScalarWhereWithAggregatesInput = {
   slug?: Prisma.StringWithAggregatesFilter<"Content"> | string
   excerpt?: Prisma.StringNullableWithAggregatesFilter<"Content"> | string | null
   body?: Prisma.StringNullableWithAggregatesFilter<"Content"> | string | null
-  type?: Prisma.StringWithAggregatesFilter<"Content"> | string
-  status?: Prisma.StringWithAggregatesFilter<"Content"> | string
+  type?: Prisma.EnumContentTypeWithAggregatesFilter<"Content"> | $Enums.ContentType
+  status?: Prisma.EnumContentStatusWithAggregatesFilter<"Content"> | $Enums.ContentStatus
   thumbnailUrl?: Prisma.StringNullableWithAggregatesFilter<"Content"> | string | null
   videoUrl?: Prisma.StringNullableWithAggregatesFilter<"Content"> | string | null
   videoDuration?: Prisma.IntNullableWithAggregatesFilter<"Content"> | number | null
@@ -516,8 +516,8 @@ export type ContentCreateInput = {
   slug: string
   excerpt?: string | null
   body?: string | null
-  type: string
-  status?: string
+  type: $Enums.ContentType
+  status?: $Enums.ContentStatus
   thumbnailUrl?: string | null
   videoUrl?: string | null
   videoDuration?: number | null
@@ -549,8 +549,8 @@ export type ContentUncheckedCreateInput = {
   slug: string
   excerpt?: string | null
   body?: string | null
-  type: string
-  status?: string
+  type: $Enums.ContentType
+  status?: $Enums.ContentStatus
   thumbnailUrl?: string | null
   videoUrl?: string | null
   videoDuration?: number | null
@@ -582,8 +582,8 @@ export type ContentUpdateInput = {
   slug?: Prisma.StringFieldUpdateOperationsInput | string
   excerpt?: Prisma.NullableStringFieldUpdateOperationsInput | string | null
   body?: Prisma.NullableStringFieldUpdateOperationsInput | string | null
-  type?: Prisma.StringFieldUpdateOperationsInput | string
-  status?: Prisma.StringFieldUpdateOperationsInput | string
+  type?: Prisma.EnumContentTypeFieldUpdateOperationsInput | $Enums.ContentType
+  status?: Prisma.EnumContentStatusFieldUpdateOperationsInput | $Enums.ContentStatus
   thumbnailUrl?: Prisma.NullableStringFieldUpdateOperationsInput | string | null
   videoUrl?: Prisma.NullableStringFieldUpdateOperationsInput | string | null
   videoDuration?: Prisma.NullableIntFieldUpdateOperationsInput | number | null
@@ -615,8 +615,8 @@ export type ContentUncheckedUpdateInput = {
   slug?: Prisma.StringFieldUpdateOperationsInput | string
   excerpt?: Prisma.NullableStringFieldUpdateOperationsInput | string | null
   body?: Prisma.NullableStringFieldUpdateOperationsInput | string | null
-  type?: Prisma.StringFieldUpdateOperationsInput | string
-  status?: Prisma.StringFieldUpdateOperationsInput | string
+  type?: Prisma.EnumContentTypeFieldUpdateOperationsInput | $Enums.ContentType
+  status?: Prisma.EnumContentStatusFieldUpdateOperationsInput | $Enums.ContentStatus
   thumbnailUrl?: Prisma.NullableStringFieldUpdateOperationsInput | string | null
   videoUrl?: Prisma.NullableStringFieldUpdateOperationsInput | string | null
   videoDuration?: Prisma.NullableIntFieldUpdateOperationsInput | number | null
@@ -648,8 +648,8 @@ export type ContentCreateManyInput = {
   slug: string
   excerpt?: string | null
   body?: string | null
-  type: string
-  status?: string
+  type: $Enums.ContentType
+  status?: $Enums.ContentStatus
   thumbnailUrl?: string | null
   videoUrl?: string | null
   videoDuration?: number | null
@@ -674,8 +674,8 @@ export type ContentUpdateManyMutationInput = {
   slug?: Prisma.StringFieldUpdateOperationsInput | string
   excerpt?: Prisma.NullableStringFieldUpdateOperationsInput | string | null
   body?: Prisma.NullableStringFieldUpdateOperationsInput | string | null
-  type?: Prisma.StringFieldUpdateOperationsInput | string
-  status?: Prisma.StringFieldUpdateOperationsInput | string
+  type?: Prisma.EnumContentTypeFieldUpdateOperationsInput | $Enums.ContentType
+  status?: Prisma.EnumContentStatusFieldUpdateOperationsInput | $Enums.ContentStatus
   thumbnailUrl?: Prisma.NullableStringFieldUpdateOperationsInput | string | null
   videoUrl?: Prisma.NullableStringFieldUpdateOperationsInput | string | null
   videoDuration?: Prisma.NullableIntFieldUpdateOperationsInput | number | null
@@ -700,8 +700,8 @@ export type ContentUncheckedUpdateManyInput = {
   slug?: Prisma.StringFieldUpdateOperationsInput | string
   excerpt?: Prisma.NullableStringFieldUpdateOperationsInput | string | null
   body?: Prisma.NullableStringFieldUpdateOperationsInput | string | null
-  type?: Prisma.StringFieldUpdateOperationsInput | string
-  status?: Prisma.StringFieldUpdateOperationsInput | string
+  type?: Prisma.EnumContentTypeFieldUpdateOperationsInput | $Enums.ContentType
+  status?: Prisma.EnumContentStatusFieldUpdateOperationsInput | $Enums.ContentStatus
   thumbnailUrl?: Prisma.NullableStringFieldUpdateOperationsInput | string | null
   videoUrl?: Prisma.NullableStringFieldUpdateOperationsInput | string | null
   videoDuration?: Prisma.NullableIntFieldUpdateOperationsInput | number | null
@@ -817,6 +817,14 @@ export type ContentScalarRelationFilter = {
   isNot?: Prisma.ContentWhereInput
 }
 
+export type EnumContentTypeFieldUpdateOperationsInput = {
+  set?: $Enums.ContentType
+}
+
+export type EnumContentStatusFieldUpdateOperationsInput = {
+  set?: $Enums.ContentStatus
+}
+
 export type NullableIntFieldUpdateOperationsInput = {
   set?: number | null
   increment?: number
@@ -929,8 +937,8 @@ export type ContentCreateWithoutCategoriesInput = {
   slug: string
   excerpt?: string | null
   body?: string | null
-  type: string
-  status?: string
+  type: $Enums.ContentType
+  status?: $Enums.ContentStatus
   thumbnailUrl?: string | null
   videoUrl?: string | null
   videoDuration?: number | null
@@ -961,8 +969,8 @@ export type ContentUncheckedCreateWithoutCategoriesInput = {
   slug: string
   excerpt?: string | null
   body?: string | null
-  type: string
-  status?: string
+  type: $Enums.ContentType
+  status?: $Enums.ContentStatus
   thumbnailUrl?: string | null
   videoUrl?: string | null
   videoDuration?: number | null
@@ -1009,8 +1017,8 @@ export type ContentUpdateWithoutCategoriesInput = {
   slug?: Prisma.StringFieldUpdateOperationsInput | string
   excerpt?: Prisma.NullableStringFieldUpdateOperationsInput | string | null
   body?: Prisma.NullableStringFieldUpdateOperationsInput | string | null
-  type?: Prisma.StringFieldUpdateOperationsInput | string
-  status?: Prisma.StringFieldUpdateOperationsInput | string
+  type?: Prisma.EnumContentTypeFieldUpdateOperationsInput | $Enums.ContentType
+  status?: Prisma.EnumContentStatusFieldUpdateOperationsInput | $Enums.ContentStatus
   thumbnailUrl?: Prisma.NullableStringFieldUpdateOperationsInput | string | null
   videoUrl?: Prisma.NullableStringFieldUpdateOperationsInput | string | null
   videoDuration?: Prisma.NullableIntFieldUpdateOperationsInput | number | null
@@ -1041,8 +1049,8 @@ export type ContentUncheckedUpdateWithoutCategoriesInput = {
   slug?: Prisma.StringFieldUpdateOperationsInput | string
   excerpt?: Prisma.NullableStringFieldUpdateOperationsInput | string | null
   body?: Prisma.NullableStringFieldUpdateOperationsInput | string | null
-  type?: Prisma.StringFieldUpdateOperationsInput | string
-  status?: Prisma.StringFieldUpdateOperationsInput | string
+  type?: Prisma.EnumContentTypeFieldUpdateOperationsInput | $Enums.ContentType
+  status?: Prisma.EnumContentStatusFieldUpdateOperationsInput | $Enums.ContentStatus
   thumbnailUrl?: Prisma.NullableStringFieldUpdateOperationsInput | string | null
   videoUrl?: Prisma.NullableStringFieldUpdateOperationsInput | string | null
   videoDuration?: Prisma.NullableIntFieldUpdateOperationsInput | number | null
@@ -1073,8 +1081,8 @@ export type ContentCreateWithoutAgeGroupsInput = {
   slug: string
   excerpt?: string | null
   body?: string | null
-  type: string
-  status?: string
+  type: $Enums.ContentType
+  status?: $Enums.ContentStatus
   thumbnailUrl?: string | null
   videoUrl?: string | null
   videoDuration?: number | null
@@ -1105,8 +1113,8 @@ export type ContentUncheckedCreateWithoutAgeGroupsInput = {
   slug: string
   excerpt?: string | null
   body?: string | null
-  type: string
-  status?: string
+  type: $Enums.ContentType
+  status?: $Enums.ContentStatus
   thumbnailUrl?: string | null
   videoUrl?: string | null
   videoDuration?: number | null
@@ -1153,8 +1161,8 @@ export type ContentUpdateWithoutAgeGroupsInput = {
   slug?: Prisma.StringFieldUpdateOperationsInput | string
   excerpt?: Prisma.NullableStringFieldUpdateOperationsInput | string | null
   body?: Prisma.NullableStringFieldUpdateOperationsInput | string | null
-  type?: Prisma.StringFieldUpdateOperationsInput | string
-  status?: Prisma.StringFieldUpdateOperationsInput | string
+  type?: Prisma.EnumContentTypeFieldUpdateOperationsInput | $Enums.ContentType
+  status?: Prisma.EnumContentStatusFieldUpdateOperationsInput | $Enums.ContentStatus
   thumbnailUrl?: Prisma.NullableStringFieldUpdateOperationsInput | string | null
   videoUrl?: Prisma.NullableStringFieldUpdateOperationsInput | string | null
   videoDuration?: Prisma.NullableIntFieldUpdateOperationsInput | number | null
@@ -1185,8 +1193,8 @@ export type ContentUncheckedUpdateWithoutAgeGroupsInput = {
   slug?: Prisma.StringFieldUpdateOperationsInput | string
   excerpt?: Prisma.NullableStringFieldUpdateOperationsInput | string | null
   body?: Prisma.NullableStringFieldUpdateOperationsInput | string | null
-  type?: Prisma.StringFieldUpdateOperationsInput | string
-  status?: Prisma.StringFieldUpdateOperationsInput | string
+  type?: Prisma.EnumContentTypeFieldUpdateOperationsInput | $Enums.ContentType
+  status?: Prisma.EnumContentStatusFieldUpdateOperationsInput | $Enums.ContentStatus
   thumbnailUrl?: Prisma.NullableStringFieldUpdateOperationsInput | string | null
   videoUrl?: Prisma.NullableStringFieldUpdateOperationsInput | string | null
   videoDuration?: Prisma.NullableIntFieldUpdateOperationsInput | number | null
@@ -1217,8 +1225,8 @@ export type ContentCreateWithoutTagsInput = {
   slug: string
   excerpt?: string | null
   body?: string | null
-  type: string
-  status?: string
+  type: $Enums.ContentType
+  status?: $Enums.ContentStatus
   thumbnailUrl?: string | null
   videoUrl?: string | null
   videoDuration?: number | null
@@ -1249,8 +1257,8 @@ export type ContentUncheckedCreateWithoutTagsInput = {
   slug: string
   excerpt?: string | null
   body?: string | null
-  type: string
-  status?: string
+  type: $Enums.ContentType
+  status?: $Enums.ContentStatus
   thumbnailUrl?: string | null
   videoUrl?: string | null
   videoDuration?: number | null
@@ -1297,8 +1305,8 @@ export type ContentUpdateWithoutTagsInput = {
   slug?: Prisma.StringFieldUpdateOperationsInput | string
   excerpt?: Prisma.NullableStringFieldUpdateOperationsInput | string | null
   body?: Prisma.NullableStringFieldUpdateOperationsInput | string | null
-  type?: Prisma.StringFieldUpdateOperationsInput | string
-  status?: Prisma.StringFieldUpdateOperationsInput | string
+  type?: Prisma.EnumContentTypeFieldUpdateOperationsInput | $Enums.ContentType
+  status?: Prisma.EnumContentStatusFieldUpdateOperationsInput | $Enums.ContentStatus
   thumbnailUrl?: Prisma.NullableStringFieldUpdateOperationsInput | string | null
   videoUrl?: Prisma.NullableStringFieldUpdateOperationsInput | string | null
   videoDuration?: Prisma.NullableIntFieldUpdateOperationsInput | number | null
@@ -1329,8 +1337,8 @@ export type ContentUncheckedUpdateWithoutTagsInput = {
   slug?: Prisma.StringFieldUpdateOperationsInput | string
   excerpt?: Prisma.NullableStringFieldUpdateOperationsInput | string | null
   body?: Prisma.NullableStringFieldUpdateOperationsInput | string | null
-  type?: Prisma.StringFieldUpdateOperationsInput | string
-  status?: Prisma.StringFieldUpdateOperationsInput | string
+  type?: Prisma.EnumContentTypeFieldUpdateOperationsInput | $Enums.ContentType
+  status?: Prisma.EnumContentStatusFieldUpdateOperationsInput | $Enums.ContentStatus
   thumbnailUrl?: Prisma.NullableStringFieldUpdateOperationsInput | string | null
   videoUrl?: Prisma.NullableStringFieldUpdateOperationsInput | string | null
   videoDuration?: Prisma.NullableIntFieldUpdateOperationsInput | number | null
@@ -1361,8 +1369,8 @@ export type ContentCreateWithoutProductsInput = {
   slug: string
   excerpt?: string | null
   body?: string | null
-  type: string
-  status?: string
+  type: $Enums.ContentType
+  status?: $Enums.ContentStatus
   thumbnailUrl?: string | null
   videoUrl?: string | null
   videoDuration?: number | null
@@ -1393,8 +1401,8 @@ export type ContentUncheckedCreateWithoutProductsInput = {
   slug: string
   excerpt?: string | null
   body?: string | null
-  type: string
-  status?: string
+  type: $Enums.ContentType
+  status?: $Enums.ContentStatus
   thumbnailUrl?: string | null
   videoUrl?: string | null
   videoDuration?: number | null
@@ -1441,8 +1449,8 @@ export type ContentUpdateWithoutProductsInput = {
   slug?: Prisma.StringFieldUpdateOperationsInput | string
   excerpt?: Prisma.NullableStringFieldUpdateOperationsInput | string | null
   body?: Prisma.NullableStringFieldUpdateOperationsInput | string | null
-  type?: Prisma.StringFieldUpdateOperationsInput | string
-  status?: Prisma.StringFieldUpdateOperationsInput | string
+  type?: Prisma.EnumContentTypeFieldUpdateOperationsInput | $Enums.ContentType
+  status?: Prisma.EnumContentStatusFieldUpdateOperationsInput | $Enums.ContentStatus
   thumbnailUrl?: Prisma.NullableStringFieldUpdateOperationsInput | string | null
   videoUrl?: Prisma.NullableStringFieldUpdateOperationsInput | string | null
   videoDuration?: Prisma.NullableIntFieldUpdateOperationsInput | number | null
@@ -1473,8 +1481,8 @@ export type ContentUncheckedUpdateWithoutProductsInput = {
   slug?: Prisma.StringFieldUpdateOperationsInput | string
   excerpt?: Prisma.NullableStringFieldUpdateOperationsInput | string | null
   body?: Prisma.NullableStringFieldUpdateOperationsInput | string | null
-  type?: Prisma.StringFieldUpdateOperationsInput | string
-  status?: Prisma.StringFieldUpdateOperationsInput | string
+  type?: Prisma.EnumContentTypeFieldUpdateOperationsInput | $Enums.ContentType
+  status?: Prisma.EnumContentStatusFieldUpdateOperationsInput | $Enums.ContentStatus
   thumbnailUrl?: Prisma.NullableStringFieldUpdateOperationsInput | string | null
   videoUrl?: Prisma.NullableStringFieldUpdateOperationsInput | string | null
   videoDuration?: Prisma.NullableIntFieldUpdateOperationsInput | number | null
@@ -1505,8 +1513,8 @@ export type ContentCreateWithoutLearningPathItemsInput = {
   slug: string
   excerpt?: string | null
   body?: string | null
-  type: string
-  status?: string
+  type: $Enums.ContentType
+  status?: $Enums.ContentStatus
   thumbnailUrl?: string | null
   videoUrl?: string | null
   videoDuration?: number | null
@@ -1537,8 +1545,8 @@ export type ContentUncheckedCreateWithoutLearningPathItemsInput = {
   slug: string
   excerpt?: string | null
   body?: string | null
-  type: string
-  status?: string
+  type: $Enums.ContentType
+  status?: $Enums.ContentStatus
   thumbnailUrl?: string | null
   videoUrl?: string | null
   videoDuration?: number | null
@@ -1585,8 +1593,8 @@ export type ContentUpdateWithoutLearningPathItemsInput = {
   slug?: Prisma.StringFieldUpdateOperationsInput | string
   excerpt?: Prisma.NullableStringFieldUpdateOperationsInput | string | null
   body?: Prisma.NullableStringFieldUpdateOperationsInput | string | null
-  type?: Prisma.StringFieldUpdateOperationsInput | string
-  status?: Prisma.StringFieldUpdateOperationsInput | string
+  type?: Prisma.EnumContentTypeFieldUpdateOperationsInput | $Enums.ContentType
+  status?: Prisma.EnumContentStatusFieldUpdateOperationsInput | $Enums.ContentStatus
   thumbnailUrl?: Prisma.NullableStringFieldUpdateOperationsInput | string | null
   videoUrl?: Prisma.NullableStringFieldUpdateOperationsInput | string | null
   videoDuration?: Prisma.NullableIntFieldUpdateOperationsInput | number | null
@@ -1617,8 +1625,8 @@ export type ContentUncheckedUpdateWithoutLearningPathItemsInput = {
   slug?: Prisma.StringFieldUpdateOperationsInput | string
   excerpt?: Prisma.NullableStringFieldUpdateOperationsInput | string | null
   body?: Prisma.NullableStringFieldUpdateOperationsInput | string | null
-  type?: Prisma.StringFieldUpdateOperationsInput | string
-  status?: Prisma.StringFieldUpdateOperationsInput | string
+  type?: Prisma.EnumContentTypeFieldUpdateOperationsInput | $Enums.ContentType
+  status?: Prisma.EnumContentStatusFieldUpdateOperationsInput | $Enums.ContentStatus
   thumbnailUrl?: Prisma.NullableStringFieldUpdateOperationsInput | string | null
   videoUrl?: Prisma.NullableStringFieldUpdateOperationsInput | string | null
   videoDuration?: Prisma.NullableIntFieldUpdateOperationsInput | number | null
@@ -1649,8 +1657,8 @@ export type ContentCreateWithoutBookmarksInput = {
   slug: string
   excerpt?: string | null
   body?: string | null
-  type: string
-  status?: string
+  type: $Enums.ContentType
+  status?: $Enums.ContentStatus
   thumbnailUrl?: string | null
   videoUrl?: string | null
   videoDuration?: number | null
@@ -1681,8 +1689,8 @@ export type ContentUncheckedCreateWithoutBookmarksInput = {
   slug: string
   excerpt?: string | null
   body?: string | null
-  type: string
-  status?: string
+  type: $Enums.ContentType
+  status?: $Enums.ContentStatus
   thumbnailUrl?: string | null
   videoUrl?: string | null
   videoDuration?: number | null
@@ -1729,8 +1737,8 @@ export type ContentUpdateWithoutBookmarksInput = {
   slug?: Prisma.StringFieldUpdateOperationsInput | string
   excerpt?: Prisma.NullableStringFieldUpdateOperationsInput | string | null
   body?: Prisma.NullableStringFieldUpdateOperationsInput | string | null
-  type?: Prisma.StringFieldUpdateOperationsInput | string
-  status?: Prisma.StringFieldUpdateOperationsInput | string
+  type?: Prisma.EnumContentTypeFieldUpdateOperationsInput | $Enums.ContentType
+  status?: Prisma.EnumContentStatusFieldUpdateOperationsInput | $Enums.ContentStatus
   thumbnailUrl?: Prisma.NullableStringFieldUpdateOperationsInput | string | null
   videoUrl?: Prisma.NullableStringFieldUpdateOperationsInput | string | null
   videoDuration?: Prisma.NullableIntFieldUpdateOperationsInput | number | null
@@ -1761,8 +1769,8 @@ export type ContentUncheckedUpdateWithoutBookmarksInput = {
   slug?: Prisma.StringFieldUpdateOperationsInput | string
   excerpt?: Prisma.NullableStringFieldUpdateOperationsInput | string | null
   body?: Prisma.NullableStringFieldUpdateOperationsInput | string | null
-  type?: Prisma.StringFieldUpdateOperationsInput | string
-  status?: Prisma.StringFieldUpdateOperationsInput | string
+  type?: Prisma.EnumContentTypeFieldUpdateOperationsInput | $Enums.ContentType
+  status?: Prisma.EnumContentStatusFieldUpdateOperationsInput | $Enums.ContentStatus
   thumbnailUrl?: Prisma.NullableStringFieldUpdateOperationsInput | string | null
   videoUrl?: Prisma.NullableStringFieldUpdateOperationsInput | string | null
   videoDuration?: Prisma.NullableIntFieldUpdateOperationsInput | number | null
@@ -1793,8 +1801,8 @@ export type ContentCreateWithoutViewsInput = {
   slug: string
   excerpt?: string | null
   body?: string | null
-  type: string
-  status?: string
+  type: $Enums.ContentType
+  status?: $Enums.ContentStatus
   thumbnailUrl?: string | null
   videoUrl?: string | null
   videoDuration?: number | null
@@ -1825,8 +1833,8 @@ export type ContentUncheckedCreateWithoutViewsInput = {
   slug: string
   excerpt?: string | null
   body?: string | null
-  type: string
-  status?: string
+  type: $Enums.ContentType
+  status?: $Enums.ContentStatus
   thumbnailUrl?: string | null
   videoUrl?: string | null
   videoDuration?: number | null
@@ -1873,8 +1881,8 @@ export type ContentUpdateWithoutViewsInput = {
   slug?: Prisma.StringFieldUpdateOperationsInput | string
   excerpt?: Prisma.NullableStringFieldUpdateOperationsInput | string | null
   body?: Prisma.NullableStringFieldUpdateOperationsInput | string | null
-  type?: Prisma.StringFieldUpdateOperationsInput | string
-  status?: Prisma.StringFieldUpdateOperationsInput | string
+  type?: Prisma.EnumContentTypeFieldUpdateOperationsInput | $Enums.ContentType
+  status?: Prisma.EnumContentStatusFieldUpdateOperationsInput | $Enums.ContentStatus
   thumbnailUrl?: Prisma.NullableStringFieldUpdateOperationsInput | string | null
   videoUrl?: Prisma.NullableStringFieldUpdateOperationsInput | string | null
   videoDuration?: Prisma.NullableIntFieldUpdateOperationsInput | number | null
@@ -1905,8 +1913,8 @@ export type ContentUncheckedUpdateWithoutViewsInput = {
   slug?: Prisma.StringFieldUpdateOperationsInput | string
   excerpt?: Prisma.NullableStringFieldUpdateOperationsInput | string | null
   body?: Prisma.NullableStringFieldUpdateOperationsInput | string | null
-  type?: Prisma.StringFieldUpdateOperationsInput | string
-  status?: Prisma.StringFieldUpdateOperationsInput | string
+  type?: Prisma.EnumContentTypeFieldUpdateOperationsInput | $Enums.ContentType
+  status?: Prisma.EnumContentStatusFieldUpdateOperationsInput | $Enums.ContentStatus
   thumbnailUrl?: Prisma.NullableStringFieldUpdateOperationsInput | string | null
   videoUrl?: Prisma.NullableStringFieldUpdateOperationsInput | string | null
   videoDuration?: Prisma.NullableIntFieldUpdateOperationsInput | number | null
@@ -2159,8 +2167,8 @@ export type $ContentPayload<ExtArgs extends runtime.Types.Extensions.InternalArg
     slug: string
     excerpt: string | null
     body: string | null
-    type: string
-    status: string
+    type: $Enums.ContentType
+    status: $Enums.ContentStatus
     thumbnailUrl: string | null
     videoUrl: string | null
     videoDuration: number | null
@@ -2612,8 +2620,8 @@ export interface ContentFieldRefs {
   readonly slug: Prisma.FieldRef<"Content", 'String'>
   readonly excerpt: Prisma.FieldRef<"Content", 'String'>
   readonly body: Prisma.FieldRef<"Content", 'String'>
-  readonly type: Prisma.FieldRef<"Content", 'String'>
-  readonly status: Prisma.FieldRef<"Content", 'String'>
+  readonly type: Prisma.FieldRef<"Content", 'ContentType'>
+  readonly status: Prisma.FieldRef<"Content", 'ContentStatus'>
   readonly thumbnailUrl: Prisma.FieldRef<"Content", 'String'>
   readonly videoUrl: Prisma.FieldRef<"Content", 'String'>
   readonly videoDuration: Prisma.FieldRef<"Content", 'Int'>
@@ -2864,6 +2872,7 @@ export type ContentCreateManyArgs<ExtArgs extends runtime.Types.Extensions.Inter
    * The data used to create many Contents.
    */
   data: Prisma.ContentCreateManyInput | Prisma.ContentCreateManyInput[]
+  skipDuplicates?: boolean
 }
 
 /**
@@ -2882,6 +2891,7 @@ export type ContentCreateManyAndReturnArgs<ExtArgs extends runtime.Types.Extensi
    * The data used to create many Contents.
    */
   data: Prisma.ContentCreateManyInput | Prisma.ContentCreateManyInput[]
+  skipDuplicates?: boolean
 }
 
 /**

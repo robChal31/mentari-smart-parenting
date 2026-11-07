@@ -359,6 +359,7 @@ export type ProductAgeGroupCreateOrConnectWithoutAgeGroupInput = {
 
 export type ProductAgeGroupCreateManyAgeGroupInputEnvelope = {
   data: Prisma.ProductAgeGroupCreateManyAgeGroupInput | Prisma.ProductAgeGroupCreateManyAgeGroupInput[]
+  skipDuplicates?: boolean
 }
 
 export type ProductAgeGroupUpsertWithWhereUniqueWithoutAgeGroupInput = {
@@ -400,6 +401,7 @@ export type ProductAgeGroupCreateOrConnectWithoutProductInput = {
 
 export type ProductAgeGroupCreateManyProductInputEnvelope = {
   data: Prisma.ProductAgeGroupCreateManyProductInput | Prisma.ProductAgeGroupCreateManyProductInput[]
+  skipDuplicates?: boolean
 }
 
 export type ProductAgeGroupUpsertWithWhereUniqueWithoutProductInput = {
@@ -1162,6 +1164,7 @@ export type ProductAgeGroupCreateManyArgs<ExtArgs extends runtime.Types.Extensio
    * The data used to create many ProductAgeGroups.
    */
   data: Prisma.ProductAgeGroupCreateManyInput | Prisma.ProductAgeGroupCreateManyInput[]
+  skipDuplicates?: boolean
 }
 
 /**
@@ -1180,6 +1183,7 @@ export type ProductAgeGroupCreateManyAndReturnArgs<ExtArgs extends runtime.Types
    * The data used to create many ProductAgeGroups.
    */
   data: Prisma.ProductAgeGroupCreateManyInput | Prisma.ProductAgeGroupCreateManyInput[]
+  skipDuplicates?: boolean
   /**
    * Choose, which related nodes to fetch as well
    */
