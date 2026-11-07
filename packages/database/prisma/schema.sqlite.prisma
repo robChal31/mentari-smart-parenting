@@ -1,0 +1,434 @@
+// LOCAL DEV SCHEMA (SQLite) — mirrors schema.prisma (MySQL) minus
+// MySQL-specific column types & enums so the app runs without a MySQL server.
+// Production uses schema.prisma. Keep both in sync when changing models.
+
+generator client {
+  provider = "prisma-client"
+  output   = "../src/generated/prisma"
+}
+
+datasource db {
+  provider = "sqlite"
+}
+
+model User {
+  id              String    @id @default(uuid())
+  supabaseId      String?   @unique @map("supabase_id")
+  email           String    @unique
+  fullName        String    @map("full_name")
+  passwordHash    String?   @map("password_hash")
+  avatarUrl       String?   @map("avatar_url")
+  phone           String?
+  role            String    @default("USER")
+  isActive        Boolean   @default(true) @map("is_active")
+  lastLoginAt     DateTime? @map("last_login_at")
+  createdAt       DateTime  @default(now()) @map("created_at")
+  updatedAt       DateTime  @updatedAt @map("updated_at")
+
+  children        Child[]
+  bookmarks       Bookmark[]
+  contentViews    ContentView[]
+  productClicks   ProductClick[]
+  communityThreads CommunityThread[]
+  communityComments CommunityComment[]
+  gamificationProfile GamificationProfile?
+  notifications   Notification[]
+
+  @@map("users")
+}
+
+model Child {
+  id          String    @id @default(uuid())
+  userId      String    @map("user_id")
+  name        String
+  birthDate   DateTime  @map("birth_date")
+  gender      String?
+  avatarUrl   String?   @map("avatar_url")
+  createdAt   DateTime  @default(now()) @map("created_at")
+  updatedAt   DateTime  @updatedAt @map("updated_at")
+
+  user        User      @relation(fields: [userId], references: [id], onDelete: Cascade)
+  milestones  ChildMilestone[]
+
+  @@map("children")
+}
+
+model Milestone {
+  id            String    @id @default(uuid())
+  title         String
+  description   String?
+  ageGroupId    String    @map("age_group_id")
+  category      String
+  sortOrder     Int       @default(0) @map("sort_order")
+  createdAt     DateTime  @default(now()) @map("created_at")
+
+  ageGroup      AgeGroup  @relation(fields: [ageGroupId], references: [id])
+  childMilestones ChildMilestone[]
+
+  @@map("milestones")
+}
+
+model ChildMilestone {
+  id            String    @id @default(uuid())
+  childId       String    @map("child_id")
+  milestoneId   String    @map("milestone_id")
+  isCompleted   Boolean   @default(false) @map("is_completed")
+  completedAt   DateTime? @map("completed_at")
+  notes         String?
+  createdAt     DateTime  @default(now()) @map("created_at")
+
+  child         Child     @relation(fields: [childId], references: [id], onDelete: Cascade)
+  milestone     Milestone @relation(fields: [milestoneId], references: [id])
+
+  @@unique([childId, milestoneId])
+  @@map("child_milestones")
+}
+
+model AgeGroup {
+  id          String    @id @default(uuid())
+  name        String
+  slug        String    @unique
+  minAge      Int       @map("min_age")
+  maxAge      Int       @map("max_age")
+  description String?
+  createdAt   DateTime  @default(now()) @map("created_at")
+
+  contents    ContentAgeGroup[]
+  products    ProductAgeGroup[]
+  milestones  Milestone[]
+
+  @@map("age_groups")
+}
+
+model Content {
+  id              String        @id @default(uuid())
+  title           String
+  slug            String        @unique
+  excerpt         String?
+  body            String?
+  type            String
+  status          String        @default("DRAFT")
+  thumbnailUrl    String?       @map("thumbnail_url")
+  videoUrl        String?       @map("video_url")
+  videoDuration   Int?          @map("video_duration")
+  readTime        Int?          @map("read_time")
+  isFeatured      Boolean       @default(false) @map("is_featured")
+  isPremium       Boolean       @default(false) @map("is_premium")
+  viewCount       Int           @default(0) @map("view_count")
+  likeCount       Int           @default(0) @map("like_count")
+  publishedAt     DateTime?     @map("published_at")
+  authorName      String?       @map("author_name")
+  authorTitle     String?       @map("author_title")
+  authorAvatarUrl String?       @map("author_avatar_url")
+  metaTitle       String?       @map("meta_title")
+  metaDescription String?       @map("meta_description")
+  createdAt       DateTime      @default(now()) @map("created_at")
+  updatedAt       DateTime      @updatedAt @map("updated_at")
+
+  categories      ContentCategory[]
+  ageGroups       ContentAgeGroup[]
+  tags            ContentTag[]
+  products        ContentProduct[]
+  bookmarks       Bookmark[]
+  views           ContentView[]
+  learningPathItems LearningPathItem[]
+
+  @@index([status, publishedAt])
+  @@index([type, status])
+  @@map("contents")
+}
+
+model Category {
+  id          String    @id @default(uuid())
+  name        String
+  slug        String    @unique
+  description String?
+  icon        String?
+  color       String?
+  parentId    String?   @map("parent_id")
+  sortOrder   Int       @default(0) @map("sort_order")
+  isActive    Boolean   @default(true) @map("is_active")
+  createdAt   DateTime  @default(now()) @map("created_at")
+  updatedAt   DateTime  @updatedAt @map("updated_at")
+
+  parent      Category?   @relation("CategoryTree", fields: [parentId], references: [id])
+  children    Category[]  @relation("CategoryTree")
+  contents    ContentCategory[]
+
+  @@map("categories")
+}
+
+model Tag {
+  id          String    @id @default(uuid())
+  name        String    @unique
+  slug        String    @unique
+  createdAt   DateTime  @default(now()) @map("created_at")
+
+  contents    ContentTag[]
+
+  @@map("tags")
+}
+
+model ContentCategory {
+  contentId   String   @map("content_id")
+  categoryId  String   @map("category_id")
+
+  content     Content  @relation(fields: [contentId], references: [id], onDelete: Cascade)
+  category    Category @relation(fields: [categoryId], references: [id], onDelete: Cascade)
+
+  @@id([contentId, categoryId])
+  @@map("content_categories")
+}
+
+model ContentAgeGroup {
+  contentId   String   @map("content_id")
+  ageGroupId  String   @map("age_group_id")
+
+  content     Content  @relation(fields: [contentId], references: [id], onDelete: Cascade)
+  ageGroup    AgeGroup @relation(fields: [ageGroupId], references: [id], onDelete: Cascade)
+
+  @@id([contentId, ageGroupId])
+  @@map("content_age_groups")
+}
+
+model ContentTag {
+  contentId   String   @map("content_id")
+  tagId       String   @map("tag_id")
+
+  content     Content  @relation(fields: [contentId], references: [id], onDelete: Cascade)
+  tag         Tag      @relation(fields: [tagId], references: [id], onDelete: Cascade)
+
+  @@id([contentId, tagId])
+  @@map("content_tags")
+}
+
+model Product {
+  id              String        @id @default(uuid())
+  name            String
+  slug            String        @unique
+  description     String?
+  shortDescription String?      @map("short_description")
+  type            String
+  price           Float?
+  currency        String        @default("IDR")
+  thumbnailUrl    String?       @map("thumbnail_url")
+  images          String?                              // JSON array of image URLs (sqlite has no native Json)
+  externalUrl     String?       @map("external_url")
+  ctaText         String?       @map("cta_text")
+  isActive        Boolean       @default(true) @map("is_active")
+  isFeatured      Boolean       @default(false) @map("is_featured")
+  sortOrder       Int           @default(0) @map("sort_order")
+  createdAt       DateTime      @default(now()) @map("created_at")
+  updatedAt       DateTime      @updatedAt @map("updated_at")
+
+  ageGroups       ProductAgeGroup[]
+  contents        ContentProduct[]
+  clicks          ProductClick[]
+
+  @@map("products")
+}
+
+model ProductAgeGroup {
+  productId   String   @map("product_id")
+  ageGroupId  String   @map("age_group_id")
+
+  product     Product  @relation(fields: [productId], references: [id], onDelete: Cascade)
+  ageGroup    AgeGroup @relation(fields: [ageGroupId], references: [id], onDelete: Cascade)
+
+  @@id([productId, ageGroupId])
+  @@map("product_age_groups")
+}
+
+model ContentProduct {
+  id          String   @id @default(uuid())
+  contentId   String   @map("content_id")
+  productId   String   @map("product_id")
+  relevanceScore Float  @default(1.0) @map("relevance_score")
+  placement   String   @default("SIDEBAR")
+  sortOrder   Int      @default(0) @map("sort_order")
+  createdAt   DateTime @default(now()) @map("created_at")
+
+  content     Content  @relation(fields: [contentId], references: [id], onDelete: Cascade)
+  product     Product  @relation(fields: [productId], references: [id], onDelete: Cascade)
+
+  @@unique([contentId, productId])
+  @@map("content_products")
+}
+
+model LearningPath {
+  id          String    @id @default(uuid())
+  title       String
+  slug        String    @unique
+  description String?
+  thumbnailUrl String?  @map("thumbnail_url")
+  difficulty  String    @default("BEGINNER")
+  estimatedTime Int?    @map("estimated_time")
+  isPublished Boolean   @default(false) @map("is_published")
+  sortOrder   Int       @default(0) @map("sort_order")
+  createdAt   DateTime  @default(now()) @map("created_at")
+  updatedAt   DateTime  @updatedAt @map("updated_at")
+
+  items       LearningPathItem[]
+
+  @@map("learning_paths")
+}
+
+model LearningPathItem {
+  id              String       @id @default(uuid())
+  learningPathId  String       @map("learning_path_id")
+  contentId       String       @map("content_id")
+  sortOrder       Int          @default(0) @map("sort_order")
+  isRequired      Boolean      @default(true) @map("is_required")
+  createdAt       DateTime     @default(now()) @map("created_at")
+
+  learningPath    LearningPath @relation(fields: [learningPathId], references: [id], onDelete: Cascade)
+  content         Content      @relation(fields: [contentId], references: [id])
+
+  @@unique([learningPathId, contentId])
+  @@map("learning_path_items")
+}
+
+model Bookmark {
+  id          String    @id @default(uuid())
+  userId      String    @map("user_id")
+  contentId   String    @map("content_id")
+  createdAt   DateTime  @default(now()) @map("created_at")
+
+  user        User      @relation(fields: [userId], references: [id], onDelete: Cascade)
+  content     Content   @relation(fields: [contentId], references: [id], onDelete: Cascade)
+
+  @@unique([userId, contentId])
+  @@map("bookmarks")
+}
+
+model CommunityThread {
+  id          String    @id @default(uuid())
+  userId      String    @map("user_id")
+  title       String
+  body        String
+  categorySlug String?  @map("category_slug")
+  isPinned    Boolean   @default(false) @map("is_pinned")
+  isLocked    Boolean   @default(false) @map("is_locked")
+  viewCount   Int       @default(0) @map("view_count")
+  likeCount   Int       @default(0) @map("like_count")
+  commentCount Int      @default(0) @map("comment_count")
+  createdAt   DateTime  @default(now()) @map("created_at")
+  updatedAt   DateTime  @updatedAt @map("updated_at")
+
+  user        User      @relation(fields: [userId], references: [id])
+  comments    CommunityComment[]
+
+  @@index([createdAt])
+  @@map("community_threads")
+}
+
+model CommunityComment {
+  id          String    @id @default(uuid())
+  threadId    String    @map("thread_id")
+  userId      String    @map("user_id")
+  parentId    String?   @map("parent_id")
+  body        String
+  likeCount   Int       @default(0) @map("like_count")
+  createdAt   DateTime  @default(now()) @map("created_at")
+  updatedAt   DateTime  @updatedAt @map("updated_at")
+
+  thread      CommunityThread @relation(fields: [threadId], references: [id], onDelete: Cascade)
+  user        User            @relation(fields: [userId], references: [id])
+  parent      CommunityComment? @relation("CommentReplies", fields: [parentId], references: [id])
+  replies     CommunityComment[] @relation("CommentReplies")
+
+  @@map("community_comments")
+}
+
+model GamificationProfile {
+  id              String    @id @default(uuid())
+  userId          String    @unique @map("user_id")
+  totalPoints     Int       @default(0) @map("total_points")
+  currentStreak   Int       @default(0) @map("current_streak")
+  longestStreak   Int       @default(0) @map("longest_streak")
+  lastActiveDate  DateTime? @map("last_active_date")
+  level           Int       @default(1)
+  createdAt       DateTime  @default(now()) @map("created_at")
+  updatedAt       DateTime  @updatedAt @map("updated_at")
+
+  user            User      @relation(fields: [userId], references: [id], onDelete: Cascade)
+  badges          UserBadge[]
+
+  @@map("gamification_profiles")
+}
+
+model Badge {
+  id          String    @id @default(uuid())
+  name        String
+  slug        String    @unique
+  description String?
+  iconUrl     String?   @map("icon_url")
+  criteria    String?   // JSON string (sqlite has no native Json)
+  points      Int       @default(0)
+  createdAt   DateTime  @default(now()) @map("created_at")
+
+  users       UserBadge[]
+
+  @@map("badges")
+}
+
+model UserBadge {
+  id                    String    @id @default(uuid())
+  gamificationProfileId String    @map("gamification_profile_id")
+  badgeId               String    @map("badge_id")
+  earnedAt              DateTime  @default(now()) @map("earned_at")
+
+  gamificationProfile   GamificationProfile @relation(fields: [gamificationProfileId], references: [id], onDelete: Cascade)
+  badge                 Badge               @relation(fields: [badgeId], references: [id])
+
+  @@unique([gamificationProfileId, badgeId])
+  @@map("user_badges")
+}
+
+model ContentView {
+  id          String    @id @default(uuid())
+  contentId   String    @map("content_id")
+  userId      String?   @map("user_id")
+  sessionId   String?   @map("session_id")
+  duration    Int?
+  completedAt DateTime? @map("completed_at")
+  createdAt   DateTime  @default(now()) @map("created_at")
+
+  content     Content   @relation(fields: [contentId], references: [id], onDelete: Cascade)
+  user        User?     @relation(fields: [userId], references: [id])
+
+  @@index([contentId, createdAt])
+  @@index([userId, createdAt])
+  @@map("content_views")
+}
+
+model ProductClick {
+  id          String    @id @default(uuid())
+  productId   String    @map("product_id")
+  userId      String?   @map("user_id")
+  contentId   String?   @map("content_id")
+  source      String?
+  createdAt   DateTime  @default(now()) @map("created_at")
+
+  product     Product   @relation(fields: [productId], references: [id])
+  user        User?     @relation(fields: [userId], references: [id])
+
+  @@index([productId, createdAt])
+  @@map("product_clicks")
+}
+
+model Notification {
+  id          String    @id @default(uuid())
+  userId      String    @map("user_id")
+  title       String
+  body        String
+  type        String
+  isRead      Boolean   @default(false) @map("is_read")
+  actionUrl   String?   @map("action_url")
+  createdAt   DateTime  @default(now()) @map("created_at")
+
+  user        User      @relation(fields: [userId], references: [id], onDelete: Cascade)
+
+  @@index([userId, isRead, createdAt])
+  @@map("notifications")
+}
