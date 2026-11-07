@@ -32,8 +32,4 @@ export type * from './models/Badge'
 export type * from './models/UserBadge'
 export type * from './models/ContentView'
 export type * from './models/ProductClick'
-<<<<<<< HEAD
-export type * from './models/Notification'
-=======
->>>>>>> e9310957946f70d3b2a21a6e5b859ce4af234e6b
 export type * from './commonInputTypes'
