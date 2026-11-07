@@ -106,6 +106,29 @@ export type CreateCategoryInput = z.infer<typeof createCategorySchema>;
 export const updateCategorySchema = createCategorySchema.partial();
 export type UpdateCategoryInput = z.infer<typeof updateCategorySchema>;
 
+// ---------- Learning Path (admin) ----------
+export const learningPathItemInputSchema = z.object({
+  contentId: uuidSchema,
+  sortOrder: z.number().int().min(0).default(0),
+  isRequired: z.boolean().default(true),
+});
+export type LearningPathItemInput = z.infer<typeof learningPathItemInputSchema>;
+
+export const createLearningPathSchema = z.object({
+  title: z.string().min(3, 'Judul minimal 3 karakter').max(200),
+  slug: z.string().min(3).max(220).regex(/^[a-z0-9-]+$/, 'Slug hanya boleh huruf kecil, angka, dan tanda hubung').optional(),
+  description: z.string().max(5000).nullish(),
+  thumbnailUrl: z.string().max(1000).nullish(),
+  difficulty: z.enum(['BEGINNER', 'INTERMEDIATE', 'ADVANCED']).default('BEGINNER'),
+  estimatedTime: z.number().int().min(1).max(100000).nullish(),
+  isPublished: z.boolean().default(false),
+  sortOrder: z.number().int().default(0),
+  items: z.array(learningPathItemInputSchema).max(200).default([]),
+});
+export type CreateLearningPathInput = z.infer<typeof createLearningPathSchema>;
+export const updateLearningPathSchema = createLearningPathSchema.partial();
+export type UpdateLearningPathInput = z.infer<typeof updateLearningPathSchema>;
+
 // ---------- Content-Product mapping (admin) ----------
 export const contentProductSchema = z.object({
   contentId: uuidSchema,
