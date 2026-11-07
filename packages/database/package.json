@@ -21,7 +21,8 @@
     "prepublishOnly": "pnpm build",
     "db:push:supabase": "node scripts/push-wasm.mjs prisma/schema.postgres.prisma",
     "db:push:supabase:cli": "prisma db push --skip-generate --config prisma.config.supabase.ts",
-    "db:generate:postgres": "prisma generate --schema prisma/schema.postgres.prisma && node scripts/patch-generated.mjs"
+    "db:generate:postgres": "prisma generate --schema prisma/schema.postgres.prisma && node scripts/patch-generated.mjs",
+    "db:ddl:postgres": "node scripts/export-ddl.mjs"
   },
   "dependencies": {
     "@libsql/client": "^0.18.0",
