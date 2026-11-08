@@ -102,9 +102,13 @@ export function LearningPathsTab() {
         <ul className="divide-y divide-sand/70">
           {items.map((path) => (
             <li key={path.id} className="flex flex-wrap items-center gap-3 px-5 py-3">
-              <span className="grid h-9 w-9 shrink-0 place-items-center rounded-2xl bg-secondary-soft text-secondary">
-                <GraduationCap size={18} />
-              </span>
+              {path.thumbnailUrl ? (
+                <img src={path.thumbnailUrl} alt="" loading="lazy" className="h-12 w-16 shrink-0 rounded-xl border border-sand object-cover" />
+              ) : (
+                <span className="grid h-12 w-16 shrink-0 place-items-center rounded-xl bg-secondary-soft text-secondary">
+                  <GraduationCap size={20} />
+                </span>
+              )}
               <span className="min-w-0 flex-1">
                 <span className="line-clamp-1 block text-xs font-semibold text-ink">{path.title}</span>
                 <span className="mt-0.5 flex flex-wrap items-center gap-1.5 text-[9px] font-bold">

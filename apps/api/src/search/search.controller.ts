@@ -37,7 +37,7 @@ export class SearchController {
       ],
     };
 
-    const [total, rows] = await prisma.$transaction([
+    const [total, rows] = await Promise.all([
       prisma.content.count({ where }),
       prisma.content.findMany({
         where,

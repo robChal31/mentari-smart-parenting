@@ -250,6 +250,7 @@ async function main() {
         title: lp.title, slug: lp.slug, description: lp.description,
         difficulty: lp.difficulty, estimatedTime: lp.estimatedTime,
         isPublished: true, sortOrder: lp.sortOrder,
+        thumbnailUrl: lp.thumbnailUrl ?? null,
       },
     });
     for (const [index, contentSlug] of lp.contentSlugs.entries()) {

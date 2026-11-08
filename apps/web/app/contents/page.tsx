@@ -48,6 +48,9 @@ export default async function ContentsPage({ searchParams }: PageProps) {
   ]);
 
   const { items, meta } = result;
+  // fetchServerPaginated returns meta: null when the API could not be reached —
+  // treat that as an error state, not as "no contents exist".
+  const apiFailed = meta === null;
   const flatCategories = (categories ?? []).flatMap((c) => [c, ...(c.children ?? [])]);
 
   function pageHref(page: number): string {
@@ -115,7 +118,14 @@ export default async function ContentsPage({ searchParams }: PageProps) {
             </nav>
           </div>
 
-          {items.length === 0 ? (
+          {apiFailed ? (
+            <div className="rounded-3xl border border-red-200 bg-red-50 px-6 py-16 text-center">
+              <p className="font-heading text-lg font-bold text-red-800">{dict.common.loadError}</p>
+              <Link href="/contents" className="mt-5 inline-block rounded-2xl bg-red-600 px-6 py-3 text-sm font-bold text-white hover:bg-red-700">
+                {dict.common.retry}
+              </Link>
+            </div>
+          ) : items.length === 0 ? (
             <div className="rounded-3xl border border-dashed border-sand bg-white/60 px-6 py-16 text-center">
               <p className="font-heading text-lg font-bold text-secondary">{dict.contents.emptyTitle}</p>
               <p className="mt-1 text-sm text-muted">{dict.contents.emptyHint}</p>
