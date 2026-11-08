@@ -20,79 +20,103 @@ export default async function LearningPathsPage() {
     dict.paths[`difficulty${difficulty.charAt(0)}${difficulty.slice(1).toLowerCase()}` as "difficultyBeginner"];
 
   return (
-    <div className="relative mx-auto max-w-7xl overflow-hidden px-4 py-10 sm:px-6">
-      {/* decorative background blobs */}
-      <span aria-hidden className="pointer-events-none absolute -left-24 top-16 h-72 w-72 rounded-full bg-primary/10 blur-3xl" />
-      <span aria-hidden className="pointer-events-none absolute -right-24 top-40 h-72 w-72 rounded-full bg-accent/15 blur-3xl" />
+    <div>
+      {/* ===== header band (dot-grid, like the home hero) ===== */}
+      <section className="dot-grid relative overflow-hidden border-b border-sand">
+        <div aria-hidden className="pointer-events-none absolute -right-24 -top-24 h-80 w-80 rounded-full bg-primary/10 blur-3xl" />
+        <div aria-hidden className="pointer-events-none absolute -left-24 bottom-0 h-72 w-72 rounded-full bg-accent/10 blur-3xl" />
+        <div className="relative mx-auto max-w-7xl px-4 py-10 sm:px-6 sm:py-14">
+          <p className="inline-flex items-center gap-2 rounded-full border border-accent/30 bg-accent-soft px-3 py-1.5 text-[11px] font-bold uppercase tracking-[0.14em] text-accent-deep">
+            <Rocket size={13} aria-hidden /> {dict.paths.kicker}
+          </p>
+          <h1 className="mt-4 max-w-2xl font-heading text-4xl font-extrabold leading-[1.12] tracking-tight text-secondary sm:text-5xl">
+            {dict.paths.title}
+          </h1>
+          <p className="mt-4 max-w-xl text-base leading-7 text-muted">
+            {dict.paths.listSub}
+          </p>
+        </div>
+      </section>
 
-      <header className="relative max-w-2xl">
-        <p className="inline-flex items-center gap-2 rounded-full bg-accent-soft px-3 py-1.5 text-[11px] font-extrabold uppercase tracking-[0.16em] text-accent-deep">
-          <Rocket size={13} aria-hidden /> {dict.paths.kicker}
-        </p>
-        <h1 className="mt-3 font-heading text-4xl font-extrabold leading-[1.15] text-secondary sm:text-5xl">{dict.paths.title}</h1>
-        <p className="mt-3 max-w-xl text-sm leading-6 text-muted">
-          {dict.paths.listSub}
-        </p>
-      </header>
-
-      <div className="relative mt-8 grid gap-6 md:grid-cols-2">
-        {paths.map((path) => {
-          const itemCount = (path as { itemCount?: number }).itemCount ?? 0;
-          return (
-            <Link
-              key={path.id}
-              href={`/learning-paths/${path.slug}`}
-              className="group flex h-full flex-col overflow-hidden rounded-[2rem] border border-sand bg-white shadow-[0_2px_10px_rgba(38,50,68,0.05)] transition-all duration-300 hover:-translate-y-1.5 hover:border-primary/30 hover:shadow-[0_20px_45px_rgba(255,107,53,0.16)]"
-            >
-              {/* thumbnail */}
-              <div className={`relative h-44 w-full overflow-hidden sm:h-48 ${path.thumbnailUrl ? "" : `bg-gradient-to-br ${gradientFor(path.id)}`}`}>
-                {path.thumbnailUrl ? (
-                  <img
-                    src={path.thumbnailUrl}
-                    alt={path.title}
-                    loading="lazy"
-                    className="absolute inset-0 h-full w-full object-cover transition-transform duration-500 ease-out group-hover:scale-[1.05]"
-                  />
-                ) : (
-                  <>
-                    <span aria-hidden className="absolute -left-6 -top-8 h-28 w-28 rounded-full bg-white/40 blur-2xl" />
-                    <span aria-hidden className="absolute -bottom-10 right-6 h-32 w-32 rounded-full bg-white/30 blur-2xl" />
-                    <GraduationCap size={64} className="absolute bottom-6 left-6 text-secondary/70" aria-hidden strokeWidth={1.4} />
-                  </>
-                )}
-                {/* readability gradient on top of photos */}
-                <span aria-hidden className="pointer-events-none absolute inset-0 bg-gradient-to-t from-secondary/60 via-secondary/10 to-transparent" />
-                <span className="absolute left-4 top-4 inline-flex items-center gap-1.5 rounded-full bg-white/85 px-3 py-1.5 text-[9px] font-extrabold uppercase tracking-[0.18em] text-secondary backdrop-blur">
-                  {difficultyLabel(path.difficulty)}
-                </span>
-                <span className="absolute right-4 top-4 inline-flex items-center gap-1 rounded-full bg-secondary/80 px-2.5 py-1 text-[10px] font-bold text-white backdrop-blur">
-                  <ListChecks size={11} aria-hidden /> {format(dict.paths.modules, { count: itemCount })}
-                </span>
-              </div>
-
-              {/* body */}
-              <div className="flex flex-1 flex-col gap-2 p-6">
-                <h2 className="font-heading text-xl font-extrabold leading-snug text-ink transition-colors group-hover:text-secondary">
-                  {path.title}
-                </h2>
-                {path.description && <p className="line-clamp-3 text-xs leading-5 text-muted">{path.description}</p>}
-                <div className="mt-auto flex items-center justify-between gap-3 border-t border-sand/80 pt-3.5">
-                  <span className="inline-flex items-center gap-3 text-[11px] font-semibold text-muted">
-                    {path.estimatedTime && (
-                      <span className="inline-flex items-center gap-1.5"><Clock size={12} aria-hidden /> {format(dict.paths.minutesTotal, { minutes: path.estimatedTime })}</span>
-                    )}
-                  </span>
-                  <span className="inline-flex items-center gap-2 font-heading text-[12px] font-bold text-primary transition group-hover:gap-3 group-hover:text-primary-deep">
-                    {dict.paths.startLearning} <ArrowRight size={14} aria-hidden />
-                  </span>
+      {/* ===== path cards (signature dark cards from the home page) ===== */}
+      <div className="mx-auto max-w-7xl px-4 py-10 sm:px-6">
+        <div className="grid gap-5 lg:grid-cols-2">
+          {paths.map((path) => {
+            const itemCount = (path as { itemCount?: number }).itemCount ?? 0;
+            return (
+              <Link
+                key={path.id}
+                href={`/learning-paths/${path.slug}`}
+                className="group relative flex flex-col overflow-hidden rounded-3xl bg-secondary text-white ring-1 ring-white/5 transition hover:bg-secondary-deep sm:flex-row"
+              >
+                <div aria-hidden className="pointer-events-none absolute -right-10 -top-10 h-44 w-44 rounded-full bg-accent/20 blur-2xl transition group-hover:bg-accent/30" />
+                {/* artwork — top band on mobile, right panel on sm+ */}
+                <div className="relative h-36 w-full shrink-0 sm:hidden">
+                  {path.thumbnailUrl ? (
+                    <>
+                      <img
+                        src={path.thumbnailUrl}
+                        alt=""
+                        aria-hidden
+                        loading="lazy"
+                        className="absolute inset-0 h-full w-full object-cover"
+                      />
+                      <span aria-hidden className="absolute inset-0 bg-gradient-to-t from-secondary via-secondary/35 to-transparent" />
+                    </>
+                  ) : (
+                    <div aria-hidden className={`absolute inset-0 bg-gradient-to-br ${gradientFor(path.id)} opacity-90`}>
+                      <span className="absolute inset-0 bg-secondary/25" />
+                      <GraduationCap size={48} strokeWidth={1.4} className="absolute bottom-3 left-5 text-white/45" />
+                    </div>
+                  )}
                 </div>
-              </div>
-            </Link>
-          );
-        })}
-      </div>
+                <div className="relative flex min-w-0 flex-1 flex-col p-6 sm:p-7">
+                  <p className="inline-flex w-fit items-center gap-1.5 rounded-full bg-white/10 px-3 py-1.5 text-[9px] font-extrabold uppercase tracking-[0.18em] text-accent">
+                    {difficultyLabel(path.difficulty)}
+                    {path.estimatedTime ? <span className="text-white/55"> · {format(dict.paths.minutesTotal, { minutes: path.estimatedTime })}</span> : null}
+                  </p>
+                  <h2 className="mt-4 font-heading text-xl font-extrabold leading-snug sm:text-2xl">
+                    {path.title}
+                  </h2>
+                  {path.description && <p className="mt-2 line-clamp-3 text-sm leading-6 text-white/75">{path.description}</p>}
+                  <div className="mt-auto flex items-center justify-between gap-3 pt-6">
+                    <span className="inline-flex items-center gap-1.5 rounded-full bg-white/10 px-3 py-1.5 text-[10px] font-bold text-white/85">
+                      <ListChecks size={12} aria-hidden /> {format(dict.paths.modules, { count: itemCount })}
+                    </span>
+                    <span className="inline-flex items-center gap-2 font-heading text-[12px] font-bold text-[#FFD9A0] transition group-hover:gap-3">
+                      {dict.paths.startLearning} <ArrowRight size={15} aria-hidden />
+                    </span>
+                  </div>
+                </div>
+                {/* artwork panel — melts into the card via a left fade */}
+                <div className="relative hidden w-36 shrink-0 sm:block md:w-48 lg:w-44 xl:w-52">
+                  {path.thumbnailUrl ? (
+                    <>
+                      <img
+                        src={path.thumbnailUrl}
+                        alt=""
+                        aria-hidden
+                        loading="lazy"
+                        className="absolute inset-0 h-full w-full object-cover"
+                      />
+                      <span aria-hidden className="absolute inset-0 bg-gradient-to-r from-secondary via-secondary/35 to-transparent" />
+                    </>
+                  ) : (
+                    <div aria-hidden className={`absolute inset-0 bg-gradient-to-br ${gradientFor(path.id)} opacity-90`}>
+                      <span className="absolute inset-0 bg-secondary/25" />
+                      <GraduationCap size={56} strokeWidth={1.4} className="absolute bottom-4 right-4 text-white/45" />
+                    </div>
+                  )}
+                </div>
+              </Link>
+            );
+          })}
+        </div>
 
-      {paths.length === 0 && <p className="mt-16 text-center text-sm text-muted">{dict.paths.listEmpty}</p>}
+        {paths.length === 0 && (
+          <p className="mt-6 rounded-3xl border border-dashed border-sand bg-white/60 px-6 py-16 text-center text-sm text-muted">{dict.paths.listEmpty}</p>
+        )}
+      </div>
     </div>
   );
 }

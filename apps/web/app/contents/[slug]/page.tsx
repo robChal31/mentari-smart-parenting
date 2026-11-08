@@ -46,9 +46,9 @@ export default async function ContentDetailPage({ params }: PageProps) {
   const content = await api.contentBySlug(slug);
   if (!content) notFound();
 
+  // Recommended products appear in a single place (the sidebar, right rail) —
+  // inline/bottom placements were removed to declutter the article.
   const sidebarProducts = content.recommendedProducts.slice(0, 3);
-  const bottomProducts = content.recommendedProducts.slice(3);
-  const inlineProduct = content.recommendedProducts.length >= 3 ? content.recommendedProducts[0] : null;
   const duration = formatDuration(content.videoDuration, dict.time);
 
   const jsonLd = {
@@ -159,19 +159,6 @@ export default async function ContentDetailPage({ params }: PageProps) {
             </div>
           )}
 
-          {/* Inline recommendation (≥3 mapped products) */}
-          {inlineProduct && (
-            <div className="mt-6">
-              <RecommendationsPanel
-                products={[inlineProduct]}
-                source="INLINE"
-                contentId={content.id}
-                compact
-                subtitle={dict.recommendations.subtitleInline}
-              />
-            </div>
-          )}
-
           {/* Tags */}
           {content.tags.length > 0 && (
             <div className="mt-8 flex flex-wrap items-center gap-2">
@@ -185,13 +172,6 @@ export default async function ContentDetailPage({ params }: PageProps) {
                   #{tag}
                 </Link>
               ))}
-            </div>
-          )}
-
-          {/* Bottom recommendations */}
-          {bottomProducts.length > 0 && (
-            <div className="mt-6">
-              <RecommendationsPanel products={bottomProducts} source="BOTTOM" contentId={content.id} compact />
             </div>
           )}
 

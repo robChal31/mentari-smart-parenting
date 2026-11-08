@@ -360,6 +360,7 @@ const en: Dictionary = {
     kicker: "Learning Paths",
     title: "Learn step by step, see real results",
     listSub: "A curated sequence of articles and videos — finish a path and watch the difference it makes for your little one.",
+    modulesHeading: "Modules",
     difficultyBeginner: "Beginner",
     difficultyIntermediate: "Intermediate",
     difficultyAdvanced: "Advanced",
