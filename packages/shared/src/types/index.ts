@@ -203,6 +203,10 @@ export interface LearningPathDto {
   thumbnailUrl?: string | null;
   difficulty: 'BEGINNER' | 'INTERMEDIATE' | 'ADVANCED';
   estimatedTime?: number | null;
+  isPublished?: boolean;
+  sortOrder?: number;
+  itemCount?: number;
+  updatedAt?: string;
   items?: LearningPathItemDto[];
 }
 

@@ -4,16 +4,19 @@ import {
   slugify,
   type CreateCategoryInput,
   type CreateContentInput,
+  type CreateLearningPathInput,
   type CreateProductInput,
   type ContentProductInput,
   type UpdateCategoryInput,
   type UpdateContentInput,
+  type UpdateLearningPathInput,
   type UpdateProductInput,
 } from '@mentari/shared';
 import {
   contentInclude,
   serializeCategory,
   serializeContentSummary,
+  serializeLearningPath,
   serializeProduct,
 } from '../common/serializers/content.serializer';
 
@@ -297,6 +300,85 @@ export class AdminService {
     if (!existing) throw new NotFoundException({ code: 'NOT_FOUND', message: 'Produk tidak ditemukan.' });
     await prisma.product.update({ where: { id }, data: { isActive: true, deletedAt: null } });
     return { restored: true };
+  }
+
+  // ---------- Learning Paths ----------
+  private serializeLearningPathAdmin(path: any, includeItems = true) {
+    return {
+      ...serializeLearningPath(path, includeItems),
+      isPublished: path.isPublished,
+      sortOrder: path.sortOrder,
+      itemCount: path._count?.items ?? path.items?.length ?? 0,
+      updatedAt: path.updatedAt?.toISOString?.() ?? path.updatedAt,
+    };
+  }
+
+  private learningPathInclude(withItems: boolean) {
+    return withItems
+      ? { items: { orderBy: { sortOrder: 'asc' as const }, include: { content: { include: contentInclude } } }, _count: { select: { items: true } } }
+      : { _count: { select: { items: true } } };
+  }
+
+  async listLearningPaths(query: { page: number; limit: number; q?: string }) {
+    const where = query.q
+      ? { OR: [{ title: { contains: query.q } }, { slug: { contains: query.q } }] }
+      : {};
+    const [total, rows] = await prisma.$transaction([
+      prisma.learningPath.count({ where }),
+      prisma.learningPath.findMany({
+        where,
+        include: this.learningPathInclude(false),
+        orderBy: { sortOrder: 'asc' },
+        skip: (query.page - 1) * query.limit,
+        take: query.limit,
+      }),
+    ]);
+    return { items: rows.map((p) => this.serializeLearningPathAdmin(p, false)), total };
+  }
+
+  async findLearningPath(id: string) {
+    const path = await prisma.learningPath.findUnique({ where: { id }, include: this.learningPathInclude(true) });
+    if (!path) throw new NotFoundException({ code: 'NOT_FOUND', message: 'Learning path tidak ditemukan.' });
+    return this.serializeLearningPathAdmin(path, true);
+  }
+
+  async createLearningPath(input: CreateLearningPathInput) {
+    const slug = input.slug ?? await uniqueSlug(input.title, async (s) => Boolean(await prisma.learningPath.findUnique({ where: { slug: s } })));
+    const { items, ...rest } = input;
+    const created = await prisma.learningPath.create({
+      data: {
+        ...rest,
+        slug,
+        items: items.length
+          ? { create: items.map((item) => ({ contentId: item.contentId, sortOrder: item.sortOrder, isRequired: item.isRequired })) }
+          : undefined,
+      },
+    });
+    return this.findLearningPath(created.id);
+  }
+
+  async updateLearningPath(id: string, input: UpdateLearningPathInput) {
+    const existing = await prisma.learningPath.findUnique({ where: { id } });
+    if (!existing) throw new NotFoundException({ code: 'NOT_FOUND', message: 'Learning path tidak ditemukan.' });
+    const { items, ...rest } = input;
+    await prisma.learningPath.update({ where: { id }, data: { ...rest } });
+    if (items !== undefined) {
+      await prisma.learningPathItem.deleteMany({ where: { learningPathId: id } });
+      if (items.length) {
+        await prisma.learningPathItem.createMany({
+          data: items.map((item) => ({ learningPathId: id, contentId: item.contentId, sortOrder: item.sortOrder, isRequired: item.isRequired })),
+        });
+      }
+    }
+    return this.findLearningPath(id);
+  }
+
+  async deleteLearningPath(id: string) {
+    const existing = await prisma.learningPath.findUnique({ where: { id } });
+    if (!existing) throw new NotFoundException({ code: 'NOT_FOUND', message: 'Learning path tidak ditemukan.' });
+    // Items are removed via onDelete: Cascade on learning_path_items.
+    await prisma.learningPath.delete({ where: { id } });
+    return { deleted: true };
   }
 
   // ---------- Categories ----------

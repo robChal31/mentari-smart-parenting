@@ -13,16 +13,20 @@ import {
   contentProductSchema,
   createCategorySchema,
   createContentSchema,
+  createLearningPathSchema,
   createProductSchema,
   updateCategorySchema,
   updateContentSchema,
+  updateLearningPathSchema,
   updateProductSchema,
   type ContentProductInput,
   type CreateCategoryInput,
   type CreateContentInput,
+  type CreateLearningPathInput,
   type CreateProductInput,
   type UpdateCategoryInput,
   type UpdateContentInput,
+  type UpdateLearningPathInput,
   type UpdateProductInput,
 } from '@mentari/shared';
 import { Roles } from '../common/decorators/roles.decorator';
@@ -105,6 +109,38 @@ export class AdminController {
   @Patch('products/:id/restore')
   restoreProduct(@Param('id') id: string) {
     return this.admin.restoreProduct(id).then((data) => ok(data));
+  }
+
+  // ---------- Learning Paths (ADMIN/EDITOR) ----------
+  @Get('learning-paths')
+  async listLearningPaths(@Query('page') page?: string, @Query('limit') limit?: string, @Query('q') q?: string) {
+    const pageNum = Math.max(1, Number(page) || 1);
+    const limitNum = Math.min(100, Math.max(1, Number(limit) || 20));
+    const { items, total } = await this.admin.listLearningPaths({ page: pageNum, limit: limitNum, q: q?.trim() || undefined });
+    return paginated(items, pageNum, limitNum, total);
+  }
+
+  @Post('learning-paths')
+  createLearningPath(@Body(new ZodValidationPipe(createLearningPathSchema)) body: CreateLearningPathInput) {
+    return this.admin.createLearningPath(body).then((data) => ok(data));
+  }
+
+  @Get('learning-paths/:id')
+  findLearningPath(@Param('id') id: string) {
+    return this.admin.findLearningPath(id).then((data) => ok(data));
+  }
+
+  @Patch('learning-paths/:id')
+  updateLearningPath(
+    @Param('id') id: string,
+    @Body(new ZodValidationPipe(updateLearningPathSchema)) body: UpdateLearningPathInput,
+  ) {
+    return this.admin.updateLearningPath(id, body).then((data) => ok(data));
+  }
+
+  @Delete('learning-paths/:id')
+  deleteLearningPath(@Param('id') id: string) {
+    return this.admin.deleteLearningPath(id).then((data) => ok(data));
   }
 
   // ---------- Categories ----------
