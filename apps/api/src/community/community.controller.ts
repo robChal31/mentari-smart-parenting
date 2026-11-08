@@ -30,7 +30,7 @@ export class CommunityController {
     const pageNum = Math.max(1, Number(page) || 1);
     const limitNum = Math.min(50, Math.max(1, Number(limit) || 10));
     const where = category ? { categorySlug: category } : {};
-    const [total, rows] = await prisma.$transaction([
+    const [total, rows] = await Promise.all([
       prisma.communityThread.count({ where }),
       prisma.communityThread.findMany({
         where,
@@ -91,7 +91,7 @@ export class CommunityController {
     if (thread.isLocked) {
       throw new BadRequestException({ code: 'LOCKED', message: 'Thread ini dikunci oleh moderator.' });
     }
-    const [comment] = await prisma.$transaction([
+    const [comment] = await Promise.all([
       prisma.communityComment.create({
         data: { threadId: id, userId: user.id, body: body.body, parentId: body.parentId ?? null },
         include: { user: userSelect },

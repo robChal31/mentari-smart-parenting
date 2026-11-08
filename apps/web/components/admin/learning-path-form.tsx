@@ -1,7 +1,7 @@
 "use client";
 
 import { useEffect, useRef, useState } from "react";
-import { ArrowDown, ArrowUp, Loader2, Plus, Search, Trash2, X } from "lucide-react";
+import { ArrowDown, ArrowUp, Image as ImageIcon, Loader2, Plus, Search, Trash2, X } from "lucide-react";
 import { useDictionary } from "@/components/i18n-provider";
 import { apiData, apiPaginated, ApiError } from "@/lib/client-api";
 import type { LearningPathDto } from "@mentari/shared";
@@ -79,6 +79,7 @@ export function LearningPathForm({
 
   const [busy, setBusy] = useState(false);
   const [error, setError] = useState<string | null>(null);
+  const [thumbFailed, setThumbFailed] = useState(false);
 
   function addItem(option: ContentOption) {
     setItems((rows) => (rows.some((r) => r.contentId === option.id) ? rows : [...rows, { contentId: option.id, title: option.title, type: option.type, isRequired: true }]));
@@ -175,7 +176,17 @@ export function LearningPathForm({
         </label>
         <label className="block sm:col-span-2">
           <span className="text-[10px] font-extrabold uppercase tracking-[0.14em] text-muted">{dict.admin.thumbnailUrlLabel}</span>
-          <input value={thumbnailUrl} onChange={(e) => setThumbnailUrl(e.target.value)} placeholder={dict.admin.thumbnailUrlPlaceholder} aria-label={dict.admin.thumbnailUrlLabel} className="mt-1.5 w-full rounded-2xl border border-sand bg-cream/30 px-4 py-2.5 text-sm outline-none focus:border-primary" />
+          <input value={thumbnailUrl} onChange={(e) => { setThumbnailUrl(e.target.value); setThumbFailed(false); }} placeholder={dict.admin.thumbnailUrlPlaceholder} aria-label={dict.admin.thumbnailUrlLabel} className="mt-1.5 w-full rounded-2xl border border-sand bg-cream/30 px-4 py-2.5 text-sm outline-none focus:border-primary" />
+          <div className="mt-2 flex items-center gap-3">
+            {thumbnailUrl.trim() && !thumbFailed ? (
+              <img src={thumbnailUrl.trim()} alt={dict.admin.thumbnailUrlLabel} onError={() => setThumbFailed(true)} className="h-24 w-44 rounded-2xl border border-sand object-cover" />
+            ) : (
+              <div className="grid h-24 w-44 place-items-center rounded-2xl border border-dashed border-sand bg-cream/40 text-muted">
+                <ImageIcon size={22} aria-hidden />
+              </div>
+            )}
+            <p className="max-w-56 text-[10px] leading-4 text-muted">{dict.admin.thumbnailPreviewHint}</p>
+          </div>
         </label>
         <label className="block sm:col-span-2">
           <span className="text-[10px] font-extrabold uppercase tracking-[0.14em] text-muted">{dict.admin.learningPathDescriptionLabel}</span>

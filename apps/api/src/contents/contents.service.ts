@@ -38,7 +38,7 @@ export class ContentsService {
           ? [{ publishedAt: 'asc' as const }]
           : [{ publishedAt: 'desc' as const }];
 
-    const [total, rows] = await prisma.$transaction([
+    const [total, rows] = await Promise.all([
       prisma.content.count({ where }),
       prisma.content.findMany({
         where,
@@ -104,7 +104,7 @@ export class ContentsService {
   async trackView(contentId: string, userId?: string, input?: { duration?: number; completed?: boolean }) {
     const content = await prisma.content.findUnique({ where: { id: contentId }, select: { id: true } });
     if (!content) throw new NotFoundException({ code: 'NOT_FOUND', message: 'Konten tidak ditemukan.' });
-    await prisma.$transaction([
+    await Promise.all([
       prisma.content.update({ where: { id: contentId }, data: { viewCount: { increment: 1 } } }),
       prisma.contentView.create({
         data: {

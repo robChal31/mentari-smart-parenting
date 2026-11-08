@@ -102,7 +102,7 @@ export class AdminService {
       ...(query.status ? { status: query.status.toUpperCase() } : {}),
       ...(query.q ? { OR: [{ title: { contains: query.q } }, { slug: { contains: query.q } }] } : {}),
     };
-    const [total, rows] = await prisma.$transaction([
+    const [total, rows] = await Promise.all([
       prisma.content.count({ where }),
       prisma.content.findMany({
         where,
@@ -224,7 +224,7 @@ export class AdminService {
     const where: Record<string, unknown> = query.q
       ? { OR: [{ name: { contains: query.q } }, { slug: { contains: query.q } }] }
       : {};
-    const [total, rows] = await prisma.$transaction([
+    const [total, rows] = await Promise.all([
       prisma.product.count({ where }),
       prisma.product.findMany({
         where,
@@ -323,7 +323,7 @@ export class AdminService {
     const where = query.q
       ? { OR: [{ title: { contains: query.q } }, { slug: { contains: query.q } }] }
       : {};
-    const [total, rows] = await prisma.$transaction([
+    const [total, rows] = await Promise.all([
       prisma.learningPath.count({ where }),
       prisma.learningPath.findMany({
         where,
@@ -411,7 +411,7 @@ export class AdminService {
     const where: Record<string, unknown> = query.q
       ? { OR: [{ email: { contains: query.q } }, { fullName: { contains: query.q } }] }
       : {};
-    const [total, rows] = await prisma.$transaction([
+    const [total, rows] = await Promise.all([
       prisma.user.count({ where }),
       prisma.user.findMany({
         where,

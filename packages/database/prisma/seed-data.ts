@@ -858,6 +858,7 @@ export const BADGES: Array<{ name: string; slug: string; description: string; po
 
 export const LEARNING_PATHS: Array<{
   title: string; slug: string; description: string; difficulty: string; estimatedTime: number; sortOrder: number;
+  thumbnailUrl?: string;
   contentSlugs: string[];
 }> = [
   {
@@ -867,6 +868,7 @@ export const LEARNING_PATHS: Array<{
     difficulty: 'BEGINNER',
     estimatedTime: 90,
     sortOrder: 1,
+    thumbnailUrl: '/learning-paths/persiapan-anak-masuk-sd.jpg',
     contentSlugs: [
       'tanda-tanda-siap-sekolah',
       'checklist-persiapan-anak-masuk-sd',
@@ -883,6 +885,7 @@ export const LEARNING_PATHS: Array<{
     difficulty: 'BEGINNER',
     estimatedTime: 60,
     sortOrder: 2,
+    thumbnailUrl: '/learning-paths/mpasi-6-bulan-pertama.jpg',
     contentSlugs: [
       'panduan-mpasi-6-bulan',
       'takaran-mpasi-6-24-bulan',
