@@ -1,6 +1,7 @@
 "use client";
 
 import { useCallback, useEffect, useState } from "react";
+import { AdminErrorBanner } from "@/components/admin/admin-error";
 import { useDictionary, useLocale } from "@/components/i18n-provider";
 import { apiData, apiPaginated } from "@/lib/client-api";
 import { Combobox } from "@/components/combobox";
@@ -17,12 +18,14 @@ export function UsersTab() {
   const locale = intlTag(useLocale());
   const [items, setItems] = useState<AdminUser[]>([]);
   const [busy, setBusy] = useState(false);
+  const [loadError, setLoadError] = useState(false);
 
   const load = useCallback(() => {
     setBusy(true);
+    setLoadError(false);
     apiPaginated<AdminUser>("/admin/users?limit=50")
       .then((envelope) => setItems(envelope.data))
-      .catch(() => undefined)
+      .catch(() => setLoadError(true))
       .finally(() => setBusy(false));
   }, []);
 
@@ -41,8 +44,9 @@ export function UsersTab() {
   ];
 
   return (
-    <div className="overflow-x-auto rounded-3xl border border-sand bg-white md:overflow-visible">
-      <table className="w-full min-w-[720px] text-left text-xs">
+    <div className="space-y-2">
+      {loadError && <AdminErrorBanner onRetry={load} />}
+    <div className="overflow-x-auto rounded-3xl border border-sand bg-white md:overflow-visible">      <table className="w-full min-w-[720px] text-left text-xs">
         <thead className="bg-cream/50 text-[9px] font-extrabold uppercase tracking-[0.16em] text-muted">
           <tr>
             <th className="px-5 py-3">{dict.admin.usersName}</th>
@@ -77,6 +81,7 @@ export function UsersTab() {
         </tbody>
       </table>
       {!busy && items.length === 0 && <p className="px-5 py-8 text-center text-xs text-muted">{dict.admin.noUsers}</p>}
+    </div>
     </div>
   );
 }

@@ -4,6 +4,7 @@ import { useCallback, useEffect, useState } from "react";
 import {
   Archive, Loader2, Pencil, Plus, RotateCcw, Search, Star, Trash2, X,
 } from "lucide-react";
+import { AdminErrorBanner } from "@/components/admin/admin-error";
 import { useDictionary } from "@/components/i18n-provider";
 import { apiData, apiPaginated } from "@/lib/client-api";
 import { format } from "@/lib/i18n/format";
@@ -15,6 +16,7 @@ export function ProductsTab() {
   const [items, setItems] = useState<ProductDto[]>([]);
   const [q, setQ] = useState("");
   const [busy, setBusy] = useState(false);
+  const [loadError, setLoadError] = useState(false);
   const [showForm, setShowForm] = useState(false);
   const [editing, setEditing] = useState<ProductDto | null>(null);
   const [confirmDelete, setConfirmDelete] = useState<ProductDto | null>(null);
@@ -22,10 +24,11 @@ export function ProductsTab() {
 
   const load = useCallback(() => {
     setBusy(true);
+    setLoadError(false);
     const params = new URLSearchParams({ limit: "50", ...(q.trim() ? { q: q.trim() } : {}) });
     apiPaginated<ProductDto>(`/admin/products?${params}`)
       .then((envelope) => setItems(envelope.data))
-      .catch(() => undefined)
+      .catch(() => setLoadError(true))
       .finally(() => setBusy(false));
   }, [q]);
 
@@ -61,7 +64,8 @@ export function ProductsTab() {
   }
 
   return (
-    <div>
+    <div className="space-y-2">
+      {loadError && <AdminErrorBanner onRetry={load} />}
       <div className="flex flex-wrap items-center gap-3">
         <label className="flex min-w-0 flex-1 items-center gap-2 rounded-2xl border border-sand bg-white px-4 py-2.5 focus-within:border-primary">
           <Search size={15} className="shrink-0 text-muted" aria-hidden />

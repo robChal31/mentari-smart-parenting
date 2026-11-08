@@ -1,6 +1,7 @@
 "use client";
 
-import { useEffect, useState } from "react";
+import { useCallback, useEffect, useState } from "react";
+import { AdminErrorBanner } from "@/components/admin/admin-error";
 import {
   BookOpenText, Boxes, CheckCircle2, Eye, MousePointerClick, Users,
 } from "lucide-react";
@@ -24,11 +25,16 @@ export function OverviewTab() {
   const dict = useDictionary();
   const locale = useLocale();
   const [data, setData] = useState<Overview | null>(null);
+  const [failed, setFailed] = useState(false);
 
-  useEffect(() => {
-    apiData<Overview>("/admin/overview").then(setData).catch(() => undefined);
+  const load = useCallback(() => {
+    setFailed(false);
+    apiData<Overview>("/admin/overview").then(setData).catch(() => setFailed(true));
   }, []);
 
+  useEffect(() => { load(); }, [load]);
+
+  if (failed) return <AdminErrorBanner onRetry={load} />;
   if (!data) {
     return <div className="grid gap-4 sm:grid-cols-4">{Array.from({ length: 8 }).map((_, i) => <div key={i} className="skeleton h-24 rounded-3xl" />)}</div>;
   }

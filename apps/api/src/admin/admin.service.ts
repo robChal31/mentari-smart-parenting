@@ -1,6 +1,7 @@
 import { BadRequestException, Injectable, NotFoundException } from '@nestjs/common';
 import { prisma } from '@mentari/database';
 import {
+  countProfanity,
   slugify,
   type CreateCategoryInput,
   type CreateContentInput,
@@ -15,9 +16,11 @@ import {
 import {
   contentInclude,
   serializeCategory,
+  serializeComment,
   serializeContentSummary,
   serializeLearningPath,
   serializeProduct,
+  serializeThread,
 } from '../common/serializers/content.serializer';
 
 async function uniqueSlug(base: string, exists: (slug: string) => Promise<boolean>): Promise<string> {
@@ -436,6 +439,103 @@ export class AdminService {
     const user = await prisma.user.update({ where: { id }, data: { role } }).catch(() => null);
     if (!user) throw new NotFoundException({ code: 'NOT_FOUND', message: 'User tidak ditemukan.' });
     return { id: user.id, email: user.email, role: user.role };
+  }
+
+  // ---------- Community moderation ----------
+  private serializeThreadAdmin(t: any) {
+    return {
+      ...serializeThread(t, { censor: false }),
+      flags: countProfanity(`${t.title}\n${t.body}`),
+      author: {
+        fullName: t.user?.fullName ?? 'Anonim',
+        avatarUrl: t.user?.avatarUrl ?? null,
+        email: t.user?.email ?? null,
+      },
+    };
+  }
+
+  async listCommunityThreads(query: { page: number; limit: number; q?: string; filter?: 'pinned' | 'locked' | 'flagged' }) {
+    const where: Record<string, unknown> = query.q
+      ? { OR: [{ title: { contains: query.q } }, { body: { contains: query.q } }] }
+      : {};
+    if (query.filter === 'pinned') where.isPinned = true;
+    if (query.filter === 'locked') where.isLocked = true;
+    const userSelect = { select: { fullName: true, avatarUrl: true, email: true } };
+    const [total, rows] = await Promise.all([
+      prisma.communityThread.count({ where }),
+      prisma.communityThread.findMany({
+        where,
+        include: { user: userSelect },
+        orderBy: [{ isPinned: 'desc' }, { createdAt: 'desc' }],
+        skip: (query.page - 1) * query.limit,
+        take: query.limit,
+      }),
+    ]);
+    let items = rows.map((t) => this.serializeThreadAdmin(t));
+    if (query.filter === 'flagged') {
+      // Flags are computed at read time (no column exists), so the flagged
+      // queue is produced per page; totals reflect the filtered result.
+      items = items.filter((t) => t.flags > 0);
+      return { items, total: items.length };
+    }
+    return { items, total };
+  }
+
+  async findCommunityThread(id: string) {
+    const thread = await prisma.communityThread.findUnique({
+      where: { id },
+      include: {
+        user: { select: { fullName: true, avatarUrl: true, email: true } },
+        comments: {
+          include: { user: { select: { fullName: true, avatarUrl: true, email: true } } },
+          orderBy: { createdAt: 'asc' },
+        },
+      },
+    });
+    if (!thread) throw new NotFoundException({ code: 'NOT_FOUND', message: 'Thread tidak ditemukan.' });
+    return {
+      ...this.serializeThreadAdmin(thread),
+      comments: thread.comments.map((c) => ({
+        ...serializeComment(c, { censor: false }),
+        flags: countProfanity(c.body),
+        author: {
+          fullName: c.user?.fullName ?? 'Anonim',
+          avatarUrl: c.user?.avatarUrl ?? null,
+          email: c.user?.email ?? null,
+        },
+      })),
+    };
+  }
+
+  async setThreadPinned(id: string, isPinned: boolean) {
+    const t = await prisma.communityThread.update({ where: { id }, data: { isPinned } }).catch(() => null);
+    if (!t) throw new NotFoundException({ code: 'NOT_FOUND', message: 'Thread tidak ditemukan.' });
+    return { id, isPinned };
+  }
+
+  async setThreadLocked(id: string, isLocked: boolean) {
+    const t = await prisma.communityThread.update({ where: { id }, data: { isLocked } }).catch(() => null);
+    if (!t) throw new NotFoundException({ code: 'NOT_FOUND', message: 'Thread tidak ditemukan.' });
+    return { id, isLocked };
+  }
+
+  async deleteCommunityThread(id: string) {
+    const existing = await prisma.communityThread.findUnique({ where: { id } });
+    if (!existing) throw new NotFoundException({ code: 'NOT_FOUND', message: 'Thread tidak ditemukan.' });
+    // Comments cascade (schema onDelete: Cascade).
+    await prisma.communityThread.delete({ where: { id } });
+    return { deleted: true };
+  }
+
+  async deleteCommunityComment(id: string) {
+    const existing = await prisma.communityComment.findUnique({ where: { id }, select: { id: true, threadId: true } });
+    if (!existing) throw new NotFoundException({ code: 'NOT_FOUND', message: 'Komentar tidak ditemukan.' });
+    await prisma.communityComment.delete({ where: { id } });
+    await prisma.communityThread.updateMany({
+      where: { id: existing.threadId, commentCount: { gt: 0 } },
+      data: { commentCount: { decrement: 1 } },
+    });
+    return { deleted: true };
   }
 
   // ---------- Content ↔ Product mappings ----------

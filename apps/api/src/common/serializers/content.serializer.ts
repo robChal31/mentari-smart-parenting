@@ -9,7 +9,7 @@ import type {
   CommentDto,
   ChildDto,
 } from '@mentari/shared';
-import { ageGroupSlugForMonths, ageInMonths, ageLabel } from '@mentari/shared';
+import { ageGroupSlugForMonths, ageInMonths, ageLabel, censorProfanity } from '@mentari/shared';
 
 /* eslint-disable @typescript-eslint/no-explicit-any */
 // Prisma rows come from either the sqlite (string enums) or mysql (enum) schema —
@@ -137,11 +137,14 @@ export function serializeChild(child: any, now = new Date()): ChildDto {
   };
 }
 
-export function serializeThread(t: any): ThreadDto {
+export function serializeThread(t: any, opts?: { censor?: boolean }): ThreadDto {
+  const doCensor = opts?.censor !== false;
+  const title = doCensor ? censorProfanity(t.title).text : t.title;
+  const body = doCensor ? censorProfanity(t.body).text : t.body;
   return {
     id: t.id,
-    title: t.title,
-    body: t.body,
+    title,
+    body,
     isPinned: Boolean(t.isPinned),
     isLocked: Boolean(t.isLocked),
     viewCount: t.viewCount ?? 0,
@@ -157,10 +160,12 @@ export function serializeThread(t: any): ThreadDto {
   };
 }
 
-export function serializeComment(c: any): CommentDto {
+export function serializeComment(c: any, opts?: { censor?: boolean }): CommentDto {
+  const doCensor = opts?.censor !== false;
+  const body = doCensor ? censorProfanity(c.body).text : c.body;
   return {
     id: c.id,
-    body: c.body,
+    body,
     likeCount: c.likeCount ?? 0,
     createdAt: new Date(c.createdAt).toISOString(),
     author: {

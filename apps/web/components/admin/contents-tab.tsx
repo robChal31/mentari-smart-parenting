@@ -4,6 +4,7 @@ import { useCallback, useEffect, useState } from "react";
 import {
   Archive, CheckCircle2, Loader2, Plus, RotateCcw, X,
 } from "lucide-react";
+import { AdminErrorBanner } from "@/components/admin/admin-error";
 import { useDictionary } from "@/components/i18n-provider";
 import { apiData, apiPaginated, ApiError } from "@/lib/client-api";
 import { formatViews } from "@/lib/format";
@@ -18,14 +19,16 @@ export function ContentsTab() {
   const [status, setStatus] = useState<"" | "PUBLISHED" | "DRAFT" | "ARCHIVED">("");
   const [q, setQ] = useState("");
   const [busy, setBusy] = useState(false);
+  const [loadError, setLoadError] = useState(false);
   const [showForm, setShowForm] = useState(false);
 
   const load = useCallback(() => {
     setBusy(true);
+    setLoadError(false);
     const params = new URLSearchParams({ limit: "25", ...(status ? { status } : {}), ...(q ? { q } : {}) });
     apiPaginated<ContentSummaryDto>(`/admin/contents?${params}`)
       .then((envelope) => { setItems(envelope.data); setTotal(envelope.meta?.total ?? envelope.data.length); })
-      .catch(() => undefined)
+      .catch(() => setLoadError(true))
       .finally(() => setBusy(false));
   }, [status, q]);
 
@@ -44,7 +47,8 @@ export function ContentsTab() {
   ];
 
   return (
-    <div>
+    <div className="space-y-2">
+      {loadError && <AdminErrorBanner onRetry={load} />}
       <div className="flex flex-wrap items-center gap-3">
         <input value={q} onChange={(e) => setQ(e.target.value)} placeholder={dict.admin.contentsSearchPlaceholder} aria-label={dict.admin.contentsSearchAria} className="min-w-0 flex-1 rounded-2xl border border-sand bg-white px-4 py-2.5 text-sm outline-none focus:border-primary" />
         <Combobox

@@ -160,7 +160,7 @@ async function main() {
       data: {
         title: c.title, slug: c.slug, excerpt: c.excerpt, body: c.body,
         type: c.type, status: 'PUBLISHED',
-        thumbnailUrl: null,
+        thumbnailUrl: c.thumbnailUrl ?? null,
         videoUrl: c.videoUrl ?? null,
         videoDuration: c.videoDuration ?? null,
         readTime: c.readTime ?? null,

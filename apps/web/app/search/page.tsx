@@ -27,7 +27,7 @@ export default async function SearchPage({ searchParams }: { searchParams: Promi
   // terbaru (sebelumnya halaman tampak "kosong" tanpa konten apa pun).
   const [result, latest] = q
     ? [await api.search({ q, limit: "24" }), null]
-    : [{ items: [], meta: null }, await api.contents({ sort: "latest", limit: "8" }).catch(() => ({ items: [], meta: null }))];
+    : [{ items: [], meta: null }, await api.contents({ sort: "latest", limit: "8" })];
 
   return (
     <div className="mx-auto max-w-7xl px-4 py-10 sm:px-6">

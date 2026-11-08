@@ -2,6 +2,7 @@ import Link from "next/link";
 import type { ContentSummaryDto } from "@mentari/shared";
 import { BookOpenText, Eye, Flame, Headphones, Lightbulb, NotebookPen, Play, Sparkles, Clock } from "lucide-react";
 import { formatDate, formatDuration, formatViews } from "@/lib/format";
+import { ThumbImg } from "@/components/thumb-img";
 import { getDictionary } from "@/lib/i18n/get-dictionary";
 import { format } from "@/lib/i18n/format";
 
@@ -41,6 +42,9 @@ export async function ContentCard({ content, priority = false }: { content: Cont
       className="group flex h-full flex-col overflow-hidden rounded-3xl border border-sand bg-white shadow-[0_2px_10px_rgba(38,50,68,0.05)] transition-all duration-200 hover:-translate-y-1 hover:border-primary/30 hover:shadow-[0_16px_40px_rgba(255,107,53,0.14)]"
     >
       <div className={`relative h-36 w-full overflow-hidden bg-gradient-to-br ${gradientFor(content.id)} sm:h-40`}>
+        {content.thumbnailUrl && (
+          <ThumbImg src={content.thumbnailUrl} className="absolute inset-0 h-full w-full object-cover" />
+        )}
         {/* decorative blobs */}
         <span aria-hidden className="absolute -left-6 -top-8 h-28 w-28 rounded-full bg-white/40 blur-2xl" />
         <span aria-hidden className="absolute -bottom-10 right-6 h-32 w-32 rounded-full bg-white/30 blur-2xl" />

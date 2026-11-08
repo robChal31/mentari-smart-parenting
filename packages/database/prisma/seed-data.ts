@@ -164,6 +164,7 @@ const TEAM = { authorName: 'Tim Mentari Smart Parent', authorTitle: 'Editorial M
 export interface SeedContent {
   title: string; slug: string; excerpt: string; body?: string; type: string;
   videoUrl?: string; videoDuration?: number; readTime?: number;
+  thumbnailUrl?: string;
   isFeatured?: boolean; isPremium?: boolean; viewCount: number; likeCount?: number;
   publishedDaysAgo: number; author: { authorName: string; authorTitle: string };
   categorySlugs: string[]; ageGroupSlugs: string[]; tags: string[];
@@ -174,6 +175,7 @@ export const CONTENTS: SeedContent[] = [
   {
     title: 'Takaran MPASI 6–24 Bulan: Panduan Porsi Menurut Dokter Anak',
     slug: 'takaran-mpasi-6-24-bulan',
+    thumbnailUrl: '/learning-paths/mpasi-6-bulan-pertama.jpg',
     excerpt: 'Berapa sendok makan yang ideal untuk bayi 6, 8, atau 12 bulan? dr. Rony Tamba, Sp.A menjelaskan porsi MPASI bertahap sesuai usia dan tanda kenyang bayi.',
     type: 'VIDEO',
     videoUrl: 'https://www.youtube.com/embed/b-nwf9Z-sNg',
@@ -192,6 +194,7 @@ export const CONTENTS: SeedContent[] = [
   {
     title: 'Kupas Tuntas MPASI: Kesalahan yang Sering Dibuat Orang Tua',
     slug: 'kupas-tuntas-mpasi',
+    thumbnailUrl: '/learning-paths/mpasi-6-bulan-pertama.jpg',
     excerpt: 'dr. Deva Putriane membahas kesalahan klasik MPASI: terlalu dini, tekstur tidak naik, menu tidak variatif, hingga garam & gula berlebih.',
     type: 'VIDEO',
     videoUrl: 'https://www.youtube.com/embed/9DkCKsMK8Ho',
@@ -207,6 +210,7 @@ export const CONTENTS: SeedContent[] = [
   {
     title: 'Kebutuhan ASI Bayi Sesuai Usia: Jangan Sampai Kurang!',
     slug: 'kebutuhan-asi-bayi-sesuai-usia',
+    thumbnailUrl: '/learning-paths/mpasi-6-bulan-pertama.jpg',
     excerpt: 'Panduan dokter RSUI tentang jumlah ASI yang dibutuhkan bayi di setiap tahap usia — dari newborn hingga 2 tahun.',
     type: 'VIDEO',
     videoUrl: 'https://www.youtube.com/embed/OS-yywQl6Hg',
@@ -222,6 +226,7 @@ export const CONTENTS: SeedContent[] = [
   {
     title: 'Menghadapi Tantrum dengan Tenang: 5 Langkah Terbukti',
     slug: 'menghadapi-tantrum-dengan-tenang',
+    thumbnailUrl: '/content-thumbs/tantrum.jpg',
     excerpt: 'Tantrum bukan kenakalan — ini sinyal anak yang kewalahan mengelola emosi. Pelajari 5 langkah respons tenang yang terbukti secara psikologis.',
     type: 'VIDEO',
     videoUrl: 'https://www.youtube.com/embed/FN-LXa2iHSg',
@@ -238,6 +243,7 @@ export const CONTENTS: SeedContent[] = [
   {
     title: 'Webinar: Mengelola Emosi Saat Anak Tantrum',
     slug: 'webinar-mengelola-emosi-tantrum',
+    thumbnailUrl: '/content-thumbs/tantrum.jpg',
     excerpt: 'Sesi webinar live bersama psikolog anak: penyebab tantrum, fase-fase kemarahan anak, dan skrip kalimat yang bisa langsung dipakai di rumah.',
     type: 'VIDEO',
     videoUrl: 'https://www.youtube.com/embed/9tOhUvW-95k',
@@ -253,6 +259,7 @@ export const CONTENTS: SeedContent[] = [
   {
     title: 'Tantrum Manipulatif vs Tantrum Frustrasi: Bedanya Apa?',
     slug: 'tantrum-manipulatif-vs-frustrasi',
+    thumbnailUrl: '/content-thumbs/tantrum.jpg',
     excerpt: 'Tidak semua tantrum sama. Kenali perbedaan tantrum manipulatif dan tantrum frustrasi, dan respons yang tepat untuk masing-masing.',
     type: 'VIDEO',
     videoUrl: 'https://www.youtube.com/embed/RIGxQbSlb_w',
@@ -268,6 +275,7 @@ export const CONTENTS: SeedContent[] = [
   {
     title: 'Memahami Kenapa Anak Tantrum dan Cara Mengatasinya',
     slug: 'kenapa-anak-tantrum-cara-mengatasinya',
+    thumbnailUrl: '/content-thumbs/tantrum.jpg',
     excerpt: 'Hidup Sehat tvOne membahas sisi medis & psikologis di balik tantrum — dan kapan orang tua perlu khawatir.',
     type: 'VIDEO',
     videoUrl: 'https://www.youtube.com/embed/1Xy3bxopth0',
@@ -283,6 +291,7 @@ export const CONTENTS: SeedContent[] = [
   {
     title: 'Panduan MPASI 6 Bulan: Menu, Tekstur, dan Jadwal Minggu Pertama',
     slug: 'panduan-mpasi-6-bulan',
+    thumbnailUrl: '/learning-paths/mpasi-6-bulan-pertama.jpg',
     excerpt: 'Dari ASI eksklusif ke makanan pertama: urutan mengenalkan tekstur, contoh menu 7 hari pertama, dan tanda bayi siap makan.',
     type: 'ARTICLE',
     readTime: 8,
@@ -356,6 +365,7 @@ Diskusikan kondisi khusus (alergi, prematur, penyakit bawaan) dengan dokter anak
   {
     title: '12 Ide Permainan Edukatif Tanpa Gadget untuk Anak 3–6 Tahun',
     slug: 'permainan-edukatif-tanpa-gadget',
+    thumbnailUrl: '/content-thumbs/play.jpg',
     excerpt: 'Dari treasure hunt hingga sains dapur: 12 permainan murah meriah yang melatih motorik, kognitif, dan bonding orang tua–anak.',
     type: 'ARTICLE',
     readTime: 12,
@@ -392,6 +402,7 @@ Setiap permainan di atas melatih eksekutif fungsi: fokus, bergiliran, dan menyel
   {
     title: 'Checklist Persiapan Anak Masuk SD: 9 Aspek yang Harus Matang',
     slug: 'checklist-persiapan-anak-masuk-sd',
+    thumbnailUrl: '/learning-paths/persiapan-anak-masuk-sd.jpg',
     excerpt: 'School readiness bukan soal bisa baca-tulis saja. Cek 9 aspek: dari motorik halus, kemandirian, hingga kesiapan emosional menghadapi sekolah baru.',
     type: 'ARTICLE',
     readTime: 9,
@@ -427,6 +438,7 @@ Anak yang siap secara emosional dan sosial akan jauh lebih cepat beradaptasi dar
   {
     title: 'Screen Time untuk Balita: Batas Aman Menurut Dokter Anak',
     slug: 'screen-time-balita-batas-aman',
+    thumbnailUrl: '/content-thumbs/digital.jpg',
     excerpt: 'WHO merekomendasikan 0 menit screen time sebelum usia 2 tahun. Ini panduan praktis menerapkannya tanpa drama di rumah.',
     type: 'ARTICLE',
     readTime: 6,
@@ -522,6 +534,7 @@ Bila ada tanda ini, segera konsultasikan ke dokter anak atau terapis wicara.`,
   {
     title: 'Rutinitas Tidur Anak: Jadwal Ideal dari Bayi hingga SD',
     slug: 'rutinitas-tidur-anak-jadwal-ideal',
+    thumbnailUrl: '/content-thumbs/sleep.jpg',
     excerpt: 'Berapa jam tidur anak ideal per usia, dan bagaimana membangun ritual tidur yang konsisten tanpa drama tengah malam?',
     type: 'ARTICLE',
     readTime: 7,
@@ -553,6 +566,7 @@ Konsistensi 2 minggu biasanya cukup membentuk kebiasaan. Jika anak sering terban
   {
     title: 'Tanda-tanda Siap Sekolah (School Readiness): Fisik, Sosial, Emosi',
     slug: 'tanda-tanda-siap-sekolah',
+    thumbnailUrl: '/learning-paths/persiapan-anak-masuk-sd.jpg',
     excerpt: 'Bagaimana tahu anak benar-benar siap sekolah — bukan sekadar cukup umur? Kenali 12 tanda kesiapan dari tiga domain utama.',
     type: 'ARTICLE',
     readTime: 8,
@@ -639,6 +653,7 @@ Anak paling menderita bukan karena orang tuanya berpisah, tapi karena terus terp
   {
     title: 'Keamanan Digital untuk Anak: Aturan 3C (Content, Contact, Conduct)',
     slug: 'keamanan-digital-anak-aturan-3c',
+    thumbnailUrl: '/content-thumbs/digital.jpg',
     excerpt: 'Kerangka 3C dari internet safety: konten yang dilihat, kontak yang bisa menghubungi, dan perilaku online anak.',
     type: 'ARTICLE',
     readTime: 8,
@@ -702,6 +717,7 @@ Buat “kontrak digital keluarga” tertulis dan tinjau ulang setiap 6 bulan sei
   {
     title: '5 Tips Menidurkan Anak Lebih Cepat',
     slug: 'tips-menidurkan-anak-lebih-cepat',
+    thumbnailUrl: '/content-thumbs/sleep.jpg',
     excerpt: 'Ritual 20 menit, lampu hangat, dan satu kebiasaan kecil yang membuat anak tertidur dalam hitungan menit.',
     type: 'TIPS',
     readTime: 3,
@@ -721,6 +737,7 @@ Buat “kontrak digital keluarga” tertulis dan tinjau ulang setiap 6 bulan sei
   {
     title: 'Checklist Bekal Sekolah Sehat 5 Menit',
     slug: 'checklist-bekal-sekolah-sehat',
+    thumbnailUrl: '/learning-paths/persiapan-anak-masuk-sd.jpg',
     excerpt: 'Formula sederhana: 1 karbohidrat + 1 protein + 1 sayur + 1 buah — selesai dalam 5 menit tiap pagi.',
     type: 'TIPS',
     readTime: 3,
@@ -741,6 +758,7 @@ Plus air putih. Siapkan malam sebelumnya agar pagi lebih santai.`,
   {
     title: 'Eksperimen Sains Sederhana di Dapur (Usia 4–8 Tahun)',
     slug: 'eksperimen-sains-sederhana-di-dapur',
+    thumbnailUrl: '/content-thumbs/play.jpg',
     excerpt: 'Gunung berapi cuka, pelangi dalam gelas, dan telur terapung: 5 eksperimen sains dari bahan dapur yang membuat anak takjub.',
     type: 'ACTIVITY',
     readTime: 10,
@@ -771,6 +789,7 @@ Setelah eksperimen, tanya: “Menurut kamu kenapa bisa begitu?” — biarkan an
   {
     title: 'Scavenger Hunt Alam: Belajar Lingkungan di Sekitar Rumah',
     slug: 'scavenger-hunt-alam',
+    thumbnailUrl: '/content-thumbs/play.jpg',
     excerpt: 'Cetak checklist ini, ajak anak keluar: temukan 3 daun berbeda, 2 serangga, 1 batu unik — sains & petualangan jadi satu.',
     type: 'ACTIVITY',
     readTime: 6,

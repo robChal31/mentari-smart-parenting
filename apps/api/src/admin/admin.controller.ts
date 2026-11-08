@@ -35,6 +35,7 @@ import { ok, paginated } from '../common/interceptors/response.interceptor';
 import { AdminService } from './admin.service';
 
 const roleSchema = z.object({ role: z.enum(['USER', 'ADMIN', 'EDITOR', 'MODERATOR']) });
+const communityToggleSchema = z.object({ value: z.boolean() });
 
 @Roles('ADMIN', 'EDITOR')
 @Controller('admin')
@@ -141,6 +142,46 @@ export class AdminController {
   @Delete('learning-paths/:id')
   deleteLearningPath(@Param('id') id: string) {
     return this.admin.deleteLearningPath(id).then((data) => ok(data));
+  }
+
+  // ---------- Community moderation (ADMIN/EDITOR) ----------
+  @Get('community/threads')
+  async listCommunityThreads(
+    @Query('page') page?: string,
+    @Query('limit') limit?: string,
+    @Query('q') q?: string,
+    @Query('filter') filter?: string,
+  ) {
+    const pageNum = Math.max(1, Number(page) || 1);
+    const limitNum = Math.min(100, Math.max(1, Number(limit) || 20));
+    const parsed = filter === 'pinned' || filter === 'locked' || filter === 'flagged' ? filter : undefined;
+    const { items, total } = await this.admin.listCommunityThreads({ page: pageNum, limit: limitNum, q: q?.trim() || undefined, filter: parsed });
+    return paginated(items, pageNum, limitNum, total);
+  }
+
+  @Get('community/threads/:id')
+  findCommunityThread(@Param('id') id: string) {
+    return this.admin.findCommunityThread(id).then((data) => ok(data));
+  }
+
+  @Patch('community/threads/:id/pin')
+  setThreadPinned(@Param('id') id: string, @Body(new ZodValidationPipe(communityToggleSchema)) body: { value: boolean }) {
+    return this.admin.setThreadPinned(id, body.value).then((data) => ok(data));
+  }
+
+  @Patch('community/threads/:id/lock')
+  setThreadLocked(@Param('id') id: string, @Body(new ZodValidationPipe(communityToggleSchema)) body: { value: boolean }) {
+    return this.admin.setThreadLocked(id, body.value).then((data) => ok(data));
+  }
+
+  @Delete('community/threads/:id')
+  deleteCommunityThread(@Param('id') id: string) {
+    return this.admin.deleteCommunityThread(id).then((data) => ok(data));
+  }
+
+  @Delete('community/comments/:id')
+  deleteCommunityComment(@Param('id') id: string) {
+    return this.admin.deleteCommunityComment(id).then((data) => ok(data));
   }
 
   // ---------- Categories ----------

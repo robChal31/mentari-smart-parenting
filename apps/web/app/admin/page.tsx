@@ -3,7 +3,7 @@
 import { useEffect, useState } from "react";
 import { useRouter } from "next/navigation";
 import {
-  BarChart3, FileText, GraduationCap, Package, ShieldAlert, Users,
+  BarChart3, FileText, GraduationCap, MessagesSquare, Package, ShieldAlert, Users,
 } from "lucide-react";
 import { useAuth } from "@/components/auth-provider";
 import { useDictionary } from "@/components/i18n-provider";
@@ -11,9 +11,10 @@ import { OverviewTab } from "@/components/admin/overview-tab";
 import { ContentsTab } from "@/components/admin/contents-tab";
 import { ProductsTab } from "@/components/admin/products-tab";
 import { LearningPathsTab } from "@/components/admin/learning-paths-tab";
+import { CommunityTab } from "@/components/admin/community-tab";
 import { UsersTab } from "@/components/admin/users-tab";
 
-type Tab = "overview" | "content" | "products" | "learning-paths" | "users";
+type Tab = "overview" | "content" | "products" | "learning-paths" | "community" | "users";
 
 export default function AdminPage() {
   const router = useRouter();
@@ -46,6 +47,7 @@ export default function AdminPage() {
     ["content", dict.admin.contents, <FileText key="i" size={15} />],
     ["products", dict.admin.products, <Package key="i" size={15} />],
     ["learning-paths", dict.nav.learningPath, <GraduationCap key="i" size={15} />],
+    ["community", dict.nav.community, <MessagesSquare key="i" size={15} />],
     ...(isAdmin ? [["users", dict.admin.users, <Users key="i" size={15} />] as [Tab, string, React.ReactNode]] : []),
   ];
 
@@ -80,6 +82,7 @@ export default function AdminPage() {
         {tab === "content" && <ContentsTab />}
         {tab === "products" && <ProductsTab />}
         {tab === "learning-paths" && <LearningPathsTab />}
+        {tab === "community" && <CommunityTab />}
         {tab === "users" && isAdmin && <UsersTab />}
       </div>
     </div>

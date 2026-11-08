@@ -41,16 +41,24 @@ export default async function ContentsPage({ searchParams }: PageProps) {
     limit: "12",
   };
 
-  const [result, categories, ageGroups] = await Promise.all([
-    api.contents(query),
-    api.categories(),
-    api.ageGroups(),
-  ]);
-
-  const { items, meta } = result;
-  // fetchServerPaginated returns meta: null when the API could not be reached —
-  // treat that as an error state, not as "no contents exist".
-  const apiFailed = meta === null;
+  // API failures throw (see lib/api.ts) — capture them here so we can show an
+  // in-page "gagal memuat + coba lagi" card instead of a misleading empty state.
+  let result: Awaited<ReturnType<typeof api.contents>> | null = null;
+  let categories: Awaited<ReturnType<typeof api.categories>> = null;
+  let ageGroups: Awaited<ReturnType<typeof api.ageGroups>> = null;
+  let apiFailed = false;
+  try {
+    [result, categories, ageGroups] = await Promise.all([
+      api.contents(query),
+      api.categories(),
+      api.ageGroups(),
+    ]);
+  } catch (error) {
+    console.error("[contents] failed to load", error);
+    apiFailed = true;
+  }
+  const items = result?.items ?? [];
+  const meta = result?.meta ?? null;
   const flatCategories = (categories ?? []).flatMap((c) => [c, ...(c.children ?? [])]);
 
   function pageHref(page: number): string {

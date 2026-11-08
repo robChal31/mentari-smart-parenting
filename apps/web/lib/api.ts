@@ -3,7 +3,6 @@
 // the server talks directly to the API process via API_INTERNAL_URL.
 import type {
   AgeGroupDto,
-  ApiResponse,
   CategoryDto,
   ChildDto,
   ContentDetailDto,
@@ -21,29 +20,60 @@ export interface Paginated<T> {
   meta: PaginationMeta | null;
 }
 
-async function fetchServer<T>(path: string, init?: RequestInit): Promise<T | null> {
+/**
+ * Thrown when the upstream API is unreachable or answers with a non-OK /
+ * malformed response. Server components let this bubble to `app/error.tsx`,
+ * which renders an honest "something went wrong + retry" screen — instead of
+ * a misleading empty state.
+ */
+export class ApiServerError extends Error {
+  constructor(
+    public status: number | null,
+    message: string,
+  ) {
+    super(message);
+    this.name = "ApiServerError";
+  }
+}
+
+function parseApiBody(text: string): { success?: boolean; data?: unknown; meta?: PaginationMeta; error?: { message?: string } } | null {
   try {
-    const res = await fetch(`${API_INTERNAL}/api/v1${path}`, {
-      cache: "no-store",
-      ...init,
-    });
-    const body = (await res.json()) as ApiResponse<T> | { success: true; data: T; meta?: PaginationMeta };
-    if (!res.ok || !("success" in body) || body.success !== true) return null;
-    return (body as { data: T }).data;
+    return JSON.parse(text) as ReturnType<typeof parseApiBody>;
   } catch {
     return null;
   }
 }
 
-async function fetchServerPaginated<T>(path: string): Promise<Paginated<T>> {
+async function fetchServer<T>(path: string, init?: RequestInit): Promise<T | null> {
+  let res: Response;
   try {
-    const res = await fetch(`${API_INTERNAL}/api/v1${path}`, { cache: "no-store" });
-    const body = (await res.json()) as { success: true; data: T[]; meta?: PaginationMeta };
-    if (!res.ok || body.success !== true) return { items: [], meta: null };
-    return { items: body.data, meta: body.meta ?? null };
+    res = await fetch(`${API_INTERNAL}/api/v1${path}`, {
+      cache: "no-store",
+      ...init,
+    });
   } catch {
-    return { items: [], meta: null };
+    throw new ApiServerError(null, "Tidak dapat terhubung ke server API.");
   }
+  const body = parseApiBody(await res.text());
+  if (res.status === 404) return null; // genuine "not found" — callers render 404
+  if (!res.ok || !body || body.success !== true) {
+    throw new ApiServerError(res.status, body?.error?.message ?? "Permintaan gagal.");
+  }
+  return body.data as T;
+}
+
+async function fetchServerPaginated<T>(path: string): Promise<Paginated<T>> {
+  let res: Response;
+  try {
+    res = await fetch(`${API_INTERNAL}/api/v1${path}`, { cache: "no-store" });
+  } catch {
+    throw new ApiServerError(null, "Tidak dapat terhubung ke server API.");
+  }
+  const body = parseApiBody(await res.text());
+  if (!res.ok || !body || body.success !== true || !Array.isArray(body.data)) {
+    throw new ApiServerError(res.status, body?.error?.message ?? "Permintaan gagal.");
+  }
+  return { items: body.data as T[], meta: body.meta ?? null };
 }
 
 function qs(params: Record<string, string | undefined>): string {
