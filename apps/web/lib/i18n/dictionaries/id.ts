@@ -358,6 +358,7 @@ const id = {
     kicker: "Learning Path",
     title: "Belajar bertahap, hasil nyata",
     listSub: "Kumpulan artikel dan video yang disusun urut — selesaikan satu path dan rasakan perbedaannya pada Si Kecil.",
+    modulesHeading: "Daftar modul",
     difficultyBeginner: "Pemula",
     difficultyIntermediate: "Menengah",
     difficultyAdvanced: "Lanjutan",
