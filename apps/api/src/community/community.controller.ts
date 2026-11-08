@@ -40,7 +40,7 @@ export class CommunityController {
         take: limitNum,
       }),
     ]);
-    return paginated(rows.map(serializeThread), pageNum, limitNum, total);
+    return paginated(rows.map((t) => serializeThread(t)), pageNum, limitNum, total);
   }
 
   @Public()
@@ -55,7 +55,7 @@ export class CommunityController {
       },
     }).catch(() => null);
     if (!thread) throw new NotFoundException({ code: 'NOT_FOUND', message: 'Thread tidak ditemukan.' });
-    return ok({ ...serializeThread(thread), comments: thread.comments.map(serializeComment) });
+    return ok({ ...serializeThread(thread), comments: thread.comments.map((c) => serializeComment(c)) });
   }
 
   @Post('threads')

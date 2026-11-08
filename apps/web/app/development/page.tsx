@@ -5,7 +5,7 @@ import Link from "next/link";
 import { useRouter } from "next/navigation";
 import {
   Baby, Brain, CheckCircle2, Circle, HeartHandshake, Loader2,
-  Palette, Sparkles, Speech,
+  Palette, Sparkles, Speech, TriangleAlert,
 } from "lucide-react";
 import { useAuth } from "@/components/auth-provider";
 import { useDictionary } from "@/components/i18n-provider";
@@ -51,6 +51,8 @@ export default function DevelopmentPage() {
   const [milestones, setMilestones] = useState<MilestoneRow[]>([]);
   const [loading, setLoading] = useState(true);
   const [toggling, setToggling] = useState<string | null>(null);
+  const [loadError, setLoadError] = useState(false);
+  const [reloadKey, setReloadKey] = useState(0);
 
   useEffect(() => {
     if (!isLoading && !user) router.replace("/login?next=/development");
@@ -58,23 +60,31 @@ export default function DevelopmentPage() {
 
   useEffect(() => {
     if (!user) return;
+    setLoadError(false);
     apiData<ChildDto[]>("/children")
       .then((rows) => {
         setChildren(rows);
         if (rows[0]) setSelectedId(rows[0].id);
         else setLoading(false);
       })
-      .catch(() => setLoading(false));
-  }, [user]);
+      .catch(() => {
+        setLoadError(true);
+        setLoading(false);
+      });
+  }, [user, reloadKey]);
 
   useEffect(() => {
     if (!selectedId) return;
     setLoading(true);
+    setLoadError(false);
     apiData<MilestoneRow[]>(`/milestones?childId=${encodeURIComponent(selectedId)}`)
       .then(setMilestones)
-      .catch(() => setMilestones([]))
+      .catch(() => {
+        setMilestones([]);
+        setLoadError(true);
+      })
       .finally(() => setLoading(false));
-  }, [selectedId]);
+  }, [selectedId, reloadKey]);
 
   const toggle = useCallback(async (milestone: MilestoneRow) => {
     setToggling(milestone.id);
@@ -108,6 +118,24 @@ export default function DevelopmentPage() {
 
   if (isLoading || !user) {
     return <div className="mx-auto max-w-4xl px-4 py-16"><div className="skeleton h-10 w-72" /><div className="skeleton mt-6 h-96 rounded-3xl" /></div>;
+  }
+
+  if (!loading && loadError) {
+    return (
+      <div className="mx-auto max-w-lg px-4 py-20 text-center">
+        <span className="mx-auto grid h-16 w-16 place-items-center rounded-3xl bg-primary-soft text-primary">
+          <TriangleAlert size={30} aria-hidden />
+        </span>
+        <h1 className="mt-6 font-heading text-2xl font-extrabold text-secondary">{dict.common.loadError}</h1>
+        <p className="mt-2 text-sm text-muted">{dict.errors.errorSub}</p>
+        <button
+          onClick={() => { setLoading(true); setLoadError(false); setReloadKey((key) => key + 1); }}
+          className="mt-6 rounded-2xl bg-primary px-6 py-3 text-sm font-bold text-white transition hover:bg-primary-deep"
+        >
+          {dict.common.retry}
+        </button>
+      </div>
+    );
   }
 
   if (!loading && children.length === 0) {

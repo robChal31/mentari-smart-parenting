@@ -29,6 +29,9 @@ export class ApiError extends Error {
   }
 }
 
+const RETRYABLE_STATUS = new Set([502, 503, 504]);
+const delay = (ms: number) => new Promise<void>((resolve) => setTimeout(resolve, ms));
+
 async function request<T>(
   path: string,
   options: { method?: string; body?: unknown; auth?: boolean } = {},
@@ -40,27 +43,51 @@ async function request<T>(
     if (token) headers.authorization = `Bearer ${token}`;
   }
 
-  const res = await fetch(`/api/v1${path}`, {
-    method: options.method ?? (options.body !== undefined ? "POST" : "GET"),
-    headers,
-    body: options.body !== undefined ? JSON.stringify(options.body) : undefined,
-  });
+  const send = () =>
+    fetch(`/api/v1${path}`, {
+      method: options.method ?? (options.body !== undefined ? "POST" : "GET"),
+      headers,
+      body: options.body !== undefined ? JSON.stringify(options.body) : undefined,
+    });
 
-  let body: { success?: boolean; data?: T; meta?: ApiEnvelope<T>["meta"]; error?: { code?: string; message?: string } } | null = null;
-  try {
-    body = await res.json();
-  } catch {
-    body = null;
-  }
+  const MAX_ATTEMPTS = 2; // initial try + 1 automatic retry for transient failures
+  for (let attempt = 1; ; attempt++) {
+    let res: Response | null = null;
+    try {
+      res = await send();
+    } catch {
+      res = null; // connection refused / offline / timeout
+    }
 
-  if (!res.ok || !body?.success) {
-    throw new ApiError(
-      res.status,
-      body?.error?.code ?? "REQUEST_FAILED",
-      body?.error?.message ?? "Permintaan gagal. Coba lagi.",
-    );
+    // Transient network/gateway failure → wait briefly and retry once.
+    if (res === null || RETRYABLE_STATUS.has(res.status)) {
+      if (attempt < MAX_ATTEMPTS) {
+        await delay(500);
+        continue;
+      }
+      throw new ApiError(
+        res?.status ?? 0,
+        "NETWORK_ERROR",
+        "Koneksi bermasalah. Periksa internet Anda, lalu coba lagi.",
+      );
+    }
+
+    let body: { success?: boolean; data?: T; meta?: ApiEnvelope<T>["meta"]; error?: { code?: string; message?: string } } | null = null;
+    try {
+      body = await res.json();
+    } catch {
+      body = null;
+    }
+
+    if (!res.ok || !body?.success) {
+      throw new ApiError(
+        res.status,
+        body?.error?.code ?? "REQUEST_FAILED",
+        body?.error?.message ?? "Permintaan gagal. Coba lagi.",
+      );
+    }
+    return body as ApiEnvelope<T>;
   }
-  return body as ApiEnvelope<T>;
 }
 
 /** Unwrap `data` from the envelope. */
