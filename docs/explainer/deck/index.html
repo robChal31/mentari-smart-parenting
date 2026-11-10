@@ -1,0 +1,1364 @@
+<!DOCTYPE html>
+<html lang="id">
+<head>
+<meta charset="utf-8" />
+<meta name="viewport" content="width=device-width, initial-scale=1" />
+<title>MentariSmartParent — Penjelasan untuk Tim Non-Teknis</title>
+<meta name="description" content="Penjelasan sederhana aplikasi MentariSmartParent: apa itu, untuk siapa, alur pemakaian, isi fiturnya, dan cara menjelaskannya." />
+<link rel="icon" href="data:image/svg+xml,<svg xmlns='http://www.w3.org/2000/svg' viewBox='0 0 100 100'><text y='.9em' font-size='90'><svg class="ico" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round" aria-hidden="true"><circle cx="12" cy="12" r="4"/><path d="M12 2v2"/><path d="M12 20v2"/><path d="m4.93 4.93 1.41 1.41"/><path d="m17.66 17.66 1.41 1.41"/><path d="M2 12h2"/><path d="M20 12h2"/><path d="m6.34 17.66-1.41 1.41"/><path d="m19.07 4.93-1.41 1.41"/></svg></text></svg>" />
+<link rel="stylesheet" href="styles.css" />
+<style>
+  /* deck-only helpers */
+  .grid-2 { display: grid; grid-template-columns: 1fr 1fr; }
+  .grid-3 { display: grid; grid-template-columns: repeat(3, 1fr); }
+  .grid-4 { display: grid; grid-template-columns: repeat(4, 1fr); }
+  .grid-5 { display: grid; grid-template-columns: repeat(5, 1fr); }
+  .grid-6 { display: grid; grid-template-columns: repeat(6, 1fr); }
+  .rule { height: 1px; background: var(--line); }
+  .vc { display: flex; flex-direction: column; justify-content: center; }
+  .muted { color: var(--muted); }
+  .small { font-size: 11.5px; }
+  .tiny { font-size: 10px; }
+  .b { font-weight: 700; color: var(--secondary); }
+  .nowrap { white-space: nowrap; }
+  .list-check { display: flex; flex-direction: column; gap: 7px; }
+  .list-check li { list-style: none; display: flex; gap: 8px; align-items: flex-start; font-size: 11.5px; color: var(--muted); line-height: 1.5; }
+  .list-check li b { color: var(--secondary); font-weight: 700; }
+  .list-check .tick { color: var(--accent-deep); font-weight: 800; flex: 0 0 auto; }
+  .phone-mock {
+    width: 100%; border-radius: 26px; background: #fff; border: 1px solid var(--line);
+    box-shadow: var(--shadow-md); overflow: hidden;
+  }
+  .phone-bar { display: flex; align-items: center; gap: 7px; padding: 9px 12px; background: #fff; border-bottom: 1px solid var(--sand); }
+  .phone-bar .sun { width: 20px; height: 20px; border-radius: 7px; background: linear-gradient(135deg, var(--primary), #ff8e53); display: grid; place-items: center; font-size: 10px; color: #ffe27a; }
+  .phone-bar b { font-family: var(--font-heading); font-size: 9.5px; color: var(--secondary); }
+  .phone-body { padding: 10px 12px 14px; }
+  .mini-card { border: 1px solid var(--line); border-radius: 11px; overflow: hidden; background: #fff; }
+  .mini-card .thumb { height: 62px; background-size: cover; background-position: center; }
+  .mini-card .body { padding: 6px 8px 8px; }
+  .mini-card .tagrow { font-size: 7.5px; font-weight: 800; letter-spacing: 0.08em; text-transform: uppercase; color: var(--primary); }
+  .mini-card .ttl { font-family: var(--font-heading); font-size: 9px; font-weight: 800; color: var(--secondary); line-height: 1.25; margin-top: 2px; }
+  .mini-card .meta { font-size: 7.5px; color: var(--muted); margin-top: 3px; }
+  .legend { display: flex; gap: 14px; flex-wrap: wrap; font-size: 10px; color: var(--muted); align-items: center; }
+  .legend i { width: 9px; height: 9px; border-radius: 3px; display: inline-block; margin-right: 5px; }
+  .qa { display: flex; flex-direction: column; gap: 9px; }
+  .qa .item { background: #fff; border: 1px solid var(--line); border-radius: 14px; padding: 11px 13px; }
+  .qa .q { font-family: var(--font-heading); font-size: 11.5px; font-weight: 800; color: var(--secondary); display: flex; gap: 7px; }
+  .qa .q span { color: var(--primary); }
+  .qa .a { font-size: 10.5px; color: var(--muted); margin-top: 3px; line-height: 1.5; padding-left: 16px; }
+  .kbd { font-family: ui-monospace, Menlo, monospace; background: var(--sand); border-radius: 5px; padding: 1px 5px; font-size: 10px; color: var(--muted); }
+</style>
+</head>
+<body data-pdf-title="MentariSmartParent — Penjelasan untuk Tim Non-Teknis">
+
+<!-- ============================== TOOLBAR (tidak ikut tercetak) ============================== -->
+<div class="topbar no-print">
+  <span class="brand"><span class="sun"><svg class="ico" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round" aria-hidden="true"><circle cx="12" cy="12" r="4"/><path d="M12 2v2"/><path d="M12 20v2"/><path d="m4.93 4.93 1.41 1.41"/><path d="m17.66 17.66 1.41 1.41"/><path d="M2 12h2"/><path d="M20 12h2"/><path d="m6.34 17.66-1.41 1.41"/><path d="m19.07 4.93-1.41 1.41"/></svg></span> MentariSmartParent</span>
+  <span class="doc-title">Penjelasan untuk tim non-teknis · 24 halaman</span>
+  <span class="spacer"></span>
+  <button class="btn-print" id="btn-print"><svg class="ico" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round" aria-hidden="true"><path d="M6 18H4a2 2 0 0 1-2-2v-5a2 2 0 0 1 2-2h16a2 2 0 0 1 2 2v5a2 2 0 0 1-2 2h-2"/><path d="M6 9V3a1 1 0 0 1 1-1h10a1 1 0 0 1 1 1v6"/><rect x="6" y="14" width="12" height="8" rx="1"/></svg> Simpan sebagai PDF</button>
+</div>
+
+<main class="deck">
+
+<!-- ================= 01 · COVER ================= -->
+<section class="slide">
+  <div class="cover">
+    <div>
+      <div class="sun-large"><svg class="ico" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round" aria-hidden="true"><circle cx="12" cy="12" r="4"/><path d="M12 2v2"/><path d="M12 20v2"/><path d="m4.93 4.93 1.41 1.41"/><path d="m17.66 17.66 1.41 1.41"/><path d="M2 12h2"/><path d="M20 12h2"/><path d="m6.34 17.66-1.41 1.41"/><path d="m19.07 4.93-1.41 1.41"/></svg></div>
+      <p class="kicker">Penjelasan Produk · v1 · November 2026</p>
+      <h1 style="margin-top:14px">Apa itu<br><span class="accent-text">MentariSmartParent?</span></h1>
+      <p class="subtitle" style="margin-top:18px; max-width:470px; font-size:16px">
+        Sebuah <b style="color:var(--secondary)">situs web untuk orang tua</b> berisi artikel, video, dan tips
+        pengasuhan anak yang ditulis bersama psikolog &amp; dokter anak — yang
+        <b style="color:var(--secondary)">menghubungkan</b> topik yang sedang dibaca dengan
+        produk-produk Mentari Group yang relevan.
+      </p>
+      <div class="audience-line" style="margin-top:22px">
+        <span class="badge-pill badge-pill--accent">Dibuat untuk</span>
+        <b>Tim produk · pemasaran · penjualan · editorial · manajemen</b>
+      </div>
+      <p class="tiny muted" style="margin-top:10px">Tidak perlu latar belakang teknis. Semua istilah dijelaskan di halaman 2.</p>
+    </div>
+    <div class="cover-figure">
+      <img src="assets/hero.jpg" alt="Ilustrasi keluarga" />
+      <div class="float-card" style="left:-26px; top:34px">
+        <span class="icon-tile tile-accent"><svg class="ico" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round" aria-hidden="true"><path d="M20 6 9 17l-5-5"/></svg></span>
+        <span><b>Tervalidasi ahli</b><span>psikolog &amp; dokter anak</span></span>
+      </div>
+      <div class="float-card" style="right:-14px; bottom:52px">
+        <span class="icon-tile tile-primary"><svg class="ico" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round" aria-hidden="true"><path d="M8.5 14.5A2.5 2.5 0 0 0 11 12c0-1.38-.5-2-1-3-1.072-2.143-.224-4.054 2-6 .5 2.5 2 4.9 4 6.5 2 1.6 3 3.5 3 5.5a7 7 0 1 1-14 0c0-1.153.433-2.294 1-3a2.5 2.5 0 0 0 2.5 2.5z"/></svg></span>
+        <span><b>Streak hari ke-7</b><span>kebiasaan belajar terbentuk</span></span>
+      </div>
+      <div class="float-card" style="left:22px; bottom:-18px">
+        <span class="icon-tile tile-secondary"><svg class="ico" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round" aria-hidden="true"><circle cx="12" cy="12" r="10"/><circle cx="12" cy="12" r="6"/><circle cx="12" cy="12" r="2"/></svg></span>
+        <span><b>Rekomendasi relevan</b><span>bukan iklan acak</span></span>
+      </div>
+    </div>
+  </div>
+  <span class="slide-number">01</span>
+</section>
+
+<!-- ================= 02 · KAMUS ================= -->
+<section class="slide">
+  <p class="kicker">Sebelum mulai</p>
+  <h2 class="title" style="margin-top:8px">Enam istilah yang akan sering muncul</h2>
+  <p class="subtitle" style="margin-top:8px">Kalau enam ini sudah jelas, sisa deck-nya gampang.</p>
+
+  <div class="grid-3 gap-12" style="margin-top:18px">
+    <div class="card card--tint" style="padding:16px">
+      <span class="icon-tile tile-primary"><svg class="ico" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round" aria-hidden="true"><rect width="20" height="14" x="2" y="3" rx="2"/><line x1="8" x2="16" y1="21" y2="21"/><line x1="12" x2="12" y1="17" y2="21"/></svg></span>
+      <h3 class="card-title" style="margin-top:8px">Frontend<br><span class="tiny muted">(web / “tampilan”)</span></h3>
+      <p class="card-body" style="margin-top:6px">Bagian yang <b>dilihat dan diklik</b> pengguna di browser — halaman, tombol, gambar. Di proyek ini namanya <span class="kbd">apps/web</span>.</p>
+    </div>
+    <div class="card card--tint" style="padding:16px">
+      <span class="icon-tile tile-secondary"><svg class="ico" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round" aria-hidden="true"><path d="M12.22 2h-.44a2 2 0 0 0-2 2v.18a2 2 0 0 1-1 1.73l-.43.25a2 2 0 0 1-2 0l-.15-.08a2 2 0 0 0-2.73.73l-.22.38a2 2 0 0 0 .73 2.73l.15.1a2 2 0 0 1 1 1.72v.51a2 2 0 0 1-1 1.74l-.15.09a2 2 0 0 0-.73 2.73l.22.38a2 2 0 0 0 2.73.73l.15-.08a2 2 0 0 1 2 0l.43.25a2 2 0 0 1 1 1.73V20a2 2 0 0 0 2 2h.44a2 2 0 0 0 2-2v-.18a2 2 0 0 1 1-1.73l.43-.25a2 2 0 0 1 2 0l.15.08a2 2 0 0 0 2.73-.73l.22-.39a2 2 0 0 0-.73-2.73l-.15-.08a2 2 0 0 1-1-1.74v-.5a2 2 0 0 1 1-1.74l.15-.09a2 2 0 0 0 .73-2.73l-.22-.38a2 2 0 0 0-2.73-.73l-.15.08a2 2 0 0 1-2 0l-.43-.25a2 2 0 0 1-1-1.73V4a2 2 0 0 0-2-2z"/><circle cx="12" cy="12" r="3"/></svg></span>
+      <h3 class="card-title" style="margin-top:8px">Backend<br><span class="tiny muted">(API / “mesin”)</span></h3>
+      <p class="card-body" style="margin-top:6px">Bagian yang <b>tidak terlihat</b>: memeriksa hak akses, menghitung rekomendasi, menyimpan data. Namanya <span class="kbd">apps/api</span>.</p>
+    </div>
+    <div class="card card--tint" style="padding:16px">
+      <span class="icon-tile tile-accent"><svg class="ico" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round" aria-hidden="true"><ellipse cx="12" cy="5" rx="9" ry="3"/><path d="M3 5v14a9 3 0 0 0 18 0V5"/><path d="M3 12a9 3 0 0 0 18 0"/></svg></span>
+      <h3 class="card-title" style="margin-top:8px">Database<br><span class="tiny muted">(“gudang data”)</span></h3>
+      <p class="card-body" style="margin-top:6px">Tempat semua data disimpan permanen: akun, artikel, produk, komentar. Ibarat <b>lemari arsip raksasa</b> yang tertata.</p>
+    </div>
+    <div class="card card--tint" style="padding:16px">
+      <span class="icon-tile tile-amber"><svg class="ico" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round" aria-hidden="true"><path d="M13.4 2H6a2 2 0 0 0-2 2v16a2 2 0 0 0 2 2h12a2 2 0 0 0 2-2v-7.4"/><path d="M2 6h4"/><path d="M2 10h4"/><path d="M2 14h4"/><path d="M2 18h4"/><path d="M21.378 5.626a1 1 0 1 0-3.004-3.004l-5.01 5.012a2 2 0 0 0-.506.854l-.837 2.87a.5.5 0 0 0 .62.62l2.87-.837a2 2 0 0 0 .854-.506z"/></svg></span>
+      <h3 class="card-title" style="margin-top:8px">CMS<br><span class="tiny muted">(panel admin)</span></h3>
+      <p class="card-body" style="margin-top:6px">Halaman khusus tim internal untuk <b>menulis artikel dan mengatur produk</b> tanpa perlu programmer. Alamatnya <span class="kbd">/admin</span>.</p>
+    </div>
+    <div class="card card--tint" style="padding:16px">
+      <span class="icon-tile tile-rose"><svg class="ico" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round" aria-hidden="true"><path d="M2.586 17.414A2 2 0 0 0 2 18.828V21a1 1 0 0 0 1 1h3a1 1 0 0 0 1-1v-1a1 1 0 0 1 1-1h1a1 1 0 0 0 1-1v-1a1 1 0 0 1 1-1h.172a2 2 0 0 0 1.414-.586l.814-.814a6.5 6.5 0 1 0-4-4z"/><circle cx="16.5" cy="7.5" r=".5" fill="currentColor"/></svg></span>
+      <h3 class="card-title" style="margin-top:8px">Login / Peran<br><span class="tiny muted">(role)</span></h3>
+      <p class="card-body" style="margin-top:6px">Akun punya “tingkat akses”: <b>pengunjung</b>, <b>orang tua</b>, <b>editor</b>, <b>admin</b>. Yang tidak berhak tidak bisa masuk.</p>
+    </div>
+    <div class="card card--tint" style="padding:16px">
+      <span class="icon-tile tile-violet"><svg class="ico" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round" aria-hidden="true"><path d="M10 13a5 5 0 0 0 7.54.54l3-3a5 5 0 0 0-7.07-7.07l-1.72 1.71"/><path d="M14 11a5 5 0 0 0-7.54-.54l-3 3a5 5 0 0 0 7.07 7.07l1.71-1.71"/></svg></span>
+      <h3 class="card-title" style="margin-top:8px">API<br><span class="tiny muted">(“pelayan pesanan”)</span></h3>
+      <p class="card-body" style="margin-top:6px">Jembatan resmi antara tampilan dan mesin. Tampilan <b>memesan</b> (“beri saya 4 artikel populer”), API <b>mengantar</b> datanya.</p>
+    </div>
+  </div>
+
+  <div class="callout callout--info" style="margin-top:14px; padding:11px 15px">
+    <b><svg class="ico" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round" aria-hidden="true"><path d="M15 14c.2-1 .7-1.7 1.5-2.5 1-.9 1.5-2.2 1.5-3.5A6 6 0 0 0 6 8c0 1 .2 2.2 1.5 3.5.7.7 1.3 1.5 1.5 2.5"/><path d="M9 18h6"/><path d="M10 22h4"/></svg></b>
+    <div>
+      <b>Analogi restoran:</b>
+      <p style="margin-top:2px">Frontend = ruang makan &amp; menu · Backend = dapur · Database = kulkas &amp; gudang bahan · API = pelayan yang membawa pesanan. Tamu tidak perlu masuk dapur — dan memang tidak boleh.</p>
+    </div>
+  </div>
+  <span class="slide-number">02</span>
+</section>
+
+<!-- ================= 03 · MASALAH ================= -->
+<section class="slide">
+  <p class="kicker">Kenapa ini dibuat</p>
+  <h2 class="title" style="margin-top:8px; max-width:900px">Orang tua mencari jawaban di internet yang <span class="hl">tidak jelas siapa penulisnya</span></h2>
+  <p class="subtitle" style="margin-top:10px; max-width:860px">Sementara Mentari Group punya produk pendidikan yang bagus — tapi tidak punya alasan alami untuk <b>“kenalan”</b> dengan orang tua di momen mereka paling butuh.</p>
+
+  <div class="grid-3 gap-20" style="margin-top:26px">
+    <div class="card">
+      <span class="badge-pill badge-pill--primary">Masalah 1</span>
+      <h3 class="card-title" style="margin-top:10px">Informasi berserakan &amp; tidak terpercaya</h3>
+      <p class="card-body" style="margin-top:6px">Forum, grup chat, dan video pendek. Sumbernya sering tidak jelas, kadang bertentangan, dan tidak pernah menyebut dokter mana yang meninjau.</p>
+    </div>
+    <div class="card">
+      <span class="badge-pill badge-pill--primary">Masalah 2</span>
+      <h3 class="card-title" style="margin-top:10px">Nasihat parenting terasa “generik”</h3>
+      <p class="card-body" style="margin-top:6px">Tips untuk bayi 6 bulan dipakai untuk anak 6 tahun. Padahal kebutuhan tiap usia berbeda jauh — dan orang tua tahu itu.</p>
+    </div>
+    <div class="card">
+      <span class="badge-pill badge-pill--primary">Masalah 3</span>
+      <h3 class="card-title" style="margin-top:10px">Produk Mentari “dijual”, bukan “dibutuhkan”</h3>
+      <p class="card-body" style="margin-top:6px">Iklan buku dan kelas terasa mengganggu kalau muncul tanpa konteks. Yang dicari orang tua adalah solusi, bukan katalog.</p>
+    </div>
+  </div>
+
+  <div class="row gap-20" style="margin-top:26px; align-items:stretch">
+    <div class="card grow" style="border-left:4px solid var(--primary)">
+      <p class="kicker" style="color:var(--primary-deep)">Cara Mentari menjawab</p>
+      <h3 class="title title--sm" style="margin-top:6px; font-size:22px">Jadi “sahabat” dulu, baru “toko”</h3>
+      <p class="card-body" style="margin-top:6px">Beri ilmu yang benar-benar berguna dan gratis → orang tua percaya → ketika mereka butuh buku/kelas, rekomendasinya terasa <b>membantu</b>, bukan menjual.</p>
+    </div>
+    <div class="card card--accent" style="width:300px">
+      <p class="kicker kicker--accent">Prinsipnya</p>
+      <p class="card-title" style="font-size:19px; margin-top:6px; line-height:1.25">Trust first,<br>commerce second.</p>
+      <p class="card-body" style="margin-top:8px">Konten editorial tidak boleh dibayar oleh produk. Rekomendasi selalu diberi label.</p>
+    </div>
+  </div>
+  <span class="slide-number">03</span>
+</section>
+
+<!-- ================= 04 · LIMA PERAN ================= -->
+<section class="slide">
+  <p class="kicker">Untuk siapa</p>
+  <h2 class="title" style="margin-top:8px">Lima peran yang berbeda di dalam satu situs</h2>
+  <p class="subtitle" style="margin-top:8px">Semua orang melihat situs yang sama — tapi yang bisa mereka lakukan berbeda-beda.</p>
+
+  <div class="grid-5 gap-12" style="margin-top:24px">
+    <div class="persona">
+      <div class="avatar av-1"><svg class="ico" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round" aria-hidden="true"><path d="M2.062 12.348a1 1 0 0 1 0-.696 10.75 10.75 0 0 1 19.876 0 1 1 0 0 1 0 .696 10.75 10.75 0 0 1-19.876 0"/><circle cx="12" cy="12" r="3"/></svg></div>
+      <p class="meta">Tanpa akun</p>
+      <p class="who">Pengunjung</p>
+      <p class="need">Datang dari Google atau media sosial, sering lewat HP. <b>70–80%</b> pengguna baru adalah tipe ini.</p>
+      <p class="tiny muted" style="margin-top:auto; padding-top:8px; border-top:1px solid var(--sand)">Bisa: baca semua konten, lihat katalog produk, baca komunitas.</p>
+    </div>
+    <div class="persona">
+      <div class="avatar av-1" style="background:linear-gradient(135deg,#ffb27a,var(--primary))"><svg class="ico" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round" aria-hidden="true"><path d="M19 21v-2a4 4 0 0 0-4-4H9a4 4 0 0 0-4 4v2"/><circle cx="12" cy="7" r="4"/></svg></div>
+      <p class="meta">Akun gratis</p>
+      <p class="who">Orang tua</p>
+      <p class="need">Sudah punya akun &amp; profil anak. Ingin konten yang <b>sesuai usia anaknya</b>.</p>
+      <p class="tiny muted" style="margin-top:auto; padding-top:8px; border-top:1px solid var(--sand)">Bisa: semua di atas + bookmark, milestone, poin &amp; badge, tulis di komunitas.</p>
+    </div>
+    <div class="persona">
+      <div class="avatar av-2"><svg class="ico" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round" aria-hidden="true"><path d="M12 20h9"/><path d="M16.5 3.5a2.12 2.12 0 0 1 3 3L7 19l-4 1 1-4Z"/></svg></div>
+      <p class="meta">Tim internal</p>
+      <p class="who">Editor</p>
+      <p class="need">Menulis dan menerbitkan konten. <b>Tidak boleh</b> mengubah peran pengguna lain.</p>
+      <p class="tiny muted" style="margin-top:auto; padding-top:8px; border-top:1px solid var(--sand)">Bisa: kelola konten, produk, learning path, moderasi komunitas.</p>
+    </div>
+    <div class="persona">
+      <div class="avatar av-2" style="background:linear-gradient(135deg,#0d6ba8,var(--secondary-deep))"><svg class="ico" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round" aria-hidden="true"><path d="M20 13c0 5-3.5 7.5-7.66 8.95a1 1 0 0 1-.67-.01C7.5 20.5 4 18 4 13V6a1 1 0 0 1 1-1c2 0 4.5-1.2 6.24-2.72a1.17 1.17 0 0 1 1.52 0C14.51 3.81 17 5 19 5a1 1 0 0 1 1 1z"/></svg></div>
+      <p class="meta">Tim internal</p>
+      <p class="who">Admin</p>
+      <p class="need">Semua akses editor + <b>mengatur peran pengguna</b> dan melihat angka performa.</p>
+      <p class="tiny muted" style="margin-top:auto; padding-top:8px; border-top:1px solid var(--sand)">Bisa: semua, termasuk jadikan seseorang editor/admin.</p>
+    </div>
+    <div class="persona">
+      <div class="avatar av-3"><svg class="ico" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round" aria-hidden="true"><path d="M21.42 10.922a1 1 0 0 0-.019-1.838L12.83 5.18a2 2 0 0 0-1.66 0L2.6 9.08a1 1 0 0 0 0 1.832l8.57 3.908a2 2 0 0 0 1.66 0z"/><path d="M22 10v6"/><path d="M6 12.5V16a6 3 0 0 0 12 0v-3.5"/></svg>‍<svg class="ico" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round" aria-hidden="true"><path d="M21.42 10.922a1 1 0 0 0-.019-1.838L12.83 5.18a2 2 0 0 0-1.66 0L2.6 9.08a1 1 0 0 0 0 1.832l8.57 3.908a2 2 0 0 0 1.66 0z"/><path d="M22 10v6"/><path d="M6 12.5V16a6 3 0 0 0 12 0v-3.5"/></svg></div>
+      <p class="meta">Segmen khusus</p>
+      <p class="who">Guru</p>
+      <p class="need">Target produk <b>Teacher Academy</b>. Tahun pertama fokus membaca, bukan menulis.</p>
+      <p class="tiny muted" style="margin-top:auto; padding-top:8px; border-top:1px solid var(--sand)">Saat ini: pengunjung / orang tua biasa.</p>
+    </div>
+  </div>
+
+  <div class="callout" style="margin-top:20px">
+    <b><svg class="ico" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round" aria-hidden="true"><path d="m21.73 18-8-14a2 2 0 0 0-3.48 0l-8 14A2 2 0 0 0 4 21h16a2 2 0 0 0 1.73-3"/><path d="M12 9v4"/><path d="M12 17h.01"/></svg></b>
+    <div>
+      <b>Kenapa ini penting untuk tim non-teknis:</b>
+      <p style="margin-top:2px">Setiap tombol “berhasil” atau “ditolak” di situs selalu menjawab satu pertanyaan: <i>“Siapa kamu?”</i>. Kalau ada laporan “saya tidak bisa membuka halaman X”, pertanyaan pertama bukan bug — tapi <b>peran akunnya apa</b>.</p>
+    </div>
+  </div>
+  <span class="slide-number">04</span>
+</section>
+
+<!-- ================= 05 · PETA SITUS ================= -->
+<section class="slide tight">
+  <p class="kicker">Peta situs</p>
+  <h2 class="title title--sm" style="margin-top:6px">Apa saja yang ada di dalam aplikasi</h2>
+  <p class="subtitle" style="margin-top:6px; font-size:13.5px">Semua halaman yang bisa dibuka, dikelompokkan menjadi lima area.</p>
+
+  <div class="sitemap" style="margin-top:18px">
+    <div class="col">
+      <h4>1 · Jelajah Konten</h4>
+      <a href="/contents"><svg class="ico" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round" aria-hidden="true"><path d="M12 7v14"/><path d="M3 18a1 1 0 0 1-1-1V4a1 1 0 0 1 1-1h5a4 4 0 0 1 4 4 4 4 0 0 1 4-4h5a1 1 0 0 1 1 1v13a1 1 0 0 1-1 1h-6a3 3 0 0 0-3 3 3 3 0 0 0-3-3z"/></svg> Daftar semua konten</a>
+      <span class="note">filter usia, kategori, tipe</span>
+      <a href="/contents/:slug"><svg class="ico" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round" aria-hidden="true"><path d="M15 2H6a2 2 0 0 0-2 2v16a2 2 0 0 0 2 2h12a2 2 0 0 0 2-2V7Z"/><path d="M14 2v4a2 2 0 0 0 2 2h4"/><path d="M10 9H8"/><path d="M16 13H8"/><path d="M16 17H8"/></svg> Halaman baca artikel/video</a>
+      <span class="note">+ panel “Rekomendasi dari Mentari”</span>
+      <a href="/search"><svg class="ico" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round" aria-hidden="true"><circle cx="11" cy="11" r="8"/><path d="m21 21-4.3-4.3"/></svg> Pencarian</a>
+      <span class="note">judul, ringkasan, penulis, tag</span>
+    </div>
+    <div class="col">
+      <h4>2 · Belajar Terarah</h4>
+      <a href="/learning-paths"><svg class="ico" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round" aria-hidden="true"><path d="M4.5 16.5c-1.5 1.26-2 5-2 5s3.74-.5 5-2c.71-.84.7-2.13-.09-2.91a2.18 2.18 0 0 0-2.91-.09z"/><path d="m12 15-3-3a22 22 0 0 1 2-3.95A12.88 12.88 0 0 1 22 2c0 2.72-.78 7.5-6 11a22.35 22.35 0 0 1-4 2z"/><path d="M9 12H4s.55-3.03 2-4c1.62-1.08 5 0 5 0"/><path d="M12 15v5s3.03-.55 4-2c1.08-1.62 0-5 0-5"/></svg> Learning Path</a>
+      <span class="note">rangkaian konten berurutan</span>
+      <a href="/development"><svg class="ico" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round" aria-hidden="true"><path d="M7 20h10"/><path d="M10 20c5.5-2.5.8-6.4 3-10"/><path d="M9.5 9.4c1.1.8 1.8 2.2 2.3 3.7-2 .4-3.5.4-4.8-.3-1.2-.6-2.3-1.9-3-4.2 2.8-.5 4.4 0 5.5.8z"/><path d="M14.1 6a7 7 0 0 0-1.1 4c1.9-.1 3.3-.6 4.3-1.4 1-1 1.6-2.3 1.7-4.6-2.7.1-4 1-4.9 2z"/></svg> Perkembangan (milestone)</a>
+      <span class="note">checklist sesuai usia anak</span>
+      <a href="/profile"><svg class="ico" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round" aria-hidden="true"><path d="M19 21v-2a4 4 0 0 0-4-4H9a4 4 0 0 0-4 4v2"/><circle cx="12" cy="7" r="4"/></svg> Profil saya</a>
+      <span class="note">anak, poin, badge, bookmark</span>
+    </div>
+    <div class="col">
+      <h4>3 · Komunitas</h4>
+      <a href="/community"><svg class="ico" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round" aria-hidden="true"><path d="M21 15a2 2 0 0 1-2 2H7l-4 4V5a2 2 0 0 1 2-2h14a2 2 0 0 1 2 2z"/></svg> Forum diskusi orang tua</a>
+      <span class="note">thread, komentar, like</span>
+      <a href="/community/:id"><svg class="ico" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round" aria-hidden="true"><path d="M14 9a2 2 0 0 1-2 2H6l-4 4V4a2 2 0 0 1 2-2h8a2 2 0 0 1 2 2z"/><path d="M18 9h2a2 2 0 0 1 2 2v11l-4-4h-6a2 2 0 0 1-2-2v-1"/></svg> Detail diskusi</a>
+      <span class="note">moderasi: pin, kunci, hapus</span>
+    </div>
+    <div class="col">
+      <h4>4 · Produk Mentari</h4>
+      <a href="/products"><svg class="ico" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round" aria-hidden="true"><path d="M6 2 3 6v14a2 2 0 0 0 2 2h14a2 2 0 0 0 2-2V6l-3-4Z"/><path d="M3 6h18"/><path d="M16 10a4 4 0 0 1-8 0"/></svg> Katalog produk</a>
+      <span class="note">7 jenis produk</span>
+      <a href="/products/:slug"><svg class="ico" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round" aria-hidden="true"><path d="m7.5 4.27 9 5.15"/><path d="M21 8a2 2 0 0 0-1-1.73l-7-4a2 2 0 0 0-2 0l-7 4A2 2 0 0 0 3 8v8a2 2 0 0 0 1 1.73l7 4a2 2 0 0 0 2 0l7-4A2 2 0 0 0 21 16Z"/><path d="m3.3 7 8.7 5 8.7-5"/><path d="M12 22V12"/></svg> Detail produk</a>
+      <span class="note">tombol keluar ke situs Mentari</span>
+    </div>
+  </div>
+
+  <div class="grid-2 gap-20" style="margin-top:16px; align-items:stretch">
+    <div class="col" style="background:#0b3d68; border-color:transparent; color:#fff; border-radius:16px; padding:14px; display:flex; flex-direction:column; gap:6px">
+      <h4 style="font-size:10px; letter-spacing:.1em; text-transform:uppercase; color:#ffd9a0; font-weight:800; margin:0">5 · Area Internal (login wajib)</h4>
+      <span style="font-size:11.5px"><svg class="ico" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round" aria-hidden="true"><path d="M14.7 6.3a1 1 0 0 0 0 1.4l1.6 1.6a1 1 0 0 0 1.4 0l3.77-3.77a6 6 0 0 1-7.94 7.94l-6.91 6.91a2.12 2.12 0 0 1-3-3l6.91-6.91a6 6 0 0 1 7.94-7.94l-3.76 3.76z"/></svg> <b>/admin</b> — CMS: Ringkasan · Konten · Produk · Learning Path · Komunitas · Pengguna</span>
+      <span class="note" style="font-size:9.5px; color:rgba(255,255,255,.6)">Hanya ADMIN &amp; EDITOR. Tab “Pengguna” hanya ADMIN.</span>
+    </div>
+    <div class="col" style="border-radius:16px; padding:14px; display:flex; flex-direction:column; gap:6px">
+      <h4 style="font-size:10px; letter-spacing:.1em; text-transform:uppercase; color:var(--muted); font-weight:800; margin:0">+ Halaman pendukung</h4>
+      <span class="small">ℹ️ /about · <svg class="ico" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round" aria-hidden="true"><circle cx="12" cy="12" r="10"/><path d="M9.09 9a3 3 0 0 1 5.83 1c0 2-3 3-3 3"/><path d="M12 17h.01"/></svg> /help (FAQ) · <svg class="ico" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round" aria-hidden="true"><rect width="18" height="11" x="3" y="11" rx="2" ry="2"/><path d="M7 11V7a5 5 0 0 1 10 0v4"/></svg> /privacy · <svg class="ico" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round" aria-hidden="true"><path d="M15 2H6a2 2 0 0 0-2 2v16a2 2 0 0 0 2 2h12a2 2 0 0 0 2-2V7Z"/><path d="M14 2v4a2 2 0 0 0 2 2h4"/><path d="M10 9H8"/><path d="M16 13H8"/><path d="M16 17H8"/></svg> /terms · <svg class="ico" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round" aria-hidden="true"><path d="M2.586 17.414A2 2 0 0 0 2 18.828V21a1 1 0 0 0 1 1h3a1 1 0 0 0 1-1v-1a1 1 0 0 1 1-1h1a1 1 0 0 0 1-1v-1a1 1 0 0 1 1-1h.172a2 2 0 0 0 1.414-.586l.814-.814a6.5 6.5 0 1 0-4-4z"/><circle cx="16.5" cy="7.5" r=".5" fill="currentColor"/></svg> /login · <svg class="ico" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round" aria-hidden="true"><path d="M12 20h9"/><path d="M16.5 3.5a2.12 2.12 0 0 1 3 3L7 19l-4 1 1-4Z"/></svg> /register · <svg class="ico" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round" aria-hidden="true"><path d="M21 12a9 9 0 1 1-9-9c2.52 0 4.93 1 6.74 2.74L21 8"/><path d="M21 3v5h-5"/></svg> /forgot-password</span>
+      <span class="note" style="font-size:9.5px">Juga: peta situs otomatis untuk Google (/sitemap.xml) dan aturan robot (/robots.txt).</span>
+    </div>
+  </div>
+
+  <div class="card" style="margin-top:14px; padding:13px 16px; background:#fff">
+    <p class="kicker" style="color:var(--secondary)">Siapa boleh masuk ke mana</p>
+    <div class="row" style="margin-top:9px; gap:0; align-items:stretch">
+      <div style="flex:1; padding-right:12px">
+        <p class="tiny b">Semua pengunjung</p>
+        <p class="tiny muted" style="margin-top:2px">Beranda · konten · pencarian · katalog produk · komunitas (baca) · halaman legal</p>
+      </div>
+      <div style="width:1px; background:var(--line)"></div>
+      <div style="flex:1; padding:0 12px">
+        <p class="tiny b">Harus punya akun</p>
+        <p class="tiny muted" style="margin-top:2px">Profil &amp; data anak · milestone · bookmark · poin/badge · menulis diskusi &amp; komentar · rekomendasi personal</p>
+      </div>
+      <div style="width:1px; background:var(--line)"></div>
+      <div style="flex:1; padding-left:12px">
+        <p class="tiny b">Harus ADMIN / EDITOR</p>
+        <p class="tiny muted" style="margin-top:2px">Seluruh <span class="kbd">/admin</span>. Tab <b>Pengguna</b> hanya ADMIN — EDITOR tidak melihatnya sama sekali.</p>
+      </div>
+    </div>
+  </div>
+  <span class="slide-number">05</span>
+</section>
+
+<!-- ================= 06 · CARA KERJA DALAM 30 DETIK ================= -->
+<section class="slide">
+  <p class="kicker">Cara kerja, versi 30 detik</p>
+  <h2 class="title" style="margin-top:8px">Dari klik sampai data tersimpan</h2>
+  <p class="subtitle" style="margin-top:8px">Contoh nyata: seorang ibu membuka artikel “Takaran MPASI”. Ini yang terjadi di belakang layar.</p>
+
+  <div class="flow" style="margin-top:30px">
+    <div class="flow-node">
+      <span class="icon-tile tile-primary"><svg class="ico" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round" aria-hidden="true"><path d="M19 21v-2a4 4 0 0 0-4-4H9a4 4 0 0 0-4 4v2"/><circle cx="12" cy="7" r="4"/></svg></span>
+      <b>1 · Orang tua</b>
+      <span>Klik artikel di Google atau media sosial. Buka di HP.</span>
+    </div>
+    <div class="flow-arrow">→</div>
+    <div class="flow-node">
+      <span class="icon-tile tile-accent"><svg class="ico" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round" aria-hidden="true"><rect width="20" height="14" x="2" y="3" rx="2"/><line x1="8" x2="16" y1="21" y2="21"/><line x1="12" x2="12" y1="17" y2="21"/></svg></span>
+      <b>2 · Tampilan web</b>
+      <span>Menyiapkan halaman: judul, isi, gambar, rekomendasi produk.</span>
+    </div>
+    <div class="flow-arrow">→</div>
+    <div class="flow-node">
+      <span class="icon-tile tile-secondary"><svg class="ico" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round" aria-hidden="true"><path d="M12.22 2h-.44a2 2 0 0 0-2 2v.18a2 2 0 0 1-1 1.73l-.43.25a2 2 0 0 1-2 0l-.15-.08a2 2 0 0 0-2.73.73l-.22.38a2 2 0 0 0 .73 2.73l.15.1a2 2 0 0 1 1 1.72v.51a2 2 0 0 1-1 1.74l-.15.09a2 2 0 0 0-.73 2.73l.22.38a2 2 0 0 0 2.73.73l.15-.08a2 2 0 0 1 2 0l.43.25a2 2 0 0 1 1 1.73V20a2 2 0 0 0 2 2h.44a2 2 0 0 0 2-2v-.18a2 2 0 0 1 1-1.73l.43-.25a2 2 0 0 1 2 0l.15.08a2 2 0 0 0 2.73-.73l.22-.39a2 2 0 0 0-.73-2.73l-.15-.08a2 2 0 0 1-1-1.74v-.5a2 2 0 0 1 1-1.74l.15-.09a2 2 0 0 0 .73-2.73l-.22-.38a2 2 0 0 0-2.73-.73l-.15.08a2 2 0 0 1-2 0l-.43-.25a2 2 0 0 1-1-1.73V4a2 2 0 0 0-2-2z"/><circle cx="12" cy="12" r="3"/></svg></span>
+      <b>3 · Mesin / API</b>
+      <span>Memeriksa izin, mengambil artikel, menghitung produk yang cocok.</span>
+    </div>
+    <div class="flow-arrow">→</div>
+    <div class="flow-node">
+      <span class="icon-tile tile-violet"><svg class="ico" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round" aria-hidden="true"><ellipse cx="12" cy="5" rx="9" ry="3"/><path d="M3 5v14a9 3 0 0 0 18 0V5"/><path d="M3 12a9 3 0 0 0 18 0"/></svg></span>
+      <b>4 · Database</b>
+      <span>Menyimpan &amp; mengembalikan data artikel, produk, dan riwayat baca.</span>
+    </div>
+  </div>
+
+  <div class="flow" style="margin-top:16px">
+    <div class="flow-node" style="background:var(--sand); border-color:#e7d9cb">
+      <b><svg class="ico" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round" aria-hidden="true"><path d="M19 12H5"/><path d="m12 19-7-7 7-7"/></svg> Kembali ke tampilan</b>
+      <span>Disusun jadi halaman yang rapi dan cepat dibuka.</span>
+    </div>
+    <div class="flow-arrow">→</div>
+    <div class="flow-node">
+      <b>5 · Halaman tampil</b>
+      <span>Pembaca melihat artikel + 3 rekomendasi produk berlabel.</span>
+    </div>
+    <div class="flow-arrow">→</div>
+    <div class="flow-node" style="border-color:rgba(46,196,182,.45)">
+      <b>6 · Tercatat otomatis</b>
+      <span>1 “view” bertambah; kalau produk diklik, kliknya dicatat beserta asalnya.</span>
+    </div>
+    <div class="flow-arrow">→</div>
+    <div class="flow-node" style="background:var(--secondary-soft); border-color:#cfe0ee">
+      <b>7 · Masuk laporan</b>
+      <span>Angka ini muncul di dashboard admin (views &amp; klik 30 hari).</span>
+    </div>
+  </div>
+
+  <div class="grid-3 gap-16" style="margin-top:26px">
+    <div class="card card--flat" style="background:transparent; border:none; padding:0">
+      <p class="kicker" style="color:var(--secondary)">Kenapa penting</p>
+      <p class="small muted" style="margin-top:4px">Semua orang tua memakai <b>satu pintu yang sama</b> (situs). Tidak ada aplikasi terpisah untuk iOS/Android — jadi satu perbaikan langsung terasa untuk semua pengguna.</p>
+    </div>
+    <div class="card card--flat" style="background:transparent; border:none; padding:0">
+      <p class="kicker" style="color:var(--secondary)">Kenapa cepat</p>
+      <p class="small muted" style="margin-top:4px">Halaman artikel disiapkan di server (bukan di HP pengguna), jadi <b>cepat dibuka di jaringan lambat</b> dan mudah ditemukan Google.</p>
+    </div>
+    <div class="card card--flat" style="background:transparent; border:none; padding:0">
+      <p class="kicker" style="color:var(--secondary)">Kenapa aman</p>
+      <p class="small muted" style="margin-top:4px">Browser pengguna <b>tidak pernah</b> menyentuh database langsung. Semua permintaan lewat API yang memeriksa izin lebih dulu.</p>
+    </div>
+  </div>
+
+  <div class="card" style="margin-top:18px; padding:14px 16px; background:var(--secondary); border-color:transparent">
+    <div class="row between gap-24">
+      <div>
+        <p class="kicker kicker--light">Terjemahan untuk tim non-teknis</p>
+        <p class="small" style="color:rgba(255,255,255,.85); margin-top:5px; max-width:720px">
+          Kalau ada yang bertanya “kenapa perubahan kecil butuh waktu?” — jawabannya ada di gambar di atas.
+          Mengubah <b style="color:#fff">tampilan</b> tidak menyentuh data. Mengubah <b style="color:#fff">aturan rekomendasi</b> tidak menyentuh tampilan.
+          Tapi mengubah <b style="color:#fff">jenis data yang disimpan</b> menyentuh ketiganya.
+        </p>
+      </div>
+      <div style="flex:0 0 210px; border-left:1px solid rgba(255,255,255,.18); padding-left:18px">
+        <p class="tiny" style="color:#ffd9a0; font-weight:800; letter-spacing:.1em">URUTAN PERUBAHAN</p>
+        <p class="tiny" style="color:rgba(255,255,255,.8); margin-top:4px; line-height:1.6">Tampilan → cepat · Mesin → sedang · Data → paling lama</p>
+      </div>
+    </div>
+  </div>
+  <span class="slide-number">06</span>
+</section>
+
+<!-- ================= 07 · PERJALANAN ORANG TUA ================= -->
+<section class="slide tight">
+  <p class="kicker">Alur pemakaian pengguna</p>
+  <h2 class="title title--sm" style="margin-top:6px">Perjalanan seorang orang tua, dari tidak kenal sampai jadi kebiasaan</h2>
+
+  <div class="journey" style="margin-top:20px">
+    <div class="head" style="background:var(--secondary-deep)">Tahap</div>
+    <div class="head">1 · Ketemu</div>
+    <div class="head">2 · Baca</div>
+    <div class="head">3 · Daftar</div>
+    <div class="head">4 · Pakai rutin</div>
+    <div class="head">5 · Beli / ikut</div>
+
+    <div class="rowlabel">Yang dia lihat</div>
+    <div class="cell"><b>Hasil Google</b>Judul artikel yang menjawab pertanyaan persis.</div>
+    <div class="cell"><b>Halaman artikel</b>Isi jelas, ada nama penulis &amp; ahli peninjau.</div>
+    <div class="cell"><b>Form singkat</b>Nama, email, password.</div>
+    <div class="cell"><b>Profil &amp; checklist</b>Data anak, milestone, badge.</div>
+    <div class="cell"><b>Rekomendasi</b>Produk berlabel “Rekomendasi dari Mentari”.</div>
+
+    <div class="rowlabel">Yang dia rasakan</div>
+    <div class="cell">“Ini jawabannya.”</div>
+    <div class="cell">“Ternyata gratis &amp; rapi.”</div>
+    <div class="cell">“Cuma sebentar, aman.”</div>
+    <div class="cell">“Ini ngerti anak saya.”</div>
+    <div class="cell">“Masuk akal untuk dibeli.”</div>
+
+    <div class="rowlabel">Yang kita dapat</div>
+    <div class="cell">1 kunjungan (+1 view tercatat)</div>
+    <div class="cell">Waktu baca, topik favorit</div>
+    <div class="cell">Data akun + profil anak</div>
+    <div class="cell">Retensi: streak, bookmark, badge</div>
+    <div class="cell">Klik produk → 1 lead</div>
+
+    <div class="rowlabel">Halaman yang dipakai</div>
+    <div class="cell">/contents/:slug</div>
+    <div class="cell">/contents · /search</div>
+    <div class="cell">/register</div>
+    <div class="cell">/profile · /development · /community</div>
+    <div class="cell">/products · tombol keluar</div>
+  </div>
+
+  <div class="grid-3 gap-16" style="margin-top:20px">
+    <div class="card" style="padding:15px">
+      <p class="kicker">Titik putus terbesar</p>
+      <p class="small muted" style="margin-top:4px">Antara tahap 2 dan 3. Banyak orang tua <b>tidak melihat alasan</b> untuk mendaftar karena semua konten sudah bisa dibaca tanpa akun.</p>
+    </div>
+    <div class="card" style="padding:14px">
+      <p class="kicker">Jawabannya hari ini</p>
+      <p class="small muted" style="margin-top:4px">Yang <b>tidak bisa</b> dilakukan tanpa akun: profil anak, milestone, bookmark, poin &amp; badge, menulis di komunitas.</p>
+    </div>
+    <div class="card" style="padding:14px; background:var(--secondary); border-color:transparent">
+      <p class="kicker kicker--light">Pesan untuk tim</p>
+      <p class="small" style="margin-top:4px; color:rgba(255,255,255,.85)">Saat presentasi, ceritakan alur ini sebagai <b style="color:#ffd9a0">cerita satu orang</b>, bukan daftar fitur. Orang mengingat cerita, bukan menu.</p>
+    </div>
+  </div>
+  <span class="slide-number">07</span>
+</section>
+
+<!-- ================= 08 · TIGA PINTU MASUK ================= -->
+<section class="slide">
+  <p class="kicker">Alur masuk</p>
+  <h2 class="title" style="margin-top:8px">Ada tiga pintu masuk, bukan satu</h2>
+  <p class="subtitle" style="margin-top:8px">Ini yang sering terlewat saat menjelaskan produk: pengguna tidak selalu “mulai dari beranda”.</p>
+
+  <div class="grid-3 gap-20" style="margin-top:26px; align-items:stretch">
+    <div class="card">
+      <div class="row between">
+        <span class="icon-tile tile-primary"><svg class="ico" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round" aria-hidden="true"><circle cx="11" cy="11" r="8"/><path d="m21 21-4.3-4.3"/></svg></span>
+        <span class="badge-pill">paling umum</span>
+      </div>
+      <h3 class="card-title" style="margin-top:12px; font-size:17px">Pintu 1 — Google</h3>
+      <p class="card-body" style="margin-top:6px">Mencari “takaran MPASI 6 bulan”, mendarat <b>langsung di artikel</b>. Beranda tidak pernah dilihat.</p>
+      <p class="tiny muted" style="margin-top:10px; padding-top:8px; border-top:1px solid var(--sand)"><b style="color:var(--secondary)">Implikasi:</b> setiap halaman artikel harus bisa berdiri sendiri — judul, ringkasan, gambar, penulis.</p>
+    </div>
+    <div class="card">
+      <div class="row between">
+        <span class="icon-tile tile-accent"><svg class="ico" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round" aria-hidden="true"><rect width="14" height="20" x="5" y="2" rx="2" ry="2"/><path d="M12 18h.01"/></svg></span>
+        <span class="badge-pill badge-pill--accent">tumbuh cepat</span>
+      </div>
+      <h3 class="card-title" style="margin-top:12px; font-size:17px">Pintu 2 — Media sosial</h3>
+      <p class="card-body" style="margin-top:6px">Link dibagikan di grup WhatsApp atau Instagram. Yang dibuka <b>satu halaman</b>, sering di HP dengan koneksi pas-pasan.</p>
+      <p class="tiny muted" style="margin-top:10px; padding-top:8px; border-top:1px solid var(--sand)"><b style="color:var(--secondary)">Implikasi:</b> tampilan HP adalah tampilan utama — bukan versi “mini” dari desktop.</p>
+    </div>
+    <div class="card">
+      <div class="row between">
+        <span class="icon-tile tile-secondary"><svg class="ico" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round" aria-hidden="true"><path d="M15 21v-8a1 1 0 0 0-1-1h-4a1 1 0 0 0-1 1v8"/><path d="M3 10a2 2 0 0 1 .709-1.528l7-5.999a2 2 0 0 1 2.582 0l7 5.999A2 2 0 0 1 21 10v9a2 2 0 0 1-2 2H5a2 2 0 0 1-2-2z"/></svg></span>
+        <span class="badge-pill badge-pill--secondary">untuk pelanggan setia</span>
+      </div>
+      <h3 class="card-title" style="margin-top:12px; font-size:17px">Pintu 3 — Beranda</h3>
+      <p class="card-body" style="margin-top:6px">Membuka alamat situs langsung. Melihat sorotan: konten populer, topik, learning path, produk, komunitas.</p>
+      <p class="tiny muted" style="margin-top:10px; padding-top:8px; border-top:1px solid var(--sand)"><b style="color:var(--secondary)">Implikasi:</b> beranda berfungsi sebagai “etalase” untuk yang sudah kenal.</p>
+    </div>
+  </div>
+
+  <div class="card card--flat" style="margin-top:22px; background:#fff; border:1px dashed #e0cfc1">
+    <p class="kicker" style="color:var(--secondary)">Cara menjelaskan ke orang awam</p>
+    <p class="small" style="margin-top:6px; color:var(--ink)">
+      “Bayangkan sebuah <b>majalah parenting</b>. Orang bisa menemukan satu halaman majalah itu lewat Google, tanpa pernah melihat sampulnya.
+      Tugas kami: memastikan <b>setiap halaman</b> tetap masuk akal sendirian — dan selalu ada jalan kembali ke bagian lain.”
+    </p>
+  </div>
+  <span class="slide-number">08</span>
+</section>
+
+<!-- ================= 09 · DAFTAR & MASUK ================= -->
+<section class="slide">
+  <p class="kicker">Alur 1 dari 6</p>
+  <h2 class="title" style="margin-top:8px">Daftar, masuk, dan lupa password</h2>
+
+  <div class="grid-3 gap-20" style="margin-top:24px">
+    <div class="card">
+      <span class="step-num step-num--primary">1</span>
+      <h3 class="card-title" style="margin-top:10px">Daftar akun</h3>
+      <p class="card-body" style="margin-top:5px">Isi nama lengkap, email, password. Langsung dapat badge <b>“Langkah Pertama”</b> (10 poin) sebagai penyambut.</p>
+      <p class="tiny muted" style="margin-top:8px">Halaman <span class="kbd">/register</span></p>
+    </div>
+    <div class="card">
+      <span class="step-num step-num--primary">2</span>
+      <h3 class="card-title" style="margin-top:10px">Masuk &amp; streak harian</h3>
+      <p class="card-body" style="margin-top:5px">Tiap login di hari baru menambah <b>streak</b> dan <b>5 poin</b>. Streak 7 dan 30 hari memberi badge khusus.</p>
+      <p class="tiny muted" style="margin-top:8px">Halaman <span class="kbd">/login</span></p>
+    </div>
+    <div class="card">
+      <span class="step-num step-num--primary">3</span>
+      <h3 class="card-title" style="margin-top:10px">Lupa password</h3>
+      <p class="card-body" style="margin-top:5px">Isi email, sistem menjawab <i>“jika email terdaftar, tautan reset sudah dikirim”</i> — sengaja tidak membocorkan email mana yang terdaftar.</p>
+      <p class="tiny muted" style="margin-top:8px">Halaman <span class="kbd">/forgot-password</span></p>
+    </div>
+  </div>
+
+  <div class="grid-2 gap-20" style="margin-top:22px; align-items:stretch">
+    <div class="card">
+      <p class="kicker" style="color:var(--secondary)">Kenapa alurnya dibuat begini</p>
+      <ul class="list-check" style="margin-top:9px">
+        <li><span class="tick"><svg class="ico" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round" aria-hidden="true"><path d="M20 6 9 17l-5-5"/></svg></span><span><b>Tidak ada verifikasi email yang memblokir</b> — bisa langsung pakai. (Email verifikasi = calon pengguna kabur.)</span></li>
+        <li><span class="tick"><svg class="ico" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round" aria-hidden="true"><path d="M20 6 9 17l-5-5"/></svg></span><span><b>Password disamarkan &amp; tidak pernah disimpan mentah</b> — yang tersimpan hanya “sidik jari” (hash) yang tidak bisa dibalik.</span></li>
+        <li><span class="tick"><svg class="ico" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round" aria-hidden="true"><path d="M20 6 9 17l-5-5"/></svg></span><span><b>Pesan “email tidak ditemukan” tidak ditampilkan</b> — mencegah orang menebak email pelanggan lain.</span></li>
+      </ul>
+    </div>
+    <div class="callout" style="background:#fef2f2; border-color:#fecaca">
+      <b><svg class="ico" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round" aria-hidden="true"><path d="M14 2v6a2 2 0 0 0 .245.96l5.51 10.08A2 2 0 0 1 18 22H6a2 2 0 0 1-1.755-2.96l5.51-10.08A2 2 0 0 0 10 8V2"/><path d="M6.453 15h11.094"/><path d="M8.5 2h7"/></svg></b>
+      <div>
+        <b style="color:#b91c1c">Yang masih perlu disiapkan sebelum peluncuran</b>
+        <p style="color:#9b4a4a; margin-top:2px">
+          Saat ini halaman lupa password <b>belum benar-benar mengirim email</b> — baru mencatat permintaan di server.
+          Pengiriman email reset perlu disiapkan (lewat penyedia email atau layanan login seperti Supabase).
+        </p>
+      </div>
+    </div>
+  </div>
+  <span class="slide-number">09</span>
+</section>
+
+<!-- ================= 10 · JELAJAH & BACA ================= -->
+<section class="slide">
+  <p class="kicker">Alur 2 dari 6 · inti produk</p>
+  <h2 class="title" style="margin-top:8px">Menemukan dan membaca konten</h2>
+
+  <div class="grid-2 gap-24" style="margin-top:20px; align-items:start">
+    <div>
+      <div class="vflow">
+        <div class="vstep"><span class="step-num step-num--outline">1</span><span><b>Pilih cara masuk</b> — dari beranda, menu “Jelajah Konten”, pencarian, atau langsung dari Google.</span></div>
+        <div class="vstep"><span class="step-num step-num--outline">2</span><span><b>Saring</b> — berdasarkan kelompok usia (6 pilihan), kategori (7 induk + 22 sub), atau tipe konten.</span></div>
+        <div class="vstep"><span class="step-num step-num--outline">3</span><span><b>Lihat kartu konten</b> — judul, gambar, tipe, estimasi waktu baca, jumlah dilihat.</span></div>
+        <div class="vstep"><span class="step-num step-num--outline">4</span><span><b>Buka halaman baca</b> — isi lengkap, nama penulis &amp; jabatan, tanggal terbit, video jika ada.</span></div>
+        <div class="vstep" style="border-color:rgba(46,196,182,.45); background:var(--accent-soft)"><span class="step-num step-num--accent">5</span><span><b>Lihat “Rekomendasi dari Mentari”</b> — maksimal 3 produk relevan di sisi kanan, tanpa harga.</span></div>
+        <div class="vstep"><span class="step-num step-num--outline">6</span><span><b>Simpan atau lanjut</b> — bookmark jika login; atau lanjut ke artikel serupa di bawah halaman.</span></div>
+      </div>
+    </div>
+
+    <div>
+      <p class="kicker" style="color:var(--secondary)">Yang bisa disaring di halaman konten</p>
+      <div class="grid-2 gap-10" style="margin-top:10px">
+        <div class="card" style="padding:12px">
+          <p class="card-title" style="font-size:12px"><svg class="ico" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round" aria-hidden="true"><path d="M9 12h.01"/><path d="M15 12h.01"/><path d="M10 16c.5.3 1.2.5 2 .5s1.5-.2 2-.5"/><path d="M19 6.3a9 9 0 0 1 1.8 3.9 2 2 0 0 1 0 3.6 9 9 0 0 1-17.6 0 2 2 0 0 1 0-3.6A9 9 0 0 1 12 3c2 0 3.5 1.1 3.5 2.5s-.9 2.5-2 2.5c-.8 0-1.5-.4-1.5-1"/></svg> Kelompok usia</p>
+          <p class="tiny muted" style="margin-top:3px">Bayi 0–12 bln · Batita 1–3 th · Prasekolah 3–6 th · SD Awal 6–9 th · SD Akhir 9–12 th · Semua usia</p>
+        </div>
+        <div class="card" style="padding:12px">
+          <p class="card-title" style="font-size:12px"><svg class="ico" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round" aria-hidden="true"><path d="m6 14 1.5-2.9A2 2 0 0 1 9.24 10H20a2 2 0 0 1 1.94 2.5l-1.54 6a2 2 0 0 1-1.95 1.5H4a2 2 0 0 1-2-2V5a2 2 0 0 1 2-2h3.9a2 2 0 0 1 1.69.9l.81 1.2a2 2 0 0 0 1.67.9H18a2 2 0 0 1 2 2v2"/></svg> Kategori</p>
+          <p class="tiny muted" style="margin-top:3px">Nutrisi &amp; Kesehatan · Tumbuh Kembang · Pendidikan · Aktivitas · Psikologi Anak · Parenting Tips · Digital &amp; Teknologi</p>
+        </div>
+        <div class="card" style="padding:12px">
+          <p class="card-title" style="font-size:12px"><svg class="ico" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round" aria-hidden="true"><path d="M20.2 6 3 11l-.9-2.4c-.3-1.1.3-2.2 1.3-2.5l13.5-4c1.1-.3 2.2.3 2.5 1.3Z"/><path d="m6.2 5.3 3.1 3.9"/><path d="m12.4 3.4 3.1 4"/><path d="M3 11h18v8a2 2 0 0 1-2 2H5a2 2 0 0 1-2-2Z"/></svg> Tipe konten</p>
+          <p class="tiny muted" style="margin-top:3px">Video · Artikel · Infografis · Tips · Aktivitas</p>
+        </div>
+        <div class="card" style="padding:12px">
+          <p class="card-title" style="font-size:12px"><svg class="ico" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round" aria-hidden="true"><path d="m18 14 4 4-4 4"/><path d="m18 2 4 4-4 4"/><path d="M2 18h1.973a4 4 0 0 0 3.3-1.7l5.454-8.6a4 4 0 0 1 3.3-1.7H22"/><path d="M2 6h1.972a4 4 0 0 1 3.6 2.2"/><path d="M22 18h-6.041a4 4 0 0 1-3.3-1.8l-.359-.45"/></svg> Urutan</p>
+          <p class="tiny muted" style="margin-top:3px">Terbaru atau terpopuler</p>
+        </div>
+      </div>
+
+      <div class="card" style="margin-top:14px; background:var(--secondary); border-color:transparent">
+        <p class="kicker kicker--light">Kunci yang sering ditanyakan</p>
+        <p class="small" style="color:rgba(255,255,255,.88); margin-top:5px">
+          <b style="color:#ffd9a0">Berapa sih jumlah kontennya?</b><br>
+          Data contoh saat ini: <b style="color:#fff">25 konten</b>, 7 produk, 23 milestone, 2 learning path, 10 badge.
+          Target jangka panjang yang ditulis di situs: <b style="color:#fff">250+ konten</b>.
+        </p>
+      </div>
+    </div>
+  </div>
+  <span class="slide-number">10</span>
+</section>
+
+<!-- ================= 11 · MESIN REKOMENDASI ================= -->
+<section class="slide">
+  <p class="kicker">Alur 3 dari 6 · nilai bisnis utama</p>
+  <h2 class="title" style="margin-top:8px">Bagaimana produk Mentari dipilih untuk ditampilkan</h2>
+  <p class="subtitle" style="margin-top:8px">Bukan iklan acak dan bukan “yang bayar paling banyak”. Ada urutan tiga tingkat yang jelas.</p>
+
+  <div class="row gap-12" style="margin-top:22px; align-items:stretch">
+    <div class="card" style="flex:1; border-top:4px solid var(--primary)">
+      <span class="badge-pill badge-pill--primary">Prioritas 1</span>
+      <h3 class="card-title" style="margin-top:9px">Dikurasi manual</h3>
+      <p class="card-body" style="margin-top:5px">Tim editorial menentukan: <i>“artikel ini cocoknya dengan buku ini”</i>, plus skor relevansi 0–1.</p>
+      <p class="tiny muted" style="margin-top:8px"><b style="color:var(--secondary)">Kontrol penuh.</b> Ini yang dipakai dulu kalau ada.</p>
+    </div>
+    <div class="card" style="flex:1; border-top:4px solid var(--accent)">
+      <span class="badge-pill badge-pill--accent">Prioritas 2</span>
+      <h3 class="card-title" style="margin-top:9px">Cocok kelompok usia</h3>
+      <p class="card-body" style="margin-top:5px">Kalau belum ada kurasi, sistem mencari produk yang menyasar usia sama dengan isi artikel.</p>
+      <p class="tiny muted" style="margin-top:8px"><b style="color:var(--secondary)">Otomatis</b>, tanpa campur tangan tim.</p>
+    </div>
+    <div class="card" style="flex:1; border-top:4px solid #b8a99b">
+      <span class="badge-pill">Prioritas 3</span>
+      <h3 class="card-title" style="margin-top:9px">Produk unggulan</h3>
+      <p class="card-body" style="margin-top:5px">Kalau dua cara di atas tidak menghasilkan apa pun, tampilkan produk yang ditandai “unggulan”.</p>
+      <p class="tiny muted" style="margin-top:8px"><b style="color:var(--secondary)">Jaring pengaman</b> agar panel tidak kosong.</p>
+    </div>
+  </div>
+
+  <div class="grid-2 gap-20" style="margin-top:20px; align-items:stretch">
+    <div class="card">
+      <p class="kicker" style="color:var(--secondary)">Aturan main yang tidak boleh dilanggar</p>
+      <ul class="list-check" style="margin-top:8px">
+        <li><span class="tick"><svg class="ico" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round" aria-hidden="true"><path d="M20 6 9 17l-5-5"/></svg></span><span>Selalu berlabel <b>“Rekomendasi dari Mentari”</b> + tanda <b>Sponsored</b>. Tidak menyamar jadi artikel.</span></li>
+        <li><span class="tick"><svg class="ico" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round" aria-hidden="true"><path d="M20 6 9 17l-5-5"/></svg></span><span><b>Tidak menampilkan harga</b> — keputusan produk: harga membuat orang berhenti membaca.</span></li>
+        <li><span class="tick"><svg class="ico" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round" aria-hidden="true"><path d="M20 6 9 17l-5-5"/></svg></span><span>Hanya di <b>satu tempat</b> (kolom kanan artikel) — dulu sempat muncul di tengah artikel, lalu dihapus agar tidak mengganggu.</span></li>
+        <li><span class="tick"><svg class="ico" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round" aria-hidden="true"><path d="M20 6 9 17l-5-5"/></svg></span><span>Klik dicatat beserta <b>asalnya</b> (dari konten mana, posisi mana) untuk mengukur relevansi.</span></li>
+      </ul>
+    </div>
+    <div class="card card--tint">
+      <p class="kicker" style="color:var(--secondary)">Contoh nyata di layar</p>
+      <div class="row gap-12" style="margin-top:10px">
+        <div style="flex:1.1">
+          <p class="tiny muted" style="line-height:1.6">Membaca <b style="color:var(--ink)">“Takaran MPASI 6–24 Bulan”</b> → panel menampilkan buku aktivitas anak &amp; produk digital learning untuk usia balita.</p>
+          <p class="tiny muted" style="margin-top:8px">Membaca <b style="color:var(--ink)">“Checklist Persiapan Masuk SD”</b> → menampilkan Buku Tematik SD &amp; Cambridge Primary English.</p>
+        </div>
+        <div style="flex:1">
+          <div style="border:2px solid rgba(46,196,182,.45); border-radius:14px; padding:9px; background:linear-gradient(180deg,var(--accent-soft),#fff)">
+            <p class="tiny" style="font-family:var(--font-heading); font-weight:800; color:var(--secondary); font-size:8.5px">◉ REKOMENDASI DARI MENTARI <span style="color:var(--accent-deep)">SPONSORED</span></p>
+            <div class="mini-card" style="margin-top:6px; border-color:rgba(46,196,182,.35)">
+              <div class="body" style="padding:7px">
+                <div class="row gap-8">
+                  <span class="icon-tile" style="width:24px;height:24px;border-radius:8px;font-size:11px;background:#e3eef7;color:#004e89"><svg class="ico" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round" aria-hidden="true"><path d="M12 7v14"/><path d="M3 18a1 1 0 0 1-1-1V4a1 1 0 0 1 1-1h5a4 4 0 0 1 4 4 4 4 0 0 1 4-4h5a1 1 0 0 1 1 1v13a1 1 0 0 1-1 1h-6a3 3 0 0 0-3 3 3 3 0 0 0-3-3z"/></svg></span>
+                  <span style="font-family:var(--font-heading); font-size:8.5px; font-weight:800; color:var(--secondary); line-height:1.2">Buku Tematik SD<br>Kelas 1–6</span>
+                </div>
+              </div>
+            </div>
+            <div class="mini-card" style="margin-top:5px; border-color:rgba(46,196,182,.35)">
+              <div class="body" style="padding:7px">
+                <div class="row gap-8">
+                  <span class="icon-tile" style="width:24px;height:24px;border-radius:8px;font-size:11px;background:#dff7f4;color:#1fa89a"><svg class="ico" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round" aria-hidden="true"><rect width="20" height="14" x="2" y="3" rx="2"/><line x1="8" x2="16" y1="21" y2="21"/><line x1="12" x2="12" y1="17" y2="21"/></svg></span>
+                  <span style="font-family:var(--font-heading); font-size:8.5px; font-weight:800; color:var(--secondary); line-height:1.2">Digital Learning<br>Platform</span>
+                </div>
+              </div>
+            </div>
+          </div>
+        </div>
+      </div>
+    </div>
+  </div>
+  <span class="slide-number">11</span>
+</section>
+
+<!-- ================= 12 · PROFIL ANAK ================= -->
+<section class="slide">
+  <p class="kicker">Alur 4 dari 6</p>
+  <h2 class="title" style="margin-top:8px">Profil anak: satu data, banyak manfaat</h2>
+  <p class="subtitle" style="margin-top:8px">Hanya butuh <b>nama panggilan + tanggal lahir</b>. Dari situ sistem menghitung usia dan menyesuaikan seluruh pengalaman.</p>
+
+  <div class="row gap-12" style="margin-top:22px; align-items:stretch">
+    <div class="card" style="flex:1; background:#fff7f1; border-color:#f6e2d3">
+      <p class="kicker" style="color:var(--primary-deep)">Data yang diisi</p>
+      <div class="row gap-10" style="margin-top:9px">
+        <span class="icon-tile tile-primary"><svg class="ico" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round" aria-hidden="true"><path d="M9 12h.01"/><path d="M15 12h.01"/><path d="M10 16c.5.3 1.2.5 2 .5s1.5-.2 2-.5"/><path d="M19 6.3a9 9 0 0 1 1.8 3.9 2 2 0 0 1 0 3.6 9 9 0 0 1-17.6 0 2 2 0 0 1 0-3.6A9 9 0 0 1 12 3c2 0 3.5 1.1 3.5 2.5s-.9 2.5-2 2.5c-.8 0-1.5-.4-1.5-1"/></svg></span>
+        <span class="small"><b style="color:var(--secondary)">Nama panggilan</b><br><span class="tiny muted">contoh: Aisha</span></span>
+      </div>
+      <div class="row gap-10" style="margin-top:8px">
+        <span class="icon-tile tile-primary"><svg class="ico" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round" aria-hidden="true"><path d="M8 2v4"/><path d="M16 2v4"/><rect width="18" height="18" x="3" y="4" rx="2"/><path d="M3 10h18"/></svg></span>
+        <span class="small"><b style="color:var(--secondary)">Tanggal lahir</b><br><span class="tiny muted">untuk menghitung usia &amp; kelompok</span></span>
+      </div>
+      <div class="row gap-10" style="margin-top:8px">
+        <span class="icon-tile tile-primary"><svg class="ico" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round" aria-hidden="true"><circle cx="12" cy="12" r="9"/></svg></span>
+        <span class="small"><b style="color:var(--secondary)">Jenis kelamin</b><br><span class="tiny muted">opsional, boleh dikosongkan</span></span>
+      </div>
+      <p class="tiny" style="margin-top:10px; color:#a36a45">Bisa menambahkan <b>lebih dari satu anak</b>. Setiap anak punya progres sendiri.</p>
+    </div>
+
+    <div class="step-num" style="align-self:center; background:var(--sand); color:var(--primary-deep); font-size:18px">→</div>
+
+    <div class="card" style="flex:1.15">
+      <p class="kicker" style="color:var(--secondary)">Usia dihitung otomatis</p>
+      <p class="small muted" style="margin-top:6px">Tanggal lahir → usia dalam bulan → kelompok usia:</p>
+      <div class="stack gap-6" style="margin-top:9px">
+        <div class="row between" style="font-size:10.5px"><span>0–11 bulan</span><b style="color:var(--secondary)">Bayi</b></div>
+        <div class="rule"></div>
+        <div class="row between" style="font-size:10.5px"><span>12–35 bulan</span><b style="color:var(--secondary)">Batita</b></div>
+        <div class="rule"></div>
+        <div class="row between" style="font-size:10.5px"><span>36–71 bulan</span><b style="color:var(--secondary)">Prasekolah</b></div>
+        <div class="rule"></div>
+        <div class="row between" style="font-size:10.5px"><span>72–107 bulan</span><b style="color:var(--secondary)">SD Awal</b></div>
+        <div class="rule"></div>
+        <div class="row between" style="font-size:10.5px"><span>108+ bulan</span><b style="color:var(--secondary)">SD Akhir</b></div>
+      </div>
+      <p class="tiny muted" style="margin-top:9px">Usia bertambah tiap bulan — kelompoknya ikut berpindah sendiri, tanpa perlu diubah manual.</p>
+    </div>
+
+    <div class="step-num" style="align-self:center; background:var(--sand); color:var(--primary-deep); font-size:18px">→</div>
+
+    <div class="card card--accent" style="flex:1.15">
+      <p class="kicker" style="color:var(--secondary)">Yang ikut menyesuaikan</p>
+      <ul class="list-check" style="margin-top:8px">
+        <li><span class="tick"><svg class="ico" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round" aria-hidden="true"><path d="M20 6 9 17l-5-5"/></svg></span><span>Ceklis <b>milestone</b> yang relevan untuk usianya</span></li>
+        <li><span class="tick"><svg class="ico" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round" aria-hidden="true"><path d="M20 6 9 17l-5-5"/></svg></span><span>Rekomendasi produk yang lebih <b>tepat sasaran</b></span></li>
+        <li><span class="tick"><svg class="ico" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round" aria-hidden="true"><path d="M20 6 9 17l-5-5"/></svg></span><span>Saran konten yang tidak “terlalu bayi” atau “terlalu besar”</span></li>
+      </ul>
+      <p class="tiny" style="margin-top:10px; color:var(--accent-deep)">Data anak tidak dijual dan tidak dipakai untuk iklan bertarget. Bisa dihapus kapan saja.</p>
+    </div>
+  </div>
+
+  <div class="callout" style="margin-top:18px">
+    <b><svg class="ico" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round" aria-hidden="true"><rect width="18" height="11" x="3" y="11" rx="2" ry="2"/><path d="M7 11V7a5 5 0 0 1 10 0v4"/></svg></b>
+    <div>
+      <b>Pertanyaan yang pasti muncul: “apakah data anak aman?”</b>
+      <p style="margin-top:2px">Jawaban siap pakai: <i>“Data anak hanya terlihat oleh pemilik akun, tidak dipakai untuk iklan, dan bisa dihapus sendiri dari halaman Profil kapan saja.”</i> Ini tertulis di Kebijakan Privasi.</p>
+    </div>
+  </div>
+
+  <div class="grid-2 gap-14" style="margin-top:14px">
+    <div class="card" style="padding:12px 15px">
+      <div class="row gap-8"><span class="icon-tile tile-secondary" style="width:26px; height:26px"><svg class="ico" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round" aria-hidden="true"><path d="M19 21v-2a4 4 0 0 0-4-4H9a4 4 0 0 0-4 4v2"/><circle cx="12" cy="7" r="4"/></svg></span><b class="small">Hanya butuh 2 isian</b></div>
+      <p class="tiny muted" style="margin-top:5px">Nama panggilan + tanggal lahir. Tidak ada NIK, tidak ada foto, tidak ada alamat — sengaja seminimal mungkin.</p>
+    </div>
+    <div class="card" style="padding:12px 15px">
+      <div class="row gap-8"><span class="icon-tile tile-primary" style="width:26px; height:26px"><svg class="ico" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round" aria-hidden="true"><path d="M21 12a9 9 0 1 1-9-9c2.52 0 4.93 1 6.74 2.74L21 8"/><path d="M21 3v5h-5"/></svg></span><b class="small">Usia ikut bertambah sendiri</b></div>
+      <p class="tiny muted" style="margin-top:5px">Tidak perlu diperbarui manual. Anak yang hari ini batita akan otomatis pindah ke prasekolah saat ulang tahunnya.</p>
+    </div>
+  </div>
+  <span class="slide-number">12</span>
+</section>
+
+<!-- ================= 13 · MILESTONE ================= -->
+<section class="slide">
+  <p class="kicker">Alur 5 dari 6</p>
+  <h2 class="title" style="margin-top:8px">Milestone: “apakah anak saya normal?”</h2>
+  <p class="subtitle" style="margin-top:8px">Ini fitur yang paling sering membuat orang tua <b>kembali</b> ke situs — bukan sekadar membaca lalu pergi.</p>
+
+  <div class="grid-2 gap-20" style="margin-top:14px; align-items:start">
+    <div>
+      <div class="card" style="padding:15px">
+        <p class="kicker" style="color:var(--secondary)">Cara kerjanya</p>
+        <div class="vflow" style="margin-top:8px; gap:6px">
+          <div class="vstep" style="padding:8px 11px"><span class="step-num step-num--outline" style="width:24px;height:24px;font-size:11px">1</span><span>Buat profil anak → sistem tahu kelompok usianya</span></div>
+          <div class="vstep" style="padding:8px 11px"><span class="step-num step-num--outline" style="width:24px;height:24px;font-size:11px">2</span><span>Daftar ceklis muncul otomatis, <b>termasuk tahap sebelumnya</b></span></div>
+          <div class="vstep" style="padding:8px 11px"><span class="step-num step-num--outline" style="width:24px;height:24px;font-size:11px">3</span><span>Centang yang sudah tercapai → progres tersimpan</span></div>
+          <div class="vstep" style="padding:8px 11px"><span class="step-num step-num--outline" style="width:24px;height:24px;font-size:11px">4</span><span>Beri catatan (opsional) untuk hal yang perlu dibahas saat kontrol</span></div>
+        </div>
+      </div>
+
+      <div class="card" style="margin-top:11px; padding:15px">
+        <p class="kicker" style="color:var(--secondary)">23 milestone, 5 area perkembangan</p>
+        <div class="row wrap gap-8" style="margin-top:9px">
+          <span class="badge-pill badge-pill--primary">Fisik &amp; Motorik</span>
+          <span class="badge-pill badge-pill--accent">Bahasa</span>
+          <span class="badge-pill" style="background:#f0e8ff;color:#6d28d9">Kognitif</span>
+          <span class="badge-pill" style="background:#ffe4ea;color:#be123c">Sosial &amp; Emosional</span>
+          <span class="badge-pill" style="background:#dcfce7;color:#15803d">Kreativitas</span>
+        </div>
+        <p class="tiny muted" style="margin-top:9px">Contoh: <i>“Mengucapkan minimal 10 kata bermakna”</i> (batita) · <i>“Membaca kalimat sederhana dengan lancar”</i> (SD awal).</p>
+      </div>
+    </div>
+
+    <div>
+      <div class="phone-mock">
+        <div class="phone-bar"><span class="sun"><svg class="ico" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round" aria-hidden="true"><circle cx="12" cy="12" r="4"/><path d="M12 2v2"/><path d="M12 20v2"/><path d="m4.93 4.93 1.41 1.41"/><path d="m17.66 17.66 1.41 1.41"/><path d="M2 12h2"/><path d="M20 12h2"/><path d="m6.34 17.66-1.41 1.41"/><path d="m19.07 4.93-1.41 1.41"/></svg></span><b>Perkembangan · Aisha, 2 th 4 bln</b></div>
+        <div class="phone-body" style="padding:9px 11px 11px">
+          <div class="row between" style="margin-bottom:7px">
+            <span class="tiny" style="font-family:var(--font-heading); font-weight:800; color:var(--secondary)">BATITA · 1–3 TAHUN</span>
+            <span class="tiny" style="color:var(--accent-deep); font-weight:800">3 / 5 tercapai</span>
+          </div>
+          <div style="height:6px; border-radius:99px; background:var(--sand); overflow:hidden"><div style="width:60%; height:100%; background:linear-gradient(90deg,var(--accent),#7ef0e2)"></div></div>
+
+          <div style="margin-top:8px; display:flex; flex-direction:column; gap:5px">
+            <div class="row gap-8" style="background:#f0fdf4; border:1px solid #bbf7d0; border-radius:9px; padding:6px 9px">
+              <span style="color:#15803d; font-weight:800; font-size:11px"><svg class="ico" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round" aria-hidden="true"><path d="M20 6 9 17l-5-5"/></svg></span>
+              <span class="tiny" style="color:#166534">Berjalan tanpa pegangan</span>
+            </div>
+            <div class="row gap-8" style="background:#f0fdf4; border:1px solid #bbf7d0; border-radius:9px; padding:6px 9px">
+              <span style="color:#15803d; font-weight:800; font-size:11px"><svg class="ico" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round" aria-hidden="true"><path d="M20 6 9 17l-5-5"/></svg></span>
+              <span class="tiny" style="color:#166534">Menunjuk bagian tubuh saat ditanya</span>
+            </div>
+            <div class="row gap-8" style="background:#f0fdf4; border:1px solid #bbf7d0; border-radius:9px; padding:6px 9px">
+              <span style="color:#15803d; font-weight:800; font-size:11px"><svg class="ico" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round" aria-hidden="true"><path d="M20 6 9 17l-5-5"/></svg></span>
+              <span class="tiny" style="color:#166534">Bermain pura-pura sederhana</span>
+            </div>
+            <div class="row gap-8" style="background:#fff; border:1px solid var(--sand); border-radius:9px; padding:6px 9px">
+              <span style="color:#cbb9aa; font-weight:800; font-size:11px">○</span>
+              <span class="tiny" style="color:var(--muted)">Mengucapkan minimal 10 kata bermakna</span>
+            </div>
+            <div class="row gap-8" style="background:#fff; border:1px solid var(--sand); border-radius:9px; padding:6px 9px">
+              <span style="color:#cbb9aa; font-weight:800; font-size:11px">○</span>
+              <span class="tiny" style="color:var(--muted)">Mengekspresikan emosi dengan kata</span>
+            </div>
+          </div>
+
+          <div style="margin-top:10px; background:#fff7ed; border:1px solid #fde3c7; border-radius:9px; padding:8px 10px">
+            <p class="tiny" style="color:#b45309; font-weight:800"><svg class="ico" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round" aria-hidden="true"><path d="m21.73 18-8-14a2 2 0 0 0-3.48 0l-8 14A2 2 0 0 0 4 21h16a2 2 0 0 0 1.73-3"/><path d="M12 9v4"/><path d="M12 17h.01"/></svg> Tanda perlu konsultasi</p>
+            <p class="tiny" style="color:#8a6242; margin-top:2px; line-height:1.4">2 tahun belum bisa merangkai 2 kata → konsultasikan ke dokter anak.</p>
+          </div>
+        </div>
+      </div>
+      <p class="tiny muted" style="margin-top:9px; text-align:center">Ilustrasi tampilan — bukan tangkapan layar. Isi teks diambil dari data aplikasi.</p>
+    </div>
+  </div>
+  <span class="slide-number">13</span>
+</section>
+
+<!-- ================= 14 · LEARNING PATH ================= -->
+<section class="slide">
+  <p class="kicker">Alur 6 dari 6</p>
+  <h2 class="title" style="margin-top:8px">Learning Path: dari “baca sana-sini” jadi “ikut kurikulum”</h2>
+
+  <div class="grid-2 gap-24" style="margin-top:22px; align-items:stretch">
+    <div class="stack gap-16">
+      <div class="card">
+        <p class="kicker" style="color:var(--secondary)">Masalah yang dipecahkan</p>
+        <p class="small muted" style="margin-top:6px">25 artikel terpisah itu melelahkan. Orang tua tidak tahu <b>urutan</b> membacanya: mana dulu, mana setelahnya, kapan selesai.</p>
+      </div>
+      <div class="card">
+        <p class="kicker" style="color:var(--secondary)">Solusinya</p>
+        <p class="small muted" style="margin-top:6px">Konten dikelompokkan menjadi <b>jalur berurutan</b> dengan estimasi waktu. Setiap modul yang dibuka menambah progres — jadi terasa seperti menyelesaikan sesuatu, bukan mengembara.</p>
+      </div>
+      <div class="card card--accent">
+        <p class="kicker" style="color:var(--secondary)">Kenapa ini penting untuk bisnis</p>
+        <p class="small muted" style="margin-top:6px">Learning path adalah <b>“paket”</b> alami. Satu topik besar (mis. persiapan masuk SD) membutuhkan produk yang lebih spesifik — dan rekomendasinya jadi lebih mudah dijelaskan.</p>
+      </div>
+    </div>
+
+    <div>
+      <div class="card" style="padding:0; overflow:hidden">
+        <div style="position:relative; height:132px; background:linear-gradient(120deg, var(--secondary), #0a5f9e)">
+          <img src="assets/path-sd.jpg" alt="" style="width:100%; height:100%; object-fit:cover; opacity:.45" />
+          <div style="position:absolute; inset:0; padding:14px 16px; display:flex; flex-direction:column; justify-content:flex-end; background:linear-gradient(180deg, rgba(0,78,137,.25), rgba(0,78,137,.9))">
+            <span class="tiny" style="color:#ffd9a0; font-weight:800; letter-spacing:.12em">LEARNING PATH · PEMULA</span>
+            <p style="font-family:var(--font-heading); font-size:17px; font-weight:800; color:#fff; line-height:1.15; margin-top:3px">Persiapan Anak Masuk SD</p>
+            <p class="tiny" style="color:rgba(255,255,255,.8); margin-top:2px">6 modul · ±90 menit total</p>
+          </div>
+        </div>
+        <div style="padding:12px 14px">
+          <div class="row between tiny" style="color:var(--muted); font-weight:800; letter-spacing:.08em"><span>PROGRES</span><span>2 / 6 · 33%</span></div>
+          <div style="height:7px; border-radius:99px; background:var(--sand); overflow:hidden; margin-top:5px"><div style="width:33%; height:100%; background:linear-gradient(90deg,var(--accent),#7ef0e2)"></div></div>
+
+          <div style="margin-top:11px; display:flex; flex-direction:column; gap:6px">
+            <div class="row gap-8" style="border:1px solid #bbf7d0; background:#f0fdf4; border-radius:9px; padding:6px 9px"><span class="tiny" style="color:#15803d; font-weight:800">1</span><span class="tiny" style="color:#166534; text-decoration:line-through">Tanda-tanda siap sekolah</span><span class="tiny" style="margin-left:auto; color:#15803d; font-weight:800"><svg class="ico" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round" aria-hidden="true"><path d="M20 6 9 17l-5-5"/></svg></span></div>
+            <div class="row gap-8" style="border:1px solid #bbf7d0; background:#f0fdf4; border-radius:9px; padding:6px 9px"><span class="tiny" style="color:#15803d; font-weight:800">2</span><span class="tiny" style="color:#166534; text-decoration:line-through">Checklist persiapan masuk SD</span><span class="tiny" style="margin-left:auto; color:#15803d; font-weight:800"><svg class="ico" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round" aria-hidden="true"><path d="M20 6 9 17l-5-5"/></svg></span></div>
+            <div class="row gap-8" style="border:1px solid var(--sand); border-radius:9px; padding:6px 9px"><span class="tiny" style="color:var(--muted); font-weight:800">3</span><span class="tiny" style="color:var(--ink)">Stimulasi bahasa anak 1–3 tahun</span></div>
+            <div class="row gap-8" style="border:1px solid var(--sand); border-radius:9px; padding:6px 9px"><span class="tiny" style="color:var(--muted); font-weight:800">4</span><span class="tiny" style="color:var(--ink)">12 ide permainan edukatif tanpa gadget</span></div>
+            <div class="row gap-8" style="border:1px solid var(--sand); border-radius:9px; padding:6px 9px"><span class="tiny" style="color:var(--muted); font-weight:800">5</span><span class="tiny" style="color:var(--ink)">Disiplin positif tanpa memukul</span></div>
+            <div class="row gap-8" style="border:1px solid var(--sand); border-radius:9px; padding:6px 9px"><span class="tiny" style="color:var(--muted); font-weight:800">6</span><span class="tiny" style="color:var(--ink)">Rutinitas tidur anak</span></div>
+          </div>
+        </div>
+      </div>
+      <p class="tiny muted" style="margin-top:8px; text-align:center">Ilustrasi tampilan. Judul modul &amp; durasi diambil dari data aplikasi.</p>
+    </div>
+  </div>
+  <span class="slide-number">14</span>
+</section>
+
+<!-- ================= 15 · GAMIFIKASI ================= -->
+<section class="slide">
+  <p class="kicker">Alur pendukung</p>
+  <h2 class="title" style="margin-top:8px">Poin, streak, dan badge: bikin balik lagi</h2>
+  <p class="subtitle" style="margin-top:8px">Bukan game anak-anak — ini alat retensi. Tujuannya satu: membuat kebiasaan membaca terbentuk.</p>
+
+  <div class="grid-4 gap-14" style="margin-top:22px">
+    <div class="card" style="text-align:center">
+      <span class="icon-tile tile-amber" style="margin:0 auto"><svg class="ico" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round" aria-hidden="true"><path d="M11.525 2.295a.53.53 0 0 1 .95 0l2.31 4.679a2.12 2.12 0 0 0 1.595 1.16l5.166.756a.53.53 0 0 1 .294.904l-3.736 3.638a2.12 2.12 0 0 0-.611 1.878l.882 5.14a.53.53 0 0 1-.771.56l-4.618-2.428a2.12 2.12 0 0 0-1.973 0L6.396 21.01a.53.53 0 0 1-.77-.56l.881-5.139a2.12 2.12 0 0 0-.611-1.879L2.16 9.795a.53.53 0 0 1 .294-.906l5.165-.755a2.12 2.12 0 0 0 1.597-1.16z"/></svg></span>
+      <p class="stat" style="margin-top:9px; align-items:center"><span class="num">130</span><span class="lbl">poin terkumpul</span></p>
+      <p class="tiny muted" style="margin-top:4px">+5 dari login harian, +15 dari membuat diskusi</p>
+    </div>
+    <div class="card" style="text-align:center">
+      <span class="icon-tile tile-primary" style="margin:0 auto"><svg class="ico" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round" aria-hidden="true"><path d="M8.5 14.5A2.5 2.5 0 0 0 11 12c0-1.38-.5-2-1-3-1.072-2.143-.224-4.054 2-6 .5 2.5 2 4.9 4 6.5 2 1.6 3 3.5 3 5.5a7 7 0 1 1-14 0c0-1.153.433-2.294 1-3a2.5 2.5 0 0 0 2.5 2.5z"/></svg></span>
+      <p class="stat" style="margin-top:9px; align-items:center"><span class="num">7</span><span class="lbl">hari beruntun</span></p>
+      <p class="tiny muted" style="margin-top:4px">Badge di hari ke-7 dan ke-30</p>
+    </div>
+    <div class="card" style="text-align:center">
+      <span class="icon-tile tile-secondary" style="margin:0 auto"><svg class="ico" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round" aria-hidden="true"><circle cx="12" cy="8" r="6"/><path d="M15.477 12.89 17 22l-5-3-5 3 1.523-9.11"/></svg></span>
+      <p class="stat" style="margin-top:9px; align-items:center"><span class="num">3</span><span class="lbl">badge dimiliki</span></p>
+      <p class="tiny muted" style="margin-top:4px">dari 10 badge yang tersedia</p>
+    </div>
+    <div class="card" style="text-align:center">
+      <span class="icon-tile tile-accent" style="margin:0 auto"><svg class="ico" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round" aria-hidden="true"><polyline points="22 7 13.5 15.5 8.5 10.5 2 17"/><polyline points="16 7 22 7 22 13"/></svg></span>
+      <p class="stat" style="margin-top:9px; align-items:center"><span class="num">Lv 3</span><span class="lbl">level</span></p>
+      <p class="tiny muted" style="margin-top:4px">tampil di halaman profil</p>
+    </div>
+  </div>
+
+  <div class="row gap-20 style="margin-top:20px; align-items:stretch">
+    <div class="card" style="flex:1.25">
+      <p class="kicker" style="color:var(--secondary)">Bagaimana poin dan badge didapat</p>
+      <table class="table" style="margin-top:8px">
+        <thead><tr><th>Aksi</th><th>Hadiah</th><th>Otomatis?</th></tr></thead>
+        <tbody>
+          <tr><td>Mendaftar akun</td><td>Badge “Langkah Pertama” · 10 poin</td><td>Ya</td></tr>
+          <tr><td>Login di hari baru</td><td>+5 poin &amp; streak bertambah</td><td>Ya</td></tr>
+          <tr><td>Membuat diskusi di komunitas</td><td>+15 poin</td><td>Ya</td></tr>
+          <tr><td>Menyimpan 10 konten</td><td>Badge “Penjaga Bookmark”</td><td>Ya</td></tr>
+          <tr><td>Komentar di komunitas</td><td>Badge “Kontributor Komunitas”</td><td>Ya</td></tr>
+        </tbody>
+      </table>
+    </div>
+    <div class="card" style="flex:1; background:var(--secondary); border-color:transparent; color:#fff">
+      <p class="kicker kicker--light">Jujur soal statusnya</p>
+      <p class="small" style="color:rgba(255,255,255,.85); margin-top:7px">
+        Poin, streak, dan badge <b style="color:#fff">berfungsi</b>. Tapi beberapa badge di katalog (mis. “Pembaca Setia”) baru diberikan lewat data contoh — belum tentu terpicu otomatis saat dipakai sungguhan.
+      </p>
+      <p class="tiny" style="color:#ffd9a0; margin-top:9px; font-weight:700">Jangan menjanjikan semua badge otomatis sebelum dicek.</p>
+    </div>
+  </div>
+  <span class="slide-number">15</span>
+</section>
+
+<!-- ================= 16 · KOMUNITAS ================= -->
+<section class="slide">
+  <p class="kicker">Alur pendukung</p>
+  <h2 class="title" style="margin-top:8px">Komunitas: tempat orang tua saling menjawab</h2>
+  <p class="subtitle" style="margin-top:8px">Forum sederhana: buat diskusi, balas, beri “suka”. Tanpa fitur berlebihan — fokus pada rasa aman.</p>
+
+  <div class="grid-3 gap-16" style="margin-top:20px">
+    <div class="card">
+      <span class="step-num step-num--primary">1</span>
+      <h3 class="card-title" style="margin-top:9px; font-size:13.5px">Buat diskusi</h3>
+      <p class="card-body" style="margin-top:4px">Judul + isi + pilih kategori (gizi, kesehatan, kurikulum, screen time, dll). Wajib login.</p>
+    </div>
+    <div class="card">
+      <span class="step-num step-num--primary">2</span>
+      <h3 class="card-title" style="margin-top:9px; font-size:13.5px">Balas &amp; dukung</h3>
+      <p class="card-body" style="margin-top:4px">Komentar bisa dibalas berjenjang. Tombol “suka” menandai jawaban yang membantu.</p>
+    </div>
+    <div class="card">
+      <span class="step-num step-num--primary">3</span>
+      <h3 class="card-title" style="margin-top:9px; font-size:13.5px">Tim menjaga</h3>
+      <p class="card-body" style="margin-top:4px">Admin/editor bisa <b>sematkan</b> diskusi penting, <b>kunci</b> yang memanas, dan <b>hapus</b> yang melanggar.</p>
+    </div>
+  </div>
+
+  <div class="grid-2 gap-20" style="margin-top:18px; align-items:stretch">
+    <div class="card">
+      <p class="kicker" style="color:var(--secondary)">Tiga lapis pengamanan</p>
+      <ul class="list-check" style="margin-top:8px">
+        <li><span class="tick"><svg class="ico" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round" aria-hidden="true"><path d="M20 13c0 5-3.5 7.5-7.66 8.95a1 1 0 0 1-.67-.01C7.5 20.5 4 18 4 13V6a1 1 0 0 1 1-1c2 0 4.5-1.2 6.24-2.72a1.17 1.17 0 0 1 1.52 0C14.51 3.81 17 5 19 5a1 1 0 0 1 1 1z"/></svg></span><span><b>Filter kata kasar</b> (Indonesia + Inggris). Kata tidak pantas disamarkan jadi bintang di tampilan publik; teks aslinya tetap tersimpan untuk moderator.</span></li>
+        <li><span class="tick"><svg class="ico" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round" aria-hidden="true"><rect width="18" height="11" x="3" y="11" rx="2" ry="2"/><path d="M7 11V7a5 5 0 0 1 10 0v4"/></svg></span><span><b>Thread bisa dikunci.</b> Setelah dikunci, tidak ada komentar baru yang masuk — mencegah debat berlarut.</span></li>
+        <li><span class="tick"><svg class="ico" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round" aria-hidden="true"><path d="m12 3-1.912 5.813a2 2 0 0 1-1.275 1.275L3 12l5.813 1.912a2 2 0 0 1 1.275 1.275L12 21l1.912-5.813a2 2 0 0 1 1.275-1.275L21 12l-5.813-1.912a2 2 0 0 1-1.275-1.275L12 3z"/></svg></span><span><b>Moderasi manual</b> dari panel admin: sematkan, kunci, hapus diskusi/komentar.</span></li>
+      </ul>
+    </div>
+    <div class="card" style="background:#fff7f1; border-color:#f6e2d3">
+      <p class="kicker" style="color:var(--primary-deep)">Contoh diskusi yang hidup di data</p>
+      <div class="stack gap-8" style="margin-top:8px">
+        <p class="small" style="color:var(--ink)"><b style="color:var(--secondary)">“Anak 2 tahun pilih-pilih makan — wajar nggak sih?”</b><br><span class="tiny muted">23 suka · 3 balasan · #gizi-anak</span></p>
+        <p class="small" style="color:var(--ink)"><b style="color:var(--secondary)">“Tips lepas diaper di malam hari?”</b><br><span class="tiny muted">31 suka · 2 balasan · #kesehatan-fisik</span></p>
+        <p class="small" style="color:var(--ink)"><b style="color:var(--secondary)"><svg class="ico" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round" aria-hidden="true"><path d="M12 17v5"/><path d="M9 10.76a2 2 0 0 1-1.11 1.79l-1.78.9A2 2 0 0 0 5 15.24V16a1 1 0 0 0 1 1h12a1 1 0 0 0 1-1v-.76a2 2 0 0 0-1.11-1.79l-1.78-.9A2 2 0 0 1 15 10.76V7a1 1 0 0 1 1-1 2 2 0 0 0 0-4H8a2 2 0 0 0 0 4 1 1 0 0 1 1 1z"/></svg> “Rekomendasi sekolah: nasional vs internasional?”</b><br><span class="tiny muted">disematkan admin · 45 suka</span></p>
+      </div>
+    </div>
+  </div>
+
+  <div class="callout" style="margin-top:16px">
+    <b><svg class="ico" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round" aria-hidden="true"><path d="M5 12h14"/><path d="m12 5 7 7-7 7"/></svg></b>
+    <div>
+      <b>Kenapa komunitas penting untuk presentasi ke manajemen:</b>
+      <p style="margin-top:2px">Forum membuat orang <b>datang berkali-kali tanpa perlu konten baru</b>. Konten butuh biaya produksi; percakapan pengguna tumbuh sendiri — asal ada yang menjaga.</p>
+    </div>
+  </div>
+  <span class="slide-number">16</span>
+</section>
+
+<!-- ================= 17 · PRODUK & KATALOG ================= -->
+<section class="slide">
+  <p class="kicker">Sisi bisnis</p>
+  <h2 class="title" style="margin-top:8px">Dari artikel ke produk: perjalanan satu klik</h2>
+  <p class="subtitle" style="margin-top:8px">Situs ini <b>bukan toko</b>. Tidak ada pembayaran di dalamnya. Tugasnya mengantar orang ke tempat yang tepat.</p>
+
+  <div class="flow" style="margin-top:16px">
+    <div class="flow-node">
+      <span class="icon-tile tile-primary"><svg class="ico" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round" aria-hidden="true"><path d="M12 7v14"/><path d="M3 18a1 1 0 0 1-1-1V4a1 1 0 0 1 1-1h5a4 4 0 0 1 4 4 4 4 0 0 1 4-4h5a1 1 0 0 1 1 1v13a1 1 0 0 1-1 1h-6a3 3 0 0 0-3 3 3 3 0 0 0-3-3z"/></svg></span>
+      <b>Artikel dibaca</b>
+      <span>Konteks jelas: topik &amp; usia anak</span>
+    </div>
+    <div class="flow-arrow">→</div>
+    <div class="flow-node">
+      <span class="icon-tile tile-accent">◉</span>
+      <b>Panel rekomendasi</b>
+      <span>Maks 3 produk, berlabel, tanpa harga</span>
+    </div>
+    <div class="flow-arrow">→</div>
+    <div class="flow-node">
+      <span class="icon-tile tile-secondary"><svg class="ico" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round" aria-hidden="true"><path d="M14 4.1 12 6"/><path d="m5.1 8-2.9-.8"/><path d="m6 12-1.9 2"/><path d="M7.2 2.2 8 5.1"/><path d="M9.037 9.69a.498.498 0 0 1 .653-.653l11 4.5a.5.5 0 0 1-.074.949l-4.349 1.041a1 1 0 0 0-.74.739l-1.04 4.35a.5.5 0 0 1-.95.074z"/></svg></span>
+      <b>Klik “Lihat di Mentari”</b>
+      <span>Membuka situs produk di tab baru</span>
+    </div>
+    <div class="flow-arrow">→</div>
+    <div class="flow-node">
+      <span class="icon-tile tile-violet"><svg class="ico" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round" aria-hidden="true"><line x1="12" x2="12" y1="20" y2="10"/><line x1="18" x2="18" y1="20" y2="4"/><line x1="6" x2="6" y1="20" y2="16"/></svg></span>
+      <b>Tercatat</b>
+      <span>Produk apa, dari artikel mana, posisi mana</span>
+    </div>
+  </div>
+
+  <div class="grid-2 gap-20" style="margin-top:16px; align-items:stretch">
+    <div>
+      <p class="kicker" style="color:var(--secondary)">Tujuh jenis produk Mentari</p>
+      <div class="grid-2 gap-8" style="margin-top:8px">
+        <div class="card" style="padding:8px 10px"><span class="tiny"><b style="color:var(--secondary)">Buku Kurikulum Nasional</b><br><span class="muted">Buku Tematik SD 1–6</span></span></div>
+        <div class="card" style="padding:8px 10px"><span class="tiny"><b style="color:var(--secondary)">Buku Kurikulum Internasional</b><br><span class="muted">Cambridge Primary English</span></span></div>
+        <div class="card" style="padding:8px 10px"><span class="tiny"><b style="color:var(--secondary)">Buku Dongeng &amp; Cerita</b><br><span class="muted">Seri Dongeng Nusantara</span></span></div>
+        <div class="card" style="padding:8px 10px"><span class="tiny"><b style="color:var(--secondary)">Digital Learning</b><br><span class="muted">Platform belajar 1 tahun</span></span></div>
+        <div class="card" style="padding:8px 10px"><span class="tiny"><b style="color:var(--secondary)">English Assessment</b><br><span class="muted">Tes kemampuan bahasa Inggris</span></span></div>
+        <div class="card" style="padding:8px 10px"><span class="tiny"><b style="color:var(--secondary)">Teacher Academy</b><br><span class="muted">Pelatihan guru PAUD</span></span></div>
+        <div class="card" style="padding:9px 11px; grid-column:span 2"><span class="tiny"><b style="color:var(--secondary)">Buku Terbitan Sendiri</b><br><span class="muted">Buku Aktivitas Anak Kreatif (3–6 tahun)</span></span></div>
+      </div>
+    </div>
+
+    <div class="card" style="background:var(--secondary); border-color:transparent; color:#fff">
+      <p class="kicker kicker--light">Apa yang bisa dan tidak bisa dilakukan</p>
+      <table class="table" style="margin-top:9px">
+        <tbody style="color:#fff">
+          <tr><td style="color:#ffd9a0; border-color:rgba(255,255,255,.12); width:62px">Bisa</td><td style="color:rgba(255,255,255,.85); border-color:rgba(255,255,255,.12)">Katalog &amp; detail produk, klik ke situs Mentari, lacak klik</td></tr>
+          <tr><td style="color:#ffd9a0; border-color:rgba(255,255,255,.12)">Belum</td><td style="color:rgba(255,255,255,.85); border-color:rgba(255,255,255,.12)">Keranjang, pembayaran, ongkir, riwayat pesanan</td></tr>
+          <tr><td style="color:#ffd9a0; border-color:rgba(255,255,255,.12)">Sengaja</td><td style="color:rgba(255,255,255,.85); border-color:rgba(255,255,255,.12)">Harga tidak tampil di panel rekomendasi</td></tr>
+        </tbody>
+      </table>
+      <p class="tiny" style="color:rgba(255,255,255,.6); margin-top:9px">Kalau ada yang bertanya “bisa checkout di sini?” — jawabannya sekarang: <b style="color:#ffd9a0">belum, dan memang belum dirancang untuk itu.</b></p>
+    </div>
+  </div>
+  <span class="slide-number">17</span>
+</section>
+
+<!-- ================= 18 · CMS ================= -->
+<section class="slide">
+  <p class="kicker">Di belakang layar</p>
+  <h2 class="title" style="margin-top:8px">Panel admin: dapur tempat tim bekerja</h2>
+  <p class="subtitle" style="margin-top:8px">Alamat <span class="kbd">/admin</span>. Tidak terlihat pengunjung dan tidak diindeks Google. Login dengan akun ADMIN atau EDITOR.</p>
+
+  <div class="grid-3 gap-10" style="margin-top:16px">
+    <div class="card" style="border-top:3px solid var(--primary); padding:14px">
+      <div class="row gap-8"><span class="icon-tile tile-primary" style="width:30px;height:30px;font-size:14px"><svg class="ico" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round" aria-hidden="true"><line x1="12" x2="12" y1="20" y2="10"/><line x1="18" x2="18" y1="20" y2="4"/><line x1="6" x2="6" y1="20" y2="16"/></svg></span><b class="card-title" style="font-size:12.5px">Ringkasan</b></div>
+      <p class="card-body" style="margin-top:6px">6 angka utama, grafik views 14 hari, konten terpopuler, produk paling diklik.</p>
+    </div>
+    <div class="card" style="border-top:3px solid var(--primary); padding:14px">
+      <div class="row gap-8"><span class="icon-tile tile-primary" style="width:30px;height:30px;font-size:14px"><svg class="ico" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round" aria-hidden="true"><path d="M15 2H6a2 2 0 0 0-2 2v16a2 2 0 0 0 2 2h12a2 2 0 0 0 2-2V7Z"/><path d="M14 2v4a2 2 0 0 0 2 2h4"/><path d="M10 9H8"/><path d="M16 13H8"/><path d="M16 17H8"/></svg></span><b class="card-title" style="font-size:12.5px">Konten</b></div>
+      <p class="card-body" style="margin-top:6px">Cari &amp; filter per status. Buat konten baru, ubah status <b>Terbit / Draft / Arsip</b> dalam satu klik.</p>
+    </div>
+    <div class="card" style="border-top:3px solid var(--primary); padding:14px">
+      <div class="row gap-8"><span class="icon-tile tile-primary" style="width:30px;height:30px;font-size:14px"><svg class="ico" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round" aria-hidden="true"><path d="m7.5 4.27 9 5.15"/><path d="M21 8a2 2 0 0 0-1-1.73l-7-4a2 2 0 0 0-2 0l-7 4A2 2 0 0 0 3 8v8a2 2 0 0 0 1 1.73l7 4a2 2 0 0 0 2 0l7-4A2 2 0 0 0 21 16Z"/><path d="m3.3 7 8.7 5 8.7-5"/><path d="M12 22V12"/></svg></span><b class="card-title" style="font-size:12.5px">Produk</b></div>
+      <p class="card-body" style="margin-top:6px">Tambah/edit produk, tandai unggulan, hapus lunak (bisa dipulihkan).</p>
+    </div>
+    <div class="card" style="border-top:3px solid var(--accent); padding:14px">
+      <div class="row gap-8"><span class="icon-tile tile-accent" style="width:30px;height:30px;font-size:14px"><svg class="ico" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round" aria-hidden="true"><path d="M4.5 16.5c-1.5 1.26-2 5-2 5s3.74-.5 5-2c.71-.84.7-2.13-.09-2.91a2.18 2.18 0 0 0-2.91-.09z"/><path d="m12 15-3-3a22 22 0 0 1 2-3.95A12.88 12.88 0 0 1 22 2c0 2.72-.78 7.5-6 11a22.35 22.35 0 0 1-4 2z"/><path d="M9 12H4s.55-3.03 2-4c1.62-1.08 5 0 5 0"/><path d="M12 15v5s3.03-.55 4-2c1.08-1.62 0-5 0-5"/></svg></span><b class="card-title" style="font-size:12.5px">Learning Path</b></div>
+      <p class="card-body" style="margin-top:6px">Buat jalur belajar dan susun modul-modulnya sesuai urutan yang diinginkan.</p>
+    </div>
+    <div class="card" style="border-top:3px solid var(--accent); padding:14px">
+      <div class="row gap-8"><span class="icon-tile tile-accent" style="width:30px;height:30px;font-size:14px"><svg class="ico" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round" aria-hidden="true"><path d="M21 15a2 2 0 0 1-2 2H7l-4 4V5a2 2 0 0 1 2-2h14a2 2 0 0 1 2 2z"/></svg></span><b class="card-title" style="font-size:12.5px">Komunitas</b></div>
+      <p class="card-body" style="margin-top:6px">Sematkan diskusi penting, kunci yang memanas, hapus konten melanggar.</p>
+    </div>
+    <div class="card" style="border-top:3px solid var(--secondary); padding:14px">
+      <div class="row gap-8"><span class="icon-tile tile-secondary" style="width:30px;height:30px;font-size:14px"><svg class="ico" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round" aria-hidden="true"><path d="M16 21v-2a4 4 0 0 0-4-4H6a4 4 0 0 0-4 4v2"/><circle cx="9" cy="7" r="4"/><path d="M22 21v-2a4 4 0 0 0-3-3.87"/><path d="M16 3.13a4 4 0 0 1 0 7.75"/></svg></span><b class="card-title" style="font-size:12.5px">Pengguna <span class="tag tag--partial">admin saja</span></b></div>
+      <p class="card-body" style="margin-top:6px">Lihat daftar akun dan ubah peran (mis. jadikan seseorang EDITOR). Tab ini <b>tidak muncul</b> untuk EDITOR.</p>
+    </div>
+  </div>
+
+  <div class="grid-2 gap-14" style="margin-top:12px; align-items:stretch">
+    <div class="callout" style="padding:11px 14px">
+      <b><svg class="ico" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round" aria-hidden="true"><path d="m21.73 18-8-14a2 2 0 0 0-3.48 0l-8 14A2 2 0 0 0 4 21h16a2 2 0 0 0 1.73-3"/><path d="M12 9v4"/><path d="M12 17h.01"/></svg></b>
+      <div>
+        <b>Batasan yang perlu diketahui tim</b>
+        <p style="margin-top:2px">Form konten di panel admin saat ini <b>ringkas</b>: judul, tipe, ringkasan, isi, kategori, status. Pengaturan usia, tag, thumbnail, dan penulis lengkap masih lewat jalur lain (data awal / API).</p>
+      </div>
+    </div>
+    <div class="callout callout--info">
+      <b><svg class="ico" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round" aria-hidden="true"><path d="M15 14c.2-1 .7-1.7 1.5-2.5 1-.9 1.5-2.2 1.5-3.5A6 6 0 0 0 6 8c0 1 .2 2.2 1.5 3.5.7.7 1.3 1.5 1.5 2.5"/><path d="M9 18h6"/><path d="M10 22h4"/></svg></b>
+      <div>
+        <b>Cara menjelaskan panel admin</b>
+        <p style="margin-top:2px">“Ini <b>meja kerja tim</b>, bukan halaman pelanggan. Kalau ingin mengubah apa yang dilihat orang tua, hampir selalu mulai dari sini.”</p>
+      </div>
+    </div>
+  </div>
+
+  <div class="card" style="margin-top:12px; padding:11px 14px">
+    <p class="kicker" style="color:var(--secondary)">Alur kerja harian tim konten</p>
+    <div class="row gap-8" style="margin-top:8px">
+      <div class="card card--flat" style="flex:1; padding:8px 10px; background:var(--cream)"><p class="tiny b">1 · Tulis</p><p class="tiny muted" style="margin-top:2px">Buat konten di tab Konten (judul, tipe, isi, kategori)</p></div>
+      <div class="flow-arrow" style="flex:0 0 20px; font-size:14px"><svg class="ico" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round" aria-hidden="true"><path d="M5 12h14"/><path d="m12 5 7 7-7 7"/></svg></div>
+      <div class="card card--flat" style="flex:1; padding:8px 10px; background:var(--cream)"><p class="tiny b">2 · Simpan sebagai draft</p><p class="tiny muted" style="margin-top:2px">Belum terlihat publik, bisa direvisi</p></div>
+      <div class="flow-arrow" style="flex:0 0 20px; font-size:14px"><svg class="ico" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round" aria-hidden="true"><path d="M5 12h14"/><path d="m12 5 7 7-7 7"/></svg></div>
+      <div class="card card--flat" style="flex:1; padding:8px 10px; background:var(--cream)"><p class="tiny b">3 · Terbitkan</p><p class="tiny muted" style="margin-top:2px">Satu klik → langsung tampil di situs</p></div>
+      <div class="flow-arrow" style="flex:0 0 20px; font-size:14px"><svg class="ico" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round" aria-hidden="true"><path d="M5 12h14"/><path d="m12 5 7 7-7 7"/></svg></div>
+      <div class="card card--flat" style="flex:1; padding:8px 10px; background:var(--cream)"><p class="tiny b">4 · Pantau</p><p class="tiny muted" style="margin-top:2px">Lihat views-nya di tab Ringkasan</p></div>
+    </div>
+  </div>
+  <span class="slide-number">18</span>
+</section>
+
+<!-- ================= 19 · DATA & LAPORAN ================= -->
+<section class="slide">
+  <p class="kicker">Data &amp; laporan</p>
+  <h2 class="title" style="margin-top:8px">Angka apa yang kita punya (dan tidak punya)</h2>
+
+  <div class="grid-2 gap-24" style="margin-top:20px; align-items:start">
+    <div>
+      <p class="kicker" style="color:var(--accent-deep)"><svg class="ico" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round" aria-hidden="true"><path d="M20 6 9 17l-5-5"/></svg> Yang sudah tercatat otomatis</p>
+      <div class="stack gap-8" style="margin-top:8px">
+        <div class="card" style="padding:10px 12px"><b class="small" style="color:var(--secondary)">Views per konten</b><p class="tiny muted">Setiap halaman artikel dibuka = 1 view. Ada juga catatan per hari untuk grafik.</p></div>
+        <div class="card" style="padding:10px 12px"><b class="small" style="color:var(--secondary)">Klik produk + asalnya</b><p class="tiny muted">Produk apa, dari artikel mana, dari posisi mana (sidebar/banner).</p></div>
+        <div class="card" style="padding:10px 12px"><b class="small" style="color:var(--secondary)">Akun, profil anak, bookmark, milestone</b><p class="tiny muted">Untuk melihat seberapa dalam pengguna memakai produk.</p></div>
+        <div class="card" style="padding:10px 12px"><b class="small" style="color:var(--secondary)">Aktivitas komunitas</b><p class="tiny muted">Jumlah diskusi, komentar, suka, dan views diskusi.</p></div>
+      </div>
+    </div>
+
+    <div>
+      <div class="card">
+        <p class="kicker" style="color:var(--secondary)">Bentuk laporannya di panel admin</p>
+        <div class="grid-3 gap-8" style="margin-top:10px">
+          <div style="background:var(--cream); border-radius:12px; padding:9px"><p class="stat"><span class="num" style="font-size:20px">718</span><span class="lbl">views 30 hari</span></p></div>
+          <div style="background:var(--cream); border-radius:12px; padding:9px"><p class="stat"><span class="num" style="font-size:20px">48</span><span class="lbl">klik produk</span></p></div>
+          <div style="background:var(--cream); border-radius:12px; padding:9px"><p class="stat"><span class="num" style="font-size:20px">8</span><span class="lbl">pengguna</span></p></div>
+        </div>
+        <div class="bars" style="margin-top:12px">
+          <div class="bar" style="height:42%"></div><div class="bar" style="height:58%"></div><div class="bar" style="height:35%"></div>
+          <div class="bar" style="height:70%"></div><div class="bar" style="height:52%"></div><div class="bar" style="height:88%"></div>
+          <div class="bar" style="height:64%"></div><div class="bar" style="height:47%"></div><div class="bar" style="height:76%"></div>
+          <div class="bar" style="height:39%"></div><div class="bar" style="height:66%"></div><div class="bar" style="height:55%"></div>
+          <div class="bar" style="height:82%"></div><div class="bar" style="height:61%"></div>
+        </div>
+        <p class="tiny muted" style="margin-top:6px">Grafik views 14 hari (ilustrasi bentuk). Angka di kiri adalah data contoh yang benar-benar ada di sistem saat ini.</p>
+      </div>
+
+      <div class="callout" style="margin-top:12px; background:#fef2f2; border-color:#fecaca">
+        <b>✖</b>
+        <div>
+          <b style="color:#b91c1c">Yang belum ada — jangan dijanjikan dulu</b>
+          <p style="color:#9b4a4a; margin-top:2px">Laporan konversi penjualan (karena tidak ada transaksi di sini), data demografi pengguna, A/B testing, dan dashboard “funnel” dari kunjungan sampai pembelian.</p>
+        </div>
+      </div>
+    </div>
+  </div>
+  <span class="slide-number">19</span>
+</section>
+
+<!-- ================= 20 · DI BALIK LAYAR (arsitektur awam) ================= -->
+<section class="slide">
+  <p class="kicker">Di balik layar, versi awam</p>
+  <h2 class="title" style="margin-top:8px">“Kenapa harus ada tiga bagian?”</h2>
+  <p class="subtitle" style="margin-top:8px">Pertanyaan wajar dari tim non-teknis. Jawabannya selalu kembali ke <b>keamanan</b>, <b>kecepatan</b>, dan <b>kemudahan mengubah</b>.</p>
+
+  <div class="grid-3 gap-16" style="margin-top:22px; align-items:stretch">
+    <div class="card">
+      <span class="icon-tile tile-primary"><svg class="ico" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round" aria-hidden="true"><rect width="20" height="14" x="2" y="3" rx="2"/><line x1="8" x2="16" y1="21" y2="21"/><line x1="12" x2="12" y1="17" y2="21"/></svg></span>
+      <p class="card-title" style="margin-top:9px">Tampilan (Next.js)</p>
+      <p class="card-body" style="margin-top:4px">Menyusun halaman yang dilihat orang. Bisa dua bahasa (Indonesia &amp; Inggris), tampilan HP diutamakan, dan disiapkan agar mudah ditemukan Google.</p>
+      <p class="tiny" style="margin-top:8px; color:var(--primary-deep)"><b>Diubah saat:</b> mengubah desain, teks tombol, susunan halaman.</p>
+    </div>
+    <div class="card">
+      <span class="icon-tile tile-secondary"><svg class="ico" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round" aria-hidden="true"><path d="M12.22 2h-.44a2 2 0 0 0-2 2v.18a2 2 0 0 1-1 1.73l-.43.25a2 2 0 0 1-2 0l-.15-.08a2 2 0 0 0-2.73.73l-.22.38a2 2 0 0 0 .73 2.73l.15.1a2 2 0 0 1 1 1.72v.51a2 2 0 0 1-1 1.74l-.15.09a2 2 0 0 0-.73 2.73l.22.38a2 2 0 0 0 2.73.73l.15-.08a2 2 0 0 1 2 0l.43.25a2 2 0 0 1 1 1.73V20a2 2 0 0 0 2 2h.44a2 2 0 0 0 2-2v-.18a2 2 0 0 1 1-1.73l.43-.25a2 2 0 0 1 2 0l.15.08a2 2 0 0 0 2.73-.73l.22-.39a2 2 0 0 0-.73-2.73l-.15-.08a2 2 0 0 1-1-1.74v-.5a2 2 0 0 1 1-1.74l.15-.09a2 2 0 0 0 .73-2.73l-.22-.38a2 2 0 0 0-2.73-.73l-.15.08a2 2 0 0 1-2 0l-.43-.25a2 2 0 0 1-1-1.73V4a2 2 0 0 0-2-2z"/><circle cx="12" cy="12" r="3"/></svg></span>
+      <p class="card-title" style="margin-top:9px">Mesin (NestJS)</p>
+      <p class="card-body" style="margin-top:4px">Aturan main: siapa boleh apa, logika rekomendasi produk, pencatatan views &amp; klik, pencarian, moderasi.</p>
+      <p class="tiny" style="margin-top:8px; color:var(--primary-deep)"><b>Diubah saat:</b> menambah fitur baru atau mengubah aturan bisnis.</p>
+    </div>
+    <div class="card">
+      <span class="icon-tile tile-violet"><svg class="ico" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round" aria-hidden="true"><ellipse cx="12" cy="5" rx="9" ry="3"/><path d="M3 5v14a9 3 0 0 0 18 0V5"/><path d="M3 12a9 3 0 0 0 18 0"/></svg></span>
+      <p class="card-title" style="margin-top:9px">Gudang data (database)</p>
+      <p class="card-body" style="margin-top:4px">Menyimpan 20 jenis data: pengguna, anak, konten, produk, relasi konten–produk, bookmark, milestone, badge, diskusi, dan statistik.</p>
+      <p class="tiny" style="margin-top:8px; color:var(--primary-deep)"><b>Diubah saat:</b> butuh menyimpan jenis informasi baru.</p>
+    </div>
+  </div>
+
+  <div class="card" style="margin-top:18px; background:#fff7f1; border-color:#f6e2d3">
+    <div class="row gap-20" style="align-items:flex-start">
+      <div style="flex:1">
+        <p class="kicker" style="color:var(--primary-deep)">Analogi yang paling gampang dipakai saat presentasi</p>
+        <p class="small" style="margin-top:6px; color:var(--ink); line-height:1.65">
+          <b style="color:var(--secondary)">Restoran.</b> Ruang makan &amp; menu = tampilan. Dapur = mesin. Kulkas &amp; gudang bahan = database.
+          Pelayan yang membawa pesanan = API. <b>Pelanggan tidak pernah masuk dapur</b> — dan itu justru membuat semuanya aman dan rapi.
+        </p>
+      </div>
+      <div style="flex:0 0 280px">
+        <p class="kicker" style="color:var(--primary-deep)">Kenapa dipisah?</p>
+        <ul class="list-check" style="margin-top:6px">
+          <li><span class="tick">1</span><span><b>Ganti desain</b> tanpa membongkar data</span></li>
+          <li><span class="tick">2</span><span><b>Tambah fitur</b> tanpa mengubah tampilan lama</span></li>
+          <li><span class="tick">3</span><span><b>Data tidak bisa diakses langsung</b> dari browser pengguna</span></li>
+        </ul>
+      </div>
+    </div>
+  </div>
+  <span class="slide-number">20</span>
+</section>
+
+<!-- ================= 21 · STATUS: JUJUR ================= -->
+<section class="slide">
+  <p class="kicker">Status hari ini</p>
+  <h2 class="title" style="margin-top:8px">Apa yang sudah jalan, dan apa yang belum</h2>
+  <p class="subtitle" style="margin-top:8px">Bagian ini penting: kalau presentasi menjanjikan hal yang belum ada, kepercayaan tim hilang.</p>
+
+  <div class="legend" style="margin-top:12px">
+    <span><i style="background:#22c55e"></i>Sudah berfungsi</span>
+    <span><i style="background:#f59e0b"></i>Berfungsi sebagian / masih disederhanakan</span>
+    <span><i style="background:#ef4444"></i>Belum ada / hanya tampilan</span>
+  </div>
+
+  <div class="grid-2 gap-20" style="margin-top:14px; align-items:start">
+    <div class="card" style="padding:0; overflow:hidden">
+      <table class="table">
+        <thead><tr><th style="padding-top:12px">Fitur</th><th style="padding-top:12px">Status</th></tr></thead>
+        <tbody>
+          <tr><td>Baca konten + filter usia/kategori/tipe</td><td><span class="tag tag--live">● jalan</span></td></tr>
+          <tr><td>Pencarian</td><td><span class="tag tag--live">● jalan</span></td></tr>
+          <tr><td>Daftar, login, peran pengguna</td><td><span class="tag tag--live">● jalan</span></td></tr>
+          <tr><td>Profil anak &amp; milestone otomatis</td><td><span class="tag tag--live">● jalan</span></td></tr>
+          <tr><td>Bookmark</td><td><span class="tag tag--live">● jalan</span></td></tr>
+          <tr><td>Rekomendasi produk 3 tingkat</td><td><span class="tag tag--live">● jalan</span></td></tr>
+          <tr><td>Learning path + progres</td><td><span class="tag tag--live">● jalan</span></td></tr>
+          <tr><td>Komunitas + moderasi</td><td><span class="tag tag--live">● jalan</span></td></tr>
+          <tr><td>Panel admin (konten, produk, pengguna)</td><td><span class="tag tag--live">● jalan</span></td></tr>
+          <tr><td>Pencatatan views &amp; klik produk</td><td><span class="tag tag--live">● jalan</span></td></tr>
+        </tbody>
+      </table>
+    </div>
+
+    <div class="card" style="padding:0; overflow:hidden">
+      <table class="table">
+        <thead><tr><th style="padding-top:12px">Fitur</th><th style="padding-top:12px">Status</th></tr></thead>
+        <tbody>
+          <tr><td>Email reset password</td><td><span class="tag tag--mock">● belum</span></td></tr>
+          <tr><td>Penyimpanan progres learning path</td><td><span class="tag tag--partial">● hanya di perangkat</span></td></tr>
+          <tr><td>Pemberian poin/badge dari membaca</td><td><span class="tag tag--partial">● sebagian</span></td></tr>
+          <tr><td>Naik level otomatis</td><td><span class="tag tag--mock">● belum</span></td></tr>
+          <tr><td>Buletin email mingguan</td><td><span class="tag tag--mock">● tampilan saja</span></td></tr>
+          <tr><td>Unggah gambar dari panel admin</td><td><span class="tag tag--mock">● belum</span></td></tr>
+          <tr><td>Keranjang &amp; pembayaran</td><td><span class="tag tag--mock">● tidak dirancang</span></td></tr>
+          <tr><td>Tombol “laporkan” di komunitas</td><td><span class="tag tag--mock">● belum</span></td></tr>
+          <tr><td>Analitik konversi penjualan</td><td><span class="tag tag--mock">● belum</span></td></tr>
+          <tr><td>Notifikasi / email otomatis</td><td><span class="tag tag--mock">● belum</span></td></tr>
+        </tbody>
+      </table>
+    </div>
+  </div>
+  <span class="slide-number">21</span>
+</section>
+
+<!-- ================= 22 · 10 KALIMAT SIAP PAKAI ================= -->
+<section class="slide">
+  <p class="kicker">Amunisi presentasi</p>
+  <h2 class="title title--sm" style="margin-top:6px">Sepuluh kalimat siap pakai untuk menjelaskan produk</h2>
+  <p class="subtitle" style="margin-top:6px; font-size:13.5px">Pilih tiga yang paling cocok dengan audiens, jangan dibacakan semua.</p>
+
+  <div class="grid-2 gap-12" style="margin-top:16px">
+    <div class="card" style="padding:12px 14px"><p class="tiny" style="color:var(--primary); font-weight:800">1 · VERSI SATU KALIMAT</p><p class="small" style="margin-top:2px; color:var(--ink)">“Situs parenting berisi konten tervalidasi ahli, yang menghubungkan topik bacaan dengan produk Mentari yang relevan.”</p></div>
+    <div class="card" style="padding:12px 14px"><p class="tiny" style="color:var(--primary); font-weight:800">2 · VERSI SATU MENIT</p><p class="small" style="margin-top:2px; color:var(--ink)">“Orang tua sering cari jawaban di internet yang tidak jelas sumbernya. Kami bikin tempat yang jelas: ditinjau psikolog dan dokter anak, gratis, dan disesuaikan dengan usia anak. Kalau mereka butuh produk, kami rekomendasikan produk Mentari dengan label jelas.”</p></div>
+    <div class="card" style="padding:12px 14px"><p class="tiny" style="color:var(--primary); font-weight:800">3 · UNTUK MANAJEMEN</p><p class="small" style="margin-top:2px; color:var(--ink)">“Ini jalur akuisisi yang membangun kepercayaan lebih dulu, bukan iklan yang mengganggu. Nilainya ada di data: topik apa yang dicari, produk apa yang diklik.”</p></div>
+    <div class="card" style="padding:12px 14px"><p class="tiny" style="color:var(--primary); font-weight:800">4 · UNTUK TIM PENJUALAN</p><p class="small" style="margin-top:2px; color:var(--ink)">“Setiap artikel punya panel rekomendasi produk maksimal tiga item. Kalau pembeli bertanya ‘produk ini cocok untuk usia berapa’, jawabannya ada di halaman produk.”</p></div>
+    <div class="card" style="padding:12px 14px"><p class="tiny" style="color:var(--primary); font-weight:800">5 · UNTUK TIM EDITORIAL</p><p class="small" style="margin-top:2px; color:var(--ink)">“Setiap artikel punya dua penonton: orang tua yang mencari jawaban, dan sistem yang perlu tahu artikel ini untuk usia berapa — supaya rekomendasinya tepat.”</p></div>
+    <div class="card" style="padding:12px 14px"><p class="tiny" style="color:var(--primary); font-weight:800">6 · KALAU DITANYA “INI APLIKASI?”</p><p class="small" style="margin-top:2px; color:var(--ink)">“Ini situs web yang dioptimalkan untuk HP. Tidak perlu unduh dari Play Store atau App Store — cukup buka tautannya.”</p></div>
+    <div class="card" style="padding:12px 14px"><p class="tiny" style="color:var(--primary); font-weight:800">7 · KALAU DITANYA “GRATIS?”</p><p class="small" style="margin-top:2px; color:var(--ink)">“Semua konten dan fitur gratis. Yang berbayar adalah produk Mentari yang direkomendasikan, dan itu selalu diberi label.”</p></div>
+    <div class="card" style="padding:12px 14px"><p class="tiny" style="color:var(--primary); font-weight:800">8 · KALAU DITANYA “BEDANYA DENGAN BLOG?”</p><p class="small" style="margin-top:2px; color:var(--ink)">“Blog berhenti di artikel. Di sini ada lanjutannya: checklist milestone sesuai usia anak, jalur belajar berurutan, dan rekomendasi yang menyesuaikan.”</p></div>
+    <div class="card" style="padding:12px 14px"><p class="tiny" style="color:var(--primary); font-weight:800">9 · KALAU DITANYA “DATANYA DARI MANA?”</p><p class="small" style="margin-top:2px; color:var(--ink)">“Dari aktivitas di situs: views per artikel dan klik produk beserta artikel asalnya. Itu yang muncul di dashboard admin.”</p></div>
+    <div class="card" style="padding:12px 14px"><p class="tiny" style="color:var(--primary); font-weight:800">10 · PENUTUP</p><p class="small" style="margin-top:2px; color:var(--ink)">“Ringkasnya: kami membantu orang tua dulu, dan itu yang membuat produk Mentari terasa relevan — bukan dipaksakan.”</p></div>
+  </div>
+  <span class="slide-number">22</span>
+</section>
+
+<!-- ================= 23 · TANYA-JAWAB ================= -->
+<section class="slide">
+  <p class="kicker">Siap ditanya</p>
+  <h2 class="title title--sm" style="margin-top:6px">Tujuh pertanyaan yang paling sering muncul</h2>
+
+  <div class="grid-2 gap-14" style="margin-top:16px">
+    <div class="qa">
+      <div class="item"><p class="q"><span>Q</span>Ini aplikasi atau website?</p><p class="a">Website. Dibuka lewat browser dan dioptimalkan untuk HP — tidak perlu unduh.</p></div>
+      <div class="item"><p class="q"><span>Q</span>Apakah semua konten gratis?</p><p class="a">Ya. Konten, learning path, milestone, dan komunitas gratis. Produk yang direkomendasikan berbayar dan diberi label.</p></div>
+      <div class="item"><p class="q"><span>Q</span>Siapa yang menulis kontennya?</p><p class="a">Tim editorial dengan psikolog, dokter anak, pendidik, dan spesialis neurosains. Nama &amp; jabatan penulis tampil di setiap artikel.</p></div>
+      <div class="item"><p class="q"><span>Q</span>Apakah ini “jualan” produk Mentari?</p><p class="a">Ada unsur komersialnya, tapi terbuka: panel diberi label “Rekomendasi dari Mentari”. Konten editorial tetap netral.</p></div>
+    </div>
+    <div class="qa">
+      <div class="item"><p class="q"><span>Q</span>Bagaimana rekomendasi produk dipilih?</p><p class="a">Tiga tingkat: kurasi manual tim, lalu kecocokan usia, lalu produk unggulan. Semua tercatat dan bisa dilacak.</p></div>
+      <div class="item"><p class="q"><span>Q</span>Apakah data anak aman?</p><p class="a">Hanya terlihat oleh pemilik akun, tidak dijual, tidak untuk iklan bertarget, dan bisa dihapus kapan saja.</p></div>
+      <div class="item"><p class="q"><span>Q</span>Bisa dipakai di HP?</p><p class="a">Ya — tampilan HP adalah prioritas utama, karena mayoritas kunjungan datang dari media sosial.</p></div>
+      <div class="item" style="background:var(--secondary); border-color:transparent"><p class="q" style="color:#fff"><span>★</span>Kalau tidak tahu jawabannya?</p><p class="a" style="color:rgba(255,255,255,.8)">Katakan: “Saya cek dulu ke tim produk.” Lebih baik daripada menebak di depan tim lain.</p></div>
+    </div>
+  </div>
+  <span class="slide-number">23</span>
+</section>
+
+<!-- ================= 24 · CHECKLIST ================= -->
+<section class="slide slide--dark">
+  <p class="kicker kicker--light">Sebelum presentasi</p>
+  <h2 class="title title--light" style="margin-top:6px">Checklist 60 detik</h2>
+
+  <div class="grid-2 gap-24" style="margin-top:16px; align-items:start">
+    <div>
+      <div class="vflow">
+        <div class="vstep" style="background:rgba(255,255,255,.07); border-color:rgba(255,255,255,.16)"><span class="step-num" style="background:var(--accent); color:#003a66">1</span><span style="color:rgba(255,255,255,.9)">Buka situs di <b>HP</b>, bukan laptop — audiens akan melihat seperti pengguna nyata.</span></div>
+        <div class="vstep" style="background:rgba(255,255,255,.07); border-color:rgba(255,255,255,.16)"><span class="step-num" style="background:var(--accent); color:#003a66">2</span><span style="color:rgba(255,255,255,.9)">Tunjukkan <b>satu artikel</b> + panel rekomendasi. Ini inti produknya.</span></div>
+        <div class="vstep" style="background:rgba(255,255,255,.07); border-color:rgba(255,255,255,.16)"><span class="step-num" style="background:var(--accent); color:#003a66">3</span><span style="color:rgba(255,255,255,.9)">Ceritakan <b>satu orang tua</b> (halaman 7), bukan daftar fitur.</span></div>
+        <div class="vstep" style="background:rgba(255,255,255,.07); border-color:rgba(255,255,255,.16)"><span class="step-num" style="background:var(--accent); color:#003a66">4</span><span style="color:rgba(255,255,255,.9)">Tutup dengan <b>apa yang sudah jalan</b> (halaman 21) — jangan lebihjanji.</span></div>
+      </div>
+    </div>
+
+    <div>
+      <div class="card" style="background:rgba(255,255,255,.07); border-color:rgba(255,255,255,.16); color:#fff">
+        <p class="kicker kicker--light">Akun demo kalau perlu</p>
+        <table class="table" style="margin-top:8px">
+          <tbody style="color:#fff">
+            <tr><td style="color:#ffd9a0; border-color:rgba(255,255,255,.12)">Orang tua</td><td style="color:rgba(255,255,255,.85); border-color:rgba(255,255,255,.12)" class="mono">demo@mentari.id</td></tr>
+            <tr><td style="color:#ffd9a0; border-color:rgba(255,255,255,.12)">Admin</td><td style="color:rgba(255,255,255,.85); border-color:rgba(255,255,255,.12)" class="mono">admin@mentari.id</td></tr>
+            <tr><td style="color:#ffd9a0; border-color:rgba(255,255,255,.12)">Editor</td><td style="color:rgba(255,255,255,.85); border-color:rgba(255,255,255,.12)" class="mono">mentari@mentari.id</td></tr>
+            <tr><td style="color:#ffd9a0; border-color:rgba(255,255,255,.12)">Password</td><td style="color:#fff; border-color:rgba(255,255,255,.12)" class="mono">mentari123</td></tr>
+          </tbody>
+        </table>
+        <p class="tiny" style="color:rgba(255,255,255,.55); margin-top:8px">Akun contoh untuk lingkungan pengembangan. <b style="color:#ffd9a0">Jangan dipakai di server publik.</b></p>
+      </div>
+
+      <div class="card" style="margin-top:12px; background:rgba(255,255,255,.07); border-color:rgba(255,255,255,.16)">
+        <p class="kicker kicker--light">Tiga hal yang jangan diucapkan</p>
+        <ul class="list-check" style="margin-top:6px">
+          <li><span style="color:#ff8e53; font-weight:800">✕</span><span style="color:rgba(255,255,255,.85)">“Semua badge otomatis” — sebagian masih dari data contoh.</span></li>
+          <li><span style="color:#ff8e53; font-weight:800">✕</span><span style="color:rgba(255,255,255,.85)">“Bisa checkout di sini” — tidak ada transaksi.</span></li>
+          <li><span style="color:#ff8e53; font-weight:800">✕</span><span style="color:rgba(255,255,255,.85)">“Sudah 250 konten” — itu target, data saat ini 25.</span></li>
+        </ul>
+      </div>
+    </div>
+  </div>
+
+  <p class="footnote">
+    Dokumen ini menjelaskan aplikasi berdasarkan kode dan data di repositori (branch <span class="kbd" style="background:rgba(255,255,255,.12); color:#fff; font-size:8.5px">arena/2712f52b</span>).
+    Angka yang disebut berasal dari data contoh (seed) dan bisa berbeda di lingkungan lain.
+  </p>
+  <span class="slide-number">24</span>
+</section>
+
+</main>
+
+<script>
+  document.getElementById('btn-print')?.addEventListener('click', () => window.print());
+</script>
+</body>
+</html>
