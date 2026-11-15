@@ -62,3 +62,6 @@ packages/database/prisma/schema.postgres.sql
 # "Cannot find module './uploads/uploads.module'".
 /uploads/
 apps/api/uploads/
+
+# Folder artefak deploy yang dirakit workflow (hasil build, bukan sumber)
+/deploy/
