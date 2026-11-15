@@ -15,7 +15,7 @@ function apiOrigin(raw: string): string {
   }
 }
 
-const apiInternal = apiOrigin(process.env.API_INTERNAL_URL ?? "http://localhost:4000");
+const apiInternal = apiOrigin(process.env.API_INTERNAL_URL ?? "http://127.0.0.1:3001");
 
 const nextConfig: NextConfig = {
   turbopack: {
@@ -26,6 +26,7 @@ const nextConfig: NextConfig = {
       },
     },
   },
+  output: 'standalone',
   // Browser calls same-origin /api/* → proxied to the NestJS API.
   //
   // /uploads/* juga wajib diproxy: berkas unggahan tinggal di disk VPS dan
