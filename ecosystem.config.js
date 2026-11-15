@@ -3,7 +3,7 @@
  *
  * Dua proses:
  *   mentari-web  → Next.js standalone (port 3000)
- *   mentari-api  → NestJS (port 4000)
+ *   mentari-api  → NestJS (port 3001)
  *
  * Nginx cukup mem-proxy ke dua port ini; port API tidak perlu dibuka ke publik
  * karena browser selalu lewat proxy Next (`/api/*` dan `/uploads/*`).
@@ -31,7 +31,7 @@ module.exports = {
         HOSTNAME: "127.0.0.1",
         // Server-side fetch ke API — pakai loopback, bukan localhost, agar tidak
         // kena jebakan IPv6 ::1 di sebagian sistem.
-        API_INTERNAL_URL: "http://127.0.0.1:4000",
+        API_INTERNAL_URL: "http://127.0.0.1:3001",
       },
       max_memory_restart: "512M",
       autorestart: true,
@@ -45,7 +45,7 @@ module.exports = {
       script: "dist/main.js",
       env: {
         NODE_ENV: "production",
-        API_PORT: 4000,
+        API_PORT: 3001,
         // `::` = IPv4 + IPv6 sekaligus.
         API_HOST: "::",
         // Wajib di luar folder deploy — lihat catatan di atas.

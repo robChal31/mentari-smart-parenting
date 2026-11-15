@@ -18,7 +18,7 @@ async function bootstrap() {
   app.setGlobalPrefix(prefix);
 
   app.enableCors({
-    origin: process.env.CORS_ORIGIN?.split(',') ?? ['http://localhost:4000'],
+    origin: process.env.CORS_ORIGIN?.split(',') ?? ['http://localhost:3001'],
     credentials: true,
   });
 
@@ -45,7 +45,7 @@ async function bootstrap() {
     },
   });
 
-  const port = Number(process.env.API_PORT ?? 4000);
+  const port = Number(process.env.API_PORT ?? 3001);
   const host = process.env.API_HOST ?? '::';
   await app.listen(port, host);
   // `::` is the IPv6 wildcard, which also accepts IPv4 on every supported
