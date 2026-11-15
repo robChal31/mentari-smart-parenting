@@ -13,7 +13,7 @@
     "db:push:offline": "node scripts/push-wasm.mjs prisma/schema.postgres.prisma",
     "db:push:mysql": "prisma db push --config prisma.config.mysql.ts",
     "db:seed": "tsx prisma/seed.ts",
-    "db:reset": "pnpm db:push && pnpm db:seed",
+    "db:reset": "pnpm db:ddl:postgres",
     "db:reset:cli": "pnpm db:push:supabase:cli && pnpm db:seed",
     "lint": "echo 'database: no lint configured'",
     "build": "tsup src/index.ts --format cjs --dts --sourcemap --clean --external @prisma/client --external @prisma/adapter-mariadb --external @prisma/adapter-pg --external pg --external mariadb",

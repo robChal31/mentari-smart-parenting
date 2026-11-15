@@ -2,7 +2,7 @@
 
 **Sahabat tumbuh kembang anak Indonesia** — platform knowledge hub parenting berbasis bukti, terintegrasi katalog produk Mentari Group.
 
-Monorepo: **Next.js 16 (RSC) web** + **NestJS 11 API** + **shared Zod contracts** + **Prisma database** (SQLite untuk dev lokal — berjalan penuh offline; MySQL atau [Supabase](#production-deployment) Postgres untuk production). Web UI bilingual: **Bahasa Indonesia** (default) dan **English** (cookie `mentari.locale`, switcher di header).
+Monorepo: **Next.js 16 (RSC) web** + **NestJS 11 API** + **shared Zod contracts** + **Prisma database** ([Supabase](#production-deployment) Postgres sebagai target utama, MySQL sebagai legacy). Web UI bilingual: **Bahasa Indonesia** (default) dan **English** (cookie `mentari.locale`, switcher di header).
 
 ## Arsitektur
 
@@ -13,7 +13,7 @@ mentari-smart-parenting/
 │   └── api/          @mentari/api  — NestJS REST API, prefix /api/v1, envelope { success, data, meta?, error? }
 └── packages/
     ├── shared/       @mentari/shared   — tipe DTO, konstanta, Zod validators (dipakai FE & BE)
-    └── database/     @mentari/database — Prisma schema (SQLite dev + MySQL prod + Supabase/Postgres), seed data kaya
+    └── database/     @mentari/database — Prisma schema (Supabase/Postgres + MySQL), seed data kaya
 ```
 
 Aliran request di production:
@@ -21,7 +21,7 @@ Aliran request di production:
 ```
 Browser → Next.js (apps/web)
             ├─ RSC / generateMetadata  → API internal (API_INTERNAL_URL) untuk SSR konten (SEO)
-            └─ /api/* (rewrite proxy)  → NestJS → Prisma → SQLite (dev) / MySQL / Supabase Postgres · JWT verify (Supabase Auth)
+            └─ /api/* (rewrite proxy)  → NestJS → Prisma → Supabase Postgres (utama) / MySQL · JWT verify (Supabase Auth)
 ```
 
 Browser **tidak pernah** memanggil NestJS langsung — semua API call lewat `/api/v1/*` di origin yang sama.
@@ -34,7 +34,9 @@ Prasyarat: **Node ≥ 20** dan **pnpm 9**.
 
 ```bash
 pnpm install        # install seluruh workspace
-pnpm db:setup       # generate client + push schema ke SQLite + seed (idempotent)
+pnpm db:check       # pastikan klien Prisma cocok dengan .env (harus "postgres ✅ match")
+pnpm db:ddl:postgres   # tulis prisma/schema.postgres.sql  ← tempel ke Supabase SQL Editor
+pnpm db:seed        # isi data demo
 pnpm dev            # web http://localhost:3001 · api http://localhost:4000/api/v1
                     # (first build @mentari/shared & @mentari/database otomatis)
 ```
@@ -58,22 +60,36 @@ Atau per app: `pnpm dev:web` / `pnpm dev:api`.
 
 ## Production deployment
 
-1. **Database**: ada tiga skema — `schema.sqlite.prisma` (dev lokal), `schema.prisma` (MySQL production), `schema.postgres.prisma` (Supabase / PostgreSQL). Pilih salah satu:
-   - **MySQL**: `DATABASE_URL=mysql://… pnpm --filter=@mentari/database db:push:mysql`.
+1. **Database**: dua skema — `schema.postgres.prisma` (Supabase / PostgreSQL, target utama) dan `schema.prisma` (MySQL, legacy).
    - **Supabase Postgres** (urutan penting):
-     1. `pnpm --filter=@mentari/database db:generate:postgres` — klien Prisma hasil generate itu **single-provider**; klien yang di-commit di repo adalah SQLite. Tanpa langkah ini, seed/API melempar `Driver Adapter `@prisma/adapter-pg`… not compatible with the provider `sqlite``. Setelah pindah provider, build ulang: `pnpm --filter=@mentari/database build`.
-     2. set `SUPABASE_DATABASE_URL` di `.env` root ke *direct connection* (port 5432, bukan pooler 6543) — **jangan** biarkan placeholder template (push akan berhenti dengan error jelas dari script, atau error WASM yang samar).
-     3. `pnpm --filter=@mentari/database db:push:supabase` (schema-engine WASM, tanpa unduh binary) atau `db:push:supabase:cli`.
-     4. `DATABASE_URL=postgresql://… pnpm --filter=@mentari/database db:seed` untuk data demo (opsional).
-     5. Jika `db:push:supabase` gagal dengan `Column type 'char' could not be deserialized…` (bug WASM schema-engine vs hosted Postgres — describe gagal bahkan pada database kosong), lewati push dan terapkan DDL secara langsung:
-        a. `pnpm --filter=@mentari/database db:ddl:postgres` — menghasilkan `packages/database/prisma/schema.postgres.sql` (script dari empty → schema; **tidak** menulis ke database, hanya membaca untuk deteksi versi).
-        b. Buka **Supabase Dashboard → SQL Editor**, tempel isi `schema.postgres.sql`, jalankan. (Atau `psql "<url>" -v ON_ERROR_STOP=1 -f prisma/schema.postgres.sql`.)
-        c. Lanjut ke langkah 4 (`db:seed`).
-     6. Mau kembali ke dev SQLite? `pnpm --filter=@mentari/database db:generate && pnpm --filter=@mentari/database build`.
-     7. Untuk runtime aplikasi set `DATABASE_URL=postgresql://…` — client factory memilih adapter `@prisma/adapter-pg` otomatis dari scheme URL (`file:` → SQLite, `mysql://` → MariaDB, `postgres(ql)://` → pg). Password tidak pernah di-log penuh (URL dimask oleh script push).
-   - **Seed ke Supabase**: `DATABASE_URL=postgresql://… pnpm --filter=@mentari/database db:seed` (pakai akun service/direksi postgres, bukan anon).
-   - RLS: aplikasi tidak mengakses tabel secara langsung dari browser — semua lewat API dengan koneksi owner DB, jadi Row Level Security boleh tetap nonaktif; jangan pernah expose connection string ke `NEXT_PUBLIC_*`.
-   - **`.env` root otomatis di-load**: API, `db:push`, `db:seed`, `db:push:supabase`, dan config Prisma CLI memuat `.env` terdekat dengan walk-up dari cwd (built-in `process.loadEnvFile`, Node ≥ 20.12) — satu `.env` di root repo cukup, termasuk di Windows PowerShell/CMD. Tidak perlu syntax khusus shell (`DATABASE_URL=… pnpm …` itu khusus bash dan **tidak** jalan di PowerShell). Variabel environment yang sudah di-set di shell menang atas isi `.env`. Khusus web: Next.js **tidak** membaca root `.env` — set `NEXT_PUBLIC_SITE_URL` / `API_INTERNAL_URL` di `apps/web/.env.local` atau env hosting.
+     1. `pnpm --filter=@mentari/database use:postgres` — klien Prisma bersifat **single-provider**.
+        Klien yang di-commit sudah Postgres, jadi langkah ini hanya perlu kalau `pnpm db:check`
+        melaporkan MISMATCH. Tanpa klien yang cocok, seed/API melempar
+        `Driver Adapter @prisma/adapter-pg … is not compatible with the provider …`.
+     2. Set `SUPABASE_DATABASE_URL` di `.env` root ke *direct connection* (port 5432). Password
+        tidak pernah di-log penuh.
+     3. **Buat skemanya** dengan `pnpm --filter=@mentari/database db:ddl:postgres`, lalu tempel
+        `packages/database/prisma/schema.postgres.sql` ke **Supabase Dashboard → SQL Editor** dan
+        Run. Langkah ini **offline** dan tidak butuh koneksi dari komputermu (25 tabel, 8 enum).
+        `db:push` **tidak bisa** dipakai untuk Postgres: `@prisma/adapter-pg` gagal membaca
+        katalog (`Column type 'char' could not be deserialized`, `prisma/prisma#27403`), bahkan
+        pada database kosong.
+     4. `pnpm db:seed` untuk data demo (opsional; menghapus data yang ada).
+     5. Untuk runtime aplikasi set `DATABASE_URL=postgresql://…` — client factory memilih adapter
+        `@prisma/adapter-pg` otomatis dari scheme URL (`mysql://` → MariaDB, `postgres(ql)://` → pg).
+   - **MySQL**: `DATABASE_URL=mysql://… pnpm --filter=@mentari/database db:push:mysql`
+     (jalur push sungguhan; tidak terkena bug `char`).
+   - **Seed ke Supabase**: `pnpm db:seed` (pakai akun service/direksi postgres, bukan anon).
+   - RLS: aplikasi tidak mengakses tabel secara langsung dari browser — semua lewat API dengan
+     koneksi owner DB, jadi Row Level Security boleh tetap nonaktif; jangan pernah expose
+     connection string ke `NEXT_PUBLIC_*`.
+   - **`.env` root otomatis di-load**: API, `db:seed`, `db:ddl:postgres`, dan config Prisma CLI
+     memuat `.env` terdekat dengan walk-up dari cwd (built-in `process.loadEnvFile`, Node ≥ 20.12)
+     — satu `.env` di root repo cukup, termasuk di Windows PowerShell/CMD. Tidak perlu syntax
+     khusus shell (`DATABASE_URL=… pnpm …` itu khusus bash dan **tidak** jalan di PowerShell).
+     Variabel environment yang sudah di-set di shell menang atas isi `.env`. Khusus web: Next.js
+     **tidak** membaca root `.env` — set `NEXT_PUBLIC_SITE_URL` / `API_INTERNAL_URL` di
+     `apps/web/.env.local` atau env hosting.
 2. **Auth (Supabase)**: set `SUPABASE_JWT_SECRET` di API. Token Supabase (aud `authenticated`) otomatis diverifikasi di `JwtAuthGuard`; user lokal di-provision on-the-fly saat login pertama.
 3. **Web**: `NEXT_PUBLIC_SITE_URL`, `API_INTERNAL_URL` (URL internal service API). Browser tetap same-origin lewat rewrites.
 4. **Seed**: `pnpm db:seed` memakai bcrypt untuk password default — **ganti password demo sebelum go-live**.
@@ -106,12 +122,12 @@ bawah memakai `schema.postgres.prisma` dan membaca `SUPABASE_DATABASE_URL` (fall
 | Perintah | Fungsi |
 |---|---|
 | `pnpm db:check` | bandingkan URL vs provider klien Prisma yang ter-generate (tanpa mengubah apa pun) |
-| `pnpm db:setup` | generate + push + seed ke Supabase |
-| `pnpm db:push` | push `schema.postgres.prisma` ke Supabase via schema-engine WASM |
-| `pnpm db:push:cli` | `prisma db push` standar (perlu unduh schema-engine dari `binaries.prisma.sh`) |
+| `pnpm db:ddl:postgres` | **cara utama membuat skema**: tulis `prisma/schema.postgres.sql`, tanpa koneksi DB |
 | `pnpm db:seed` | wipe & re-seed data demo (25 konten, 7 produk, 23 milestone, dst.) |
-| `pnpm db:reset` | push ulang + seed |
-| `pnpm db:ddl:postgres` | tulis `prisma/schema.postgres.sql` untuk ditempel ke Supabase SQL Editor |
+| `pnpm db:reset` | tulis ulang DDL saja (seed butuh skema sudah ada di Supabase) |
+| `pnpm db:push` | hanya untuk MySQL; untuk Postgres selalu menolak (lihat catatan `char` di bawah) |
+| `pnpm db:push:mysql` | push `schema.prisma` (MySQL) via Prisma CLI |
+| `pnpm db:push:cli` | `prisma db push` standar (butuh unduh schema-engine dari `binaries.prisma.sh`) |
 | `pnpm --filter=@mentari/database use:postgres` | generate ulang klien Prisma untuk Postgres + build |
 | `pnpm --filter=@mentari/database use:mysql` | sama, untuk MySQL (`schema.prisma`) |
 
@@ -131,20 +147,27 @@ bawah memakai `schema.postgres.prisma` dan membaca `SUPABASE_DATABASE_URL` (fall
 > Mengganti provider menulis ulang `packages/database/src/generated`; commit hasilnya bersama
 > perubahan konfigurasi supaya anggota tim lain tidak perlu generate ulang.
 >
-> **Error `Column type 'char' could not be deserialized from the database`**: bug schema-engine
-> WASM saat membaca katalog Supabase/Postgres hosted. Ini bukan masalah kode. Perbaikan:
-> jalankan `pnpm db:ddl:postgres`, lalu tempel `packages/database/prisma/schema.postgres.sql`
-> ke **Supabase Dashboard → SQL Editor** dan eksekusi. Setelah itu `pnpm db:seed`.
+> **Error `Column type 'char' could not be deserialized from the database`**: ini **bukan**
+> soal data atau kredensial kamu. `@prisma/adapter-pg` membaca seluruh katalog Postgres untuk
+> tahu skema yang ada, dan tersandung tipe bawaan `char` (OID 18) — terjadi juga di database
+> yang masih kosong (`prisma/prisma#27403`). Karena itu `db:push` **tidak bisa** dipakai untuk
+> Postgres dan sekarang menolak lebih awal alih-alih menampilkan stack trace WASM.
 >
-> `db:push` menolak lebih awal bila `SUPABASE_DATABASE_URL`/`DATABASE_URL` belum diisi, jadi
-> kamu tidak lagi melihat stack trace WASM yang samar.
+> Alur yang benar (tidak butuh koneksi dari komputermu):
+> ```powershell
+> pnpm db:ddl:postgres   # 1. tulis packages/database/prisma/schema.postgres.sql
+> # 2. buka Supabase Dashboard -> SQL Editor, tempel isi file itu, Run
+> pnpm db:seed           # 3. isi data demo
+> ```
+> Kalau `db:seed` dijalankan sebelum langkah 2, sekarang ia berhenti dengan pesan
+> "schema has not been created yet" beserta langkah di atas — bukan `P2021` mentah.
 
-> **Catatan engine Prisma**: `pnpm db:push`/`db:reset` berjalan 100% offline lewat schema-engine
-> WASM (`packages/database/scripts/push-wasm.mjs`) dengan `@prisma/schema-engine-wasm` dipin sebagai
-> devDependency `@mentari/database` — tidak perlu jaringan ke `binaries.prisma.sh`. Jika Anda
-> lebih suka jalur resmi, `pnpm --filter=@mentari/database db:push:cli` memakai `prisma db push`
-> standar (membutuhkan unduh schema-engine dari internet). Jalur production (MySQL) tetap lewat
-> `db:push:mysql`. `pnpm dev` sengaja menjalankan web + api via `pnpm -r --parallel` (bukan turbo)
+> **Catatan engine Prisma**: pembuatan DDL (`db:ddl:postgres`) berjalan 100% offline lewat
+> schema-engine WASM (`packages/database/scripts/export-ddl.mjs`) dengan
+> `@prisma/schema-engine-wasm` dipin sebagai devDependency `@mentari/database` — tidak perlu
+> jaringan ke `binaries.prisma.sh`, bahkan tidak perlu `.env`. Skrip ini menjawab sendiri
+> beberapa query versi server yang dibutuhkan `diff`, jadi aman dijalankan di mesin mana pun.
+> Jalur MySQL tetap lewat `db:push:mysql`. `pnpm dev` sengaja menjalankan web + api via `pnpm -r --parallel` (bukan turbo)
 > agar tidak bergantung pada binary native turbo — turbo masih dipakai untuk `pnpm build`/`pnpm lint`.
 
 ## API ringkas (`/api/v1`)

@@ -43,9 +43,34 @@ function mulberry32(seed: number) {
 const DAY = 86_400_000;
 const now = Date.now();
 
+/**
+ * The wipe below assumes the schema is already pushed. When it is not, the first
+ * deleteMany dies with P2021 "The table public.<x> does not exist", which reads
+ * like a seed bug instead of "you skipped db:push". Check up front instead.
+ */
+async function assertSchemaPushed() {
+  try {
+    await prisma.$queryRaw`SELECT 1 FROM "authors" LIMIT 1`;
+  } catch (error) {
+    const code = (error as { code?: string }).code;
+    if (code !== 'P2021') throw error;
+    throw new Error([
+      'The database schema has not been created yet (no "authors" table).',
+      '',
+      'Create it first. Note that on Supabase `db:push` cannot do it:',
+      'adapter-pg fails to read the Postgres catalog (prisma/prisma#27403).',
+      '',
+      '  pnpm db:ddl:postgres     # writes prisma/schema.postgres.sql, no DB needed',
+      '  # paste that file into Supabase Dashboard -> SQL Editor and Run it',
+      '  pnpm db:seed             # then retry the seed',
+    ].join('\n'));
+  }
+}
+
 async function main() {
   warnOnProviderMismatch();
   console.log('🌱 Seeding MentariSmartParent...');
+  await assertSchemaPushed();
 
   // ---------- wipe (FK-safe order) ----------
   await prisma.childMilestone.deleteMany();
