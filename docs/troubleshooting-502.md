@@ -136,7 +136,7 @@ Isi minimal:
 
 ```env
 NODE_ENV=production
-DATABASE_URL="postgresql://mentari:PASSWORD@127.0.0.1:5432/mentari_smartparent"
+DATABASE_URL="postgresql://mentari:PASSWORD@127.0.0.1:5432/mentari_smart_parent"
 JWT_SECRET="<openssl rand -hex 32>"
 UPLOAD_DIR="/var/lib/mentari/uploads"
 CORS_ORIGIN="http://43.173.48.52"

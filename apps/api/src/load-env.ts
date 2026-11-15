@@ -41,7 +41,7 @@ if (process.env.NODE_ENV === 'production') {
   }
 
   if (!process.env.DATABASE_URL) {
-    problems.push('DATABASE_URL belum diisi (contoh: postgresql://mentari:…@127.0.0.1:5432/mentari_smartparent).');
+    problems.push('DATABASE_URL belum diisi (contoh: postgresql://mentari:…@127.0.0.1:5432/mentari_smart_parent).');
   }
 
   if (process.env.API_HOST === undefined) {

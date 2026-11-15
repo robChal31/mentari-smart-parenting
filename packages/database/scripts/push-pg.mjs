@@ -49,7 +49,7 @@ if (!url) {
     'ERROR: no database URL configured.',
     '',
     'Add to the root .env:',
-    '  DATABASE_URL="postgresql://mentari:<password>@127.0.0.1:5432/mentari_smartparent"',
+    '  DATABASE_URL="postgresql://mentari:<password>@127.0.0.1:5432/mentari_smart_parent"',
     'Never commit this file — .env is gitignored.',
   ].join('\n'));
   process.exit(1);

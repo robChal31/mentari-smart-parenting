@@ -74,7 +74,7 @@ export function createPrismaClient(
       'DATABASE_URL is not set.',
       '',
       'Add to the root .env:',
-      '  DATABASE_URL="postgresql://mentari:<password>@127.0.0.1:5432/mentari_smartparent"',
+      '  DATABASE_URL="postgresql://mentari:<password>@127.0.0.1:5432/mentari_smart_parent"',
       '',
       'SQLite is no longer supported.',
     ].join('\n'));

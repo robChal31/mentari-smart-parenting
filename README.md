@@ -66,11 +66,11 @@ Atau per app: `pnpm dev:web` / `pnpm dev:api`.
         Klien yang di-commit sudah Postgres, jadi langkah ini hanya perlu kalau `pnpm db:check`
         melaporkan MISMATCH. Tanpa klien yang cocok, seed/API melempar
         `Driver Adapter @prisma/adapter-pg … is not compatible with the provider …`.
-     2. Set `DATABASE_URL` di `.env` root, mis. `postgresql://mentari:<password>@127.0.0.1:5432/mentari_smartparent`.
+     2. Set `DATABASE_URL` di `.env` root, mis. `postgresql://mentari:<password>@127.0.0.1:5432/mentari_smart_parent`.
      3. **Buat skemanya**: `pnpm db:push`. DDL Prisma dieksekusi lewat driver `pg` dalam satu
         transaksi, tanpa schema engine — jadi bug katalog `char`
         (`prisma/prisma#27403`) tidak pernah tersentuh. Untuk membuat database-nya sendiri:
-        `sudo -u postgres createuser mentari -P` lalu `createdb -O mentari mentari_smartparent`.
+        `sudo -u postgres createuser mentari -P` lalu `createdb -O mentari mentari_smart_parent`.
      4. `pnpm db:seed` untuk data demo (opsional; menghapus data yang ada).
      5. `DATABASE_URL` yang sama dipakai runtime — client factory memilih adapter
         `@prisma/adapter-pg` otomatis dari scheme URL (`mysql://` → MariaDB, `postgres(ql)://` → pg).

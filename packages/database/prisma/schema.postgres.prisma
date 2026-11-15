@@ -4,7 +4,7 @@
 // Postgres-incompatible column attributes differ.
 //
 // Target: PostgreSQL lokal di VPS yang sama dengan aplikasi.
-//   DATABASE_URL="postgresql://mentari:<pw>@127.0.0.1:5432/mentari_smartparent" \
+//   DATABASE_URL="postgresql://mentari:<pw>@127.0.0.1:5432/mentari_smart_parent" \
 //     pnpm db:push
 //
 // DDL dijalankan lewat driver `pg`, bukan mesin skema Prisma — lihat

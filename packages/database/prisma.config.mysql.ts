@@ -15,7 +15,7 @@ import { defineConfig } from 'prisma/config';
 export default defineConfig({
   schema: 'prisma/schema.prisma',
   datasource: {
-    url: process.env.DATABASE_URL ?? 'mysql://mentari:mentari_password@localhost:3306/mentari_smartparent',
+    url: process.env.DATABASE_URL ?? 'mysql://mentari:mentari_password@localhost:3306/mentari_smart_parent',
   },
   migrations: {
     path: 'prisma/migrations-mysql',
