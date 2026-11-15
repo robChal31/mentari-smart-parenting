@@ -37,7 +37,7 @@ pnpm install        # install seluruh workspace
 pnpm db:check       # pastikan klien Prisma cocok dengan .env (harus "postgres ✅ match")
 pnpm db:push        # buat 25 tabel di PostgreSQL (satu transaksi)
 pnpm db:seed        # isi data demo
-pnpm dev            # web http://localhost:3001 · api http://127.0.0.1:3001/api/v1
+pnpm dev            # web http://localhost:3001 · api http://127.0.0.1:4000/api/v1
                     # (first build @mentari/shared & @mentari/database otomatis)
 ```
 
@@ -246,10 +246,10 @@ transcoding serta adaptive bitrate. Endpoint upload menolak MP4/WebM secara eksp
 
 ```bash
 # dengan dev server jalan:
-curl localhost:3001/api/v1/contents?limit=2
-TOKEN=$(curl -s -X POST localhost:3001/api/v1/auth/login -H 'content-type: application/json' \
+curl localhost:4000/api/v1/contents?limit=2
+TOKEN=$(curl -s -X POST localhost:4000/api/v1/auth/login -H 'content-type: application/json' \
   -d '{"email":"demo@mentari.id","password":"mentari123"}' | python3 -c 'import sys,json;print(json.load(sys.stdin)["data"]["accessToken"])')
-curl localhost:3001/api/v1/auth/me -H "authorization: Bearer $TOKEN"
+curl localhost:4000/api/v1/auth/me -H "authorization: Bearer $TOKEN"
 curl localhost:3001/                 # SSR home (200, berisi konten nyata)
 curl localhost:3001/api/v1/categories # proxy web → api
 ```

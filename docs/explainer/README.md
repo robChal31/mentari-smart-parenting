@@ -90,7 +90,7 @@ Tangkapan layar dibuat dari aplikasi yang berjalan lokal (bukan mockup):
 ```bash
 # 1. Jalankan database + API + web
 pnpm db:push && pnpm db:seed
-pnpm --filter=@mentari/api dev            # :3001
+pnpm --filter=@mentari/api dev            # :4000
 cd apps/web && npx next dev -H 0.0.0.0 -p 3001
 ```
 
