@@ -15,7 +15,7 @@ function apiOrigin(raw: string): string {
   }
 }
 
-const apiInternal = apiOrigin(process.env.API_INTERNAL_URL ?? "http://127.0.0.1:3001");
+const apiInternal = apiOrigin(process.env.API_INTERNAL_URL ?? "http://127.0.0.1:4000");
 
 const nextConfig: NextConfig = {
   // Wajib untuk proses deploy: GitHub Actions menyalin `.next/standalone` ke VPS.
