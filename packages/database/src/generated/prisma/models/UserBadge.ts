@@ -406,7 +406,6 @@ export type UserBadgeCreateOrConnectWithoutGamificationProfileInput = {
 
 export type UserBadgeCreateManyGamificationProfileInputEnvelope = {
   data: Prisma.UserBadgeCreateManyGamificationProfileInput | Prisma.UserBadgeCreateManyGamificationProfileInput[]
-  skipDuplicates?: boolean
 }
 
 export type UserBadgeUpsertWithWhereUniqueWithoutGamificationProfileInput = {
@@ -454,7 +453,6 @@ export type UserBadgeCreateOrConnectWithoutBadgeInput = {
 
 export type UserBadgeCreateManyBadgeInputEnvelope = {
   data: Prisma.UserBadgeCreateManyBadgeInput | Prisma.UserBadgeCreateManyBadgeInput[]
-  skipDuplicates?: boolean
 }
 
 export type UserBadgeUpsertWithWhereUniqueWithoutBadgeInput = {
@@ -1245,7 +1243,6 @@ export type UserBadgeCreateManyArgs<ExtArgs extends runtime.Types.Extensions.Int
    * The data used to create many UserBadges.
    */
   data: Prisma.UserBadgeCreateManyInput | Prisma.UserBadgeCreateManyInput[]
-  skipDuplicates?: boolean
 }
 
 /**
@@ -1264,7 +1261,6 @@ export type UserBadgeCreateManyAndReturnArgs<ExtArgs extends runtime.Types.Exten
    * The data used to create many UserBadges.
    */
   data: Prisma.UserBadgeCreateManyInput | Prisma.UserBadgeCreateManyInput[]
-  skipDuplicates?: boolean
   /**
    * Choose, which related nodes to fetch as well
    */

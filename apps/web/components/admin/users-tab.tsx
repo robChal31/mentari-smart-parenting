@@ -7,27 +7,35 @@ import { apiData, apiPaginated } from "@/lib/client-api";
 import { Combobox } from "@/components/combobox";
 import { intlTag } from "@/lib/i18n/config";
 import { format } from "@/lib/i18n/format";
+import { AdminPagination } from "./admin-pagination";
 
 interface AdminUser {
   id: string; email: string; fullName: string; role: "USER" | "ADMIN" | "EDITOR" | "MODERATOR";
   isActive: boolean; lastLoginAt: string | null; createdAt: string; childrenCount: number; bookmarkCount: number;
 }
 
+const PAGE_SIZE = 20;
+
 export function UsersTab() {
   const dict = useDictionary();
   const locale = intlTag(useLocale());
   const [items, setItems] = useState<AdminUser[]>([]);
+  const [total, setTotal] = useState(0);
+  const [page, setPage] = useState(1);
   const [busy, setBusy] = useState(false);
   const [loadError, setLoadError] = useState(false);
 
   const load = useCallback(() => {
     setBusy(true);
     setLoadError(false);
-    apiPaginated<AdminUser>("/admin/users?limit=50")
-      .then((envelope) => setItems(envelope.data))
+    apiPaginated<AdminUser>(`/admin/users?limit=${PAGE_SIZE}&page=${page}`)
+      .then((envelope) => {
+        setItems(envelope.data);
+        setTotal(envelope.meta?.total ?? envelope.data.length);
+      })
       .catch(() => setLoadError(true))
       .finally(() => setBusy(false));
-  }, []);
+  }, [page]);
 
   useEffect(() => { load(); }, [load]);
 
@@ -80,7 +88,9 @@ export function UsersTab() {
           ))}
         </tbody>
       </table>
+
       {!busy && items.length === 0 && <p className="px-5 py-8 text-center text-xs text-muted">{dict.admin.noUsers}</p>}
+      <AdminPagination page={page} limit={PAGE_SIZE} total={total} onPageChange={setPage} disabled={busy} />
     </div>
     </div>
   );

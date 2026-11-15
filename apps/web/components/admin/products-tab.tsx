@@ -9,12 +9,17 @@ import { useDictionary } from "@/components/i18n-provider";
 import { apiData, apiPaginated } from "@/lib/client-api";
 import { format } from "@/lib/i18n/format";
 import { ProductForm } from "./product-form";
+import { AdminPagination } from "./admin-pagination";
 import type { ProductDto } from "@mentari/shared";
+
+const PAGE_SIZE = 20;
 
 export function ProductsTab() {
   const dict = useDictionary();
   const [items, setItems] = useState<ProductDto[]>([]);
+  const [total, setTotal] = useState(0);
   const [q, setQ] = useState("");
+  const [page, setPage] = useState(1);
   const [busy, setBusy] = useState(false);
   const [loadError, setLoadError] = useState(false);
   const [showForm, setShowForm] = useState(false);
@@ -25,14 +30,26 @@ export function ProductsTab() {
   const load = useCallback(() => {
     setBusy(true);
     setLoadError(false);
-    const params = new URLSearchParams({ limit: "50", ...(q.trim() ? { q: q.trim() } : {}) });
+    const params = new URLSearchParams({
+      limit: String(PAGE_SIZE),
+      page: String(page),
+      ...(q.trim() ? { q: q.trim() } : {}),
+    });
     apiPaginated<ProductDto>(`/admin/products?${params}`)
-      .then((envelope) => setItems(envelope.data))
+      .then((envelope) => {
+        setItems(envelope.data);
+        setTotal(envelope.meta?.total ?? envelope.data.length);
+      })
       .catch(() => setLoadError(true))
       .finally(() => setBusy(false));
-  }, [q]);
+  }, [q, page]);
 
   useEffect(() => { load(); }, [load]);
+  // Searching always restarts at page 1, otherwise a stale page can point past the end.
+  function changeQuery(next: string) {
+    setQ(next);
+    setPage(1);
+  }
 
   async function toggleFeatured(product: ProductDto) {
     await apiData(`/admin/products/${product.id}`, { method: "PATCH", body: { isFeatured: !product.isFeatured } }).catch(() => undefined);
@@ -69,7 +86,7 @@ export function ProductsTab() {
       <div className="flex flex-wrap items-center gap-3">
         <label className="flex min-w-0 flex-1 items-center gap-2 rounded-2xl border border-sand bg-white px-4 py-2.5 focus-within:border-primary">
           <Search size={15} className="shrink-0 text-muted" aria-hidden />
-          <input value={q} onChange={(e) => setQ(e.target.value)} placeholder={dict.admin.productsSearchPlaceholder} aria-label={dict.admin.productsSearchPlaceholder} className="w-full bg-transparent text-sm outline-none" />
+          <input value={q} onChange={(e) => changeQuery(e.target.value)} placeholder={dict.admin.productsSearchPlaceholder} aria-label={dict.admin.productsSearchPlaceholder} className="w-full bg-transparent text-sm outline-none" />
         </label>
         <button onClick={startCreate} className="inline-flex items-center gap-1.5 rounded-2xl bg-primary px-4 py-2.5 text-xs font-bold text-white hover:bg-primary-deep">
           {showForm ? <X size={13} /> : <Plus size={13} />} {showForm ? dict.common.close : dict.admin.addProduct}
@@ -104,13 +121,25 @@ export function ProductsTab() {
 
       <div className="mt-4 overflow-hidden rounded-3xl border border-sand bg-white">
         <div className="border-b border-sand bg-cream/40 px-5 py-3 text-[10px] font-extrabold uppercase tracking-[0.14em] text-muted">
-          <span>{busy ? dict.admin.loading : format(dict.admin.productsCount, { count: items.length })}</span>
+          <span>{busy ? dict.admin.loading : format(dict.admin.productsCount, { count: total })}</span>
         </div>
         <ul className="divide-y divide-sand/70">
           {items.map((product) => {
             const deleted = Boolean(product.deletedAt);
             return (
               <li key={product.id} className={`flex flex-wrap items-center gap-3 px-5 py-3 ${deleted ? "bg-red-50/40" : ""}`}>
+                {(product.coverImageUrl ?? product.thumbnailUrl) ? (
+                  /* eslint-disable-next-line @next/next/no-img-element */
+                  <img
+                    src={(product.coverImageUrl ?? product.thumbnailUrl) as string}
+                    alt=""
+                    className="h-9 w-12 shrink-0 rounded-lg border border-sand object-cover"
+                  />
+                ) : (
+                  <span className="grid h-9 w-12 shrink-0 place-items-center rounded-lg bg-sand text-[8px] font-bold text-muted">
+                    —
+                  </span>
+                )}
                 <span className="rounded-full bg-sand px-2 py-0.5 text-[8px] font-extrabold uppercase tracking-[0.12em] text-muted">
                   {(dict.productTypes as Record<string, string>)[product.type] ?? product.type}
                 </span>
@@ -151,6 +180,7 @@ export function ProductsTab() {
           })}
           {!busy && items.length === 0 && <li className="px-5 py-8 text-center text-xs text-muted">{dict.admin.noProducts}</li>}
         </ul>
+        <AdminPagination page={page} limit={PAGE_SIZE} total={total} onPageChange={setPage} disabled={busy} />
       </div>
     </div>
   );

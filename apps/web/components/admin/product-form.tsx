@@ -23,6 +23,7 @@ export function ProductForm({
   const [type, setType] = useState<string>(initial?.type ?? "BOOK_NATIONAL");
   const [shortDescription, setShortDescription] = useState(initial?.shortDescription ?? "");
   const [description, setDescription] = useState(initial?.description ?? "");
+  const [coverImageUrl, setCoverImageUrl] = useState(initial?.coverImageUrl ?? initial?.thumbnailUrl ?? "");
   const [price, setPrice] = useState(initial?.price === null || initial?.price === undefined ? "" : String(initial.price));
   const [externalUrl, setExternalUrl] = useState(initial?.externalUrl ?? "");
   const [ctaText, setCtaText] = useState(initial?.ctaText ?? "");
@@ -53,6 +54,7 @@ export function ProductForm({
       description: description.trim() || null,
       price: priceValue === "" ? null : Number(priceValue),
       currency: "IDR",
+      coverImageUrl: coverImageUrl.trim() || null,
       externalUrl: externalUrl.trim() || null,
       ctaText: ctaText.trim() || null,
       isFeatured,
@@ -96,6 +98,27 @@ export function ProductForm({
           onChange={setType}
           buttonClassName="inline-flex w-full items-center justify-between gap-2 rounded-2xl border border-sand bg-white px-4 py-3 text-sm outline-none transition focus:border-primary"
         />
+        <div className="sm:col-span-2">
+          <span className="text-[10px] font-extrabold uppercase tracking-[0.14em] text-muted">{dict.admin.coverImageLabel}</span>
+          <div className="mt-1.5 flex items-start gap-3">
+            <input
+              value={coverImageUrl}
+              onChange={(e) => setCoverImageUrl(e.target.value)}
+              placeholder="/images/products/buku-tematik-sd.jpg"
+              aria-label={dict.admin.coverImageLabel}
+              className={`min-w-0 flex-1 ${inputClass}`}
+            />
+            {coverImageUrl.trim() ? (
+              /* eslint-disable-next-line @next/next/no-img-element */
+              <img src={coverImageUrl} alt="" className="h-20 w-20 shrink-0 rounded-xl border border-sand object-cover" />
+            ) : (
+              <span className="grid h-20 w-20 shrink-0 place-items-center rounded-xl border border-dashed border-sand bg-cream text-[9px] font-bold text-muted">
+                {dict.admin.noCoverYet}
+              </span>
+            )}
+          </div>
+          <p className="mt-1 text-[10px] text-muted">{dict.admin.coverImageHint}</p>
+        </div>
         <input value={price} onChange={(e) => setPrice(e.target.value)} inputMode="numeric" type="number" min={0} step={1000} placeholder={dict.admin.pricePlaceholder} aria-label={dict.admin.priceAria} className={inputClass} />
         <input value={sortOrder} onChange={(e) => setSortOrder(e.target.value)} inputMode="numeric" type="number" min={0} aria-label={dict.admin.sortOrderAria} className={inputClass} />
         <input value={shortDescription} onChange={(e) => setShortDescription(e.target.value)} placeholder={dict.admin.shortDescriptionPlaceholder} aria-label={dict.admin.shortDescriptionAria} className={`${inputClass} sm:col-span-2`} />

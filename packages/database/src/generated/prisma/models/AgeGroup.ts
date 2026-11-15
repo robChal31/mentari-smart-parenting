@@ -1444,7 +1444,6 @@ export type AgeGroupCreateManyArgs<ExtArgs extends runtime.Types.Extensions.Inte
    * The data used to create many AgeGroups.
    */
   data: Prisma.AgeGroupCreateManyInput | Prisma.AgeGroupCreateManyInput[]
-  skipDuplicates?: boolean
 }
 
 /**
@@ -1463,7 +1462,6 @@ export type AgeGroupCreateManyAndReturnArgs<ExtArgs extends runtime.Types.Extens
    * The data used to create many AgeGroups.
    */
   data: Prisma.AgeGroupCreateManyInput | Prisma.AgeGroupCreateManyInput[]
-  skipDuplicates?: boolean
 }
 
 /**

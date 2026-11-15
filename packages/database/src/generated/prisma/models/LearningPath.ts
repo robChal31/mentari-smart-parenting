@@ -42,7 +42,7 @@ export type LearningPathMinAggregateOutputType = {
   slug: string | null
   description: string | null
   thumbnailUrl: string | null
-  difficulty: $Enums.Difficulty | null
+  difficulty: string | null
   estimatedTime: number | null
   isPublished: boolean | null
   sortOrder: number | null
@@ -56,7 +56,7 @@ export type LearningPathMaxAggregateOutputType = {
   slug: string | null
   description: string | null
   thumbnailUrl: string | null
-  difficulty: $Enums.Difficulty | null
+  difficulty: string | null
   estimatedTime: number | null
   isPublished: boolean | null
   sortOrder: number | null
@@ -225,7 +225,7 @@ export type LearningPathGroupByOutputType = {
   slug: string
   description: string | null
   thumbnailUrl: string | null
-  difficulty: $Enums.Difficulty
+  difficulty: string
   estimatedTime: number | null
   isPublished: boolean
   sortOrder: number
@@ -262,7 +262,7 @@ export type LearningPathWhereInput = {
   slug?: Prisma.StringFilter<"LearningPath"> | string
   description?: Prisma.StringNullableFilter<"LearningPath"> | string | null
   thumbnailUrl?: Prisma.StringNullableFilter<"LearningPath"> | string | null
-  difficulty?: Prisma.EnumDifficultyFilter<"LearningPath"> | $Enums.Difficulty
+  difficulty?: Prisma.StringFilter<"LearningPath"> | string
   estimatedTime?: Prisma.IntNullableFilter<"LearningPath"> | number | null
   isPublished?: Prisma.BoolFilter<"LearningPath"> | boolean
   sortOrder?: Prisma.IntFilter<"LearningPath"> | number
@@ -295,7 +295,7 @@ export type LearningPathWhereUniqueInput = Prisma.AtLeast<{
   title?: Prisma.StringFilter<"LearningPath"> | string
   description?: Prisma.StringNullableFilter<"LearningPath"> | string | null
   thumbnailUrl?: Prisma.StringNullableFilter<"LearningPath"> | string | null
-  difficulty?: Prisma.EnumDifficultyFilter<"LearningPath"> | $Enums.Difficulty
+  difficulty?: Prisma.StringFilter<"LearningPath"> | string
   estimatedTime?: Prisma.IntNullableFilter<"LearningPath"> | number | null
   isPublished?: Prisma.BoolFilter<"LearningPath"> | boolean
   sortOrder?: Prisma.IntFilter<"LearningPath"> | number
@@ -332,7 +332,7 @@ export type LearningPathScalarWhereWithAggregatesInput = {
   slug?: Prisma.StringWithAggregatesFilter<"LearningPath"> | string
   description?: Prisma.StringNullableWithAggregatesFilter<"LearningPath"> | string | null
   thumbnailUrl?: Prisma.StringNullableWithAggregatesFilter<"LearningPath"> | string | null
-  difficulty?: Prisma.EnumDifficultyWithAggregatesFilter<"LearningPath"> | $Enums.Difficulty
+  difficulty?: Prisma.StringWithAggregatesFilter<"LearningPath"> | string
   estimatedTime?: Prisma.IntNullableWithAggregatesFilter<"LearningPath"> | number | null
   isPublished?: Prisma.BoolWithAggregatesFilter<"LearningPath"> | boolean
   sortOrder?: Prisma.IntWithAggregatesFilter<"LearningPath"> | number
@@ -346,7 +346,7 @@ export type LearningPathCreateInput = {
   slug: string
   description?: string | null
   thumbnailUrl?: string | null
-  difficulty?: $Enums.Difficulty
+  difficulty?: string
   estimatedTime?: number | null
   isPublished?: boolean
   sortOrder?: number
@@ -361,7 +361,7 @@ export type LearningPathUncheckedCreateInput = {
   slug: string
   description?: string | null
   thumbnailUrl?: string | null
-  difficulty?: $Enums.Difficulty
+  difficulty?: string
   estimatedTime?: number | null
   isPublished?: boolean
   sortOrder?: number
@@ -376,7 +376,7 @@ export type LearningPathUpdateInput = {
   slug?: Prisma.StringFieldUpdateOperationsInput | string
   description?: Prisma.NullableStringFieldUpdateOperationsInput | string | null
   thumbnailUrl?: Prisma.NullableStringFieldUpdateOperationsInput | string | null
-  difficulty?: Prisma.EnumDifficultyFieldUpdateOperationsInput | $Enums.Difficulty
+  difficulty?: Prisma.StringFieldUpdateOperationsInput | string
   estimatedTime?: Prisma.NullableIntFieldUpdateOperationsInput | number | null
   isPublished?: Prisma.BoolFieldUpdateOperationsInput | boolean
   sortOrder?: Prisma.IntFieldUpdateOperationsInput | number
@@ -391,7 +391,7 @@ export type LearningPathUncheckedUpdateInput = {
   slug?: Prisma.StringFieldUpdateOperationsInput | string
   description?: Prisma.NullableStringFieldUpdateOperationsInput | string | null
   thumbnailUrl?: Prisma.NullableStringFieldUpdateOperationsInput | string | null
-  difficulty?: Prisma.EnumDifficultyFieldUpdateOperationsInput | $Enums.Difficulty
+  difficulty?: Prisma.StringFieldUpdateOperationsInput | string
   estimatedTime?: Prisma.NullableIntFieldUpdateOperationsInput | number | null
   isPublished?: Prisma.BoolFieldUpdateOperationsInput | boolean
   sortOrder?: Prisma.IntFieldUpdateOperationsInput | number
@@ -406,7 +406,7 @@ export type LearningPathCreateManyInput = {
   slug: string
   description?: string | null
   thumbnailUrl?: string | null
-  difficulty?: $Enums.Difficulty
+  difficulty?: string
   estimatedTime?: number | null
   isPublished?: boolean
   sortOrder?: number
@@ -420,7 +420,7 @@ export type LearningPathUpdateManyMutationInput = {
   slug?: Prisma.StringFieldUpdateOperationsInput | string
   description?: Prisma.NullableStringFieldUpdateOperationsInput | string | null
   thumbnailUrl?: Prisma.NullableStringFieldUpdateOperationsInput | string | null
-  difficulty?: Prisma.EnumDifficultyFieldUpdateOperationsInput | $Enums.Difficulty
+  difficulty?: Prisma.StringFieldUpdateOperationsInput | string
   estimatedTime?: Prisma.NullableIntFieldUpdateOperationsInput | number | null
   isPublished?: Prisma.BoolFieldUpdateOperationsInput | boolean
   sortOrder?: Prisma.IntFieldUpdateOperationsInput | number
@@ -434,7 +434,7 @@ export type LearningPathUncheckedUpdateManyInput = {
   slug?: Prisma.StringFieldUpdateOperationsInput | string
   description?: Prisma.NullableStringFieldUpdateOperationsInput | string | null
   thumbnailUrl?: Prisma.NullableStringFieldUpdateOperationsInput | string | null
-  difficulty?: Prisma.EnumDifficultyFieldUpdateOperationsInput | $Enums.Difficulty
+  difficulty?: Prisma.StringFieldUpdateOperationsInput | string
   estimatedTime?: Prisma.NullableIntFieldUpdateOperationsInput | number | null
   isPublished?: Prisma.BoolFieldUpdateOperationsInput | boolean
   sortOrder?: Prisma.IntFieldUpdateOperationsInput | number
@@ -499,10 +499,6 @@ export type LearningPathScalarRelationFilter = {
   isNot?: Prisma.LearningPathWhereInput
 }
 
-export type EnumDifficultyFieldUpdateOperationsInput = {
-  set?: $Enums.Difficulty
-}
-
 export type LearningPathCreateNestedOneWithoutItemsInput = {
   create?: Prisma.XOR<Prisma.LearningPathCreateWithoutItemsInput, Prisma.LearningPathUncheckedCreateWithoutItemsInput>
   connectOrCreate?: Prisma.LearningPathCreateOrConnectWithoutItemsInput
@@ -523,7 +519,7 @@ export type LearningPathCreateWithoutItemsInput = {
   slug: string
   description?: string | null
   thumbnailUrl?: string | null
-  difficulty?: $Enums.Difficulty
+  difficulty?: string
   estimatedTime?: number | null
   isPublished?: boolean
   sortOrder?: number
@@ -537,7 +533,7 @@ export type LearningPathUncheckedCreateWithoutItemsInput = {
   slug: string
   description?: string | null
   thumbnailUrl?: string | null
-  difficulty?: $Enums.Difficulty
+  difficulty?: string
   estimatedTime?: number | null
   isPublished?: boolean
   sortOrder?: number
@@ -567,7 +563,7 @@ export type LearningPathUpdateWithoutItemsInput = {
   slug?: Prisma.StringFieldUpdateOperationsInput | string
   description?: Prisma.NullableStringFieldUpdateOperationsInput | string | null
   thumbnailUrl?: Prisma.NullableStringFieldUpdateOperationsInput | string | null
-  difficulty?: Prisma.EnumDifficultyFieldUpdateOperationsInput | $Enums.Difficulty
+  difficulty?: Prisma.StringFieldUpdateOperationsInput | string
   estimatedTime?: Prisma.NullableIntFieldUpdateOperationsInput | number | null
   isPublished?: Prisma.BoolFieldUpdateOperationsInput | boolean
   sortOrder?: Prisma.IntFieldUpdateOperationsInput | number
@@ -581,7 +577,7 @@ export type LearningPathUncheckedUpdateWithoutItemsInput = {
   slug?: Prisma.StringFieldUpdateOperationsInput | string
   description?: Prisma.NullableStringFieldUpdateOperationsInput | string | null
   thumbnailUrl?: Prisma.NullableStringFieldUpdateOperationsInput | string | null
-  difficulty?: Prisma.EnumDifficultyFieldUpdateOperationsInput | $Enums.Difficulty
+  difficulty?: Prisma.StringFieldUpdateOperationsInput | string
   estimatedTime?: Prisma.NullableIntFieldUpdateOperationsInput | number | null
   isPublished?: Prisma.BoolFieldUpdateOperationsInput | boolean
   sortOrder?: Prisma.IntFieldUpdateOperationsInput | number
@@ -697,7 +693,7 @@ export type $LearningPathPayload<ExtArgs extends runtime.Types.Extensions.Intern
     slug: string
     description: string | null
     thumbnailUrl: string | null
-    difficulty: $Enums.Difficulty
+    difficulty: string
     estimatedTime: number | null
     isPublished: boolean
     sortOrder: number
@@ -1132,7 +1128,7 @@ export interface LearningPathFieldRefs {
   readonly slug: Prisma.FieldRef<"LearningPath", 'String'>
   readonly description: Prisma.FieldRef<"LearningPath", 'String'>
   readonly thumbnailUrl: Prisma.FieldRef<"LearningPath", 'String'>
-  readonly difficulty: Prisma.FieldRef<"LearningPath", 'Difficulty'>
+  readonly difficulty: Prisma.FieldRef<"LearningPath", 'String'>
   readonly estimatedTime: Prisma.FieldRef<"LearningPath", 'Int'>
   readonly isPublished: Prisma.FieldRef<"LearningPath", 'Boolean'>
   readonly sortOrder: Prisma.FieldRef<"LearningPath", 'Int'>
@@ -1372,7 +1368,6 @@ export type LearningPathCreateManyArgs<ExtArgs extends runtime.Types.Extensions.
    * The data used to create many LearningPaths.
    */
   data: Prisma.LearningPathCreateManyInput | Prisma.LearningPathCreateManyInput[]
-  skipDuplicates?: boolean
 }
 
 /**
@@ -1391,7 +1386,6 @@ export type LearningPathCreateManyAndReturnArgs<ExtArgs extends runtime.Types.Ex
    * The data used to create many LearningPaths.
    */
   data: Prisma.LearningPathCreateManyInput | Prisma.LearningPathCreateManyInput[]
-  skipDuplicates?: boolean
 }
 
 /**

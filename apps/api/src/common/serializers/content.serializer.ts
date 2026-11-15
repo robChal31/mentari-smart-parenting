@@ -1,5 +1,8 @@
 import type {
+  AdminContentDetailDto,
+  AdminContentSummaryDto,
   AgeGroupDto,
+  AuthorDto,
   CategoryDto,
   ContentSummaryDto,
   ContentCategoryDto,
@@ -43,6 +46,21 @@ function parseImages(raw: unknown): string[] | null {
   }
 }
 
+export function serializeAuthor(a: any): AuthorDto {
+  return {
+    id: a.id,
+    name: a.name,
+    slug: a.slug,
+    title: a.title ?? null,
+    bio: a.bio ?? null,
+    avatarUrl: a.avatarUrl ?? null,
+    email: a.email ?? null,
+    isActive: a.isActive === undefined ? true : Boolean(a.isActive),
+    sortOrder: a.sortOrder ?? 0,
+    ...(a._count?.contents !== undefined ? { contentCount: a._count.contents } : {}),
+  };
+}
+
 export function serializeProduct(p: any): ProductDto {
   return {
     id: p.id, name: p.name, slug: p.slug,
@@ -51,6 +69,7 @@ export function serializeProduct(p: any): ProductDto {
     type: p.type,
     price: p.price === null || p.price === undefined ? null : Number(p.price),
     currency: p.currency ?? 'IDR',
+    coverImageUrl: p.coverImageUrl ?? p.thumbnailUrl ?? null,
     thumbnailUrl: p.thumbnailUrl ?? null,
     images: parseImages(p.images),
     externalUrl: p.externalUrl ?? null,
@@ -82,8 +101,9 @@ export function serializeContentSummary(c: any): ContentSummaryDto {
     likeCount: c.likeCount ?? 0,
     isFeatured: Boolean(c.isFeatured),
     isPremium: Boolean(c.isPremium),
-    authorName: c.authorName ?? null,
-    authorTitle: c.authorTitle ?? null,
+    authorName: c.author?.name ?? null,
+    authorTitle: c.author?.title ?? null,
+    author: c.author ? serializeAuthor(c.author) : null,
     publishedAt: c.publishedAt ? new Date(c.publishedAt).toISOString() : null,
     categories,
     ageGroups: (c.ageGroups ?? []).map((row: any) => ({
@@ -94,7 +114,42 @@ export function serializeContentSummary(c: any): ContentSummaryDto {
   };
 }
 
+/** Admin list row: public summary + status, so the panel can badge drafts. */
+export function serializeAdminContentSummary(c: any): AdminContentSummaryDto {
+  return {
+    ...serializeContentSummary(c),
+    status: c.status,
+    videoDuration: c.videoDuration ?? null,
+    authorId: c.authorId ?? null,
+  };
+}
+
+/**
+ * Full admin-facing content shape: the public summary plus the fields the
+ * editor form needs (body, video, SEO, status, taxonomy slugs, raw flags).
+ * The public detail DTO deliberately hides drafts and publish metadata, so the
+ * admin endpoints use this instead.
+ */
+export function serializeAdminContentDetail(c: any): AdminContentDetailDto {
+  return {
+    ...serializeContentSummary(c),
+    status: c.status,
+    body: c.body ?? null,
+    videoUrl: c.videoUrl ?? null,
+    videoDuration: c.videoDuration ?? null,
+    metaTitle: c.metaTitle ?? null,
+    metaDescription: c.metaDescription ?? null,
+    author: c.author ? serializeAuthor(c.author) : null,
+    authorId: c.authorId ?? null,
+    categorySlugs: (c.categories ?? []).map((row: any) => (row.category ?? row).slug),
+    ageGroupSlugs: (c.ageGroups ?? []).map((row: any) => (row.ageGroup ?? row).slug),
+    recommendedProducts: [],
+    relatedContents: [],
+  };
+}
+
 export const contentInclude = {
+  author: true,
   categories: { include: { category: true } },
   ageGroups: { include: { ageGroup: true } },
   tags: { include: { tag: true } },

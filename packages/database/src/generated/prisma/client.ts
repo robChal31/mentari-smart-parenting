@@ -77,6 +77,11 @@ export type Content = Prisma.ContentModel
  */
 export type Category = Prisma.CategoryModel
 /**
+ * Model Author
+ * 
+ */
+export type Author = Prisma.AuthorModel
+/**
  * Model Tag
  * 
  */

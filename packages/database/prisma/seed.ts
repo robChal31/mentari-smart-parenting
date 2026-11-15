@@ -7,7 +7,7 @@
 import bcrypt from 'bcryptjs';
 import { prisma } from '../src/index';
 import {
-  AGE_GROUPS, CATEGORIES, CONTENTS, PRODUCTS, MILESTONES, BADGES,
+  AGE_GROUPS, AUTHORS, CATEGORIES, CONTENTS, PRODUCTS, MILESTONES, BADGES,
   LEARNING_PATHS, THREADS,
 } from './seed-data';
 
@@ -44,6 +44,7 @@ async function main() {
   await prisma.contentCategory.deleteMany();
   await prisma.contentAgeGroup.deleteMany();
   await prisma.content.deleteMany();
+  await prisma.author.deleteMany();
   await prisma.tag.deleteMany();
   await prisma.productAgeGroup.deleteMany();
   await prisma.product.deleteMany();
@@ -127,7 +128,7 @@ async function main() {
       data: {
         name: p.name, slug: p.slug, description: p.description,
         shortDescription: p.shortDescription, type: p.type, price: p.price,
-        currency: 'IDR', thumbnailUrl: p.thumbnailUrl, images: JSON.stringify([p.thumbnailUrl]),
+        currency: 'IDR', thumbnailUrl: p.thumbnailUrl, coverImageUrl: p.thumbnailUrl, images: JSON.stringify([p.thumbnailUrl]),
         externalUrl: p.externalUrl, ctaText: p.ctaText,
         isFeatured: p.isFeatured, sortOrder: p.sortOrder, isActive: true,
         ageGroups: {
@@ -138,6 +139,19 @@ async function main() {
     productBySlug.set(p.slug, created);
   }
   console.log(`✓ ${productBySlug.size} products`);
+
+  // ---------- authors ----------
+  const authorBySlug = new Map<string, { id: string }>();
+  for (const a of AUTHORS) {
+    const row = await prisma.author.create({
+      data: {
+        name: a.name, slug: a.slug, title: a.title, bio: a.bio,
+        email: a.email, isActive: true, sortOrder: a.sortOrder,
+      },
+    });
+    authorBySlug.set(a.slug, row);
+  }
+  console.log(`✓ ${authorBySlug.size} authors`);
 
   // ---------- contents (+ tags) ----------
   const contentBySlug = new Map<string, { id: string }>();
@@ -168,7 +182,7 @@ async function main() {
         isPremium: c.isPremium ?? false,
         viewCount: c.viewCount, likeCount: c.likeCount ?? Math.round(c.viewCount * 0.06),
         publishedAt: new Date(now - c.publishedDaysAgo * DAY),
-        authorName: c.author.authorName, authorTitle: c.author.authorTitle,
+        authorId: authorBySlug.get(c.authorSlug)!.id,
         metaTitle: c.metaTitle ?? null, metaDescription: c.metaDescription ?? null,
         categories: {
           create: c.categorySlugs.map((slug) => ({ categoryId: categoryBySlug.get(slug)!.id })),

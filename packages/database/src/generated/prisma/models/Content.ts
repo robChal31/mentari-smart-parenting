@@ -46,8 +46,8 @@ export type ContentMinAggregateOutputType = {
   slug: string | null
   excerpt: string | null
   body: string | null
-  type: $Enums.ContentType | null
-  status: $Enums.ContentStatus | null
+  type: string | null
+  status: string | null
   thumbnailUrl: string | null
   videoUrl: string | null
   videoDuration: number | null
@@ -57,9 +57,7 @@ export type ContentMinAggregateOutputType = {
   viewCount: number | null
   likeCount: number | null
   publishedAt: Date | null
-  authorName: string | null
-  authorTitle: string | null
-  authorAvatarUrl: string | null
+  authorId: string | null
   metaTitle: string | null
   metaDescription: string | null
   createdAt: Date | null
@@ -72,8 +70,8 @@ export type ContentMaxAggregateOutputType = {
   slug: string | null
   excerpt: string | null
   body: string | null
-  type: $Enums.ContentType | null
-  status: $Enums.ContentStatus | null
+  type: string | null
+  status: string | null
   thumbnailUrl: string | null
   videoUrl: string | null
   videoDuration: number | null
@@ -83,9 +81,7 @@ export type ContentMaxAggregateOutputType = {
   viewCount: number | null
   likeCount: number | null
   publishedAt: Date | null
-  authorName: string | null
-  authorTitle: string | null
-  authorAvatarUrl: string | null
+  authorId: string | null
   metaTitle: string | null
   metaDescription: string | null
   createdAt: Date | null
@@ -109,9 +105,7 @@ export type ContentCountAggregateOutputType = {
   viewCount: number
   likeCount: number
   publishedAt: number
-  authorName: number
-  authorTitle: number
-  authorAvatarUrl: number
+  authorId: number
   metaTitle: number
   metaDescription: number
   createdAt: number
@@ -151,9 +145,7 @@ export type ContentMinAggregateInputType = {
   viewCount?: true
   likeCount?: true
   publishedAt?: true
-  authorName?: true
-  authorTitle?: true
-  authorAvatarUrl?: true
+  authorId?: true
   metaTitle?: true
   metaDescription?: true
   createdAt?: true
@@ -177,9 +169,7 @@ export type ContentMaxAggregateInputType = {
   viewCount?: true
   likeCount?: true
   publishedAt?: true
-  authorName?: true
-  authorTitle?: true
-  authorAvatarUrl?: true
+  authorId?: true
   metaTitle?: true
   metaDescription?: true
   createdAt?: true
@@ -203,9 +193,7 @@ export type ContentCountAggregateInputType = {
   viewCount?: true
   likeCount?: true
   publishedAt?: true
-  authorName?: true
-  authorTitle?: true
-  authorAvatarUrl?: true
+  authorId?: true
   metaTitle?: true
   metaDescription?: true
   createdAt?: true
@@ -305,8 +293,8 @@ export type ContentGroupByOutputType = {
   slug: string
   excerpt: string | null
   body: string | null
-  type: $Enums.ContentType
-  status: $Enums.ContentStatus
+  type: string
+  status: string
   thumbnailUrl: string | null
   videoUrl: string | null
   videoDuration: number | null
@@ -316,9 +304,7 @@ export type ContentGroupByOutputType = {
   viewCount: number
   likeCount: number
   publishedAt: Date | null
-  authorName: string | null
-  authorTitle: string | null
-  authorAvatarUrl: string | null
+  authorId: string | null
   metaTitle: string | null
   metaDescription: string | null
   createdAt: Date
@@ -354,8 +340,8 @@ export type ContentWhereInput = {
   slug?: Prisma.StringFilter<"Content"> | string
   excerpt?: Prisma.StringNullableFilter<"Content"> | string | null
   body?: Prisma.StringNullableFilter<"Content"> | string | null
-  type?: Prisma.EnumContentTypeFilter<"Content"> | $Enums.ContentType
-  status?: Prisma.EnumContentStatusFilter<"Content"> | $Enums.ContentStatus
+  type?: Prisma.StringFilter<"Content"> | string
+  status?: Prisma.StringFilter<"Content"> | string
   thumbnailUrl?: Prisma.StringNullableFilter<"Content"> | string | null
   videoUrl?: Prisma.StringNullableFilter<"Content"> | string | null
   videoDuration?: Prisma.IntNullableFilter<"Content"> | number | null
@@ -365,9 +351,7 @@ export type ContentWhereInput = {
   viewCount?: Prisma.IntFilter<"Content"> | number
   likeCount?: Prisma.IntFilter<"Content"> | number
   publishedAt?: Prisma.DateTimeNullableFilter<"Content"> | Date | string | null
-  authorName?: Prisma.StringNullableFilter<"Content"> | string | null
-  authorTitle?: Prisma.StringNullableFilter<"Content"> | string | null
-  authorAvatarUrl?: Prisma.StringNullableFilter<"Content"> | string | null
+  authorId?: Prisma.StringNullableFilter<"Content"> | string | null
   metaTitle?: Prisma.StringNullableFilter<"Content"> | string | null
   metaDescription?: Prisma.StringNullableFilter<"Content"> | string | null
   createdAt?: Prisma.DateTimeFilter<"Content"> | Date | string
@@ -379,6 +363,7 @@ export type ContentWhereInput = {
   bookmarks?: Prisma.BookmarkListRelationFilter
   views?: Prisma.ContentViewListRelationFilter
   learningPathItems?: Prisma.LearningPathItemListRelationFilter
+  author?: Prisma.XOR<Prisma.AuthorNullableScalarRelationFilter, Prisma.AuthorWhereInput> | null
 }
 
 export type ContentOrderByWithRelationInput = {
@@ -398,9 +383,7 @@ export type ContentOrderByWithRelationInput = {
   viewCount?: Prisma.SortOrder
   likeCount?: Prisma.SortOrder
   publishedAt?: Prisma.SortOrderInput | Prisma.SortOrder
-  authorName?: Prisma.SortOrderInput | Prisma.SortOrder
-  authorTitle?: Prisma.SortOrderInput | Prisma.SortOrder
-  authorAvatarUrl?: Prisma.SortOrderInput | Prisma.SortOrder
+  authorId?: Prisma.SortOrderInput | Prisma.SortOrder
   metaTitle?: Prisma.SortOrderInput | Prisma.SortOrder
   metaDescription?: Prisma.SortOrderInput | Prisma.SortOrder
   createdAt?: Prisma.SortOrder
@@ -412,6 +395,7 @@ export type ContentOrderByWithRelationInput = {
   bookmarks?: Prisma.BookmarkOrderByRelationAggregateInput
   views?: Prisma.ContentViewOrderByRelationAggregateInput
   learningPathItems?: Prisma.LearningPathItemOrderByRelationAggregateInput
+  author?: Prisma.AuthorOrderByWithRelationInput
 }
 
 export type ContentWhereUniqueInput = Prisma.AtLeast<{
@@ -423,8 +407,8 @@ export type ContentWhereUniqueInput = Prisma.AtLeast<{
   title?: Prisma.StringFilter<"Content"> | string
   excerpt?: Prisma.StringNullableFilter<"Content"> | string | null
   body?: Prisma.StringNullableFilter<"Content"> | string | null
-  type?: Prisma.EnumContentTypeFilter<"Content"> | $Enums.ContentType
-  status?: Prisma.EnumContentStatusFilter<"Content"> | $Enums.ContentStatus
+  type?: Prisma.StringFilter<"Content"> | string
+  status?: Prisma.StringFilter<"Content"> | string
   thumbnailUrl?: Prisma.StringNullableFilter<"Content"> | string | null
   videoUrl?: Prisma.StringNullableFilter<"Content"> | string | null
   videoDuration?: Prisma.IntNullableFilter<"Content"> | number | null
@@ -434,9 +418,7 @@ export type ContentWhereUniqueInput = Prisma.AtLeast<{
   viewCount?: Prisma.IntFilter<"Content"> | number
   likeCount?: Prisma.IntFilter<"Content"> | number
   publishedAt?: Prisma.DateTimeNullableFilter<"Content"> | Date | string | null
-  authorName?: Prisma.StringNullableFilter<"Content"> | string | null
-  authorTitle?: Prisma.StringNullableFilter<"Content"> | string | null
-  authorAvatarUrl?: Prisma.StringNullableFilter<"Content"> | string | null
+  authorId?: Prisma.StringNullableFilter<"Content"> | string | null
   metaTitle?: Prisma.StringNullableFilter<"Content"> | string | null
   metaDescription?: Prisma.StringNullableFilter<"Content"> | string | null
   createdAt?: Prisma.DateTimeFilter<"Content"> | Date | string
@@ -448,6 +430,7 @@ export type ContentWhereUniqueInput = Prisma.AtLeast<{
   bookmarks?: Prisma.BookmarkListRelationFilter
   views?: Prisma.ContentViewListRelationFilter
   learningPathItems?: Prisma.LearningPathItemListRelationFilter
+  author?: Prisma.XOR<Prisma.AuthorNullableScalarRelationFilter, Prisma.AuthorWhereInput> | null
 }, "id" | "slug">
 
 export type ContentOrderByWithAggregationInput = {
@@ -467,9 +450,7 @@ export type ContentOrderByWithAggregationInput = {
   viewCount?: Prisma.SortOrder
   likeCount?: Prisma.SortOrder
   publishedAt?: Prisma.SortOrderInput | Prisma.SortOrder
-  authorName?: Prisma.SortOrderInput | Prisma.SortOrder
-  authorTitle?: Prisma.SortOrderInput | Prisma.SortOrder
-  authorAvatarUrl?: Prisma.SortOrderInput | Prisma.SortOrder
+  authorId?: Prisma.SortOrderInput | Prisma.SortOrder
   metaTitle?: Prisma.SortOrderInput | Prisma.SortOrder
   metaDescription?: Prisma.SortOrderInput | Prisma.SortOrder
   createdAt?: Prisma.SortOrder
@@ -490,8 +471,8 @@ export type ContentScalarWhereWithAggregatesInput = {
   slug?: Prisma.StringWithAggregatesFilter<"Content"> | string
   excerpt?: Prisma.StringNullableWithAggregatesFilter<"Content"> | string | null
   body?: Prisma.StringNullableWithAggregatesFilter<"Content"> | string | null
-  type?: Prisma.EnumContentTypeWithAggregatesFilter<"Content"> | $Enums.ContentType
-  status?: Prisma.EnumContentStatusWithAggregatesFilter<"Content"> | $Enums.ContentStatus
+  type?: Prisma.StringWithAggregatesFilter<"Content"> | string
+  status?: Prisma.StringWithAggregatesFilter<"Content"> | string
   thumbnailUrl?: Prisma.StringNullableWithAggregatesFilter<"Content"> | string | null
   videoUrl?: Prisma.StringNullableWithAggregatesFilter<"Content"> | string | null
   videoDuration?: Prisma.IntNullableWithAggregatesFilter<"Content"> | number | null
@@ -501,9 +482,7 @@ export type ContentScalarWhereWithAggregatesInput = {
   viewCount?: Prisma.IntWithAggregatesFilter<"Content"> | number
   likeCount?: Prisma.IntWithAggregatesFilter<"Content"> | number
   publishedAt?: Prisma.DateTimeNullableWithAggregatesFilter<"Content"> | Date | string | null
-  authorName?: Prisma.StringNullableWithAggregatesFilter<"Content"> | string | null
-  authorTitle?: Prisma.StringNullableWithAggregatesFilter<"Content"> | string | null
-  authorAvatarUrl?: Prisma.StringNullableWithAggregatesFilter<"Content"> | string | null
+  authorId?: Prisma.StringNullableWithAggregatesFilter<"Content"> | string | null
   metaTitle?: Prisma.StringNullableWithAggregatesFilter<"Content"> | string | null
   metaDescription?: Prisma.StringNullableWithAggregatesFilter<"Content"> | string | null
   createdAt?: Prisma.DateTimeWithAggregatesFilter<"Content"> | Date | string
@@ -516,8 +495,8 @@ export type ContentCreateInput = {
   slug: string
   excerpt?: string | null
   body?: string | null
-  type: $Enums.ContentType
-  status?: $Enums.ContentStatus
+  type: string
+  status?: string
   thumbnailUrl?: string | null
   videoUrl?: string | null
   videoDuration?: number | null
@@ -527,9 +506,6 @@ export type ContentCreateInput = {
   viewCount?: number
   likeCount?: number
   publishedAt?: Date | string | null
-  authorName?: string | null
-  authorTitle?: string | null
-  authorAvatarUrl?: string | null
   metaTitle?: string | null
   metaDescription?: string | null
   createdAt?: Date | string
@@ -541,6 +517,7 @@ export type ContentCreateInput = {
   bookmarks?: Prisma.BookmarkCreateNestedManyWithoutContentInput
   views?: Prisma.ContentViewCreateNestedManyWithoutContentInput
   learningPathItems?: Prisma.LearningPathItemCreateNestedManyWithoutContentInput
+  author?: Prisma.AuthorCreateNestedOneWithoutContentsInput
 }
 
 export type ContentUncheckedCreateInput = {
@@ -549,8 +526,8 @@ export type ContentUncheckedCreateInput = {
   slug: string
   excerpt?: string | null
   body?: string | null
-  type: $Enums.ContentType
-  status?: $Enums.ContentStatus
+  type: string
+  status?: string
   thumbnailUrl?: string | null
   videoUrl?: string | null
   videoDuration?: number | null
@@ -560,9 +537,7 @@ export type ContentUncheckedCreateInput = {
   viewCount?: number
   likeCount?: number
   publishedAt?: Date | string | null
-  authorName?: string | null
-  authorTitle?: string | null
-  authorAvatarUrl?: string | null
+  authorId?: string | null
   metaTitle?: string | null
   metaDescription?: string | null
   createdAt?: Date | string
@@ -582,8 +557,8 @@ export type ContentUpdateInput = {
   slug?: Prisma.StringFieldUpdateOperationsInput | string
   excerpt?: Prisma.NullableStringFieldUpdateOperationsInput | string | null
   body?: Prisma.NullableStringFieldUpdateOperationsInput | string | null
-  type?: Prisma.EnumContentTypeFieldUpdateOperationsInput | $Enums.ContentType
-  status?: Prisma.EnumContentStatusFieldUpdateOperationsInput | $Enums.ContentStatus
+  type?: Prisma.StringFieldUpdateOperationsInput | string
+  status?: Prisma.StringFieldUpdateOperationsInput | string
   thumbnailUrl?: Prisma.NullableStringFieldUpdateOperationsInput | string | null
   videoUrl?: Prisma.NullableStringFieldUpdateOperationsInput | string | null
   videoDuration?: Prisma.NullableIntFieldUpdateOperationsInput | number | null
@@ -593,9 +568,6 @@ export type ContentUpdateInput = {
   viewCount?: Prisma.IntFieldUpdateOperationsInput | number
   likeCount?: Prisma.IntFieldUpdateOperationsInput | number
   publishedAt?: Prisma.NullableDateTimeFieldUpdateOperationsInput | Date | string | null
-  authorName?: Prisma.NullableStringFieldUpdateOperationsInput | string | null
-  authorTitle?: Prisma.NullableStringFieldUpdateOperationsInput | string | null
-  authorAvatarUrl?: Prisma.NullableStringFieldUpdateOperationsInput | string | null
   metaTitle?: Prisma.NullableStringFieldUpdateOperationsInput | string | null
   metaDescription?: Prisma.NullableStringFieldUpdateOperationsInput | string | null
   createdAt?: Prisma.DateTimeFieldUpdateOperationsInput | Date | string
@@ -607,6 +579,7 @@ export type ContentUpdateInput = {
   bookmarks?: Prisma.BookmarkUpdateManyWithoutContentNestedInput
   views?: Prisma.ContentViewUpdateManyWithoutContentNestedInput
   learningPathItems?: Prisma.LearningPathItemUpdateManyWithoutContentNestedInput
+  author?: Prisma.AuthorUpdateOneWithoutContentsNestedInput
 }
 
 export type ContentUncheckedUpdateInput = {
@@ -615,8 +588,8 @@ export type ContentUncheckedUpdateInput = {
   slug?: Prisma.StringFieldUpdateOperationsInput | string
   excerpt?: Prisma.NullableStringFieldUpdateOperationsInput | string | null
   body?: Prisma.NullableStringFieldUpdateOperationsInput | string | null
-  type?: Prisma.EnumContentTypeFieldUpdateOperationsInput | $Enums.ContentType
-  status?: Prisma.EnumContentStatusFieldUpdateOperationsInput | $Enums.ContentStatus
+  type?: Prisma.StringFieldUpdateOperationsInput | string
+  status?: Prisma.StringFieldUpdateOperationsInput | string
   thumbnailUrl?: Prisma.NullableStringFieldUpdateOperationsInput | string | null
   videoUrl?: Prisma.NullableStringFieldUpdateOperationsInput | string | null
   videoDuration?: Prisma.NullableIntFieldUpdateOperationsInput | number | null
@@ -626,9 +599,7 @@ export type ContentUncheckedUpdateInput = {
   viewCount?: Prisma.IntFieldUpdateOperationsInput | number
   likeCount?: Prisma.IntFieldUpdateOperationsInput | number
   publishedAt?: Prisma.NullableDateTimeFieldUpdateOperationsInput | Date | string | null
-  authorName?: Prisma.NullableStringFieldUpdateOperationsInput | string | null
-  authorTitle?: Prisma.NullableStringFieldUpdateOperationsInput | string | null
-  authorAvatarUrl?: Prisma.NullableStringFieldUpdateOperationsInput | string | null
+  authorId?: Prisma.NullableStringFieldUpdateOperationsInput | string | null
   metaTitle?: Prisma.NullableStringFieldUpdateOperationsInput | string | null
   metaDescription?: Prisma.NullableStringFieldUpdateOperationsInput | string | null
   createdAt?: Prisma.DateTimeFieldUpdateOperationsInput | Date | string
@@ -648,8 +619,8 @@ export type ContentCreateManyInput = {
   slug: string
   excerpt?: string | null
   body?: string | null
-  type: $Enums.ContentType
-  status?: $Enums.ContentStatus
+  type: string
+  status?: string
   thumbnailUrl?: string | null
   videoUrl?: string | null
   videoDuration?: number | null
@@ -659,9 +630,7 @@ export type ContentCreateManyInput = {
   viewCount?: number
   likeCount?: number
   publishedAt?: Date | string | null
-  authorName?: string | null
-  authorTitle?: string | null
-  authorAvatarUrl?: string | null
+  authorId?: string | null
   metaTitle?: string | null
   metaDescription?: string | null
   createdAt?: Date | string
@@ -674,8 +643,8 @@ export type ContentUpdateManyMutationInput = {
   slug?: Prisma.StringFieldUpdateOperationsInput | string
   excerpt?: Prisma.NullableStringFieldUpdateOperationsInput | string | null
   body?: Prisma.NullableStringFieldUpdateOperationsInput | string | null
-  type?: Prisma.EnumContentTypeFieldUpdateOperationsInput | $Enums.ContentType
-  status?: Prisma.EnumContentStatusFieldUpdateOperationsInput | $Enums.ContentStatus
+  type?: Prisma.StringFieldUpdateOperationsInput | string
+  status?: Prisma.StringFieldUpdateOperationsInput | string
   thumbnailUrl?: Prisma.NullableStringFieldUpdateOperationsInput | string | null
   videoUrl?: Prisma.NullableStringFieldUpdateOperationsInput | string | null
   videoDuration?: Prisma.NullableIntFieldUpdateOperationsInput | number | null
@@ -685,9 +654,6 @@ export type ContentUpdateManyMutationInput = {
   viewCount?: Prisma.IntFieldUpdateOperationsInput | number
   likeCount?: Prisma.IntFieldUpdateOperationsInput | number
   publishedAt?: Prisma.NullableDateTimeFieldUpdateOperationsInput | Date | string | null
-  authorName?: Prisma.NullableStringFieldUpdateOperationsInput | string | null
-  authorTitle?: Prisma.NullableStringFieldUpdateOperationsInput | string | null
-  authorAvatarUrl?: Prisma.NullableStringFieldUpdateOperationsInput | string | null
   metaTitle?: Prisma.NullableStringFieldUpdateOperationsInput | string | null
   metaDescription?: Prisma.NullableStringFieldUpdateOperationsInput | string | null
   createdAt?: Prisma.DateTimeFieldUpdateOperationsInput | Date | string
@@ -700,8 +666,8 @@ export type ContentUncheckedUpdateManyInput = {
   slug?: Prisma.StringFieldUpdateOperationsInput | string
   excerpt?: Prisma.NullableStringFieldUpdateOperationsInput | string | null
   body?: Prisma.NullableStringFieldUpdateOperationsInput | string | null
-  type?: Prisma.EnumContentTypeFieldUpdateOperationsInput | $Enums.ContentType
-  status?: Prisma.EnumContentStatusFieldUpdateOperationsInput | $Enums.ContentStatus
+  type?: Prisma.StringFieldUpdateOperationsInput | string
+  status?: Prisma.StringFieldUpdateOperationsInput | string
   thumbnailUrl?: Prisma.NullableStringFieldUpdateOperationsInput | string | null
   videoUrl?: Prisma.NullableStringFieldUpdateOperationsInput | string | null
   videoDuration?: Prisma.NullableIntFieldUpdateOperationsInput | number | null
@@ -711,9 +677,7 @@ export type ContentUncheckedUpdateManyInput = {
   viewCount?: Prisma.IntFieldUpdateOperationsInput | number
   likeCount?: Prisma.IntFieldUpdateOperationsInput | number
   publishedAt?: Prisma.NullableDateTimeFieldUpdateOperationsInput | Date | string | null
-  authorName?: Prisma.NullableStringFieldUpdateOperationsInput | string | null
-  authorTitle?: Prisma.NullableStringFieldUpdateOperationsInput | string | null
-  authorAvatarUrl?: Prisma.NullableStringFieldUpdateOperationsInput | string | null
+  authorId?: Prisma.NullableStringFieldUpdateOperationsInput | string | null
   metaTitle?: Prisma.NullableStringFieldUpdateOperationsInput | string | null
   metaDescription?: Prisma.NullableStringFieldUpdateOperationsInput | string | null
   createdAt?: Prisma.DateTimeFieldUpdateOperationsInput | Date | string
@@ -737,9 +701,7 @@ export type ContentCountOrderByAggregateInput = {
   viewCount?: Prisma.SortOrder
   likeCount?: Prisma.SortOrder
   publishedAt?: Prisma.SortOrder
-  authorName?: Prisma.SortOrder
-  authorTitle?: Prisma.SortOrder
-  authorAvatarUrl?: Prisma.SortOrder
+  authorId?: Prisma.SortOrder
   metaTitle?: Prisma.SortOrder
   metaDescription?: Prisma.SortOrder
   createdAt?: Prisma.SortOrder
@@ -770,9 +732,7 @@ export type ContentMaxOrderByAggregateInput = {
   viewCount?: Prisma.SortOrder
   likeCount?: Prisma.SortOrder
   publishedAt?: Prisma.SortOrder
-  authorName?: Prisma.SortOrder
-  authorTitle?: Prisma.SortOrder
-  authorAvatarUrl?: Prisma.SortOrder
+  authorId?: Prisma.SortOrder
   metaTitle?: Prisma.SortOrder
   metaDescription?: Prisma.SortOrder
   createdAt?: Prisma.SortOrder
@@ -796,9 +756,7 @@ export type ContentMinOrderByAggregateInput = {
   viewCount?: Prisma.SortOrder
   likeCount?: Prisma.SortOrder
   publishedAt?: Prisma.SortOrder
-  authorName?: Prisma.SortOrder
-  authorTitle?: Prisma.SortOrder
-  authorAvatarUrl?: Prisma.SortOrder
+  authorId?: Prisma.SortOrder
   metaTitle?: Prisma.SortOrder
   metaDescription?: Prisma.SortOrder
   createdAt?: Prisma.SortOrder
@@ -812,17 +770,19 @@ export type ContentSumOrderByAggregateInput = {
   likeCount?: Prisma.SortOrder
 }
 
+export type ContentListRelationFilter = {
+  every?: Prisma.ContentWhereInput
+  some?: Prisma.ContentWhereInput
+  none?: Prisma.ContentWhereInput
+}
+
+export type ContentOrderByRelationAggregateInput = {
+  _count?: Prisma.SortOrder
+}
+
 export type ContentScalarRelationFilter = {
   is?: Prisma.ContentWhereInput
   isNot?: Prisma.ContentWhereInput
-}
-
-export type EnumContentTypeFieldUpdateOperationsInput = {
-  set?: $Enums.ContentType
-}
-
-export type EnumContentStatusFieldUpdateOperationsInput = {
-  set?: $Enums.ContentStatus
 }
 
 export type NullableIntFieldUpdateOperationsInput = {
@@ -831,6 +791,48 @@ export type NullableIntFieldUpdateOperationsInput = {
   decrement?: number
   multiply?: number
   divide?: number
+}
+
+export type ContentCreateNestedManyWithoutAuthorInput = {
+  create?: Prisma.XOR<Prisma.ContentCreateWithoutAuthorInput, Prisma.ContentUncheckedCreateWithoutAuthorInput> | Prisma.ContentCreateWithoutAuthorInput[] | Prisma.ContentUncheckedCreateWithoutAuthorInput[]
+  connectOrCreate?: Prisma.ContentCreateOrConnectWithoutAuthorInput | Prisma.ContentCreateOrConnectWithoutAuthorInput[]
+  createMany?: Prisma.ContentCreateManyAuthorInputEnvelope
+  connect?: Prisma.ContentWhereUniqueInput | Prisma.ContentWhereUniqueInput[]
+}
+
+export type ContentUncheckedCreateNestedManyWithoutAuthorInput = {
+  create?: Prisma.XOR<Prisma.ContentCreateWithoutAuthorInput, Prisma.ContentUncheckedCreateWithoutAuthorInput> | Prisma.ContentCreateWithoutAuthorInput[] | Prisma.ContentUncheckedCreateWithoutAuthorInput[]
+  connectOrCreate?: Prisma.ContentCreateOrConnectWithoutAuthorInput | Prisma.ContentCreateOrConnectWithoutAuthorInput[]
+  createMany?: Prisma.ContentCreateManyAuthorInputEnvelope
+  connect?: Prisma.ContentWhereUniqueInput | Prisma.ContentWhereUniqueInput[]
+}
+
+export type ContentUpdateManyWithoutAuthorNestedInput = {
+  create?: Prisma.XOR<Prisma.ContentCreateWithoutAuthorInput, Prisma.ContentUncheckedCreateWithoutAuthorInput> | Prisma.ContentCreateWithoutAuthorInput[] | Prisma.ContentUncheckedCreateWithoutAuthorInput[]
+  connectOrCreate?: Prisma.ContentCreateOrConnectWithoutAuthorInput | Prisma.ContentCreateOrConnectWithoutAuthorInput[]
+  upsert?: Prisma.ContentUpsertWithWhereUniqueWithoutAuthorInput | Prisma.ContentUpsertWithWhereUniqueWithoutAuthorInput[]
+  createMany?: Prisma.ContentCreateManyAuthorInputEnvelope
+  set?: Prisma.ContentWhereUniqueInput | Prisma.ContentWhereUniqueInput[]
+  disconnect?: Prisma.ContentWhereUniqueInput | Prisma.ContentWhereUniqueInput[]
+  delete?: Prisma.ContentWhereUniqueInput | Prisma.ContentWhereUniqueInput[]
+  connect?: Prisma.ContentWhereUniqueInput | Prisma.ContentWhereUniqueInput[]
+  update?: Prisma.ContentUpdateWithWhereUniqueWithoutAuthorInput | Prisma.ContentUpdateWithWhereUniqueWithoutAuthorInput[]
+  updateMany?: Prisma.ContentUpdateManyWithWhereWithoutAuthorInput | Prisma.ContentUpdateManyWithWhereWithoutAuthorInput[]
+  deleteMany?: Prisma.ContentScalarWhereInput | Prisma.ContentScalarWhereInput[]
+}
+
+export type ContentUncheckedUpdateManyWithoutAuthorNestedInput = {
+  create?: Prisma.XOR<Prisma.ContentCreateWithoutAuthorInput, Prisma.ContentUncheckedCreateWithoutAuthorInput> | Prisma.ContentCreateWithoutAuthorInput[] | Prisma.ContentUncheckedCreateWithoutAuthorInput[]
+  connectOrCreate?: Prisma.ContentCreateOrConnectWithoutAuthorInput | Prisma.ContentCreateOrConnectWithoutAuthorInput[]
+  upsert?: Prisma.ContentUpsertWithWhereUniqueWithoutAuthorInput | Prisma.ContentUpsertWithWhereUniqueWithoutAuthorInput[]
+  createMany?: Prisma.ContentCreateManyAuthorInputEnvelope
+  set?: Prisma.ContentWhereUniqueInput | Prisma.ContentWhereUniqueInput[]
+  disconnect?: Prisma.ContentWhereUniqueInput | Prisma.ContentWhereUniqueInput[]
+  delete?: Prisma.ContentWhereUniqueInput | Prisma.ContentWhereUniqueInput[]
+  connect?: Prisma.ContentWhereUniqueInput | Prisma.ContentWhereUniqueInput[]
+  update?: Prisma.ContentUpdateWithWhereUniqueWithoutAuthorInput | Prisma.ContentUpdateWithWhereUniqueWithoutAuthorInput[]
+  updateMany?: Prisma.ContentUpdateManyWithWhereWithoutAuthorInput | Prisma.ContentUpdateManyWithWhereWithoutAuthorInput[]
+  deleteMany?: Prisma.ContentScalarWhereInput | Prisma.ContentScalarWhereInput[]
 }
 
 export type ContentCreateNestedOneWithoutCategoriesInput = {
@@ -931,14 +933,14 @@ export type ContentUpdateOneRequiredWithoutViewsNestedInput = {
   update?: Prisma.XOR<Prisma.XOR<Prisma.ContentUpdateToOneWithWhereWithoutViewsInput, Prisma.ContentUpdateWithoutViewsInput>, Prisma.ContentUncheckedUpdateWithoutViewsInput>
 }
 
-export type ContentCreateWithoutCategoriesInput = {
+export type ContentCreateWithoutAuthorInput = {
   id?: string
   title: string
   slug: string
   excerpt?: string | null
   body?: string | null
-  type: $Enums.ContentType
-  status?: $Enums.ContentStatus
+  type: string
+  status?: string
   thumbnailUrl?: string | null
   videoUrl?: string | null
   videoDuration?: number | null
@@ -948,9 +950,118 @@ export type ContentCreateWithoutCategoriesInput = {
   viewCount?: number
   likeCount?: number
   publishedAt?: Date | string | null
-  authorName?: string | null
-  authorTitle?: string | null
-  authorAvatarUrl?: string | null
+  metaTitle?: string | null
+  metaDescription?: string | null
+  createdAt?: Date | string
+  updatedAt?: Date | string
+  categories?: Prisma.ContentCategoryCreateNestedManyWithoutContentInput
+  ageGroups?: Prisma.ContentAgeGroupCreateNestedManyWithoutContentInput
+  tags?: Prisma.ContentTagCreateNestedManyWithoutContentInput
+  products?: Prisma.ContentProductCreateNestedManyWithoutContentInput
+  bookmarks?: Prisma.BookmarkCreateNestedManyWithoutContentInput
+  views?: Prisma.ContentViewCreateNestedManyWithoutContentInput
+  learningPathItems?: Prisma.LearningPathItemCreateNestedManyWithoutContentInput
+}
+
+export type ContentUncheckedCreateWithoutAuthorInput = {
+  id?: string
+  title: string
+  slug: string
+  excerpt?: string | null
+  body?: string | null
+  type: string
+  status?: string
+  thumbnailUrl?: string | null
+  videoUrl?: string | null
+  videoDuration?: number | null
+  readTime?: number | null
+  isFeatured?: boolean
+  isPremium?: boolean
+  viewCount?: number
+  likeCount?: number
+  publishedAt?: Date | string | null
+  metaTitle?: string | null
+  metaDescription?: string | null
+  createdAt?: Date | string
+  updatedAt?: Date | string
+  categories?: Prisma.ContentCategoryUncheckedCreateNestedManyWithoutContentInput
+  ageGroups?: Prisma.ContentAgeGroupUncheckedCreateNestedManyWithoutContentInput
+  tags?: Prisma.ContentTagUncheckedCreateNestedManyWithoutContentInput
+  products?: Prisma.ContentProductUncheckedCreateNestedManyWithoutContentInput
+  bookmarks?: Prisma.BookmarkUncheckedCreateNestedManyWithoutContentInput
+  views?: Prisma.ContentViewUncheckedCreateNestedManyWithoutContentInput
+  learningPathItems?: Prisma.LearningPathItemUncheckedCreateNestedManyWithoutContentInput
+}
+
+export type ContentCreateOrConnectWithoutAuthorInput = {
+  where: Prisma.ContentWhereUniqueInput
+  create: Prisma.XOR<Prisma.ContentCreateWithoutAuthorInput, Prisma.ContentUncheckedCreateWithoutAuthorInput>
+}
+
+export type ContentCreateManyAuthorInputEnvelope = {
+  data: Prisma.ContentCreateManyAuthorInput | Prisma.ContentCreateManyAuthorInput[]
+}
+
+export type ContentUpsertWithWhereUniqueWithoutAuthorInput = {
+  where: Prisma.ContentWhereUniqueInput
+  update: Prisma.XOR<Prisma.ContentUpdateWithoutAuthorInput, Prisma.ContentUncheckedUpdateWithoutAuthorInput>
+  create: Prisma.XOR<Prisma.ContentCreateWithoutAuthorInput, Prisma.ContentUncheckedCreateWithoutAuthorInput>
+}
+
+export type ContentUpdateWithWhereUniqueWithoutAuthorInput = {
+  where: Prisma.ContentWhereUniqueInput
+  data: Prisma.XOR<Prisma.ContentUpdateWithoutAuthorInput, Prisma.ContentUncheckedUpdateWithoutAuthorInput>
+}
+
+export type ContentUpdateManyWithWhereWithoutAuthorInput = {
+  where: Prisma.ContentScalarWhereInput
+  data: Prisma.XOR<Prisma.ContentUpdateManyMutationInput, Prisma.ContentUncheckedUpdateManyWithoutAuthorInput>
+}
+
+export type ContentScalarWhereInput = {
+  AND?: Prisma.ContentScalarWhereInput | Prisma.ContentScalarWhereInput[]
+  OR?: Prisma.ContentScalarWhereInput[]
+  NOT?: Prisma.ContentScalarWhereInput | Prisma.ContentScalarWhereInput[]
+  id?: Prisma.StringFilter<"Content"> | string
+  title?: Prisma.StringFilter<"Content"> | string
+  slug?: Prisma.StringFilter<"Content"> | string
+  excerpt?: Prisma.StringNullableFilter<"Content"> | string | null
+  body?: Prisma.StringNullableFilter<"Content"> | string | null
+  type?: Prisma.StringFilter<"Content"> | string
+  status?: Prisma.StringFilter<"Content"> | string
+  thumbnailUrl?: Prisma.StringNullableFilter<"Content"> | string | null
+  videoUrl?: Prisma.StringNullableFilter<"Content"> | string | null
+  videoDuration?: Prisma.IntNullableFilter<"Content"> | number | null
+  readTime?: Prisma.IntNullableFilter<"Content"> | number | null
+  isFeatured?: Prisma.BoolFilter<"Content"> | boolean
+  isPremium?: Prisma.BoolFilter<"Content"> | boolean
+  viewCount?: Prisma.IntFilter<"Content"> | number
+  likeCount?: Prisma.IntFilter<"Content"> | number
+  publishedAt?: Prisma.DateTimeNullableFilter<"Content"> | Date | string | null
+  authorId?: Prisma.StringNullableFilter<"Content"> | string | null
+  metaTitle?: Prisma.StringNullableFilter<"Content"> | string | null
+  metaDescription?: Prisma.StringNullableFilter<"Content"> | string | null
+  createdAt?: Prisma.DateTimeFilter<"Content"> | Date | string
+  updatedAt?: Prisma.DateTimeFilter<"Content"> | Date | string
+}
+
+export type ContentCreateWithoutCategoriesInput = {
+  id?: string
+  title: string
+  slug: string
+  excerpt?: string | null
+  body?: string | null
+  type: string
+  status?: string
+  thumbnailUrl?: string | null
+  videoUrl?: string | null
+  videoDuration?: number | null
+  readTime?: number | null
+  isFeatured?: boolean
+  isPremium?: boolean
+  viewCount?: number
+  likeCount?: number
+  publishedAt?: Date | string | null
   metaTitle?: string | null
   metaDescription?: string | null
   createdAt?: Date | string
@@ -961,6 +1072,7 @@ export type ContentCreateWithoutCategoriesInput = {
   bookmarks?: Prisma.BookmarkCreateNestedManyWithoutContentInput
   views?: Prisma.ContentViewCreateNestedManyWithoutContentInput
   learningPathItems?: Prisma.LearningPathItemCreateNestedManyWithoutContentInput
+  author?: Prisma.AuthorCreateNestedOneWithoutContentsInput
 }
 
 export type ContentUncheckedCreateWithoutCategoriesInput = {
@@ -969,8 +1081,8 @@ export type ContentUncheckedCreateWithoutCategoriesInput = {
   slug: string
   excerpt?: string | null
   body?: string | null
-  type: $Enums.ContentType
-  status?: $Enums.ContentStatus
+  type: string
+  status?: string
   thumbnailUrl?: string | null
   videoUrl?: string | null
   videoDuration?: number | null
@@ -980,9 +1092,7 @@ export type ContentUncheckedCreateWithoutCategoriesInput = {
   viewCount?: number
   likeCount?: number
   publishedAt?: Date | string | null
-  authorName?: string | null
-  authorTitle?: string | null
-  authorAvatarUrl?: string | null
+  authorId?: string | null
   metaTitle?: string | null
   metaDescription?: string | null
   createdAt?: Date | string
@@ -1017,8 +1127,8 @@ export type ContentUpdateWithoutCategoriesInput = {
   slug?: Prisma.StringFieldUpdateOperationsInput | string
   excerpt?: Prisma.NullableStringFieldUpdateOperationsInput | string | null
   body?: Prisma.NullableStringFieldUpdateOperationsInput | string | null
-  type?: Prisma.EnumContentTypeFieldUpdateOperationsInput | $Enums.ContentType
-  status?: Prisma.EnumContentStatusFieldUpdateOperationsInput | $Enums.ContentStatus
+  type?: Prisma.StringFieldUpdateOperationsInput | string
+  status?: Prisma.StringFieldUpdateOperationsInput | string
   thumbnailUrl?: Prisma.NullableStringFieldUpdateOperationsInput | string | null
   videoUrl?: Prisma.NullableStringFieldUpdateOperationsInput | string | null
   videoDuration?: Prisma.NullableIntFieldUpdateOperationsInput | number | null
@@ -1028,9 +1138,6 @@ export type ContentUpdateWithoutCategoriesInput = {
   viewCount?: Prisma.IntFieldUpdateOperationsInput | number
   likeCount?: Prisma.IntFieldUpdateOperationsInput | number
   publishedAt?: Prisma.NullableDateTimeFieldUpdateOperationsInput | Date | string | null
-  authorName?: Prisma.NullableStringFieldUpdateOperationsInput | string | null
-  authorTitle?: Prisma.NullableStringFieldUpdateOperationsInput | string | null
-  authorAvatarUrl?: Prisma.NullableStringFieldUpdateOperationsInput | string | null
   metaTitle?: Prisma.NullableStringFieldUpdateOperationsInput | string | null
   metaDescription?: Prisma.NullableStringFieldUpdateOperationsInput | string | null
   createdAt?: Prisma.DateTimeFieldUpdateOperationsInput | Date | string
@@ -1041,6 +1148,7 @@ export type ContentUpdateWithoutCategoriesInput = {
   bookmarks?: Prisma.BookmarkUpdateManyWithoutContentNestedInput
   views?: Prisma.ContentViewUpdateManyWithoutContentNestedInput
   learningPathItems?: Prisma.LearningPathItemUpdateManyWithoutContentNestedInput
+  author?: Prisma.AuthorUpdateOneWithoutContentsNestedInput
 }
 
 export type ContentUncheckedUpdateWithoutCategoriesInput = {
@@ -1049,8 +1157,8 @@ export type ContentUncheckedUpdateWithoutCategoriesInput = {
   slug?: Prisma.StringFieldUpdateOperationsInput | string
   excerpt?: Prisma.NullableStringFieldUpdateOperationsInput | string | null
   body?: Prisma.NullableStringFieldUpdateOperationsInput | string | null
-  type?: Prisma.EnumContentTypeFieldUpdateOperationsInput | $Enums.ContentType
-  status?: Prisma.EnumContentStatusFieldUpdateOperationsInput | $Enums.ContentStatus
+  type?: Prisma.StringFieldUpdateOperationsInput | string
+  status?: Prisma.StringFieldUpdateOperationsInput | string
   thumbnailUrl?: Prisma.NullableStringFieldUpdateOperationsInput | string | null
   videoUrl?: Prisma.NullableStringFieldUpdateOperationsInput | string | null
   videoDuration?: Prisma.NullableIntFieldUpdateOperationsInput | number | null
@@ -1060,9 +1168,7 @@ export type ContentUncheckedUpdateWithoutCategoriesInput = {
   viewCount?: Prisma.IntFieldUpdateOperationsInput | number
   likeCount?: Prisma.IntFieldUpdateOperationsInput | number
   publishedAt?: Prisma.NullableDateTimeFieldUpdateOperationsInput | Date | string | null
-  authorName?: Prisma.NullableStringFieldUpdateOperationsInput | string | null
-  authorTitle?: Prisma.NullableStringFieldUpdateOperationsInput | string | null
-  authorAvatarUrl?: Prisma.NullableStringFieldUpdateOperationsInput | string | null
+  authorId?: Prisma.NullableStringFieldUpdateOperationsInput | string | null
   metaTitle?: Prisma.NullableStringFieldUpdateOperationsInput | string | null
   metaDescription?: Prisma.NullableStringFieldUpdateOperationsInput | string | null
   createdAt?: Prisma.DateTimeFieldUpdateOperationsInput | Date | string
@@ -1081,8 +1187,8 @@ export type ContentCreateWithoutAgeGroupsInput = {
   slug: string
   excerpt?: string | null
   body?: string | null
-  type: $Enums.ContentType
-  status?: $Enums.ContentStatus
+  type: string
+  status?: string
   thumbnailUrl?: string | null
   videoUrl?: string | null
   videoDuration?: number | null
@@ -1092,9 +1198,6 @@ export type ContentCreateWithoutAgeGroupsInput = {
   viewCount?: number
   likeCount?: number
   publishedAt?: Date | string | null
-  authorName?: string | null
-  authorTitle?: string | null
-  authorAvatarUrl?: string | null
   metaTitle?: string | null
   metaDescription?: string | null
   createdAt?: Date | string
@@ -1105,6 +1208,7 @@ export type ContentCreateWithoutAgeGroupsInput = {
   bookmarks?: Prisma.BookmarkCreateNestedManyWithoutContentInput
   views?: Prisma.ContentViewCreateNestedManyWithoutContentInput
   learningPathItems?: Prisma.LearningPathItemCreateNestedManyWithoutContentInput
+  author?: Prisma.AuthorCreateNestedOneWithoutContentsInput
 }
 
 export type ContentUncheckedCreateWithoutAgeGroupsInput = {
@@ -1113,8 +1217,8 @@ export type ContentUncheckedCreateWithoutAgeGroupsInput = {
   slug: string
   excerpt?: string | null
   body?: string | null
-  type: $Enums.ContentType
-  status?: $Enums.ContentStatus
+  type: string
+  status?: string
   thumbnailUrl?: string | null
   videoUrl?: string | null
   videoDuration?: number | null
@@ -1124,9 +1228,7 @@ export type ContentUncheckedCreateWithoutAgeGroupsInput = {
   viewCount?: number
   likeCount?: number
   publishedAt?: Date | string | null
-  authorName?: string | null
-  authorTitle?: string | null
-  authorAvatarUrl?: string | null
+  authorId?: string | null
   metaTitle?: string | null
   metaDescription?: string | null
   createdAt?: Date | string
@@ -1161,8 +1263,8 @@ export type ContentUpdateWithoutAgeGroupsInput = {
   slug?: Prisma.StringFieldUpdateOperationsInput | string
   excerpt?: Prisma.NullableStringFieldUpdateOperationsInput | string | null
   body?: Prisma.NullableStringFieldUpdateOperationsInput | string | null
-  type?: Prisma.EnumContentTypeFieldUpdateOperationsInput | $Enums.ContentType
-  status?: Prisma.EnumContentStatusFieldUpdateOperationsInput | $Enums.ContentStatus
+  type?: Prisma.StringFieldUpdateOperationsInput | string
+  status?: Prisma.StringFieldUpdateOperationsInput | string
   thumbnailUrl?: Prisma.NullableStringFieldUpdateOperationsInput | string | null
   videoUrl?: Prisma.NullableStringFieldUpdateOperationsInput | string | null
   videoDuration?: Prisma.NullableIntFieldUpdateOperationsInput | number | null
@@ -1172,9 +1274,6 @@ export type ContentUpdateWithoutAgeGroupsInput = {
   viewCount?: Prisma.IntFieldUpdateOperationsInput | number
   likeCount?: Prisma.IntFieldUpdateOperationsInput | number
   publishedAt?: Prisma.NullableDateTimeFieldUpdateOperationsInput | Date | string | null
-  authorName?: Prisma.NullableStringFieldUpdateOperationsInput | string | null
-  authorTitle?: Prisma.NullableStringFieldUpdateOperationsInput | string | null
-  authorAvatarUrl?: Prisma.NullableStringFieldUpdateOperationsInput | string | null
   metaTitle?: Prisma.NullableStringFieldUpdateOperationsInput | string | null
   metaDescription?: Prisma.NullableStringFieldUpdateOperationsInput | string | null
   createdAt?: Prisma.DateTimeFieldUpdateOperationsInput | Date | string
@@ -1185,6 +1284,7 @@ export type ContentUpdateWithoutAgeGroupsInput = {
   bookmarks?: Prisma.BookmarkUpdateManyWithoutContentNestedInput
   views?: Prisma.ContentViewUpdateManyWithoutContentNestedInput
   learningPathItems?: Prisma.LearningPathItemUpdateManyWithoutContentNestedInput
+  author?: Prisma.AuthorUpdateOneWithoutContentsNestedInput
 }
 
 export type ContentUncheckedUpdateWithoutAgeGroupsInput = {
@@ -1193,8 +1293,8 @@ export type ContentUncheckedUpdateWithoutAgeGroupsInput = {
   slug?: Prisma.StringFieldUpdateOperationsInput | string
   excerpt?: Prisma.NullableStringFieldUpdateOperationsInput | string | null
   body?: Prisma.NullableStringFieldUpdateOperationsInput | string | null
-  type?: Prisma.EnumContentTypeFieldUpdateOperationsInput | $Enums.ContentType
-  status?: Prisma.EnumContentStatusFieldUpdateOperationsInput | $Enums.ContentStatus
+  type?: Prisma.StringFieldUpdateOperationsInput | string
+  status?: Prisma.StringFieldUpdateOperationsInput | string
   thumbnailUrl?: Prisma.NullableStringFieldUpdateOperationsInput | string | null
   videoUrl?: Prisma.NullableStringFieldUpdateOperationsInput | string | null
   videoDuration?: Prisma.NullableIntFieldUpdateOperationsInput | number | null
@@ -1204,9 +1304,7 @@ export type ContentUncheckedUpdateWithoutAgeGroupsInput = {
   viewCount?: Prisma.IntFieldUpdateOperationsInput | number
   likeCount?: Prisma.IntFieldUpdateOperationsInput | number
   publishedAt?: Prisma.NullableDateTimeFieldUpdateOperationsInput | Date | string | null
-  authorName?: Prisma.NullableStringFieldUpdateOperationsInput | string | null
-  authorTitle?: Prisma.NullableStringFieldUpdateOperationsInput | string | null
-  authorAvatarUrl?: Prisma.NullableStringFieldUpdateOperationsInput | string | null
+  authorId?: Prisma.NullableStringFieldUpdateOperationsInput | string | null
   metaTitle?: Prisma.NullableStringFieldUpdateOperationsInput | string | null
   metaDescription?: Prisma.NullableStringFieldUpdateOperationsInput | string | null
   createdAt?: Prisma.DateTimeFieldUpdateOperationsInput | Date | string
@@ -1225,8 +1323,8 @@ export type ContentCreateWithoutTagsInput = {
   slug: string
   excerpt?: string | null
   body?: string | null
-  type: $Enums.ContentType
-  status?: $Enums.ContentStatus
+  type: string
+  status?: string
   thumbnailUrl?: string | null
   videoUrl?: string | null
   videoDuration?: number | null
@@ -1236,9 +1334,6 @@ export type ContentCreateWithoutTagsInput = {
   viewCount?: number
   likeCount?: number
   publishedAt?: Date | string | null
-  authorName?: string | null
-  authorTitle?: string | null
-  authorAvatarUrl?: string | null
   metaTitle?: string | null
   metaDescription?: string | null
   createdAt?: Date | string
@@ -1249,6 +1344,7 @@ export type ContentCreateWithoutTagsInput = {
   bookmarks?: Prisma.BookmarkCreateNestedManyWithoutContentInput
   views?: Prisma.ContentViewCreateNestedManyWithoutContentInput
   learningPathItems?: Prisma.LearningPathItemCreateNestedManyWithoutContentInput
+  author?: Prisma.AuthorCreateNestedOneWithoutContentsInput
 }
 
 export type ContentUncheckedCreateWithoutTagsInput = {
@@ -1257,8 +1353,8 @@ export type ContentUncheckedCreateWithoutTagsInput = {
   slug: string
   excerpt?: string | null
   body?: string | null
-  type: $Enums.ContentType
-  status?: $Enums.ContentStatus
+  type: string
+  status?: string
   thumbnailUrl?: string | null
   videoUrl?: string | null
   videoDuration?: number | null
@@ -1268,9 +1364,7 @@ export type ContentUncheckedCreateWithoutTagsInput = {
   viewCount?: number
   likeCount?: number
   publishedAt?: Date | string | null
-  authorName?: string | null
-  authorTitle?: string | null
-  authorAvatarUrl?: string | null
+  authorId?: string | null
   metaTitle?: string | null
   metaDescription?: string | null
   createdAt?: Date | string
@@ -1305,8 +1399,8 @@ export type ContentUpdateWithoutTagsInput = {
   slug?: Prisma.StringFieldUpdateOperationsInput | string
   excerpt?: Prisma.NullableStringFieldUpdateOperationsInput | string | null
   body?: Prisma.NullableStringFieldUpdateOperationsInput | string | null
-  type?: Prisma.EnumContentTypeFieldUpdateOperationsInput | $Enums.ContentType
-  status?: Prisma.EnumContentStatusFieldUpdateOperationsInput | $Enums.ContentStatus
+  type?: Prisma.StringFieldUpdateOperationsInput | string
+  status?: Prisma.StringFieldUpdateOperationsInput | string
   thumbnailUrl?: Prisma.NullableStringFieldUpdateOperationsInput | string | null
   videoUrl?: Prisma.NullableStringFieldUpdateOperationsInput | string | null
   videoDuration?: Prisma.NullableIntFieldUpdateOperationsInput | number | null
@@ -1316,9 +1410,6 @@ export type ContentUpdateWithoutTagsInput = {
   viewCount?: Prisma.IntFieldUpdateOperationsInput | number
   likeCount?: Prisma.IntFieldUpdateOperationsInput | number
   publishedAt?: Prisma.NullableDateTimeFieldUpdateOperationsInput | Date | string | null
-  authorName?: Prisma.NullableStringFieldUpdateOperationsInput | string | null
-  authorTitle?: Prisma.NullableStringFieldUpdateOperationsInput | string | null
-  authorAvatarUrl?: Prisma.NullableStringFieldUpdateOperationsInput | string | null
   metaTitle?: Prisma.NullableStringFieldUpdateOperationsInput | string | null
   metaDescription?: Prisma.NullableStringFieldUpdateOperationsInput | string | null
   createdAt?: Prisma.DateTimeFieldUpdateOperationsInput | Date | string
@@ -1329,6 +1420,7 @@ export type ContentUpdateWithoutTagsInput = {
   bookmarks?: Prisma.BookmarkUpdateManyWithoutContentNestedInput
   views?: Prisma.ContentViewUpdateManyWithoutContentNestedInput
   learningPathItems?: Prisma.LearningPathItemUpdateManyWithoutContentNestedInput
+  author?: Prisma.AuthorUpdateOneWithoutContentsNestedInput
 }
 
 export type ContentUncheckedUpdateWithoutTagsInput = {
@@ -1337,8 +1429,8 @@ export type ContentUncheckedUpdateWithoutTagsInput = {
   slug?: Prisma.StringFieldUpdateOperationsInput | string
   excerpt?: Prisma.NullableStringFieldUpdateOperationsInput | string | null
   body?: Prisma.NullableStringFieldUpdateOperationsInput | string | null
-  type?: Prisma.EnumContentTypeFieldUpdateOperationsInput | $Enums.ContentType
-  status?: Prisma.EnumContentStatusFieldUpdateOperationsInput | $Enums.ContentStatus
+  type?: Prisma.StringFieldUpdateOperationsInput | string
+  status?: Prisma.StringFieldUpdateOperationsInput | string
   thumbnailUrl?: Prisma.NullableStringFieldUpdateOperationsInput | string | null
   videoUrl?: Prisma.NullableStringFieldUpdateOperationsInput | string | null
   videoDuration?: Prisma.NullableIntFieldUpdateOperationsInput | number | null
@@ -1348,9 +1440,7 @@ export type ContentUncheckedUpdateWithoutTagsInput = {
   viewCount?: Prisma.IntFieldUpdateOperationsInput | number
   likeCount?: Prisma.IntFieldUpdateOperationsInput | number
   publishedAt?: Prisma.NullableDateTimeFieldUpdateOperationsInput | Date | string | null
-  authorName?: Prisma.NullableStringFieldUpdateOperationsInput | string | null
-  authorTitle?: Prisma.NullableStringFieldUpdateOperationsInput | string | null
-  authorAvatarUrl?: Prisma.NullableStringFieldUpdateOperationsInput | string | null
+  authorId?: Prisma.NullableStringFieldUpdateOperationsInput | string | null
   metaTitle?: Prisma.NullableStringFieldUpdateOperationsInput | string | null
   metaDescription?: Prisma.NullableStringFieldUpdateOperationsInput | string | null
   createdAt?: Prisma.DateTimeFieldUpdateOperationsInput | Date | string
@@ -1369,8 +1459,8 @@ export type ContentCreateWithoutProductsInput = {
   slug: string
   excerpt?: string | null
   body?: string | null
-  type: $Enums.ContentType
-  status?: $Enums.ContentStatus
+  type: string
+  status?: string
   thumbnailUrl?: string | null
   videoUrl?: string | null
   videoDuration?: number | null
@@ -1380,9 +1470,6 @@ export type ContentCreateWithoutProductsInput = {
   viewCount?: number
   likeCount?: number
   publishedAt?: Date | string | null
-  authorName?: string | null
-  authorTitle?: string | null
-  authorAvatarUrl?: string | null
   metaTitle?: string | null
   metaDescription?: string | null
   createdAt?: Date | string
@@ -1393,6 +1480,7 @@ export type ContentCreateWithoutProductsInput = {
   bookmarks?: Prisma.BookmarkCreateNestedManyWithoutContentInput
   views?: Prisma.ContentViewCreateNestedManyWithoutContentInput
   learningPathItems?: Prisma.LearningPathItemCreateNestedManyWithoutContentInput
+  author?: Prisma.AuthorCreateNestedOneWithoutContentsInput
 }
 
 export type ContentUncheckedCreateWithoutProductsInput = {
@@ -1401,8 +1489,8 @@ export type ContentUncheckedCreateWithoutProductsInput = {
   slug: string
   excerpt?: string | null
   body?: string | null
-  type: $Enums.ContentType
-  status?: $Enums.ContentStatus
+  type: string
+  status?: string
   thumbnailUrl?: string | null
   videoUrl?: string | null
   videoDuration?: number | null
@@ -1412,9 +1500,7 @@ export type ContentUncheckedCreateWithoutProductsInput = {
   viewCount?: number
   likeCount?: number
   publishedAt?: Date | string | null
-  authorName?: string | null
-  authorTitle?: string | null
-  authorAvatarUrl?: string | null
+  authorId?: string | null
   metaTitle?: string | null
   metaDescription?: string | null
   createdAt?: Date | string
@@ -1449,8 +1535,8 @@ export type ContentUpdateWithoutProductsInput = {
   slug?: Prisma.StringFieldUpdateOperationsInput | string
   excerpt?: Prisma.NullableStringFieldUpdateOperationsInput | string | null
   body?: Prisma.NullableStringFieldUpdateOperationsInput | string | null
-  type?: Prisma.EnumContentTypeFieldUpdateOperationsInput | $Enums.ContentType
-  status?: Prisma.EnumContentStatusFieldUpdateOperationsInput | $Enums.ContentStatus
+  type?: Prisma.StringFieldUpdateOperationsInput | string
+  status?: Prisma.StringFieldUpdateOperationsInput | string
   thumbnailUrl?: Prisma.NullableStringFieldUpdateOperationsInput | string | null
   videoUrl?: Prisma.NullableStringFieldUpdateOperationsInput | string | null
   videoDuration?: Prisma.NullableIntFieldUpdateOperationsInput | number | null
@@ -1460,9 +1546,6 @@ export type ContentUpdateWithoutProductsInput = {
   viewCount?: Prisma.IntFieldUpdateOperationsInput | number
   likeCount?: Prisma.IntFieldUpdateOperationsInput | number
   publishedAt?: Prisma.NullableDateTimeFieldUpdateOperationsInput | Date | string | null
-  authorName?: Prisma.NullableStringFieldUpdateOperationsInput | string | null
-  authorTitle?: Prisma.NullableStringFieldUpdateOperationsInput | string | null
-  authorAvatarUrl?: Prisma.NullableStringFieldUpdateOperationsInput | string | null
   metaTitle?: Prisma.NullableStringFieldUpdateOperationsInput | string | null
   metaDescription?: Prisma.NullableStringFieldUpdateOperationsInput | string | null
   createdAt?: Prisma.DateTimeFieldUpdateOperationsInput | Date | string
@@ -1473,6 +1556,7 @@ export type ContentUpdateWithoutProductsInput = {
   bookmarks?: Prisma.BookmarkUpdateManyWithoutContentNestedInput
   views?: Prisma.ContentViewUpdateManyWithoutContentNestedInput
   learningPathItems?: Prisma.LearningPathItemUpdateManyWithoutContentNestedInput
+  author?: Prisma.AuthorUpdateOneWithoutContentsNestedInput
 }
 
 export type ContentUncheckedUpdateWithoutProductsInput = {
@@ -1481,8 +1565,8 @@ export type ContentUncheckedUpdateWithoutProductsInput = {
   slug?: Prisma.StringFieldUpdateOperationsInput | string
   excerpt?: Prisma.NullableStringFieldUpdateOperationsInput | string | null
   body?: Prisma.NullableStringFieldUpdateOperationsInput | string | null
-  type?: Prisma.EnumContentTypeFieldUpdateOperationsInput | $Enums.ContentType
-  status?: Prisma.EnumContentStatusFieldUpdateOperationsInput | $Enums.ContentStatus
+  type?: Prisma.StringFieldUpdateOperationsInput | string
+  status?: Prisma.StringFieldUpdateOperationsInput | string
   thumbnailUrl?: Prisma.NullableStringFieldUpdateOperationsInput | string | null
   videoUrl?: Prisma.NullableStringFieldUpdateOperationsInput | string | null
   videoDuration?: Prisma.NullableIntFieldUpdateOperationsInput | number | null
@@ -1492,9 +1576,7 @@ export type ContentUncheckedUpdateWithoutProductsInput = {
   viewCount?: Prisma.IntFieldUpdateOperationsInput | number
   likeCount?: Prisma.IntFieldUpdateOperationsInput | number
   publishedAt?: Prisma.NullableDateTimeFieldUpdateOperationsInput | Date | string | null
-  authorName?: Prisma.NullableStringFieldUpdateOperationsInput | string | null
-  authorTitle?: Prisma.NullableStringFieldUpdateOperationsInput | string | null
-  authorAvatarUrl?: Prisma.NullableStringFieldUpdateOperationsInput | string | null
+  authorId?: Prisma.NullableStringFieldUpdateOperationsInput | string | null
   metaTitle?: Prisma.NullableStringFieldUpdateOperationsInput | string | null
   metaDescription?: Prisma.NullableStringFieldUpdateOperationsInput | string | null
   createdAt?: Prisma.DateTimeFieldUpdateOperationsInput | Date | string
@@ -1513,8 +1595,8 @@ export type ContentCreateWithoutLearningPathItemsInput = {
   slug: string
   excerpt?: string | null
   body?: string | null
-  type: $Enums.ContentType
-  status?: $Enums.ContentStatus
+  type: string
+  status?: string
   thumbnailUrl?: string | null
   videoUrl?: string | null
   videoDuration?: number | null
@@ -1524,9 +1606,6 @@ export type ContentCreateWithoutLearningPathItemsInput = {
   viewCount?: number
   likeCount?: number
   publishedAt?: Date | string | null
-  authorName?: string | null
-  authorTitle?: string | null
-  authorAvatarUrl?: string | null
   metaTitle?: string | null
   metaDescription?: string | null
   createdAt?: Date | string
@@ -1537,6 +1616,7 @@ export type ContentCreateWithoutLearningPathItemsInput = {
   products?: Prisma.ContentProductCreateNestedManyWithoutContentInput
   bookmarks?: Prisma.BookmarkCreateNestedManyWithoutContentInput
   views?: Prisma.ContentViewCreateNestedManyWithoutContentInput
+  author?: Prisma.AuthorCreateNestedOneWithoutContentsInput
 }
 
 export type ContentUncheckedCreateWithoutLearningPathItemsInput = {
@@ -1545,8 +1625,8 @@ export type ContentUncheckedCreateWithoutLearningPathItemsInput = {
   slug: string
   excerpt?: string | null
   body?: string | null
-  type: $Enums.ContentType
-  status?: $Enums.ContentStatus
+  type: string
+  status?: string
   thumbnailUrl?: string | null
   videoUrl?: string | null
   videoDuration?: number | null
@@ -1556,9 +1636,7 @@ export type ContentUncheckedCreateWithoutLearningPathItemsInput = {
   viewCount?: number
   likeCount?: number
   publishedAt?: Date | string | null
-  authorName?: string | null
-  authorTitle?: string | null
-  authorAvatarUrl?: string | null
+  authorId?: string | null
   metaTitle?: string | null
   metaDescription?: string | null
   createdAt?: Date | string
@@ -1593,8 +1671,8 @@ export type ContentUpdateWithoutLearningPathItemsInput = {
   slug?: Prisma.StringFieldUpdateOperationsInput | string
   excerpt?: Prisma.NullableStringFieldUpdateOperationsInput | string | null
   body?: Prisma.NullableStringFieldUpdateOperationsInput | string | null
-  type?: Prisma.EnumContentTypeFieldUpdateOperationsInput | $Enums.ContentType
-  status?: Prisma.EnumContentStatusFieldUpdateOperationsInput | $Enums.ContentStatus
+  type?: Prisma.StringFieldUpdateOperationsInput | string
+  status?: Prisma.StringFieldUpdateOperationsInput | string
   thumbnailUrl?: Prisma.NullableStringFieldUpdateOperationsInput | string | null
   videoUrl?: Prisma.NullableStringFieldUpdateOperationsInput | string | null
   videoDuration?: Prisma.NullableIntFieldUpdateOperationsInput | number | null
@@ -1604,9 +1682,6 @@ export type ContentUpdateWithoutLearningPathItemsInput = {
   viewCount?: Prisma.IntFieldUpdateOperationsInput | number
   likeCount?: Prisma.IntFieldUpdateOperationsInput | number
   publishedAt?: Prisma.NullableDateTimeFieldUpdateOperationsInput | Date | string | null
-  authorName?: Prisma.NullableStringFieldUpdateOperationsInput | string | null
-  authorTitle?: Prisma.NullableStringFieldUpdateOperationsInput | string | null
-  authorAvatarUrl?: Prisma.NullableStringFieldUpdateOperationsInput | string | null
   metaTitle?: Prisma.NullableStringFieldUpdateOperationsInput | string | null
   metaDescription?: Prisma.NullableStringFieldUpdateOperationsInput | string | null
   createdAt?: Prisma.DateTimeFieldUpdateOperationsInput | Date | string
@@ -1617,6 +1692,7 @@ export type ContentUpdateWithoutLearningPathItemsInput = {
   products?: Prisma.ContentProductUpdateManyWithoutContentNestedInput
   bookmarks?: Prisma.BookmarkUpdateManyWithoutContentNestedInput
   views?: Prisma.ContentViewUpdateManyWithoutContentNestedInput
+  author?: Prisma.AuthorUpdateOneWithoutContentsNestedInput
 }
 
 export type ContentUncheckedUpdateWithoutLearningPathItemsInput = {
@@ -1625,8 +1701,8 @@ export type ContentUncheckedUpdateWithoutLearningPathItemsInput = {
   slug?: Prisma.StringFieldUpdateOperationsInput | string
   excerpt?: Prisma.NullableStringFieldUpdateOperationsInput | string | null
   body?: Prisma.NullableStringFieldUpdateOperationsInput | string | null
-  type?: Prisma.EnumContentTypeFieldUpdateOperationsInput | $Enums.ContentType
-  status?: Prisma.EnumContentStatusFieldUpdateOperationsInput | $Enums.ContentStatus
+  type?: Prisma.StringFieldUpdateOperationsInput | string
+  status?: Prisma.StringFieldUpdateOperationsInput | string
   thumbnailUrl?: Prisma.NullableStringFieldUpdateOperationsInput | string | null
   videoUrl?: Prisma.NullableStringFieldUpdateOperationsInput | string | null
   videoDuration?: Prisma.NullableIntFieldUpdateOperationsInput | number | null
@@ -1636,9 +1712,7 @@ export type ContentUncheckedUpdateWithoutLearningPathItemsInput = {
   viewCount?: Prisma.IntFieldUpdateOperationsInput | number
   likeCount?: Prisma.IntFieldUpdateOperationsInput | number
   publishedAt?: Prisma.NullableDateTimeFieldUpdateOperationsInput | Date | string | null
-  authorName?: Prisma.NullableStringFieldUpdateOperationsInput | string | null
-  authorTitle?: Prisma.NullableStringFieldUpdateOperationsInput | string | null
-  authorAvatarUrl?: Prisma.NullableStringFieldUpdateOperationsInput | string | null
+  authorId?: Prisma.NullableStringFieldUpdateOperationsInput | string | null
   metaTitle?: Prisma.NullableStringFieldUpdateOperationsInput | string | null
   metaDescription?: Prisma.NullableStringFieldUpdateOperationsInput | string | null
   createdAt?: Prisma.DateTimeFieldUpdateOperationsInput | Date | string
@@ -1657,8 +1731,8 @@ export type ContentCreateWithoutBookmarksInput = {
   slug: string
   excerpt?: string | null
   body?: string | null
-  type: $Enums.ContentType
-  status?: $Enums.ContentStatus
+  type: string
+  status?: string
   thumbnailUrl?: string | null
   videoUrl?: string | null
   videoDuration?: number | null
@@ -1668,9 +1742,6 @@ export type ContentCreateWithoutBookmarksInput = {
   viewCount?: number
   likeCount?: number
   publishedAt?: Date | string | null
-  authorName?: string | null
-  authorTitle?: string | null
-  authorAvatarUrl?: string | null
   metaTitle?: string | null
   metaDescription?: string | null
   createdAt?: Date | string
@@ -1681,6 +1752,7 @@ export type ContentCreateWithoutBookmarksInput = {
   products?: Prisma.ContentProductCreateNestedManyWithoutContentInput
   views?: Prisma.ContentViewCreateNestedManyWithoutContentInput
   learningPathItems?: Prisma.LearningPathItemCreateNestedManyWithoutContentInput
+  author?: Prisma.AuthorCreateNestedOneWithoutContentsInput
 }
 
 export type ContentUncheckedCreateWithoutBookmarksInput = {
@@ -1689,8 +1761,8 @@ export type ContentUncheckedCreateWithoutBookmarksInput = {
   slug: string
   excerpt?: string | null
   body?: string | null
-  type: $Enums.ContentType
-  status?: $Enums.ContentStatus
+  type: string
+  status?: string
   thumbnailUrl?: string | null
   videoUrl?: string | null
   videoDuration?: number | null
@@ -1700,9 +1772,7 @@ export type ContentUncheckedCreateWithoutBookmarksInput = {
   viewCount?: number
   likeCount?: number
   publishedAt?: Date | string | null
-  authorName?: string | null
-  authorTitle?: string | null
-  authorAvatarUrl?: string | null
+  authorId?: string | null
   metaTitle?: string | null
   metaDescription?: string | null
   createdAt?: Date | string
@@ -1737,8 +1807,8 @@ export type ContentUpdateWithoutBookmarksInput = {
   slug?: Prisma.StringFieldUpdateOperationsInput | string
   excerpt?: Prisma.NullableStringFieldUpdateOperationsInput | string | null
   body?: Prisma.NullableStringFieldUpdateOperationsInput | string | null
-  type?: Prisma.EnumContentTypeFieldUpdateOperationsInput | $Enums.ContentType
-  status?: Prisma.EnumContentStatusFieldUpdateOperationsInput | $Enums.ContentStatus
+  type?: Prisma.StringFieldUpdateOperationsInput | string
+  status?: Prisma.StringFieldUpdateOperationsInput | string
   thumbnailUrl?: Prisma.NullableStringFieldUpdateOperationsInput | string | null
   videoUrl?: Prisma.NullableStringFieldUpdateOperationsInput | string | null
   videoDuration?: Prisma.NullableIntFieldUpdateOperationsInput | number | null
@@ -1748,9 +1818,6 @@ export type ContentUpdateWithoutBookmarksInput = {
   viewCount?: Prisma.IntFieldUpdateOperationsInput | number
   likeCount?: Prisma.IntFieldUpdateOperationsInput | number
   publishedAt?: Prisma.NullableDateTimeFieldUpdateOperationsInput | Date | string | null
-  authorName?: Prisma.NullableStringFieldUpdateOperationsInput | string | null
-  authorTitle?: Prisma.NullableStringFieldUpdateOperationsInput | string | null
-  authorAvatarUrl?: Prisma.NullableStringFieldUpdateOperationsInput | string | null
   metaTitle?: Prisma.NullableStringFieldUpdateOperationsInput | string | null
   metaDescription?: Prisma.NullableStringFieldUpdateOperationsInput | string | null
   createdAt?: Prisma.DateTimeFieldUpdateOperationsInput | Date | string
@@ -1761,6 +1828,7 @@ export type ContentUpdateWithoutBookmarksInput = {
   products?: Prisma.ContentProductUpdateManyWithoutContentNestedInput
   views?: Prisma.ContentViewUpdateManyWithoutContentNestedInput
   learningPathItems?: Prisma.LearningPathItemUpdateManyWithoutContentNestedInput
+  author?: Prisma.AuthorUpdateOneWithoutContentsNestedInput
 }
 
 export type ContentUncheckedUpdateWithoutBookmarksInput = {
@@ -1769,8 +1837,8 @@ export type ContentUncheckedUpdateWithoutBookmarksInput = {
   slug?: Prisma.StringFieldUpdateOperationsInput | string
   excerpt?: Prisma.NullableStringFieldUpdateOperationsInput | string | null
   body?: Prisma.NullableStringFieldUpdateOperationsInput | string | null
-  type?: Prisma.EnumContentTypeFieldUpdateOperationsInput | $Enums.ContentType
-  status?: Prisma.EnumContentStatusFieldUpdateOperationsInput | $Enums.ContentStatus
+  type?: Prisma.StringFieldUpdateOperationsInput | string
+  status?: Prisma.StringFieldUpdateOperationsInput | string
   thumbnailUrl?: Prisma.NullableStringFieldUpdateOperationsInput | string | null
   videoUrl?: Prisma.NullableStringFieldUpdateOperationsInput | string | null
   videoDuration?: Prisma.NullableIntFieldUpdateOperationsInput | number | null
@@ -1780,9 +1848,7 @@ export type ContentUncheckedUpdateWithoutBookmarksInput = {
   viewCount?: Prisma.IntFieldUpdateOperationsInput | number
   likeCount?: Prisma.IntFieldUpdateOperationsInput | number
   publishedAt?: Prisma.NullableDateTimeFieldUpdateOperationsInput | Date | string | null
-  authorName?: Prisma.NullableStringFieldUpdateOperationsInput | string | null
-  authorTitle?: Prisma.NullableStringFieldUpdateOperationsInput | string | null
-  authorAvatarUrl?: Prisma.NullableStringFieldUpdateOperationsInput | string | null
+  authorId?: Prisma.NullableStringFieldUpdateOperationsInput | string | null
   metaTitle?: Prisma.NullableStringFieldUpdateOperationsInput | string | null
   metaDescription?: Prisma.NullableStringFieldUpdateOperationsInput | string | null
   createdAt?: Prisma.DateTimeFieldUpdateOperationsInput | Date | string
@@ -1801,8 +1867,8 @@ export type ContentCreateWithoutViewsInput = {
   slug: string
   excerpt?: string | null
   body?: string | null
-  type: $Enums.ContentType
-  status?: $Enums.ContentStatus
+  type: string
+  status?: string
   thumbnailUrl?: string | null
   videoUrl?: string | null
   videoDuration?: number | null
@@ -1812,9 +1878,6 @@ export type ContentCreateWithoutViewsInput = {
   viewCount?: number
   likeCount?: number
   publishedAt?: Date | string | null
-  authorName?: string | null
-  authorTitle?: string | null
-  authorAvatarUrl?: string | null
   metaTitle?: string | null
   metaDescription?: string | null
   createdAt?: Date | string
@@ -1825,6 +1888,7 @@ export type ContentCreateWithoutViewsInput = {
   products?: Prisma.ContentProductCreateNestedManyWithoutContentInput
   bookmarks?: Prisma.BookmarkCreateNestedManyWithoutContentInput
   learningPathItems?: Prisma.LearningPathItemCreateNestedManyWithoutContentInput
+  author?: Prisma.AuthorCreateNestedOneWithoutContentsInput
 }
 
 export type ContentUncheckedCreateWithoutViewsInput = {
@@ -1833,8 +1897,8 @@ export type ContentUncheckedCreateWithoutViewsInput = {
   slug: string
   excerpt?: string | null
   body?: string | null
-  type: $Enums.ContentType
-  status?: $Enums.ContentStatus
+  type: string
+  status?: string
   thumbnailUrl?: string | null
   videoUrl?: string | null
   videoDuration?: number | null
@@ -1844,9 +1908,7 @@ export type ContentUncheckedCreateWithoutViewsInput = {
   viewCount?: number
   likeCount?: number
   publishedAt?: Date | string | null
-  authorName?: string | null
-  authorTitle?: string | null
-  authorAvatarUrl?: string | null
+  authorId?: string | null
   metaTitle?: string | null
   metaDescription?: string | null
   createdAt?: Date | string
@@ -1881,8 +1943,8 @@ export type ContentUpdateWithoutViewsInput = {
   slug?: Prisma.StringFieldUpdateOperationsInput | string
   excerpt?: Prisma.NullableStringFieldUpdateOperationsInput | string | null
   body?: Prisma.NullableStringFieldUpdateOperationsInput | string | null
-  type?: Prisma.EnumContentTypeFieldUpdateOperationsInput | $Enums.ContentType
-  status?: Prisma.EnumContentStatusFieldUpdateOperationsInput | $Enums.ContentStatus
+  type?: Prisma.StringFieldUpdateOperationsInput | string
+  status?: Prisma.StringFieldUpdateOperationsInput | string
   thumbnailUrl?: Prisma.NullableStringFieldUpdateOperationsInput | string | null
   videoUrl?: Prisma.NullableStringFieldUpdateOperationsInput | string | null
   videoDuration?: Prisma.NullableIntFieldUpdateOperationsInput | number | null
@@ -1892,9 +1954,6 @@ export type ContentUpdateWithoutViewsInput = {
   viewCount?: Prisma.IntFieldUpdateOperationsInput | number
   likeCount?: Prisma.IntFieldUpdateOperationsInput | number
   publishedAt?: Prisma.NullableDateTimeFieldUpdateOperationsInput | Date | string | null
-  authorName?: Prisma.NullableStringFieldUpdateOperationsInput | string | null
-  authorTitle?: Prisma.NullableStringFieldUpdateOperationsInput | string | null
-  authorAvatarUrl?: Prisma.NullableStringFieldUpdateOperationsInput | string | null
   metaTitle?: Prisma.NullableStringFieldUpdateOperationsInput | string | null
   metaDescription?: Prisma.NullableStringFieldUpdateOperationsInput | string | null
   createdAt?: Prisma.DateTimeFieldUpdateOperationsInput | Date | string
@@ -1905,6 +1964,7 @@ export type ContentUpdateWithoutViewsInput = {
   products?: Prisma.ContentProductUpdateManyWithoutContentNestedInput
   bookmarks?: Prisma.BookmarkUpdateManyWithoutContentNestedInput
   learningPathItems?: Prisma.LearningPathItemUpdateManyWithoutContentNestedInput
+  author?: Prisma.AuthorUpdateOneWithoutContentsNestedInput
 }
 
 export type ContentUncheckedUpdateWithoutViewsInput = {
@@ -1913,8 +1973,8 @@ export type ContentUncheckedUpdateWithoutViewsInput = {
   slug?: Prisma.StringFieldUpdateOperationsInput | string
   excerpt?: Prisma.NullableStringFieldUpdateOperationsInput | string | null
   body?: Prisma.NullableStringFieldUpdateOperationsInput | string | null
-  type?: Prisma.EnumContentTypeFieldUpdateOperationsInput | $Enums.ContentType
-  status?: Prisma.EnumContentStatusFieldUpdateOperationsInput | $Enums.ContentStatus
+  type?: Prisma.StringFieldUpdateOperationsInput | string
+  status?: Prisma.StringFieldUpdateOperationsInput | string
   thumbnailUrl?: Prisma.NullableStringFieldUpdateOperationsInput | string | null
   videoUrl?: Prisma.NullableStringFieldUpdateOperationsInput | string | null
   videoDuration?: Prisma.NullableIntFieldUpdateOperationsInput | number | null
@@ -1924,9 +1984,7 @@ export type ContentUncheckedUpdateWithoutViewsInput = {
   viewCount?: Prisma.IntFieldUpdateOperationsInput | number
   likeCount?: Prisma.IntFieldUpdateOperationsInput | number
   publishedAt?: Prisma.NullableDateTimeFieldUpdateOperationsInput | Date | string | null
-  authorName?: Prisma.NullableStringFieldUpdateOperationsInput | string | null
-  authorTitle?: Prisma.NullableStringFieldUpdateOperationsInput | string | null
-  authorAvatarUrl?: Prisma.NullableStringFieldUpdateOperationsInput | string | null
+  authorId?: Prisma.NullableStringFieldUpdateOperationsInput | string | null
   metaTitle?: Prisma.NullableStringFieldUpdateOperationsInput | string | null
   metaDescription?: Prisma.NullableStringFieldUpdateOperationsInput | string | null
   createdAt?: Prisma.DateTimeFieldUpdateOperationsInput | Date | string
@@ -1937,6 +1995,112 @@ export type ContentUncheckedUpdateWithoutViewsInput = {
   products?: Prisma.ContentProductUncheckedUpdateManyWithoutContentNestedInput
   bookmarks?: Prisma.BookmarkUncheckedUpdateManyWithoutContentNestedInput
   learningPathItems?: Prisma.LearningPathItemUncheckedUpdateManyWithoutContentNestedInput
+}
+
+export type ContentCreateManyAuthorInput = {
+  id?: string
+  title: string
+  slug: string
+  excerpt?: string | null
+  body?: string | null
+  type: string
+  status?: string
+  thumbnailUrl?: string | null
+  videoUrl?: string | null
+  videoDuration?: number | null
+  readTime?: number | null
+  isFeatured?: boolean
+  isPremium?: boolean
+  viewCount?: number
+  likeCount?: number
+  publishedAt?: Date | string | null
+  metaTitle?: string | null
+  metaDescription?: string | null
+  createdAt?: Date | string
+  updatedAt?: Date | string
+}
+
+export type ContentUpdateWithoutAuthorInput = {
+  id?: Prisma.StringFieldUpdateOperationsInput | string
+  title?: Prisma.StringFieldUpdateOperationsInput | string
+  slug?: Prisma.StringFieldUpdateOperationsInput | string
+  excerpt?: Prisma.NullableStringFieldUpdateOperationsInput | string | null
+  body?: Prisma.NullableStringFieldUpdateOperationsInput | string | null
+  type?: Prisma.StringFieldUpdateOperationsInput | string
+  status?: Prisma.StringFieldUpdateOperationsInput | string
+  thumbnailUrl?: Prisma.NullableStringFieldUpdateOperationsInput | string | null
+  videoUrl?: Prisma.NullableStringFieldUpdateOperationsInput | string | null
+  videoDuration?: Prisma.NullableIntFieldUpdateOperationsInput | number | null
+  readTime?: Prisma.NullableIntFieldUpdateOperationsInput | number | null
+  isFeatured?: Prisma.BoolFieldUpdateOperationsInput | boolean
+  isPremium?: Prisma.BoolFieldUpdateOperationsInput | boolean
+  viewCount?: Prisma.IntFieldUpdateOperationsInput | number
+  likeCount?: Prisma.IntFieldUpdateOperationsInput | number
+  publishedAt?: Prisma.NullableDateTimeFieldUpdateOperationsInput | Date | string | null
+  metaTitle?: Prisma.NullableStringFieldUpdateOperationsInput | string | null
+  metaDescription?: Prisma.NullableStringFieldUpdateOperationsInput | string | null
+  createdAt?: Prisma.DateTimeFieldUpdateOperationsInput | Date | string
+  updatedAt?: Prisma.DateTimeFieldUpdateOperationsInput | Date | string
+  categories?: Prisma.ContentCategoryUpdateManyWithoutContentNestedInput
+  ageGroups?: Prisma.ContentAgeGroupUpdateManyWithoutContentNestedInput
+  tags?: Prisma.ContentTagUpdateManyWithoutContentNestedInput
+  products?: Prisma.ContentProductUpdateManyWithoutContentNestedInput
+  bookmarks?: Prisma.BookmarkUpdateManyWithoutContentNestedInput
+  views?: Prisma.ContentViewUpdateManyWithoutContentNestedInput
+  learningPathItems?: Prisma.LearningPathItemUpdateManyWithoutContentNestedInput
+}
+
+export type ContentUncheckedUpdateWithoutAuthorInput = {
+  id?: Prisma.StringFieldUpdateOperationsInput | string
+  title?: Prisma.StringFieldUpdateOperationsInput | string
+  slug?: Prisma.StringFieldUpdateOperationsInput | string
+  excerpt?: Prisma.NullableStringFieldUpdateOperationsInput | string | null
+  body?: Prisma.NullableStringFieldUpdateOperationsInput | string | null
+  type?: Prisma.StringFieldUpdateOperationsInput | string
+  status?: Prisma.StringFieldUpdateOperationsInput | string
+  thumbnailUrl?: Prisma.NullableStringFieldUpdateOperationsInput | string | null
+  videoUrl?: Prisma.NullableStringFieldUpdateOperationsInput | string | null
+  videoDuration?: Prisma.NullableIntFieldUpdateOperationsInput | number | null
+  readTime?: Prisma.NullableIntFieldUpdateOperationsInput | number | null
+  isFeatured?: Prisma.BoolFieldUpdateOperationsInput | boolean
+  isPremium?: Prisma.BoolFieldUpdateOperationsInput | boolean
+  viewCount?: Prisma.IntFieldUpdateOperationsInput | number
+  likeCount?: Prisma.IntFieldUpdateOperationsInput | number
+  publishedAt?: Prisma.NullableDateTimeFieldUpdateOperationsInput | Date | string | null
+  metaTitle?: Prisma.NullableStringFieldUpdateOperationsInput | string | null
+  metaDescription?: Prisma.NullableStringFieldUpdateOperationsInput | string | null
+  createdAt?: Prisma.DateTimeFieldUpdateOperationsInput | Date | string
+  updatedAt?: Prisma.DateTimeFieldUpdateOperationsInput | Date | string
+  categories?: Prisma.ContentCategoryUncheckedUpdateManyWithoutContentNestedInput
+  ageGroups?: Prisma.ContentAgeGroupUncheckedUpdateManyWithoutContentNestedInput
+  tags?: Prisma.ContentTagUncheckedUpdateManyWithoutContentNestedInput
+  products?: Prisma.ContentProductUncheckedUpdateManyWithoutContentNestedInput
+  bookmarks?: Prisma.BookmarkUncheckedUpdateManyWithoutContentNestedInput
+  views?: Prisma.ContentViewUncheckedUpdateManyWithoutContentNestedInput
+  learningPathItems?: Prisma.LearningPathItemUncheckedUpdateManyWithoutContentNestedInput
+}
+
+export type ContentUncheckedUpdateManyWithoutAuthorInput = {
+  id?: Prisma.StringFieldUpdateOperationsInput | string
+  title?: Prisma.StringFieldUpdateOperationsInput | string
+  slug?: Prisma.StringFieldUpdateOperationsInput | string
+  excerpt?: Prisma.NullableStringFieldUpdateOperationsInput | string | null
+  body?: Prisma.NullableStringFieldUpdateOperationsInput | string | null
+  type?: Prisma.StringFieldUpdateOperationsInput | string
+  status?: Prisma.StringFieldUpdateOperationsInput | string
+  thumbnailUrl?: Prisma.NullableStringFieldUpdateOperationsInput | string | null
+  videoUrl?: Prisma.NullableStringFieldUpdateOperationsInput | string | null
+  videoDuration?: Prisma.NullableIntFieldUpdateOperationsInput | number | null
+  readTime?: Prisma.NullableIntFieldUpdateOperationsInput | number | null
+  isFeatured?: Prisma.BoolFieldUpdateOperationsInput | boolean
+  isPremium?: Prisma.BoolFieldUpdateOperationsInput | boolean
+  viewCount?: Prisma.IntFieldUpdateOperationsInput | number
+  likeCount?: Prisma.IntFieldUpdateOperationsInput | number
+  publishedAt?: Prisma.NullableDateTimeFieldUpdateOperationsInput | Date | string | null
+  metaTitle?: Prisma.NullableStringFieldUpdateOperationsInput | string | null
+  metaDescription?: Prisma.NullableStringFieldUpdateOperationsInput | string | null
+  createdAt?: Prisma.DateTimeFieldUpdateOperationsInput | Date | string
+  updatedAt?: Prisma.DateTimeFieldUpdateOperationsInput | Date | string
 }
 
 
@@ -2041,9 +2205,7 @@ export type ContentSelect<ExtArgs extends runtime.Types.Extensions.InternalArgs 
   viewCount?: boolean
   likeCount?: boolean
   publishedAt?: boolean
-  authorName?: boolean
-  authorTitle?: boolean
-  authorAvatarUrl?: boolean
+  authorId?: boolean
   metaTitle?: boolean
   metaDescription?: boolean
   createdAt?: boolean
@@ -2055,6 +2217,7 @@ export type ContentSelect<ExtArgs extends runtime.Types.Extensions.InternalArgs 
   bookmarks?: boolean | Prisma.Content$bookmarksArgs<ExtArgs>
   views?: boolean | Prisma.Content$viewsArgs<ExtArgs>
   learningPathItems?: boolean | Prisma.Content$learningPathItemsArgs<ExtArgs>
+  author?: boolean | Prisma.Content$authorArgs<ExtArgs>
   _count?: boolean | Prisma.ContentCountOutputTypeDefaultArgs<ExtArgs>
 }, ExtArgs["result"]["content"]>
 
@@ -2075,13 +2238,12 @@ export type ContentSelectCreateManyAndReturn<ExtArgs extends runtime.Types.Exten
   viewCount?: boolean
   likeCount?: boolean
   publishedAt?: boolean
-  authorName?: boolean
-  authorTitle?: boolean
-  authorAvatarUrl?: boolean
+  authorId?: boolean
   metaTitle?: boolean
   metaDescription?: boolean
   createdAt?: boolean
   updatedAt?: boolean
+  author?: boolean | Prisma.Content$authorArgs<ExtArgs>
 }, ExtArgs["result"]["content"]>
 
 export type ContentSelectUpdateManyAndReturn<ExtArgs extends runtime.Types.Extensions.InternalArgs = runtime.Types.Extensions.DefaultArgs> = runtime.Types.Extensions.GetSelect<{
@@ -2101,13 +2263,12 @@ export type ContentSelectUpdateManyAndReturn<ExtArgs extends runtime.Types.Exten
   viewCount?: boolean
   likeCount?: boolean
   publishedAt?: boolean
-  authorName?: boolean
-  authorTitle?: boolean
-  authorAvatarUrl?: boolean
+  authorId?: boolean
   metaTitle?: boolean
   metaDescription?: boolean
   createdAt?: boolean
   updatedAt?: boolean
+  author?: boolean | Prisma.Content$authorArgs<ExtArgs>
 }, ExtArgs["result"]["content"]>
 
 export type ContentSelectScalar = {
@@ -2127,16 +2288,14 @@ export type ContentSelectScalar = {
   viewCount?: boolean
   likeCount?: boolean
   publishedAt?: boolean
-  authorName?: boolean
-  authorTitle?: boolean
-  authorAvatarUrl?: boolean
+  authorId?: boolean
   metaTitle?: boolean
   metaDescription?: boolean
   createdAt?: boolean
   updatedAt?: boolean
 }
 
-export type ContentOmit<ExtArgs extends runtime.Types.Extensions.InternalArgs = runtime.Types.Extensions.DefaultArgs> = runtime.Types.Extensions.GetOmit<"id" | "title" | "slug" | "excerpt" | "body" | "type" | "status" | "thumbnailUrl" | "videoUrl" | "videoDuration" | "readTime" | "isFeatured" | "isPremium" | "viewCount" | "likeCount" | "publishedAt" | "authorName" | "authorTitle" | "authorAvatarUrl" | "metaTitle" | "metaDescription" | "createdAt" | "updatedAt", ExtArgs["result"]["content"]>
+export type ContentOmit<ExtArgs extends runtime.Types.Extensions.InternalArgs = runtime.Types.Extensions.DefaultArgs> = runtime.Types.Extensions.GetOmit<"id" | "title" | "slug" | "excerpt" | "body" | "type" | "status" | "thumbnailUrl" | "videoUrl" | "videoDuration" | "readTime" | "isFeatured" | "isPremium" | "viewCount" | "likeCount" | "publishedAt" | "authorId" | "metaTitle" | "metaDescription" | "createdAt" | "updatedAt", ExtArgs["result"]["content"]>
 export type ContentInclude<ExtArgs extends runtime.Types.Extensions.InternalArgs = runtime.Types.Extensions.DefaultArgs> = {
   categories?: boolean | Prisma.Content$categoriesArgs<ExtArgs>
   ageGroups?: boolean | Prisma.Content$ageGroupsArgs<ExtArgs>
@@ -2145,10 +2304,15 @@ export type ContentInclude<ExtArgs extends runtime.Types.Extensions.InternalArgs
   bookmarks?: boolean | Prisma.Content$bookmarksArgs<ExtArgs>
   views?: boolean | Prisma.Content$viewsArgs<ExtArgs>
   learningPathItems?: boolean | Prisma.Content$learningPathItemsArgs<ExtArgs>
+  author?: boolean | Prisma.Content$authorArgs<ExtArgs>
   _count?: boolean | Prisma.ContentCountOutputTypeDefaultArgs<ExtArgs>
 }
-export type ContentIncludeCreateManyAndReturn<ExtArgs extends runtime.Types.Extensions.InternalArgs = runtime.Types.Extensions.DefaultArgs> = {}
-export type ContentIncludeUpdateManyAndReturn<ExtArgs extends runtime.Types.Extensions.InternalArgs = runtime.Types.Extensions.DefaultArgs> = {}
+export type ContentIncludeCreateManyAndReturn<ExtArgs extends runtime.Types.Extensions.InternalArgs = runtime.Types.Extensions.DefaultArgs> = {
+  author?: boolean | Prisma.Content$authorArgs<ExtArgs>
+}
+export type ContentIncludeUpdateManyAndReturn<ExtArgs extends runtime.Types.Extensions.InternalArgs = runtime.Types.Extensions.DefaultArgs> = {
+  author?: boolean | Prisma.Content$authorArgs<ExtArgs>
+}
 
 export type $ContentPayload<ExtArgs extends runtime.Types.Extensions.InternalArgs = runtime.Types.Extensions.DefaultArgs> = {
   name: "Content"
@@ -2160,6 +2324,7 @@ export type $ContentPayload<ExtArgs extends runtime.Types.Extensions.InternalArg
     bookmarks: Prisma.$BookmarkPayload<ExtArgs>[]
     views: Prisma.$ContentViewPayload<ExtArgs>[]
     learningPathItems: Prisma.$LearningPathItemPayload<ExtArgs>[]
+    author: Prisma.$AuthorPayload<ExtArgs> | null
   }
   scalars: runtime.Types.Extensions.GetPayloadResult<{
     id: string
@@ -2167,8 +2332,8 @@ export type $ContentPayload<ExtArgs extends runtime.Types.Extensions.InternalArg
     slug: string
     excerpt: string | null
     body: string | null
-    type: $Enums.ContentType
-    status: $Enums.ContentStatus
+    type: string
+    status: string
     thumbnailUrl: string | null
     videoUrl: string | null
     videoDuration: number | null
@@ -2178,9 +2343,7 @@ export type $ContentPayload<ExtArgs extends runtime.Types.Extensions.InternalArg
     viewCount: number
     likeCount: number
     publishedAt: Date | null
-    authorName: string | null
-    authorTitle: string | null
-    authorAvatarUrl: string | null
+    authorId: string | null
     metaTitle: string | null
     metaDescription: string | null
     createdAt: Date
@@ -2586,6 +2749,7 @@ export interface Prisma__ContentClient<T, Null = never, ExtArgs extends runtime.
   bookmarks<T extends Prisma.Content$bookmarksArgs<ExtArgs> = {}>(args?: Prisma.Subset<T, Prisma.Content$bookmarksArgs<ExtArgs>>): Prisma.PrismaPromise<runtime.Types.Result.GetResult<Prisma.$BookmarkPayload<ExtArgs>, T, "findMany", GlobalOmitOptions> | Null>
   views<T extends Prisma.Content$viewsArgs<ExtArgs> = {}>(args?: Prisma.Subset<T, Prisma.Content$viewsArgs<ExtArgs>>): Prisma.PrismaPromise<runtime.Types.Result.GetResult<Prisma.$ContentViewPayload<ExtArgs>, T, "findMany", GlobalOmitOptions> | Null>
   learningPathItems<T extends Prisma.Content$learningPathItemsArgs<ExtArgs> = {}>(args?: Prisma.Subset<T, Prisma.Content$learningPathItemsArgs<ExtArgs>>): Prisma.PrismaPromise<runtime.Types.Result.GetResult<Prisma.$LearningPathItemPayload<ExtArgs>, T, "findMany", GlobalOmitOptions> | Null>
+  author<T extends Prisma.Content$authorArgs<ExtArgs> = {}>(args?: Prisma.Subset<T, Prisma.Content$authorArgs<ExtArgs>>): Prisma.Prisma__AuthorClient<runtime.Types.Result.GetResult<Prisma.$AuthorPayload<ExtArgs>, T, "findUniqueOrThrow", GlobalOmitOptions> | null, null, ExtArgs, GlobalOmitOptions>
   /**
    * Attaches callbacks for the resolution and/or rejection of the Promise.
    * @param onfulfilled The callback to execute when the Promise is resolved.
@@ -2620,8 +2784,8 @@ export interface ContentFieldRefs {
   readonly slug: Prisma.FieldRef<"Content", 'String'>
   readonly excerpt: Prisma.FieldRef<"Content", 'String'>
   readonly body: Prisma.FieldRef<"Content", 'String'>
-  readonly type: Prisma.FieldRef<"Content", 'ContentType'>
-  readonly status: Prisma.FieldRef<"Content", 'ContentStatus'>
+  readonly type: Prisma.FieldRef<"Content", 'String'>
+  readonly status: Prisma.FieldRef<"Content", 'String'>
   readonly thumbnailUrl: Prisma.FieldRef<"Content", 'String'>
   readonly videoUrl: Prisma.FieldRef<"Content", 'String'>
   readonly videoDuration: Prisma.FieldRef<"Content", 'Int'>
@@ -2631,9 +2795,7 @@ export interface ContentFieldRefs {
   readonly viewCount: Prisma.FieldRef<"Content", 'Int'>
   readonly likeCount: Prisma.FieldRef<"Content", 'Int'>
   readonly publishedAt: Prisma.FieldRef<"Content", 'DateTime'>
-  readonly authorName: Prisma.FieldRef<"Content", 'String'>
-  readonly authorTitle: Prisma.FieldRef<"Content", 'String'>
-  readonly authorAvatarUrl: Prisma.FieldRef<"Content", 'String'>
+  readonly authorId: Prisma.FieldRef<"Content", 'String'>
   readonly metaTitle: Prisma.FieldRef<"Content", 'String'>
   readonly metaDescription: Prisma.FieldRef<"Content", 'String'>
   readonly createdAt: Prisma.FieldRef<"Content", 'DateTime'>
@@ -2872,7 +3034,6 @@ export type ContentCreateManyArgs<ExtArgs extends runtime.Types.Extensions.Inter
    * The data used to create many Contents.
    */
   data: Prisma.ContentCreateManyInput | Prisma.ContentCreateManyInput[]
-  skipDuplicates?: boolean
 }
 
 /**
@@ -2891,7 +3052,10 @@ export type ContentCreateManyAndReturnArgs<ExtArgs extends runtime.Types.Extensi
    * The data used to create many Contents.
    */
   data: Prisma.ContentCreateManyInput | Prisma.ContentCreateManyInput[]
-  skipDuplicates?: boolean
+  /**
+   * Choose, which related nodes to fetch as well
+   */
+  include?: Prisma.ContentIncludeCreateManyAndReturn<ExtArgs> | null
 }
 
 /**
@@ -2962,6 +3126,10 @@ export type ContentUpdateManyAndReturnArgs<ExtArgs extends runtime.Types.Extensi
    * Limit how many Contents to update.
    */
   limit?: number
+  /**
+   * Choose, which related nodes to fetch as well
+   */
+  include?: Prisma.ContentIncludeUpdateManyAndReturn<ExtArgs> | null
 }
 
 /**
@@ -3196,6 +3364,25 @@ export type Content$learningPathItemsArgs<ExtArgs extends runtime.Types.Extensio
   take?: number
   skip?: number
   distinct?: Prisma.LearningPathItemScalarFieldEnum | Prisma.LearningPathItemScalarFieldEnum[]
+}
+
+/**
+ * Content.author
+ */
+export type Content$authorArgs<ExtArgs extends runtime.Types.Extensions.InternalArgs = runtime.Types.Extensions.DefaultArgs> = {
+  /**
+   * Select specific fields to fetch from the Author
+   */
+  select?: Prisma.AuthorSelect<ExtArgs> | null
+  /**
+   * Omit specific fields from the Author
+   */
+  omit?: Prisma.AuthorOmit<ExtArgs> | null
+  /**
+   * Choose, which related nodes to fetch as well
+   */
+  include?: Prisma.AuthorInclude<ExtArgs> | null
+  where?: Prisma.AuthorWhereInput
 }
 
 /**

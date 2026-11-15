@@ -40,6 +40,7 @@ export type BadgeMinAggregateOutputType = {
   slug: string | null
   description: string | null
   iconUrl: string | null
+  criteria: string | null
   points: number | null
   createdAt: Date | null
 }
@@ -50,6 +51,7 @@ export type BadgeMaxAggregateOutputType = {
   slug: string | null
   description: string | null
   iconUrl: string | null
+  criteria: string | null
   points: number | null
   createdAt: Date | null
 }
@@ -81,6 +83,7 @@ export type BadgeMinAggregateInputType = {
   slug?: true
   description?: true
   iconUrl?: true
+  criteria?: true
   points?: true
   createdAt?: true
 }
@@ -91,6 +94,7 @@ export type BadgeMaxAggregateInputType = {
   slug?: true
   description?: true
   iconUrl?: true
+  criteria?: true
   points?: true
   createdAt?: true
 }
@@ -199,7 +203,7 @@ export type BadgeGroupByOutputType = {
   slug: string
   description: string | null
   iconUrl: string | null
-  criteria: runtime.JsonValue | null
+  criteria: string | null
   points: number
   createdAt: Date
   _count: BadgeCountAggregateOutputType | null
@@ -233,7 +237,7 @@ export type BadgeWhereInput = {
   slug?: Prisma.StringFilter<"Badge"> | string
   description?: Prisma.StringNullableFilter<"Badge"> | string | null
   iconUrl?: Prisma.StringNullableFilter<"Badge"> | string | null
-  criteria?: Prisma.JsonNullableFilter<"Badge">
+  criteria?: Prisma.StringNullableFilter<"Badge"> | string | null
   points?: Prisma.IntFilter<"Badge"> | number
   createdAt?: Prisma.DateTimeFilter<"Badge"> | Date | string
   users?: Prisma.UserBadgeListRelationFilter
@@ -260,7 +264,7 @@ export type BadgeWhereUniqueInput = Prisma.AtLeast<{
   name?: Prisma.StringFilter<"Badge"> | string
   description?: Prisma.StringNullableFilter<"Badge"> | string | null
   iconUrl?: Prisma.StringNullableFilter<"Badge"> | string | null
-  criteria?: Prisma.JsonNullableFilter<"Badge">
+  criteria?: Prisma.StringNullableFilter<"Badge"> | string | null
   points?: Prisma.IntFilter<"Badge"> | number
   createdAt?: Prisma.DateTimeFilter<"Badge"> | Date | string
   users?: Prisma.UserBadgeListRelationFilter
@@ -291,7 +295,7 @@ export type BadgeScalarWhereWithAggregatesInput = {
   slug?: Prisma.StringWithAggregatesFilter<"Badge"> | string
   description?: Prisma.StringNullableWithAggregatesFilter<"Badge"> | string | null
   iconUrl?: Prisma.StringNullableWithAggregatesFilter<"Badge"> | string | null
-  criteria?: Prisma.JsonNullableWithAggregatesFilter<"Badge">
+  criteria?: Prisma.StringNullableWithAggregatesFilter<"Badge"> | string | null
   points?: Prisma.IntWithAggregatesFilter<"Badge"> | number
   createdAt?: Prisma.DateTimeWithAggregatesFilter<"Badge"> | Date | string
 }
@@ -302,7 +306,7 @@ export type BadgeCreateInput = {
   slug: string
   description?: string | null
   iconUrl?: string | null
-  criteria?: Prisma.NullableJsonNullValueInput | runtime.InputJsonValue
+  criteria?: string | null
   points?: number
   createdAt?: Date | string
   users?: Prisma.UserBadgeCreateNestedManyWithoutBadgeInput
@@ -314,7 +318,7 @@ export type BadgeUncheckedCreateInput = {
   slug: string
   description?: string | null
   iconUrl?: string | null
-  criteria?: Prisma.NullableJsonNullValueInput | runtime.InputJsonValue
+  criteria?: string | null
   points?: number
   createdAt?: Date | string
   users?: Prisma.UserBadgeUncheckedCreateNestedManyWithoutBadgeInput
@@ -326,7 +330,7 @@ export type BadgeUpdateInput = {
   slug?: Prisma.StringFieldUpdateOperationsInput | string
   description?: Prisma.NullableStringFieldUpdateOperationsInput | string | null
   iconUrl?: Prisma.NullableStringFieldUpdateOperationsInput | string | null
-  criteria?: Prisma.NullableJsonNullValueInput | runtime.InputJsonValue
+  criteria?: Prisma.NullableStringFieldUpdateOperationsInput | string | null
   points?: Prisma.IntFieldUpdateOperationsInput | number
   createdAt?: Prisma.DateTimeFieldUpdateOperationsInput | Date | string
   users?: Prisma.UserBadgeUpdateManyWithoutBadgeNestedInput
@@ -338,7 +342,7 @@ export type BadgeUncheckedUpdateInput = {
   slug?: Prisma.StringFieldUpdateOperationsInput | string
   description?: Prisma.NullableStringFieldUpdateOperationsInput | string | null
   iconUrl?: Prisma.NullableStringFieldUpdateOperationsInput | string | null
-  criteria?: Prisma.NullableJsonNullValueInput | runtime.InputJsonValue
+  criteria?: Prisma.NullableStringFieldUpdateOperationsInput | string | null
   points?: Prisma.IntFieldUpdateOperationsInput | number
   createdAt?: Prisma.DateTimeFieldUpdateOperationsInput | Date | string
   users?: Prisma.UserBadgeUncheckedUpdateManyWithoutBadgeNestedInput
@@ -350,7 +354,7 @@ export type BadgeCreateManyInput = {
   slug: string
   description?: string | null
   iconUrl?: string | null
-  criteria?: Prisma.NullableJsonNullValueInput | runtime.InputJsonValue
+  criteria?: string | null
   points?: number
   createdAt?: Date | string
 }
@@ -361,7 +365,7 @@ export type BadgeUpdateManyMutationInput = {
   slug?: Prisma.StringFieldUpdateOperationsInput | string
   description?: Prisma.NullableStringFieldUpdateOperationsInput | string | null
   iconUrl?: Prisma.NullableStringFieldUpdateOperationsInput | string | null
-  criteria?: Prisma.NullableJsonNullValueInput | runtime.InputJsonValue
+  criteria?: Prisma.NullableStringFieldUpdateOperationsInput | string | null
   points?: Prisma.IntFieldUpdateOperationsInput | number
   createdAt?: Prisma.DateTimeFieldUpdateOperationsInput | Date | string
 }
@@ -372,7 +376,7 @@ export type BadgeUncheckedUpdateManyInput = {
   slug?: Prisma.StringFieldUpdateOperationsInput | string
   description?: Prisma.NullableStringFieldUpdateOperationsInput | string | null
   iconUrl?: Prisma.NullableStringFieldUpdateOperationsInput | string | null
-  criteria?: Prisma.NullableJsonNullValueInput | runtime.InputJsonValue
+  criteria?: Prisma.NullableStringFieldUpdateOperationsInput | string | null
   points?: Prisma.IntFieldUpdateOperationsInput | number
   createdAt?: Prisma.DateTimeFieldUpdateOperationsInput | Date | string
 }
@@ -398,6 +402,7 @@ export type BadgeMaxOrderByAggregateInput = {
   slug?: Prisma.SortOrder
   description?: Prisma.SortOrder
   iconUrl?: Prisma.SortOrder
+  criteria?: Prisma.SortOrder
   points?: Prisma.SortOrder
   createdAt?: Prisma.SortOrder
 }
@@ -408,6 +413,7 @@ export type BadgeMinOrderByAggregateInput = {
   slug?: Prisma.SortOrder
   description?: Prisma.SortOrder
   iconUrl?: Prisma.SortOrder
+  criteria?: Prisma.SortOrder
   points?: Prisma.SortOrder
   createdAt?: Prisma.SortOrder
 }
@@ -441,7 +447,7 @@ export type BadgeCreateWithoutUsersInput = {
   slug: string
   description?: string | null
   iconUrl?: string | null
-  criteria?: Prisma.NullableJsonNullValueInput | runtime.InputJsonValue
+  criteria?: string | null
   points?: number
   createdAt?: Date | string
 }
@@ -452,7 +458,7 @@ export type BadgeUncheckedCreateWithoutUsersInput = {
   slug: string
   description?: string | null
   iconUrl?: string | null
-  criteria?: Prisma.NullableJsonNullValueInput | runtime.InputJsonValue
+  criteria?: string | null
   points?: number
   createdAt?: Date | string
 }
@@ -479,7 +485,7 @@ export type BadgeUpdateWithoutUsersInput = {
   slug?: Prisma.StringFieldUpdateOperationsInput | string
   description?: Prisma.NullableStringFieldUpdateOperationsInput | string | null
   iconUrl?: Prisma.NullableStringFieldUpdateOperationsInput | string | null
-  criteria?: Prisma.NullableJsonNullValueInput | runtime.InputJsonValue
+  criteria?: Prisma.NullableStringFieldUpdateOperationsInput | string | null
   points?: Prisma.IntFieldUpdateOperationsInput | number
   createdAt?: Prisma.DateTimeFieldUpdateOperationsInput | Date | string
 }
@@ -490,7 +496,7 @@ export type BadgeUncheckedUpdateWithoutUsersInput = {
   slug?: Prisma.StringFieldUpdateOperationsInput | string
   description?: Prisma.NullableStringFieldUpdateOperationsInput | string | null
   iconUrl?: Prisma.NullableStringFieldUpdateOperationsInput | string | null
-  criteria?: Prisma.NullableJsonNullValueInput | runtime.InputJsonValue
+  criteria?: Prisma.NullableStringFieldUpdateOperationsInput | string | null
   points?: Prisma.IntFieldUpdateOperationsInput | number
   createdAt?: Prisma.DateTimeFieldUpdateOperationsInput | Date | string
 }
@@ -591,7 +597,7 @@ export type $BadgePayload<ExtArgs extends runtime.Types.Extensions.InternalArgs 
     slug: string
     description: string | null
     iconUrl: string | null
-    criteria: runtime.JsonValue | null
+    criteria: string | null
     points: number
     createdAt: Date
   }, ExtArgs["result"]["badge"]>
@@ -1023,7 +1029,7 @@ export interface BadgeFieldRefs {
   readonly slug: Prisma.FieldRef<"Badge", 'String'>
   readonly description: Prisma.FieldRef<"Badge", 'String'>
   readonly iconUrl: Prisma.FieldRef<"Badge", 'String'>
-  readonly criteria: Prisma.FieldRef<"Badge", 'Json'>
+  readonly criteria: Prisma.FieldRef<"Badge", 'String'>
   readonly points: Prisma.FieldRef<"Badge", 'Int'>
   readonly createdAt: Prisma.FieldRef<"Badge", 'DateTime'>
 }
@@ -1260,7 +1266,6 @@ export type BadgeCreateManyArgs<ExtArgs extends runtime.Types.Extensions.Interna
    * The data used to create many Badges.
    */
   data: Prisma.BadgeCreateManyInput | Prisma.BadgeCreateManyInput[]
-  skipDuplicates?: boolean
 }
 
 /**
@@ -1279,7 +1284,6 @@ export type BadgeCreateManyAndReturnArgs<ExtArgs extends runtime.Types.Extension
    * The data used to create many Badges.
    */
   data: Prisma.BadgeCreateManyInput | Prisma.BadgeCreateManyInput[]
-  skipDuplicates?: boolean
 }
 
 /**

@@ -55,9 +55,7 @@ export const createContentSchema = z.object({
   readTime: z.number().int().min(0).nullish(),
   isFeatured: z.boolean().default(false),
   isPremium: z.boolean().default(false),
-  authorName: z.string().max(120).nullish(),
-  authorTitle: z.string().max(120).nullish(),
-  authorAvatarUrl: z.string().max(1000).nullish(),
+  authorId: uuidSchema.nullish(),
   metaTitle: z.string().max(200).nullish(),
   metaDescription: z.string().max(400).nullish(),
   publishedAt: z.string().datetime({ offset: true }).nullish(),
@@ -69,6 +67,21 @@ export type CreateContentInput = z.infer<typeof createContentSchema>;
 export const updateContentSchema = createContentSchema.partial();
 export type UpdateContentInput = z.infer<typeof updateContentSchema>;
 
+// ---------- Author (admin) ----------
+export const createAuthorSchema = z.object({
+  name: z.string().min(2, 'Nama minimal 2 karakter').max(120),
+  slug: z.string().min(3).max(140).regex(/^[a-z0-9-]+$/, 'Slug hanya huruf kecil, angka, dan tanda hubung').optional(),
+  title: z.string().max(160).nullish(),
+  bio: z.string().max(2000).nullish(),
+  avatarUrl: z.string().max(1000).nullish(),
+  email: z.string().email('Format email tidak valid').max(200).nullish(),
+  isActive: z.boolean().default(true),
+  sortOrder: z.number().int().default(0),
+});
+export type CreateAuthorInput = z.infer<typeof createAuthorSchema>;
+export const updateAuthorSchema = createAuthorSchema.partial();
+export type UpdateAuthorInput = z.infer<typeof updateAuthorSchema>;
+
 // ---------- Product (admin) ----------
 export const createProductSchema = z.object({
   name: z.string().min(2).max(200),
@@ -78,6 +91,7 @@ export const createProductSchema = z.object({
   type: z.enum(PRODUCT_TYPES),
   price: z.number().min(0).nullish(),
   currency: z.string().default('IDR'),
+  coverImageUrl: z.string().max(1000).nullish(),
   thumbnailUrl: z.string().max(1000).nullish(),
   images: z.array(z.string()).nullish(),
   externalUrl: z.string().max(1000).nullish(),

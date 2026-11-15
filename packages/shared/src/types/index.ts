@@ -55,6 +55,20 @@ export interface TagDto {
   slug: string;
 }
 
+// ---------- Authors ----------
+export interface AuthorDto {
+  id: string;
+  name: string;
+  slug: string;
+  title?: string | null;
+  bio?: string | null;
+  avatarUrl?: string | null;
+  email?: string | null;
+  isActive: boolean;
+  sortOrder: number;
+  contentCount?: number;
+}
+
 // ---------- Products ----------
 export interface ProductDto {
   id: string;
@@ -65,6 +79,7 @@ export interface ProductDto {
   type: ProductType;
   price?: number | null;
   currency: string;
+  coverImageUrl?: string | null;
   thumbnailUrl?: string | null;
   images?: string[] | null;
   externalUrl?: string | null;
@@ -96,8 +111,10 @@ export interface ContentSummaryDto {
   likeCount: number;
   isFeatured: boolean;
   isPremium: boolean;
+  /** Denormalised from the related Author row so list/cards stay a single round-trip. */
   authorName?: string | null;
   authorTitle?: string | null;
+  author?: AuthorDto | null;
   publishedAt?: string | null;
   categories: ContentCategoryDto[];
   ageGroups: { name: string; slug: string }[];
@@ -111,6 +128,26 @@ export interface ContentDetailDto extends ContentSummaryDto {
   metaDescription?: string | null;
   recommendedProducts: ProductDto[];
   relatedContents: ContentSummaryDto[];
+}
+
+/** Admin list row — the public summary plus the draft/publish status column. */
+export interface AdminContentSummaryDto extends ContentSummaryDto {
+  status: 'DRAFT' | 'PUBLISHED' | 'ARCHIVED' | 'SCHEDULED';
+  videoDuration?: number | null;
+  authorId: string | null;
+}
+
+/**
+ * Admin-only content shape. Same as the public detail plus drafting metadata
+ * (status, raw flags, taxonomy slugs) so the editor can round-trip a draft.
+ */
+export interface AdminContentDetailDto extends ContentDetailDto {
+  status: 'DRAFT' | 'PUBLISHED' | 'ARCHIVED' | 'SCHEDULED';
+  videoDuration?: number | null;
+  author: AuthorDto | null;
+  authorId: string | null;
+  categorySlugs: string[];
+  ageGroupSlugs: string[];
 }
 
 export interface ContentListQuery {
