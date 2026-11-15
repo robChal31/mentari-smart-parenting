@@ -39,14 +39,12 @@ const live = args.includes('--live');
 const positional = args.filter((a) => !a.startsWith('--'));
 
 const root = path.resolve(path.dirname(fileURLToPath(import.meta.url)), '..');
-const schemaPath = positional[0] ?? 'prisma/schema.postgres.prisma';
+const schemaPath = positional[0] ?? 'prisma/schema.prisma';
 const outPath = path.resolve(root, positional[1] ?? 'prisma/schema.postgres.sql');
 const schemaAbs = path.resolve(root, schemaPath);
 
-if (!schemaPath.includes('postgres')) {
-  console.error(
-    `ERROR: ${schemaPath} is not the Postgres schema. DDL export only supports prisma/schema.postgres.prisma.`,
-  );
+if (!/provider\s*=\s*"postgresql"/.test(readFileSync(path.resolve(root, schemaPath), 'utf8'))) {
+  console.error(`ERROR: ${schemaPath} bukan schema PostgreSQL.`);
   process.exit(1);
 }
 

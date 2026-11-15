@@ -2,7 +2,7 @@
 
 **Sahabat tumbuh kembang anak Indonesia** — platform knowledge hub parenting berbasis bukti, terintegrasi katalog produk Mentari Group.
 
-Monorepo: **Next.js 16 (RSC) web** + **NestJS 11 API** + **shared Zod contracts** + **Prisma database** (PostgreSQL yang di-host sendiri sebagai target utama, MySQL sebagai legacy). Web UI bilingual: **Bahasa Indonesia** (default) dan **English** (cookie `mentari.locale`, switcher di header).
+Monorepo: **Next.js 16 (RSC) web** + **NestJS 11 API** + **shared Zod contracts** + **Prisma database** (PostgreSQL yang di-host sendiri). Web UI bilingual: **Bahasa Indonesia** (default) dan **English** (cookie `mentari.locale`, switcher di header).
 
 ## Arsitektur
 
@@ -13,7 +13,7 @@ mentari-smart-parenting/
 │   └── api/          @mentari/api  — NestJS REST API, prefix /api/v1, envelope { success, data, meta?, error? }
 └── packages/
     ├── shared/       @mentari/shared   — tipe DTO, konstanta, Zod validators (dipakai FE & BE)
-    └── database/     @mentari/database — Prisma schema (PostgreSQL + MySQL), seed data kaya
+    └── database/     @mentari/database — Prisma schema (PostgreSQL), seed data kaya
 ```
 
 Aliran request di production:
@@ -21,7 +21,7 @@ Aliran request di production:
 ```
 Browser → Next.js (apps/web)
             ├─ RSC / generateMetadata  → API internal (API_INTERNAL_URL) untuk SSR konten (SEO)
-            └─ /api/* (rewrite proxy)  → NestJS → Prisma → PostgreSQL (utama) / MySQL · JWT milik aplikasi sendiri
+            └─ /api/* (rewrite proxy)  → NestJS → Prisma → PostgreSQL · JWT milik aplikasi sendiri
 ```
 
 Browser **tidak pernah** memanggil NestJS langsung — semua API call lewat `/api/v1/*` di origin yang sama.
@@ -60,7 +60,7 @@ Atau per app: `pnpm dev:web` / `pnpm dev:api`.
 
 ## Production deployment
 
-1. **Database**: dua skema — `schema.postgres.prisma` (PostgreSQL, target utama) dan `schema.prisma` (MySQL, legacy).
+1. **Database**: satu skema — `schema.prisma` (PostgreSQL). Jalur MySQL dan SQLite sudah dihapus.
    - **PostgreSQL lokal** (urutan penting di VPS yang sama dengan aplikasi):
      1. `pnpm --filter=@mentari/database use:postgres` — klien Prisma bersifat **single-provider**.
         Klien yang di-commit sudah Postgres, jadi langkah ini hanya perlu kalau `pnpm db:check`

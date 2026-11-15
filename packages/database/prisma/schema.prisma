@@ -1,10 +1,14 @@
 // ============================================================
-// PRODUCTION SCHEMA (MySQL 8) — packages/database/prisma/schema.prisma
-// Local development uses schema.sqlite.prisma (same models, sqlite types).
-// Derived from docs/PRD.md section 4. Extra fields vs raw PRD:
-//   - users.password_hash (nullable): enables standalone auth; aplikasi ini
-//     menandatangani token sendiri, tidak memakai penyedia identitas eksternal.
-//   - community_threads.category_slug: free-form forum section tag.
+// POSTGRESQL SCHEMA — packages/database/prisma/schema.prisma
+// Same models as the MySQL schema; only the datasource provider and
+// Postgres-incompatible column attributes differ.
+//
+// Target: PostgreSQL lokal di VPS yang sama dengan aplikasi.
+//   DATABASE_URL="postgresql://mentari:<pw>@127.0.0.1:5432/mentari_smart_parent" \
+//     pnpm db:push
+//
+// DDL dijalankan lewat driver `pg`, bukan mesin skema Prisma — lihat
+// scripts/push-pg.mjs untuk alasannya.
 // ============================================================
 
 generator client {
@@ -13,7 +17,7 @@ generator client {
 }
 
 datasource db {
-  provider = "mysql"
+  provider = "postgresql"
 }
 
 // ============================================
@@ -145,7 +149,7 @@ model Content {
   title           String
   slug            String        @unique
   excerpt         String?       @db.Text
-  body            String?       @db.LongText
+  body            String?       @db.Text
   type            ContentType
   status          ContentStatus @default(DRAFT)
   thumbnailUrl    String?       @map("thumbnail_url")

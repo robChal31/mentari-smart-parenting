@@ -1,19 +1,14 @@
 // ============================================================
 // @mentari/database — Prisma client factory + shared instance
 //
-// Runtime selection is driven by DATABASE_URL:
-//   postgres://...  → PostgreSQL via @prisma/adapter-pg  (DEFAULT)
-//                     use the direct 5432 connection, or the pooler with
-//                     ?pgbouncer=true; pooled 6543 works for queries
-//   mysql://...     → MySQL via @prisma/adapter-mariadb (legacy production)
-// SQLite is no longer supported — see README "Perintah database".
+// PostgreSQL saja. Jalur MySQL/MariaDB dan SQLite sudah dihapus — menyisakan
+// pilihan provider hanya membuat orang menunjuk schema yang salah.
 // ============================================================
 import './env';
 import { loadEnvFiles } from './env';
 loadEnvFiles(__dirname);
 import { readFileSync } from 'node:fs';
 import path from 'node:path';
-import { PrismaMariaDb } from '@prisma/adapter-mariadb';
 import { PrismaPg } from '@prisma/adapter-pg';
 import { PrismaClient } from './generated/prisma/client';
 
@@ -22,7 +17,7 @@ import { PrismaClient } from './generated/prisma/client';
  * the schema source). Used only to explain a provider mismatch — never to
  * decide which adapter to build.
  */
-export function detectClientProvider(): 'sqlite' | 'postgresql' | 'mysql' | null {
+export function detectClientProvider(): 'postgresql' | null {
   // The bundled dist/index.js embeds the same inlineSchema string; look there
   // first (that is what actually runs), then fall back to the generated source.
   const candidates: string[] = [];
@@ -31,8 +26,7 @@ export function detectClientProvider(): 'sqlite' | 'postgresql' | 'mysql' | null
     candidates.push(readFileSync(path.join(__dirname, 'generated/prisma/internal/class.ts'), 'utf8'));
   } catch {}
   for (const source of candidates) {
-    const match = source.match(/provider = \W*?(postgresql|sqlite|mysql)/);
-    if (match) return match[1] as 'sqlite' | 'postgresql' | 'mysql';
+    return /provider = \W*?postgresql/.test(source) ? 'postgresql' : null;
   }
   return null;
 }
@@ -52,12 +46,11 @@ function withProviderHint(build: () => PrismaClient, target = '(unknown)'): Pris
         `Your DATABASE_URL targets: ${target}`,
         '',
         'Regenerate it for your target database, then rebuild & restart:',
-        '  • PostgreSQL:        pnpm --filter=@mentari/database use:postgres',
-        '  • MySQL:             pnpm --filter=@mentari/database use:mysql',
-        '  (each one regenerates the client and rebuilds the package)',
+        '  pnpm --filter=@mentari/database db:generate',
+        '  pnpm build',
         '',
         'Note: db:push / db:ddl:postgres / db:seed do NOT regenerate the client.',
-        'Run use:postgres (or use:mysql) after changing providers — otherwise the API',
+        'Regenerate klien setelah mengubah provider — kalau tidak, API',
         'keeps crashing with this error on every restart.',
       ].filter((line, i, all) => !(line === '' && i > 0 && all[i - 1] === '')).join('\n'));
     }
@@ -76,19 +69,15 @@ export function createPrismaClient(
       'Add to the root .env:',
       '  DATABASE_URL="postgresql://mentari:<password>@127.0.0.1:5432/mentari_smart_parent"',
       '',
-      'SQLite is no longer supported.',
+      'Hanya PostgreSQL yang didukung.',
     ].join('\n'));
-  }
-  if (databaseUrl.startsWith('mysql://')) {
-    const adapter = new PrismaMariaDb(databaseUrl);
-    return withProviderHint(() => new PrismaClient({ adapter }), 'mysql');
   }
   if (databaseUrl.startsWith('postgres://') || databaseUrl.startsWith('postgresql://')) {
     const adapter = new PrismaPg({ connectionString: databaseUrl });
     return withProviderHint(() => new PrismaClient({ adapter }), 'postgresql');
   }
   throw new Error(
-    `Unsupported DATABASE_URL scheme. Use postgresql://… or mysql://user:pass@host:3306/db. Got: ${databaseUrl.replace(/:[^:@/]+@/, ':***@')}`,
+    `Unsupported DATABASE_URL scheme. Use postgresql://… Got: ${databaseUrl.replace(/:[^:@/]+@/, ':***@')}`,
   );
 }
 
