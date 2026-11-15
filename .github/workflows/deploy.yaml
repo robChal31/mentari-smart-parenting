@@ -81,6 +81,10 @@ jobs:
           # `pnpm deploy` menyalin src/ dan tsconfig juga; tidak dipakai runtime.
           rm -rf deploy/api/src deploy/api/tsconfig.json deploy/api/tsconfig.build.json
 
+          # Salin schema.prisma dari packages/database ke dalam artefak API
+          mkdir -p deploy/api/prisma
+          cp packages/database/prisma/schema.prisma deploy/api/prisma/
+
           # ecosystem.config.js dirujuk oleh step PM2 di bawah. Tanpa baris ini
           # file itu tidak pernah sampai ke VPS dan `pm2 reload` gagal karena
           # file tidak ditemukan.
@@ -90,6 +94,7 @@ jobs:
           du -sh deploy/web deploy/api
           test -f deploy/web/apps/web/server.js
           test -f deploy/api/dist/main.js
+          test -f deploy/api/prisma/schema.prisma
           test -f deploy/ecosystem.config.js
           echo "artefak lengkap"
 
