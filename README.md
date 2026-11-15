@@ -121,7 +121,7 @@ bawah memakai `schema.postgres.prisma` dan membaca `SUPABASE_DATABASE_URL` (fall
 | Perintah | Fungsi |
 |---|---|
 | `pnpm db:check` | bandingkan URL vs provider klien Prisma yang ter-generate (tanpa mengubah apa pun) |
-| `pnpm db:push` | **buat skema di Supabase** — 25 tabel, satu transaksi |
+| `pnpm db:push` | **buat skema di Supabase** — 25 tabel, satu transaksi; idempotent, aman diulang |
 | `pnpm db:seed` | wipe & re-seed data demo (25 konten, 7 produk, 23 milestone, dst.) |
 | `pnpm db:reset` | hapus skema lalu buat ulang (`db:push --force`) |
 | `pnpm db:push:mysql` | push `schema.prisma` (MySQL) via Prisma CLI |
@@ -154,6 +154,10 @@ bawah memakai `schema.postgres.prisma` dan membaca `SUPABASE_DATABASE_URL` (fall
 > pnpm db:push      # tanpa schema engine → tidak kena bug ini
 > pnpm db:seed
 > ```
+> `db:push` **idempotent**: kalau dijalankan saat skema sudah lengkap, ia tidak mengubah apa
+> pun; kalau sebelumnya sempat gagal di tengah, ia melanjutkan sisanya. Objek yang bukan milik
+> skema ini dibiarkan. Untuk reset total: `pnpm db:reset`.
+>
 > Kalau `db:push` tidak bisa konek ke database, pakai jalur manual:
 > `pnpm db:ddl:postgres` → tempel `prisma/schema.postgres.sql` ke Supabase SQL Editor.
 
