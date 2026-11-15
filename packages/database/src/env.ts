@@ -3,7 +3,7 @@
 //
 // The monorepo keeps ONE .env at the repository root, but plain Node
 // scripts (seed, push-wasm) and the NestJS API never loaded it — on
-// Windows that meant `pnpm db:seed` silently fell back to file:./dev.db
+// Windows that meant `pnpm db:seed` silently used no DATABASE_URL at all
 // (or failed to find modules/env). Walk upward from `startDir` and load
 // the NEAREST .env found (cwd → … → repo root). Existing environment
 // variables always win — process.loadEnvFile does not override them.

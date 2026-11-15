@@ -359,6 +359,7 @@ export type ContentCategoryCreateOrConnectWithoutContentInput = {
 
 export type ContentCategoryCreateManyContentInputEnvelope = {
   data: Prisma.ContentCategoryCreateManyContentInput | Prisma.ContentCategoryCreateManyContentInput[]
+  skipDuplicates?: boolean
 }
 
 export type ContentCategoryUpsertWithWhereUniqueWithoutContentInput = {
@@ -400,6 +401,7 @@ export type ContentCategoryCreateOrConnectWithoutCategoryInput = {
 
 export type ContentCategoryCreateManyCategoryInputEnvelope = {
   data: Prisma.ContentCategoryCreateManyCategoryInput | Prisma.ContentCategoryCreateManyCategoryInput[]
+  skipDuplicates?: boolean
 }
 
 export type ContentCategoryUpsertWithWhereUniqueWithoutCategoryInput = {
@@ -1162,6 +1164,7 @@ export type ContentCategoryCreateManyArgs<ExtArgs extends runtime.Types.Extensio
    * The data used to create many ContentCategories.
    */
   data: Prisma.ContentCategoryCreateManyInput | Prisma.ContentCategoryCreateManyInput[]
+  skipDuplicates?: boolean
 }
 
 /**
@@ -1180,6 +1183,7 @@ export type ContentCategoryCreateManyAndReturnArgs<ExtArgs extends runtime.Types
    * The data used to create many ContentCategories.
    */
   data: Prisma.ContentCategoryCreateManyInput | Prisma.ContentCategoryCreateManyInput[]
+  skipDuplicates?: boolean
   /**
    * Choose, which related nodes to fetch as well
    */

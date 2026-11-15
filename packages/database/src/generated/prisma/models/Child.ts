@@ -29,7 +29,7 @@ export type ChildMinAggregateOutputType = {
   userId: string | null
   name: string | null
   birthDate: Date | null
-  gender: string | null
+  gender: $Enums.Gender | null
   avatarUrl: string | null
   createdAt: Date | null
   updatedAt: Date | null
@@ -40,7 +40,7 @@ export type ChildMaxAggregateOutputType = {
   userId: string | null
   name: string | null
   birthDate: Date | null
-  gender: string | null
+  gender: $Enums.Gender | null
   avatarUrl: string | null
   createdAt: Date | null
   updatedAt: Date | null
@@ -170,7 +170,7 @@ export type ChildGroupByOutputType = {
   userId: string
   name: string
   birthDate: Date
-  gender: string | null
+  gender: $Enums.Gender | null
   avatarUrl: string | null
   createdAt: Date
   updatedAt: Date
@@ -202,7 +202,7 @@ export type ChildWhereInput = {
   userId?: Prisma.StringFilter<"Child"> | string
   name?: Prisma.StringFilter<"Child"> | string
   birthDate?: Prisma.DateTimeFilter<"Child"> | Date | string
-  gender?: Prisma.StringNullableFilter<"Child"> | string | null
+  gender?: Prisma.EnumGenderNullableFilter<"Child"> | $Enums.Gender | null
   avatarUrl?: Prisma.StringNullableFilter<"Child"> | string | null
   createdAt?: Prisma.DateTimeFilter<"Child"> | Date | string
   updatedAt?: Prisma.DateTimeFilter<"Child"> | Date | string
@@ -231,7 +231,7 @@ export type ChildWhereUniqueInput = Prisma.AtLeast<{
   userId?: Prisma.StringFilter<"Child"> | string
   name?: Prisma.StringFilter<"Child"> | string
   birthDate?: Prisma.DateTimeFilter<"Child"> | Date | string
-  gender?: Prisma.StringNullableFilter<"Child"> | string | null
+  gender?: Prisma.EnumGenderNullableFilter<"Child"> | $Enums.Gender | null
   avatarUrl?: Prisma.StringNullableFilter<"Child"> | string | null
   createdAt?: Prisma.DateTimeFilter<"Child"> | Date | string
   updatedAt?: Prisma.DateTimeFilter<"Child"> | Date | string
@@ -261,7 +261,7 @@ export type ChildScalarWhereWithAggregatesInput = {
   userId?: Prisma.StringWithAggregatesFilter<"Child"> | string
   name?: Prisma.StringWithAggregatesFilter<"Child"> | string
   birthDate?: Prisma.DateTimeWithAggregatesFilter<"Child"> | Date | string
-  gender?: Prisma.StringNullableWithAggregatesFilter<"Child"> | string | null
+  gender?: Prisma.EnumGenderNullableWithAggregatesFilter<"Child"> | $Enums.Gender | null
   avatarUrl?: Prisma.StringNullableWithAggregatesFilter<"Child"> | string | null
   createdAt?: Prisma.DateTimeWithAggregatesFilter<"Child"> | Date | string
   updatedAt?: Prisma.DateTimeWithAggregatesFilter<"Child"> | Date | string
@@ -271,7 +271,7 @@ export type ChildCreateInput = {
   id?: string
   name: string
   birthDate: Date | string
-  gender?: string | null
+  gender?: $Enums.Gender | null
   avatarUrl?: string | null
   createdAt?: Date | string
   updatedAt?: Date | string
@@ -284,7 +284,7 @@ export type ChildUncheckedCreateInput = {
   userId: string
   name: string
   birthDate: Date | string
-  gender?: string | null
+  gender?: $Enums.Gender | null
   avatarUrl?: string | null
   createdAt?: Date | string
   updatedAt?: Date | string
@@ -295,7 +295,7 @@ export type ChildUpdateInput = {
   id?: Prisma.StringFieldUpdateOperationsInput | string
   name?: Prisma.StringFieldUpdateOperationsInput | string
   birthDate?: Prisma.DateTimeFieldUpdateOperationsInput | Date | string
-  gender?: Prisma.NullableStringFieldUpdateOperationsInput | string | null
+  gender?: Prisma.NullableEnumGenderFieldUpdateOperationsInput | $Enums.Gender | null
   avatarUrl?: Prisma.NullableStringFieldUpdateOperationsInput | string | null
   createdAt?: Prisma.DateTimeFieldUpdateOperationsInput | Date | string
   updatedAt?: Prisma.DateTimeFieldUpdateOperationsInput | Date | string
@@ -308,7 +308,7 @@ export type ChildUncheckedUpdateInput = {
   userId?: Prisma.StringFieldUpdateOperationsInput | string
   name?: Prisma.StringFieldUpdateOperationsInput | string
   birthDate?: Prisma.DateTimeFieldUpdateOperationsInput | Date | string
-  gender?: Prisma.NullableStringFieldUpdateOperationsInput | string | null
+  gender?: Prisma.NullableEnumGenderFieldUpdateOperationsInput | $Enums.Gender | null
   avatarUrl?: Prisma.NullableStringFieldUpdateOperationsInput | string | null
   createdAt?: Prisma.DateTimeFieldUpdateOperationsInput | Date | string
   updatedAt?: Prisma.DateTimeFieldUpdateOperationsInput | Date | string
@@ -320,7 +320,7 @@ export type ChildCreateManyInput = {
   userId: string
   name: string
   birthDate: Date | string
-  gender?: string | null
+  gender?: $Enums.Gender | null
   avatarUrl?: string | null
   createdAt?: Date | string
   updatedAt?: Date | string
@@ -330,7 +330,7 @@ export type ChildUpdateManyMutationInput = {
   id?: Prisma.StringFieldUpdateOperationsInput | string
   name?: Prisma.StringFieldUpdateOperationsInput | string
   birthDate?: Prisma.DateTimeFieldUpdateOperationsInput | Date | string
-  gender?: Prisma.NullableStringFieldUpdateOperationsInput | string | null
+  gender?: Prisma.NullableEnumGenderFieldUpdateOperationsInput | $Enums.Gender | null
   avatarUrl?: Prisma.NullableStringFieldUpdateOperationsInput | string | null
   createdAt?: Prisma.DateTimeFieldUpdateOperationsInput | Date | string
   updatedAt?: Prisma.DateTimeFieldUpdateOperationsInput | Date | string
@@ -341,7 +341,7 @@ export type ChildUncheckedUpdateManyInput = {
   userId?: Prisma.StringFieldUpdateOperationsInput | string
   name?: Prisma.StringFieldUpdateOperationsInput | string
   birthDate?: Prisma.DateTimeFieldUpdateOperationsInput | Date | string
-  gender?: Prisma.NullableStringFieldUpdateOperationsInput | string | null
+  gender?: Prisma.NullableEnumGenderFieldUpdateOperationsInput | $Enums.Gender | null
   avatarUrl?: Prisma.NullableStringFieldUpdateOperationsInput | string | null
   createdAt?: Prisma.DateTimeFieldUpdateOperationsInput | Date | string
   updatedAt?: Prisma.DateTimeFieldUpdateOperationsInput | Date | string
@@ -437,6 +437,10 @@ export type ChildUncheckedUpdateManyWithoutUserNestedInput = {
   deleteMany?: Prisma.ChildScalarWhereInput | Prisma.ChildScalarWhereInput[]
 }
 
+export type NullableEnumGenderFieldUpdateOperationsInput = {
+  set?: $Enums.Gender | null
+}
+
 export type ChildCreateNestedOneWithoutMilestonesInput = {
   create?: Prisma.XOR<Prisma.ChildCreateWithoutMilestonesInput, Prisma.ChildUncheckedCreateWithoutMilestonesInput>
   connectOrCreate?: Prisma.ChildCreateOrConnectWithoutMilestonesInput
@@ -455,7 +459,7 @@ export type ChildCreateWithoutUserInput = {
   id?: string
   name: string
   birthDate: Date | string
-  gender?: string | null
+  gender?: $Enums.Gender | null
   avatarUrl?: string | null
   createdAt?: Date | string
   updatedAt?: Date | string
@@ -466,7 +470,7 @@ export type ChildUncheckedCreateWithoutUserInput = {
   id?: string
   name: string
   birthDate: Date | string
-  gender?: string | null
+  gender?: $Enums.Gender | null
   avatarUrl?: string | null
   createdAt?: Date | string
   updatedAt?: Date | string
@@ -480,6 +484,7 @@ export type ChildCreateOrConnectWithoutUserInput = {
 
 export type ChildCreateManyUserInputEnvelope = {
   data: Prisma.ChildCreateManyUserInput | Prisma.ChildCreateManyUserInput[]
+  skipDuplicates?: boolean
 }
 
 export type ChildUpsertWithWhereUniqueWithoutUserInput = {
@@ -506,7 +511,7 @@ export type ChildScalarWhereInput = {
   userId?: Prisma.StringFilter<"Child"> | string
   name?: Prisma.StringFilter<"Child"> | string
   birthDate?: Prisma.DateTimeFilter<"Child"> | Date | string
-  gender?: Prisma.StringNullableFilter<"Child"> | string | null
+  gender?: Prisma.EnumGenderNullableFilter<"Child"> | $Enums.Gender | null
   avatarUrl?: Prisma.StringNullableFilter<"Child"> | string | null
   createdAt?: Prisma.DateTimeFilter<"Child"> | Date | string
   updatedAt?: Prisma.DateTimeFilter<"Child"> | Date | string
@@ -516,7 +521,7 @@ export type ChildCreateWithoutMilestonesInput = {
   id?: string
   name: string
   birthDate: Date | string
-  gender?: string | null
+  gender?: $Enums.Gender | null
   avatarUrl?: string | null
   createdAt?: Date | string
   updatedAt?: Date | string
@@ -528,7 +533,7 @@ export type ChildUncheckedCreateWithoutMilestonesInput = {
   userId: string
   name: string
   birthDate: Date | string
-  gender?: string | null
+  gender?: $Enums.Gender | null
   avatarUrl?: string | null
   createdAt?: Date | string
   updatedAt?: Date | string
@@ -554,7 +559,7 @@ export type ChildUpdateWithoutMilestonesInput = {
   id?: Prisma.StringFieldUpdateOperationsInput | string
   name?: Prisma.StringFieldUpdateOperationsInput | string
   birthDate?: Prisma.DateTimeFieldUpdateOperationsInput | Date | string
-  gender?: Prisma.NullableStringFieldUpdateOperationsInput | string | null
+  gender?: Prisma.NullableEnumGenderFieldUpdateOperationsInput | $Enums.Gender | null
   avatarUrl?: Prisma.NullableStringFieldUpdateOperationsInput | string | null
   createdAt?: Prisma.DateTimeFieldUpdateOperationsInput | Date | string
   updatedAt?: Prisma.DateTimeFieldUpdateOperationsInput | Date | string
@@ -566,7 +571,7 @@ export type ChildUncheckedUpdateWithoutMilestonesInput = {
   userId?: Prisma.StringFieldUpdateOperationsInput | string
   name?: Prisma.StringFieldUpdateOperationsInput | string
   birthDate?: Prisma.DateTimeFieldUpdateOperationsInput | Date | string
-  gender?: Prisma.NullableStringFieldUpdateOperationsInput | string | null
+  gender?: Prisma.NullableEnumGenderFieldUpdateOperationsInput | $Enums.Gender | null
   avatarUrl?: Prisma.NullableStringFieldUpdateOperationsInput | string | null
   createdAt?: Prisma.DateTimeFieldUpdateOperationsInput | Date | string
   updatedAt?: Prisma.DateTimeFieldUpdateOperationsInput | Date | string
@@ -576,7 +581,7 @@ export type ChildCreateManyUserInput = {
   id?: string
   name: string
   birthDate: Date | string
-  gender?: string | null
+  gender?: $Enums.Gender | null
   avatarUrl?: string | null
   createdAt?: Date | string
   updatedAt?: Date | string
@@ -586,7 +591,7 @@ export type ChildUpdateWithoutUserInput = {
   id?: Prisma.StringFieldUpdateOperationsInput | string
   name?: Prisma.StringFieldUpdateOperationsInput | string
   birthDate?: Prisma.DateTimeFieldUpdateOperationsInput | Date | string
-  gender?: Prisma.NullableStringFieldUpdateOperationsInput | string | null
+  gender?: Prisma.NullableEnumGenderFieldUpdateOperationsInput | $Enums.Gender | null
   avatarUrl?: Prisma.NullableStringFieldUpdateOperationsInput | string | null
   createdAt?: Prisma.DateTimeFieldUpdateOperationsInput | Date | string
   updatedAt?: Prisma.DateTimeFieldUpdateOperationsInput | Date | string
@@ -597,7 +602,7 @@ export type ChildUncheckedUpdateWithoutUserInput = {
   id?: Prisma.StringFieldUpdateOperationsInput | string
   name?: Prisma.StringFieldUpdateOperationsInput | string
   birthDate?: Prisma.DateTimeFieldUpdateOperationsInput | Date | string
-  gender?: Prisma.NullableStringFieldUpdateOperationsInput | string | null
+  gender?: Prisma.NullableEnumGenderFieldUpdateOperationsInput | $Enums.Gender | null
   avatarUrl?: Prisma.NullableStringFieldUpdateOperationsInput | string | null
   createdAt?: Prisma.DateTimeFieldUpdateOperationsInput | Date | string
   updatedAt?: Prisma.DateTimeFieldUpdateOperationsInput | Date | string
@@ -608,7 +613,7 @@ export type ChildUncheckedUpdateManyWithoutUserInput = {
   id?: Prisma.StringFieldUpdateOperationsInput | string
   name?: Prisma.StringFieldUpdateOperationsInput | string
   birthDate?: Prisma.DateTimeFieldUpdateOperationsInput | Date | string
-  gender?: Prisma.NullableStringFieldUpdateOperationsInput | string | null
+  gender?: Prisma.NullableEnumGenderFieldUpdateOperationsInput | $Enums.Gender | null
   avatarUrl?: Prisma.NullableStringFieldUpdateOperationsInput | string | null
   createdAt?: Prisma.DateTimeFieldUpdateOperationsInput | Date | string
   updatedAt?: Prisma.DateTimeFieldUpdateOperationsInput | Date | string
@@ -718,7 +723,7 @@ export type $ChildPayload<ExtArgs extends runtime.Types.Extensions.InternalArgs 
     userId: string
     name: string
     birthDate: Date
-    gender: string | null
+    gender: $Enums.Gender | null
     avatarUrl: string | null
     createdAt: Date
     updatedAt: Date
@@ -1151,7 +1156,7 @@ export interface ChildFieldRefs {
   readonly userId: Prisma.FieldRef<"Child", 'String'>
   readonly name: Prisma.FieldRef<"Child", 'String'>
   readonly birthDate: Prisma.FieldRef<"Child", 'DateTime'>
-  readonly gender: Prisma.FieldRef<"Child", 'String'>
+  readonly gender: Prisma.FieldRef<"Child", 'Gender'>
   readonly avatarUrl: Prisma.FieldRef<"Child", 'String'>
   readonly createdAt: Prisma.FieldRef<"Child", 'DateTime'>
   readonly updatedAt: Prisma.FieldRef<"Child", 'DateTime'>
@@ -1389,6 +1394,7 @@ export type ChildCreateManyArgs<ExtArgs extends runtime.Types.Extensions.Interna
    * The data used to create many Children.
    */
   data: Prisma.ChildCreateManyInput | Prisma.ChildCreateManyInput[]
+  skipDuplicates?: boolean
 }
 
 /**
@@ -1407,6 +1413,7 @@ export type ChildCreateManyAndReturnArgs<ExtArgs extends runtime.Types.Extension
    * The data used to create many Children.
    */
   data: Prisma.ChildCreateManyInput | Prisma.ChildCreateManyInput[]
+  skipDuplicates?: boolean
   /**
    * Choose, which related nodes to fetch as well
    */

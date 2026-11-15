@@ -2,30 +2,28 @@
  * Seed MentariSmartParent with realistic Indonesian parenting content.
  * Wipes existing data and re-creates it — intended for dev/staging.
  *
- * Usage: pnpm db:seed   (requires the sqlite dev.db at packages/database/)
+ * Usage: pnpm db:seed   (requires SUPABASE_DATABASE_URL / DATABASE_URL in the root .env)
  */
 import bcrypt from 'bcryptjs';
+import type { RecommendationPlacement } from '@mentari/shared';
 import { detectClientProvider, prisma } from '../src/index';
 
 /**
- * Seeding into Supabase while the client is still generated for SQLite dies with
- * "Driver Adapter ... not compatible with the provider sqlite" halfway through.
- * Warn first so the fix (db:generate:postgres) is obvious.
+ * Seeding with a client generated for a different provider dies halfway through
+ * the wipe with "Driver Adapter ... not compatible with the provider ...".
+ * Warn first so the fix (use:postgres / use:mysql) is obvious.
  */
 function warnOnProviderMismatch() {
-  const url = process.env.DATABASE_URL ?? 'file:./dev.db';
-  const wants = url.startsWith('postgres') ? 'postgresql' : url.startsWith('mysql') ? 'mysql' : 'sqlite';
+  const url = process.env.SUPABASE_DATABASE_URL ?? process.env.DATABASE_URL ?? '';
+  const wants = url.startsWith('postgres') ? 'postgresql' : url.startsWith('mysql') ? 'mysql' : null;
   const client = detectClientProvider();
-  if (client && client !== wants) {
-    console.warn([
-      '',
-      `⚠️  Generated Prisma client targets "${client}" but DATABASE_URL targets "${wants}".`,
-      client === 'sqlite'
-        ? '   Fix: pnpm --filter=@mentari/database db:generate:postgres && pnpm --filter=@mentari/database build'
-        : '   Fix: pnpm --filter=@mentari/database db:generate && pnpm --filter=@mentari/database build',
-      '',
-    ].join('\n'));
-  }
+  if (!wants || !client || client === wants) return;
+  console.warn([
+    '',
+    `⚠️  Generated Prisma client targets "${client}" but the database URL targets "${wants}".`,
+    '   Fix: pnpm --filter=@mentari/database use:' + (wants === 'postgresql' ? 'postgres' : 'mysql'),
+    '',
+  ].join('\n'));
 }
 import {
   AGE_GROUPS, AUTHORS, CATEGORIES, CONTENTS, PRODUCTS, MILESTONES, BADGES,
@@ -220,7 +218,7 @@ async function main() {
   console.log(`✓ ${contentBySlug.size} contents, ${tagBySlug.size} tags`);
 
   // ---------- content ↔ product recommendations ----------
-  const recommendations: Array<[string, string, number, string, number]> = [
+  const recommendations: Array<[string, string, number, RecommendationPlacement, number]> = [
     // [content slug, product slug, relevance, placement, order]
     ['panduan-mpasi-6-bulan', 'seri-dongeng-nusantara', 0.62, 'SIDEBAR', 1],
     ['panduan-mpasi-6-bulan', 'teacher-academy-ecd', 0.55, 'SIDEBAR', 2],

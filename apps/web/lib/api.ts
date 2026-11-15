@@ -44,10 +44,38 @@ function parseApiBody(text: string): { success?: boolean; data?: unknown; meta?:
   }
 }
 
+/**
+ * The API is restarted by `node --watch` on every recompile, so a server render
+ * can hit a 2–4 s window where port 4000 is closed (ECONNREFUSED). Retry those
+ * connection failures a few times — but never retry an HTTP error, since the
+ * upstream already answered and repeating it changes nothing.
+ *
+ * Budget: 3 attempts, +200 ms then +500 ms ≈ 0.7 s of extra waiting on the
+ * happy-after-restart path. No background polling and no unbounded loop, so it
+ * cannot pile up connections against Supabase.
+ */
+const CONNECT_ATTEMPTS = 3;
+const CONNECT_BACKOFF_MS = [200, 500];
+
+const sleep = (ms: number) => new Promise<void>((resolve) => setTimeout(resolve, ms));
+
+async function fetchWithRetry(url: string, init?: RequestInit): Promise<Response> {
+  let lastError: unknown;
+  for (let attempt = 0; attempt < CONNECT_ATTEMPTS; attempt++) {
+    try {
+      return await fetch(url, init);
+    } catch (error) {
+      lastError = error;
+      if (attempt < CONNECT_ATTEMPTS - 1) await sleep(CONNECT_BACKOFF_MS[attempt] ?? 500);
+    }
+  }
+  throw lastError instanceof Error ? lastError : new Error("API unreachable");
+}
+
 async function fetchServer<T>(path: string, init?: RequestInit): Promise<T | null> {
   let res: Response;
   try {
-    res = await fetch(`${API_INTERNAL}/api/v1${path}`, {
+    res = await fetchWithRetry(`${API_INTERNAL}/api/v1${path}`, {
       cache: "no-store",
       ...init,
     });
@@ -65,7 +93,7 @@ async function fetchServer<T>(path: string, init?: RequestInit): Promise<T | nul
 async function fetchServerPaginated<T>(path: string): Promise<Paginated<T>> {
   let res: Response;
   try {
-    res = await fetch(`${API_INTERNAL}/api/v1${path}`, { cache: "no-store" });
+    res = await fetchWithRetry(`${API_INTERNAL}/api/v1${path}`, { cache: "no-store" });
   } catch {
     throw new ApiServerError(null, "Tidak dapat terhubung ke server API.");
   }

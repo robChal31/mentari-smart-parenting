@@ -99,45 +99,45 @@ Fallback kalau auto-load tidak bekerja (custom shell, dst): pakai syntax PowerSh
 
 ## Perintah database
 
+**Database target: Supabase (PostgreSQL).** SQLite sudah tidak didukung — semua perintah di
+bawah memakai `schema.postgres.prisma` dan membaca `SUPABASE_DATABASE_URL` (fallback
+`DATABASE_URL`) dari `.env` root.
+
 | Perintah | Fungsi |
 |---|---|
-| `pnpm db:setup` | generate + push (SQLite dev) + seed |
-| `pnpm db:push` | push skema SQLite via schema-engine WASM (`@prisma/schema-engine-wasm`, tanpa jaringan — jalur default) |
+| `pnpm db:check` | bandingkan URL vs provider klien Prisma yang ter-generate (tanpa mengubah apa pun) |
+| `pnpm db:setup` | generate + push + seed ke Supabase |
+| `pnpm db:push` | push `schema.postgres.prisma` ke Supabase via schema-engine WASM |
 | `pnpm db:push:cli` | `prisma db push` standar (perlu unduh schema-engine dari `binaries.prisma.sh`) |
 | `pnpm db:seed` | wipe & re-seed data demo (25 konten, 7 produk, 23 milestone, dst.) |
-| `pnpm db:reset` | hapus dev.db, push ulang (WASM), seed |
-| `pnpm db:reset:cli` | `db:reset` versi Prisma CLI standar |
-| `pnpm --filter=@mentari/database db:push:supabase` | push `schema.postgres.prisma` ke Supabase/Postgres via WASM (offline-safe, pakai `SUPABASE_DATABASE_URL`) |
-| `pnpm --filter=@mentari/database db:push:supabase:cli` | jalur Prisma CLI standar untuk skema Supabase |
+| `pnpm db:reset` | push ulang + seed |
+| `pnpm db:ddl:postgres` | tulis `prisma/schema.postgres.sql` untuk ditempel ke Supabase SQL Editor |
+| `pnpm --filter=@mentari/database use:postgres` | generate ulang klien Prisma untuk Postgres + build |
+| `pnpm --filter=@mentari/database use:mysql` | sama, untuk MySQL (`schema.prisma`) |
 
-> Catatan: setelah `pnpm db:generate`, folder `packages/database/src/generated` bisa tampak
-> berubah di git (artifact generator Prisma) — jangan di-commit kecuali memang disengaja.
+> Catatan: `packages/database/src/generated` **di-commit** dan saat ini berisi klien
+> **PostgreSQL/Supabase**. Jalankan `pnpm db:check` untuk memastikannya cocok dengan `.env`.
+> Kalau kamu memakai MySQL, klien ikut berubah saat `use:mysql` — itu memang disengaja.
 
 > **Error `The Driver Adapter @prisma/adapter-pg ... is not compatible with the provider sqlite`**:
-> klien Prisma yang di-commit di-generate untuk **satu** provider (SQLite). Mengubah
-> `DATABASE_URL` ke Supabase **tidak** otomatis mengubah klien. Perintah `db:push:supabase`,
-> `db:ddl:postgres`, `db:seed`, dan `pnpm dev` semuanya **tidak** men-generate ulang, jadi API
-> crash setiap restart. Perbaikan satu perintah:
+> klien Prisma yang di-commit di-generate untuk **satu** provider pada satu waktu. Mengubah
+> `DATABASE_URL` **tidak** otomatis mengubah klien. Perintah `db:push`, `db:ddl:postgres`,
+> `db:seed`, dan `pnpm dev` semuanya **tidak** men-generate ulang, jadi API crash setiap
+> restart. Perbaikan satu perintah:
 > ```powershell
-> pnpm db:check                       # cek: URL vs klien yang ter-generate
-> pnpm --filter=@mentari/database use:postgres   # generate ulang + build
+> pnpm db:check                                   # cek: URL vs klien yang ter-generate
+> pnpm --filter=@mentari/database use:postgres    # generate ulang + build
 > ```
-> `use:sqlite` untuk kembali ke dev lokal, `use:mysql` untuk MySQL. Mengganti provider
-> menghapus/menulis `packages/database/src/generated` — jangan commit hasilnya kecuali disengaja.
+> Mengganti provider menulis ulang `packages/database/src/generated`; commit hasilnya bersama
+> perubahan konfigurasi supaya anggota tim lain tidak perlu generate ulang.
 >
-> **Error `Column type 'char' could not be deserialized from the database`**: hampir selalu
-> berarti `.env` menunjuk ke Supabase/Postgres (atau MySQL) sementara perintah yang jalan
-> masih memakai `schema.sqlite.prisma` (default `db:push`). Engine WASM lalu gagal saat
-> membaca katalog Postgres. Perbaikan:
-> 1. **Mau lanjut di SQLite lokal** → set `DATABASE_URL="file:./dev.db"` di `.env` root, lalu `pnpm db:setup`.
-> 2. **Mau pakai Supabase** → ikuti urutan di bagian *Production deployment*: `db:generate:postgres`
->    → isi `SUPABASE_DATABASE_URL` (port 5432, bukan pooler 6543) → `db:push:supabase`.
->    Jika push WASM tetap gagal dengan error `char` yang sama (bug describe katalog hosted
->    Postgres), jalankan `pnpm db:ddl:postgres` lalu tempel `packages/database/prisma/schema.postgres.sql`
->    ke Supabase SQL Editor.
+> **Error `Column type 'char' could not be deserialized from the database`**: bug schema-engine
+> WASM saat membaca katalog Supabase/Postgres hosted. Ini bukan masalah kode. Perbaikan:
+> jalankan `pnpm db:ddl:postgres`, lalu tempel `packages/database/prisma/schema.postgres.sql`
+> ke **Supabase Dashboard → SQL Editor** dan eksekusi. Setelah itu `pnpm db:seed`.
 >
-> `db:push` kini menolak lebih awal dengan pesan jelas jika schema SQLite dipakai ke URL
-> server, jadi kamu tidak lagi melihat stack trace WASM yang samar.
+> `db:push` menolak lebih awal bila `SUPABASE_DATABASE_URL`/`DATABASE_URL` belum diisi, jadi
+> kamu tidak lagi melihat stack trace WASM yang samar.
 
 > **Catatan engine Prisma**: `pnpm db:push`/`db:reset` berjalan 100% offline lewat schema-engine
 > WASM (`packages/database/scripts/push-wasm.mjs`) dengan `@prisma/schema-engine-wasm` dipin sebagai

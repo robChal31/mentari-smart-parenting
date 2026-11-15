@@ -15,8 +15,8 @@ import type {
 import { ageGroupSlugForMonths, ageInMonths, ageLabel, censorProfanity } from '@mentari/shared';
 
 /* eslint-disable @typescript-eslint/no-explicit-any */
-// Prisma rows come from either the sqlite (string enums) or mysql (enum) schema —
-// serialize structurally instead of against generated types.
+// Prisma rows come from either the postgres/mysql (enum) or legacy string-enum
+// schema — serialize structurally instead of against generated types.
 
 export function serializeAgeGroup(ag: any): AgeGroupDto {
   return {

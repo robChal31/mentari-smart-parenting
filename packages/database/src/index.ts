@@ -2,31 +2,20 @@
 // @mentari/database — Prisma client factory + shared instance
 //
 // Runtime selection is driven by DATABASE_URL:
-//   file:... / libsql:...   → SQLite via @prisma/adapter-libsql (local dev default)
-//   mysql://...             → MySQL via @prisma/adapter-mariadb (production)
-//   postgres://...          → PostgreSQL / Supabase via @prisma/adapter-pg
-//                             (use the direct 5432 connection or pgBouncer with
-//                             pgbouncer=true; pooled 6543 works for queries)
+//   postgres://...  → PostgreSQL / Supabase via @prisma/adapter-pg  (DEFAULT)
+//                     use the direct 5432 connection, or the pooler with
+//                     ?pgbouncer=true; pooled 6543 works for queries
+//   mysql://...     → MySQL via @prisma/adapter-mariadb (legacy production)
+// SQLite is no longer supported — see README "Perintah database".
 // ============================================================
 import './env';
 import { loadEnvFiles } from './env';
 loadEnvFiles(__dirname);
 import { readFileSync } from 'node:fs';
 import path from 'node:path';
-import { PrismaLibSql } from '@prisma/adapter-libsql';
 import { PrismaMariaDb } from '@prisma/adapter-mariadb';
 import { PrismaPg } from '@prisma/adapter-pg';
 import { PrismaClient } from './generated/prisma/client';
-
-// dist/index.js lives at packages/database/dist/index.js → pkgRoot is one level up.
-const pkgRoot = path.resolve(__dirname, '..');
-
-function resolveSqliteUrl(url: string): string {
-  if (url.startsWith('libsql:')) return url;
-  const p = url.slice('file:'.length);
-  const absolute = path.isAbsolute(p) ? p : path.resolve(pkgRoot, p);
-  return `file:${absolute}`;
-}
 
 /**
  * Read the provider baked into the generated client (internal/class.ts embeds
@@ -58,19 +47,18 @@ function withProviderHint(build: () => PrismaClient, target = '(unknown)'): Pris
       throw new Error([
         message,
         '',
-        'Hint: the committed Prisma client is generated for ONE provider (SQLite by default).',
+        'Hint: the committed Prisma client is generated for ONE provider at a time.',
         `The generated client currently targets: ${detectClientProvider() ?? 'unknown'}`,
         `Your DATABASE_URL targets: ${target}`,
         '',
         'Regenerate it for your target database, then rebuild & restart:',
-        '  • local dev (SQLite):  pnpm --filter=@mentari/database db:generate',
-        '  • Supabase (Postgres): pnpm --filter=@mentari/database db:generate:postgres',
-        '  • MySQL:               pnpm --filter=@mentari/database db:generate:mysql',
-        '  then:                  pnpm --filter=@mentari/database build',
+        '  • Supabase/Postgres: pnpm --filter=@mentari/database use:postgres',
+        '  • MySQL:             pnpm --filter=@mentari/database use:mysql',
+        '  (each one regenerates the client and rebuilds the package)',
         '',
-        'Note: db:push:supabase / db:ddl:postgres / db:seed do NOT regenerate the client.',
-        'Switching to Supabase needs db:generate:postgres, and switching back needs',
-        'db:generate — otherwise the API keeps crashing with this error on every restart.',
+        'Note: db:push / db:ddl:postgres / db:seed do NOT regenerate the client.',
+        'Run use:postgres (or use:mysql) after changing providers — otherwise the API',
+        'keeps crashing with this error on every restart.',
       ].filter((line, i, all) => !(line === '' && i > 0 && all[i - 1] === '')).join('\n'));
     }
     throw error;
@@ -78,11 +66,19 @@ function withProviderHint(build: () => PrismaClient, target = '(unknown)'): Pris
 }
 
 export function createPrismaClient(
-  databaseUrl: string = process.env.DATABASE_URL ?? 'file:./dev.db',
+  databaseUrl: string =
+    process.env.SUPABASE_DATABASE_URL ?? process.env.DATABASE_URL ?? '',
 ): PrismaClient {
-  if (databaseUrl.startsWith('file:') || databaseUrl.startsWith('libsql:')) {
-    const adapter = new PrismaLibSql({ url: resolveSqliteUrl(databaseUrl) });
-    return withProviderHint(() => new PrismaClient({ adapter }), 'sqlite');
+  if (!databaseUrl) {
+    throw new Error([
+      'DATABASE_URL is not set.',
+      '',
+      'This project targets Supabase. Add to the root .env:',
+      '  SUPABASE_DATABASE_URL="postgresql://postgres:<password>@db.<project-ref>.supabase.co:5432/postgres"',
+      '  DATABASE_URL="postgresql://postgres:<password>@db.<project-ref>.supabase.co:5432/postgres"',
+      '',
+      'SQLite is no longer supported.',
+    ].join('\n'));
   }
   if (databaseUrl.startsWith('mysql://')) {
     const adapter = new PrismaMariaDb(databaseUrl);
@@ -93,7 +89,7 @@ export function createPrismaClient(
     return withProviderHint(() => new PrismaClient({ adapter }), 'postgresql');
   }
   throw new Error(
-    `Unsupported DATABASE_URL scheme. Use file:./dev.db (sqlite), mysql://user:pass@host:3306/db, or postgresql://… (Supabase). Got: ${databaseUrl}`,
+    `Unsupported DATABASE_URL scheme. Use postgresql://… (Supabase) or mysql://user:pass@host:3306/db. Got: ${databaseUrl.replace(/:[^:@/]+@/, ':***@')}`,
   );
 }
 
