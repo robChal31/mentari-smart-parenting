@@ -203,7 +203,7 @@ async function main() {
     ['panduan-mpasi-6-bulan', 'seri-dongeng-nusantara', 0.62, 'SIDEBAR', 1],
     ['panduan-mpasi-6-bulan', 'teacher-academy-ecd', 0.55, 'SIDEBAR', 2],
     ['takaran-mpasi-6-24-bulan', 'buku-aktivitas-anak-kreatif', 0.6, 'SIDEBAR', 1],
-    ['persiapan-anak-masuk-sd' === 'x' ? '' : 'checklist-persiapan-anak-masuk-sd', 'buku-tematik-sd', 0.95, 'SIDEBAR', 1],
+    ['persiapan-anak-masuk-sd', 'buku-tematik-sd', 0.95, 'SIDEBAR', 1],
     ['checklist-persiapan-anak-masuk-sd', 'cambridge-primary-english', 0.9, 'SIDEBAR', 2],
     ['checklist-persiapan-anak-masuk-sd', 'mentari-digital-learning', 0.88, 'BOTTOM', 1],
     ['checklist-persiapan-anak-masuk-sd', 'english-assessment', 0.8, 'BOTTOM', 2],
