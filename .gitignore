@@ -53,3 +53,7 @@ packages/database/dev.db
 
 # Generated DDL dump (db:ddl:postgres)
 packages/database/prisma/schema.postgres.sql
+
+# Berkas unggahan (disajikan API, jangan masuk repo)
+uploads/
+apps/api/uploads/

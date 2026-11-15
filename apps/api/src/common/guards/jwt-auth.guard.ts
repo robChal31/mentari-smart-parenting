@@ -13,11 +13,9 @@ import { prisma } from '@mentari/database';
 /**
  * Verifies the Bearer token and attaches `request.user`.
  *
- * Two verification modes:
- *  - DEV (default): HS256 tokens signed with JWT_SECRET by POST /auth/login.
- *  - SUPABASE: when SUPABASE_JWT_SECRET is set, the same secret verifies
- *    Supabase-issued access tokens (aud "authenticated") — no Supabase SDK
- *    required because Supabase signs with plain HS256 by default.
+ * Tokens are HS256, signed with JWT_SECRET by POST /auth/login. Aplikasi ini
+ * mandiri: tidak ada penyedia identitas eksternal, jadi satu-satunya sumber
+ * kebenaran sesi adalah tabel `users` di database sendiri.
  *
  * @Public() routes pass through; if a token is present it is still verified
  * and attached so public endpoints can attribute analytics to a user.
@@ -44,34 +42,9 @@ export class JwtAuthGuard implements CanActivate {
     }
 
     try {
-      const supabaseSecret = process.env.SUPABASE_JWT_SECRET;
-      let payload: { sub?: string; email?: string; role?: string; userId?: string };
-
-      if (supabaseSecret) {
-        // Supabase tokens: sub = supabase auth user id, email claim, aud=authenticated
-        payload = this.jwt.verify(token, { secret: supabaseSecret, audience: 'authenticated' });
-        const user = await prisma.user.findUnique({ where: { supabaseId: payload.sub ?? '' } });
-        if (user) {
-          request.user = this.toAuthUser(user);
-        } else if (payload.email) {
-          // First login via Supabase — provision a local profile on the fly
-          const created = await prisma.user.create({
-            data: {
-              supabaseId: payload.sub,
-              email: payload.email,
-              fullName: (payload as Record<string, unknown>).user_metadata
-                ? ((payload as Record<string, unknown>).user_metadata as { full_name?: string })?.full_name ?? payload.email.split('@')[0]
-                : payload.email.split('@')[0],
-              role: 'USER',
-            },
-          });
-          request.user = this.toAuthUser(created);
-        }
-        if (isPublic || request.user) return true;
-        throw new UnauthorizedException({ code: 'UNAUTHORIZED', message: 'Akun tidak ditemukan.' });
-      }
-
-      payload = this.jwt.verify(token, { secret: this.devSecret() });
+      const payload = this.jwt.verify<{ sub?: string; email?: string; role?: string; userId?: string }>(token, {
+        secret: this.devSecret(),
+      });
       const userId = payload.userId ?? payload.sub;
       const user = userId ? await prisma.user.findUnique({ where: { id: userId } }) : null;
       if (!user || !user.isActive) {
@@ -86,6 +59,14 @@ export class JwtAuthGuard implements CanActivate {
     }
   }
 
+  /**
+   * Rahasia penanda tangan token.
+   *
+   * Di produksi JWT_SECRET WAJIB diisi: fallback di bawah ini tertulis di kode
+   * publik, jadi siapa pun yang membacanya bisa membuat token admin palsu.
+   * Server menolak start kalau NODE_ENV=production tanpa JWT_SECRET (lihat
+   * load-env), sehingga jalur ini hanya hidup saat pengembangan lokal.
+   */
   private devSecret(): string {
     return process.env.JWT_SECRET ?? 'mentari-dev-secret-change-me';
   }

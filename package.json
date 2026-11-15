@@ -2,7 +2,7 @@
   "name": "mentari-smart-parenting",
   "version": "1.0.0",
   "private": true,
-  "description": "Mentari Smart Parent — Parenting Knowledge Hub by Mentari Group. Monorepo: apps/web (Next.js) + apps/api (NestJS) + packages/shared + packages/database.",
+  "description": "Mentari Smart Parent \u2014 Parenting Knowledge Hub by Mentari Group. Monorepo: apps/web (Next.js) + apps/api (NestJS) + packages/shared + packages/database.",
   "packageManager": "pnpm@9.15.9",
   "scripts": {
     "build": "pnpm --filter=@mentari/shared --filter=@mentari/database build && pnpm --filter=@mentari/api build && pnpm --filter=@mentari/web build",
@@ -14,7 +14,6 @@
     "db:push": "pnpm --filter=@mentari/database db:push",
     "db:seed": "pnpm --filter=@mentari/database db:seed",
     "db:reset": "pnpm --filter=@mentari/database db:reset",
-    "db:push:supabase": "pnpm --filter=@mentari/database db:push:supabase",
     "db:ddl:postgres": "pnpm --filter=@mentari/database db:ddl:postgres",
     "db:setup": "pnpm db:generate && pnpm db:push && pnpm db:seed",
     "db:check": "pnpm --filter=@mentari/database use:check",

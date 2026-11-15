@@ -2,8 +2,8 @@
 // PRODUCTION SCHEMA (MySQL 8) — packages/database/prisma/schema.prisma
 // Local development uses schema.sqlite.prisma (same models, sqlite types).
 // Derived from docs/PRD.md section 4. Extra fields vs raw PRD:
-//   - users.password_hash (nullable): enables standalone dev auth when
-//     Supabase is not configured; unused when Supabase Auth is in front.
+//   - users.password_hash (nullable): enables standalone auth; aplikasi ini
+//     menandatangani token sendiri, tidak memakai penyedia identitas eksternal.
 //   - community_threads.category_slug: free-form forum section tag.
 // ============================================================
 

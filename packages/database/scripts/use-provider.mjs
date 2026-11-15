@@ -13,11 +13,11 @@
  * matching provider, and rebuilds.
  *
  * Supported providers: postgres (default) and mysql. SQLite is no longer
- * supported — the repo targets Supabase.
+ * supported — this repo targets self-hosted PostgreSQL.
  *
  * Usage:
  *   node scripts/use-provider.mjs            # reconcile with DATABASE_URL
- *   node scripts/use-provider.mjs postgres   # force Postgres / Supabase
+ *   node scripts/use-provider.mjs postgres   # force PostgreSQL
  *   node scripts/use-provider.mjs mysql      # force MySQL
  *   node scripts/use-provider.mjs --check    # report only, change nothing
  */
@@ -41,7 +41,7 @@ const forced = args.find((a) => ['postgres', 'mysql'].includes(a));
 
 const PROVIDERS = {
   postgres: {
-    label: 'PostgreSQL / Supabase',
+    label: 'PostgreSQL',
     schema: 'prisma/schema.postgres.prisma',
     generate: 'db:generate:postgres',
   },
@@ -73,7 +73,7 @@ function generatedProvider() {
   }
 }
 
-const url = process.env.SUPABASE_DATABASE_URL ?? process.env.DATABASE_URL ?? '';
+const url = process.env.DATABASE_URL ?? '';
 const wanted = forced ?? providerFromUrl(url);
 const current = generatedProvider();
 const masked = url ? url.replace(/(:\/\/[^:/\s]+:)[^@/\s]*(@)/, '$1***$2') : '(not set)';
@@ -85,9 +85,8 @@ if (!wanted) {
     '',
     'ERROR: no Postgres/MySQL URL found.',
     '',
-    'This repo targets Supabase. Add to the root .env:',
-    '  SUPABASE_DATABASE_URL="postgresql://postgres:<password>@db.<project-ref>.supabase.co:5432/postgres"',
-    '  DATABASE_URL="postgresql://postgres:<password>@db.<project-ref>.supabase.co:5432/postgres"',
+    'Add to the root .env:',
+    '  DATABASE_URL="postgresql://mentari:<password>@127.0.0.1:5432/mentari_smartparent"',
     '',
     'SQLite is no longer supported.',
   ].join('\n'));
@@ -120,7 +119,7 @@ console.log('\n✅ Generated client now targets ' + PROVIDERS[wanted].label + '.
 console.log('   Restart the API (pnpm dev) to pick it up.');
 console.log('\nNext:');
 if (wanted === 'postgres') {
-  console.log('  pnpm --filter=@mentari/database db:push:supabase');
+  console.log('  pnpm db:push');
   console.log('  pnpm --filter=@mentari/database db:seed');
 } else if (wanted === 'mysql') {
   console.log('  pnpm --filter=@mentari/database db:push:mysql');

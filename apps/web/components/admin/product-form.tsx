@@ -5,6 +5,8 @@ import { Loader2, Plus } from "lucide-react";
 import { useDictionary } from "@/components/i18n-provider";
 import { apiData, ApiError } from "@/lib/client-api";
 import { Combobox } from "@/components/combobox";
+import { SlugField } from "./slug-field";
+import { FileUploadField } from "./file-upload-field";
 import type { AgeGroupDto, ProductDto } from "@mentari/shared";
 
 /** Add/edit form for the admin products tab (createProductSchema field set). */
@@ -90,7 +92,7 @@ export function ProductForm({
 
       <div className="mt-3 grid gap-3 sm:grid-cols-2">
         <input required minLength={2} value={name} onChange={(e) => setName(e.target.value)} placeholder={dict.admin.namePlaceholder} aria-label={dict.admin.nameAria} className={`${inputClass} sm:col-span-2`} />
-        <input value={slug} onChange={(e) => setSlug(e.target.value.toLowerCase())} placeholder={dict.admin.slugPlaceholder} aria-label={dict.admin.slugAria} pattern="[a-z0-9-]*" className={inputClass} />
+        <SlugField title={name} slug={slug} onChange={setSlug} locked={Boolean(initial)} />
         <Combobox
           ariaLabel={dict.admin.productTypeAria}
           options={typeOptions}
@@ -99,25 +101,15 @@ export function ProductForm({
           buttonClassName="inline-flex w-full items-center justify-between gap-2 rounded-2xl border border-sand bg-white px-4 py-3 text-sm outline-none transition focus:border-primary"
         />
         <div className="sm:col-span-2">
-          <span className="text-[10px] font-extrabold uppercase tracking-[0.14em] text-muted">{dict.admin.coverImageLabel}</span>
-          <div className="mt-1.5 flex items-start gap-3">
-            <input
-              value={coverImageUrl}
-              onChange={(e) => setCoverImageUrl(e.target.value)}
-              placeholder="/images/products/buku-tematik-sd.jpg"
-              aria-label={dict.admin.coverImageLabel}
-              className={`min-w-0 flex-1 ${inputClass}`}
-            />
-            {coverImageUrl.trim() ? (
-              /* eslint-disable-next-line @next/next/no-img-element */
-              <img src={coverImageUrl} alt="" className="h-20 w-20 shrink-0 rounded-xl border border-sand object-cover" />
-            ) : (
-              <span className="grid h-20 w-20 shrink-0 place-items-center rounded-xl border border-dashed border-sand bg-cream text-[9px] font-bold text-muted">
-                {dict.admin.noCoverYet}
-              </span>
-            )}
-          </div>
-          <p className="mt-1 text-[10px] text-muted">{dict.admin.coverImageHint}</p>
+          <FileUploadField
+            label={dict.admin.coverImageLabel}
+            value={coverImageUrl}
+            onChange={setCoverImageUrl}
+            kind="image"
+            subdir="product"
+            previewClassName="h-24 w-24"
+            hint="JPG, PNG, WebP (maks 5 MB). Foto besar dikecilkan otomatis ke 1600px."
+          />
         </div>
         <input value={price} onChange={(e) => setPrice(e.target.value)} inputMode="numeric" type="number" min={0} step={1000} placeholder={dict.admin.pricePlaceholder} aria-label={dict.admin.priceAria} className={inputClass} />
         <input value={sortOrder} onChange={(e) => setSortOrder(e.target.value)} inputMode="numeric" type="number" min={0} aria-label={dict.admin.sortOrderAria} className={inputClass} />

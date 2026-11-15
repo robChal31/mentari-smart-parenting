@@ -1,14 +1,14 @@
 // ============================================================
-// SUPABASE / POSTGRESQL SCHEMA — packages/database/prisma/schema.postgres.prisma
-// Same models as the MySQL production schema; only the datasource provider and
+// POSTGRESQL SCHEMA — packages/database/prisma/schema.postgres.prisma
+// Same models as the MySQL schema; only the datasource provider and
 // Postgres-incompatible column attributes differ.
 //
-// Push to a Supabase project (direct connection, port 5432):
-//   SUPABASE_DATABASE_URL="postgresql://postgres:<pw>@db.<ref>.supabase.co:5432/postgres" \
-//     pnpm --filter=@mentari/database db:push:supabase
+// Target: PostgreSQL lokal di VPS yang sama dengan aplikasi.
+//   DATABASE_URL="postgresql://mentari:<pw>@127.0.0.1:5432/mentari_smartparent" \
+//     pnpm db:push
 //
-// Or with the standard Prisma CLI (needs network access to binaries.prisma.sh):
-//   SUPABASE_DATABASE_URL=... npx prisma db push --config prisma.config.supabase.ts
+// DDL dijalankan lewat driver `pg`, bukan mesin skema Prisma — lihat
+// scripts/push-pg.mjs untuk alasannya.
 // ============================================================
 
 generator client {
