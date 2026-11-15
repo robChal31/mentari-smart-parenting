@@ -14,12 +14,12 @@ pm2 status
 pm2 logs mentari-web --lines 50 --nostream
 pm2 logs mentari-api --lines 50 --nostream
 
-# 3. Apakah port 3000 dan 4000 benar-benar terbuka?
-ss -ltnp | grep -E ':3000|:4000'
+# 3. Apakah port 3000 dan 3001 benar-benar terbuka?
+ss -ltnp | grep -E ':3000|:3001'
 
 # 4. Uji langsung tanpa nginx — kalau ini 200, masalahnya di nginx
 curl -I http://127.0.0.1:3000
-curl -s http://127.0.0.1:4000/api/v1/categories | head -c 200
+curl -s http://127.0.0.1:3001/api/v1/categories | head -c 200
 ```
 
 Kalau langkah 4 berhasil tapi browser masih 502, baru periksa nginx:
@@ -55,18 +55,18 @@ Ini yang paling menipu. Tujuan rewrite **dibekukan saat build** ke
   "destination": "http://127.0.0.1:3001/api/:path*" }
 ```
 
-API berjalan di **4000**. Next mem-proxy `/api/*` ke 3001, koneksi ditolak,
+API berjalan di **3001**. Next mem-proxy `/api/*` ke 3001, koneksi ditolak,
 nginx melaporkannya sebagai 502.
 
 Menyetel `API_INTERNAL_URL` di `ecosystem.config.js` **tidak menolong** —
-nilainya sudah tertanam di artefak. Sudah dikembalikan ke 4000 di
+nilainya sudah tertanam di artefak. Sudah dikembalikan ke 3001 di
 `next.config.ts`, `lib/api.ts`, dan `main.ts`.
 
 Cek di VPS-mu kapan saja:
 
 ```bash
 grep -o 'destination":"[^"]*"' ~/apps/web/apps/web/.next/routes-manifest.json
-# harus 127.0.0.1:4000
+# harus 127.0.0.1:3001
 ```
 
 ### c. `ecosystem.config.js` tidak pernah sampai ke VPS
@@ -99,9 +99,9 @@ lengkap di runner.
 
 ---
 
-## Port: 4000 untuk API
+## Port: 3001 untuk API
 
-Petunjuk sebelumnya memakai 3001 untuk NestJS. Repo ini memakai **4000**
+Petunjuk sebelumnya memakai 3001 untuk NestJS. Repo ini memakai **3001**
 (`API_PORT` di `.env.example`), dan `ecosystem.config.js` menyetelnya
 eksplisit. Kalau nginx-mu mengarah ke 3001:
 
@@ -110,10 +110,10 @@ eksplisit. Kalau nginx-mu mengarah ke 3001:
 location /api/ { proxy_pass http://127.0.0.1:3001; }
 
 # BENAR
-location /api/ { proxy_pass http://127.0.0.1:4000; }
+location /api/ { proxy_pass http://127.0.0.1:3001; }
 ```
 
-**Jangan pakai trailing slash** di `proxy_pass`. `http://127.0.0.1:4000/`
+**Jangan pakai trailing slash** di `proxy_pass`. `http://127.0.0.1:3001/`
 membuang prefix `/api/`, sehingga `/api/v1/contents` sampai ke NestJS sebagai
 `/v1/contents` → 404.
 
@@ -167,7 +167,7 @@ sudo nginx -t && sudo systemctl reload nginx
 ```bash
 pm2 status                    # keduanya harus "online"
 curl -I http://127.0.0.1:3000 # 200
-curl http://127.0.0.1:4000/api/v1/categories | head -c 100
+curl http://127.0.0.1:3001/api/v1/categories | head -c 100
 ```
 
 Workflow sekarang **gagal** kalau PM2 tidak `online` atau port tidak

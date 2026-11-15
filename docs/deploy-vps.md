@@ -44,11 +44,11 @@ server {
         proxy_cache_bypass $http_upgrade;
     }
 
-    # API — port 4000, BUKAN 3001 (default API_PORT).
+    # API — port 3001, BUKAN 3001 (default API_PORT).
     # Tanpa trailing slash di proxy_pass: trailing slash MEMBUANG prefix /api/,
     # sehingga /api/v1/contents sampai ke NestJS sebagai /v1/contents → 404.
     location /api/ {
-        proxy_pass http://127.0.0.1:4000;
+        proxy_pass http://127.0.0.1:3001;
         proxy_http_version 1.1;
         proxy_set_header Host $host;
         proxy_set_header X-Real-IP $remote_addr;
@@ -60,7 +60,7 @@ server {
     # Gambar unggahan disajikan API, jadi harus diproxy juga.
     # Tanpa blok ini thumbnail akan 404 di browser.
     location /uploads/ {
-        proxy_pass http://127.0.0.1:4000;
+        proxy_pass http://127.0.0.1:3001;
         proxy_set_header Host $host;
         proxy_set_header X-Forwarded-Proto $scheme;
         expires 7d;
@@ -188,7 +188,7 @@ pnpm install --prod --ignore-scripts
 | `Cannot find module './uploads/uploads.module'` | `apps/api/src/uploads/` tidak ter-commit (pola `.gitignore` terlalu lebar) |
 | Halaman 502 | PM2 mati — cek `pm2 logs`. Sering karena `JWT_SECRET` ditolak saat boot |
 | `/api/...` 404 | `proxy_pass` pakai trailing slash, prefix `/api/` terbuang |
-| `/api/...` connection refused | Nginx mengarah ke 3001; API ada di 4000 |
+| `/api/...` connection refused | Nginx mengarah ke 3001; API ada di 3001 |
 | Gambar 404 | `location /uploads/` belum ada di nginx |
 | Deploy kedua gagal "already launched" | `pm2 start` → pakai `pm2 reload` |
 | Gambar hilang setelah deploy | `UPLOAD_DIR` di dalam folder deploy |

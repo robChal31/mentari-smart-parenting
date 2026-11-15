@@ -48,7 +48,7 @@ jobs:
       - name: Build all packages
         run: pnpm build
         env:
-          API_INTERNAL_URL: "http://127.0.0.1:4000"
+          API_INTERNAL_URL: "http://127.0.0.1:3001"
           NEXT_TELEMETRY_DISABLED: "1"
 
       - name: Prepare artifacts
@@ -138,5 +138,5 @@ jobs:
 
             # Buktikan port benar-benar melayani, bukan cuma "online".
             curl -fsS --retry 10 --retry-delay 2 --retry-connrefused http://127.0.0.1:3000/ >/dev/null
-            curl -fsS --retry 10 --retry-delay 2 --retry-connrefused http://127.0.0.1:4000/api/v1/categories >/dev/null
-            echo "web:3000 dan api:4000 merespons"
+            curl -fsS --retry 10 --retry-delay 2 --retry-connrefused http://127.0.0.1:3001/api/v1/categories >/dev/null
+            echo "web:3000 dan api:3001 merespons"
