@@ -107,18 +107,36 @@ CORS_ORIGIN="http://43.173.48.52"
 > bernilai contoh, atau kurang dari 32 karakter. Ini disengaja: tanpa itu, kunci
 > yang tertulis di repo publik bisa dipakai siapa pun untuk membuat token admin.
 
-Cara memuatnya ke proses: tambahkan `require("dotenv").config(...)` tidak diperlukan —
-`apps/api/src/load-env.ts` memuat `.env` terdekat dengan walk-up dari lokasi file.
-Karena file ada di `/var/lib/mentari/.env`, arahkan eksplisit lewat PM2:
+Cara memuatnya ke proses: **tidak perlu `dotenv`**. `apps/api/src/load-env.ts` dan
+`packages/database/src/env.ts` sudah mencari `.env` dengan urutan:
 
-```js
-// ecosystem.config.js → apps[1].env
-ENV_FILE: "/var/lib/mentari/.env",
+1. `$ENV_FILE` (eksplisit, kalau kamu ingin menunjuk file lain)
+2. `.env` terdekat, walk-up dari lokasi file — ini yang dipakai di repo lokal
+3. `/var/lib/mentari/.env` — lokasi standar di VPS
+
+Jadi menaruh file di `/var/lib/mentari/.env` sudah cukup untuk API **dan** seeder.
+Tidak ada kode yang perlu diubah, dan tidak perlu `ENV_FILE` di `ecosystem.config.js`.
+
+### 3b. Mengisi data esensial (seed) — tanpa clone repo
+
+Build terjadi di GitHub Actions, dan `pnpm deploy --prod` membuang devDependency
+(`tsx`). Karena itu `pnpm db:seed` **tidak bisa** dijalankan di `/home/ubuntu/apps`,
+dan meng-clone repo ke VPS juga tidak perlu: seeder sudah dikirim sebagai
+`dist/seed.js` di dalam artefak.
+
+```bash
+SEED_ADMIN_PASSWORD='...' SEED_EDITOR_PASSWORD='...' \
+  node /home/ubuntu/apps/scripts/seed.mjs
 ```
 
-lalu di `load-env.ts` tambahkan pembacaan `process.env.ENV_FILE` lebih dulu. Kalau
-tidak ingin mengubah kode, alternatif paling sederhana: `pm2 start ... --env-file`
-atau jalankan `pm2` dari shell yang sudah mengekspor variabelnya.
+Hasilnya: 6 age group, 29 kategori, 1 author bawaan, dan 2 akun staf
+(`admin@mentari.id` ADMIN, `editor@mentari.id` EDITOR).
+
+Setelah seed, `pm2 restart mentari-api`.
+
+> Seeder **menghapus isi semua tabel** sebelum mengisi. Aman saat database masih
+> kosong; jangan dijalankan lagi setelah ada konten nyata.
+> Tanpa `SEED_*_PASSWORD`, akun memakai password default yang tertulis di repo publik.
 
 ---
 

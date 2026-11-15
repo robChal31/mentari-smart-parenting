@@ -183,6 +183,7 @@ async function main() {
       '   publik, jalankan ulang dengan password sendiri:',
       '',
       '   SEED_ADMIN_PASSWORD=\'...\' SEED_EDITOR_PASSWORD=\'...\' pnpm db:seed',
+      '   (di VPS tanpa repo: node /home/ubuntu/apps/scripts/seed.mjs)',
     ].join('\n'));
   }
 }
