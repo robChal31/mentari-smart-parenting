@@ -66,11 +66,12 @@ async function assertSchemaPushed() {
       '',
       'Create it first — one command, no manual SQL needed:',
       '',
-      '  pnpm db:push             # creates all 25 tables in one transaction',
+      '  pnpm db:push             # creates any missing tables; safe to re-run',
       '  pnpm db:seed             # then retry the seed',
       '',
-      'Fallback if db:push cannot reach the database: `pnpm db:ddl:postgres`',
-      'writes prisma/schema.postgres.sql for the Supabase SQL Editor.',
+      'db:push is idempotent, so it also finishes a schema that a previous run',
+      'left half-built. Fallback if it cannot reach the database:',
+      '`pnpm db:ddl:postgres` writes prisma/schema.postgres.sql for the SQL Editor.',
     ].join('\n'));
   }
 }

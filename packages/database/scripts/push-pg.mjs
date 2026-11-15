@@ -93,29 +93,47 @@ try {
   process.exit(1);
 }
 
-// ---- 3. guard against clobbering a live schema ----------------------------
-const existing = await client.query(`
-  SELECT count(*)::int AS n FROM information_schema.tables
-  WHERE table_schema = 'public' AND table_name IN ('users', 'contents', 'products', 'authors');
-`);
-const present = existing.rows[0].n;
-if (present > 0 && !force) {
+// ---- 3. is the schema already complete? --------------------------------
+// Counting a few "core" tables cannot tell a finished database from one that a
+// crashed run left half-built (which is the normal failure mode here). Compare
+// against the full expected list instead, so a partial schema gets completed
+// rather than refused.
+const expected = [...ddl.matchAll(/CREATE TABLE IF NOT EXISTS "([^"]+)"/g)].map((m) => m[1]);
+const found = await client.query(
+  `SELECT table_name FROM information_schema.tables WHERE table_schema = 'public'`,
+);
+const existingTables = new Set(found.rows.map((r) => r.table_name));
+const missing = expected.filter((t) => !existingTables.has(t));
+const extra = [...existingTables].filter((t) => !expected.includes(t) && !t.includes('_prisma'));
+
+if (missing.length === 0 && !force) {
   console.log('');
-  console.log(`Nothing to do: ${present} of the 4 core tables already exist in "public".`);
-  console.log('Prisma DDL is not idempotent, so it was NOT executed.');
+  console.log(`Schema is already complete — all ${expected.length} tables exist.`);
+  console.log('Nothing was changed.');
   console.log('');
-  console.log('  • Skema sudah ada → lanjut saja: pnpm db:seed');
-  console.log('  • Mau reset total  → pnpm --filter=@mentari/database db:push --force');
+  console.log('  • Isi data demo → pnpm db:seed');
+  console.log('  • Reset total   → pnpm --filter=@mentari/database db:push --force');
   await client.end();
-  process.exit(present === 4 ? 0 : 1);
+  process.exit(0);
+}
+
+if (missing.length > 0) {
+  console.log('');
+  console.log(`Schema is incomplete: ${expected.length - missing.length}/${expected.length} tables exist.`);
+  console.log(`Missing (${missing.length}): ${missing.slice(0, 6).join(', ')}${missing.length > 6 ? ', …' : ''}`);
+  console.log('The DDL is idempotent, so the missing objects will be created now.');
+}
+if (extra.length > 0) {
+  console.log('');
+  console.log(`Note: ${extra.length} table(s) in "public" are not part of this schema:`);
+  console.log(`  ${extra.slice(0, 6).join(', ')}${extra.length > 6 ? ', …' : ''}`);
+  console.log('They are left untouched.');
 }
 
 if (dryRun) {
   console.log('');
-  console.log(`DRY RUN — ${ddl.length} bytes, ${(ddl.match(/CREATE TABLE/gi) ?? []).length} tables.`);
-  if (present > 0) console.log(`--force would DROP the ${present} existing core table(s) first.`);
-  console.log('First statements:');
-  console.log(ddl.split('\n').slice(0, 8).join('\n'));
+  console.log(`DRY RUN — ${ddl.length} bytes, ${expected.length} tables. Nothing was applied.`);
+  if (force) console.log('--force would DROP the public schema first.');
   await client.end();
   process.exit(0);
 }
@@ -152,7 +170,12 @@ const created = await client.query(`
   SELECT count(*)::int AS n FROM information_schema.tables WHERE table_schema = 'public';
 `);
 console.log('');
-console.log(`✅ Schema created — ${created.rows[0].n} tables in "public".`);
+const completed = missing.length > 0 && missing.length < expected.length;
+console.log(
+  completed
+    ? `✅ Schema completed — ${created.rows[0].n}/${expected.length} tables in "public".`
+    : `✅ Schema created — ${created.rows[0].n} tables in "public".`,
+);
 console.log('');
 console.log('Next: pnpm db:seed');
 await client.end();

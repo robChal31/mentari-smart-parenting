@@ -168,13 +168,55 @@ if (result.exitCode !== 0 || !result.stdout) {
   process.exit(1);
 }
 
-writeFileSync(outPath, result.stdout);
-const tableCount = (result.stdout.match(/CREATE TABLE/gi) ?? []).length;
-const enumCount = (result.stdout.match(/CREATE TYPE/gi) ?? []).length;
+/**
+ * Make the generated DDL safe to re-run.
+ *
+ * Prisma emits bare `CREATE TYPE` / `CREATE TABLE` / `CREATE INDEX`, which abort
+ * the whole script the moment anything already exists. That makes a partially
+ * created database impossible to finish: a half-applied run leaves some objects
+ * behind, so every retry stops on the first one it finds.
+ *
+ * Rewriting them to the IF NOT EXISTS forms makes the script converge instead of
+ * aborting — running it twice is a no-op, and running it after a crash finishes
+ * the job. Foreign keys cannot be made conditional in plain SQL, so they are
+ * wrapped in a guard instead (Postgres has no ADD CONSTRAINT IF NOT EXISTS).
+ */
+function makeIdempotent(sql) {
+  return sql
+    // Postgres has CREATE TABLE/INDEX IF NOT EXISTS but NOT CREATE TYPE IF NOT EXISTS
+    // ("syntax error at or near NOT"). Guard enums with a DO block instead — the
+    // pg_type lookup is schema-qualified so a same-named type in another schema
+    // cannot make us skip creating ours.
+    .replace(/^CREATE TYPE "([^"]+)" AS ENUM \((.+)\);$/gm, (_m, name, values) =>
+      `DO $$ BEGIN\n` +
+      `  IF NOT EXISTS (SELECT 1 FROM pg_type t JOIN pg_namespace n ON n.oid = t.typnamespace\n` +
+      `                 WHERE t.typname = '${name}' AND n.nspname = current_schema()) THEN\n` +
+      `    CREATE TYPE "${name}" AS ENUM (${values});\n` +
+      `  END IF;\n` +
+      `END $$;`)
+    .replace(/^CREATE TABLE(?! IF NOT EXISTS)/gm, 'CREATE TABLE IF NOT EXISTS')
+    .replace(/^CREATE UNIQUE INDEX(?! IF NOT EXISTS)/gm, 'CREATE UNIQUE INDEX IF NOT EXISTS')
+    .replace(/^CREATE INDEX(?! IF NOT EXISTS)/gm, 'CREATE INDEX IF NOT EXISTS')
+    .replace(
+      /^ALTER TABLE (.+?) ADD CONSTRAINT "([^"]+)" (FOREIGN KEY .+);$/gm,
+      (_m, table, name, body) =>
+        `DO $$ BEGIN\n` +
+        `  IF NOT EXISTS (SELECT 1 FROM pg_constraint WHERE conname = '${name}') THEN\n` +
+        `    ALTER TABLE ${table} ADD CONSTRAINT "${name}" ${body};\n` +
+        `  END IF;\n` +
+        `END $$;`,
+    );
+}
 
-console.log(`✅ Wrote ${result.stdout.length} bytes of DDL to ${path.relative(root, outPath)}`);
+const idempotent = makeIdempotent(result.stdout);
+writeFileSync(outPath, idempotent);
+const tableCount = (idempotent.match(/CREATE TABLE/gi) ?? []).length;
+const enumCount = (idempotent.match(/CREATE TYPE/gi) ?? []).length;
+
+console.log(`✅ Wrote ${idempotent.length} bytes of DDL to ${path.relative(root, outPath)}`);
 console.log(`   ${tableCount} tables, ${enumCount} enums/types`);
 console.log('');
+console.log('This DDL is idempotent — safe to re-run on a partially created database.');
 console.log('Next: open Supabase Dashboard -> SQL Editor, paste that file, press Run.');
 console.log('Then seed the demo data:');
 console.log('  pnpm db:seed');
