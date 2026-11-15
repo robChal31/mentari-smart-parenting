@@ -35,7 +35,7 @@ Prasyarat: **Node ≥ 20** dan **pnpm 9**.
 ```bash
 pnpm install        # install seluruh workspace
 pnpm db:check       # pastikan klien Prisma cocok dengan .env (harus "postgres ✅ match")
-pnpm db:ddl:postgres   # tulis prisma/schema.postgres.sql  ← tempel ke Supabase SQL Editor
+pnpm db:push        # buat 25 tabel di Supabase (satu transaksi)
 pnpm db:seed        # isi data demo
 pnpm dev            # web http://localhost:3001 · api http://localhost:4000/api/v1
                     # (first build @mentari/shared & @mentari/database otomatis)
@@ -68,12 +68,11 @@ Atau per app: `pnpm dev:web` / `pnpm dev:api`.
         `Driver Adapter @prisma/adapter-pg … is not compatible with the provider …`.
      2. Set `SUPABASE_DATABASE_URL` di `.env` root ke *direct connection* (port 5432). Password
         tidak pernah di-log penuh.
-     3. **Buat skemanya** dengan `pnpm --filter=@mentari/database db:ddl:postgres`, lalu tempel
-        `packages/database/prisma/schema.postgres.sql` ke **Supabase Dashboard → SQL Editor** dan
-        Run. Langkah ini **offline** dan tidak butuh koneksi dari komputermu (25 tabel, 8 enum).
-        `db:push` **tidak bisa** dipakai untuk Postgres: `@prisma/adapter-pg` gagal membaca
-        katalog (`Column type 'char' could not be deserialized`, `prisma/prisma#27403`), bahkan
-        pada database kosong.
+     3. **Buat skemanya**: `pnpm db:push`. DDL Prisma dieksekusi lewat driver `pg` dalam satu
+        transaksi, tanpa schema engine — jadi bug katalog `char`
+        (`prisma/prisma#27403`) tidak pernah tersentuh. Kalau mesinmu tidak bisa menjangkau
+        database (firewall/IP allowlist), pakai jalur manual: `pnpm db:ddl:postgres` lalu tempel
+        `packages/database/prisma/schema.postgres.sql` ke **Supabase Dashboard → SQL Editor**.
      4. `pnpm db:seed` untuk data demo (opsional; menghapus data yang ada).
      5. Untuk runtime aplikasi set `DATABASE_URL=postgresql://…` — client factory memilih adapter
         `@prisma/adapter-pg` otomatis dari scheme URL (`mysql://` → MariaDB, `postgres(ql)://` → pg).
@@ -122,12 +121,11 @@ bawah memakai `schema.postgres.prisma` dan membaca `SUPABASE_DATABASE_URL` (fall
 | Perintah | Fungsi |
 |---|---|
 | `pnpm db:check` | bandingkan URL vs provider klien Prisma yang ter-generate (tanpa mengubah apa pun) |
-| `pnpm db:ddl:postgres` | **cara utama membuat skema**: tulis `prisma/schema.postgres.sql`, tanpa koneksi DB |
+| `pnpm db:push` | **buat skema di Supabase** — 25 tabel, satu transaksi |
 | `pnpm db:seed` | wipe & re-seed data demo (25 konten, 7 produk, 23 milestone, dst.) |
-| `pnpm db:reset` | tulis ulang DDL saja (seed butuh skema sudah ada di Supabase) |
-| `pnpm db:push` | hanya untuk MySQL; untuk Postgres selalu menolak (lihat catatan `char` di bawah) |
+| `pnpm db:reset` | hapus skema lalu buat ulang (`db:push --force`) |
 | `pnpm db:push:mysql` | push `schema.prisma` (MySQL) via Prisma CLI |
-| `pnpm db:push:cli` | `prisma db push` standar (butuh unduh schema-engine dari `binaries.prisma.sh`) |
+| `pnpm db:ddl:postgres` | tulis `prisma/schema.postgres.sql` (offline) — hanya kalau `db:push` tidak bisa konek |
 | `pnpm --filter=@mentari/database use:postgres` | generate ulang klien Prisma untuk Postgres + build |
 | `pnpm --filter=@mentari/database use:mysql` | sama, untuk MySQL (`schema.prisma`) |
 
@@ -148,27 +146,21 @@ bawah memakai `schema.postgres.prisma` dan membaca `SUPABASE_DATABASE_URL` (fall
 > perubahan konfigurasi supaya anggota tim lain tidak perlu generate ulang.
 >
 > **Error `Column type 'char' could not be deserialized from the database`**: ini **bukan**
-> soal data atau kredensial kamu. `@prisma/adapter-pg` membaca seluruh katalog Postgres untuk
-> tahu skema yang ada, dan tersandung tipe bawaan `char` (OID 18) — terjadi juga di database
-> yang masih kosong (`prisma/prisma#27403`). Karena itu `db:push` **tidak bisa** dipakai untuk
-> Postgres dan sekarang menolak lebih awal alih-alih menampilkan stack trace WASM.
->
-> Alur yang benar (tidak butuh koneksi dari komputermu):
+> soal data atau kredensial. Prisma's schema engine (`db push`) membaca seluruh katalog Postgres
+> dan tersandung tipe bawaan `char` (OID 18) — terjadi juga di database kosong
+> (`prisma/prisma#27403`). Membuat tabel tidak butuh diff engine sama sekali, jadi `db:push`
+> sekarang mengeksekusi DDL Prisma lewat driver `pg` biasa, dalam satu transaksi:
 > ```powershell
-> pnpm db:ddl:postgres   # 1. tulis packages/database/prisma/schema.postgres.sql
-> # 2. buka Supabase Dashboard -> SQL Editor, tempel isi file itu, Run
-> pnpm db:seed           # 3. isi data demo
+> pnpm db:push      # tanpa schema engine → tidak kena bug ini
+> pnpm db:seed
 > ```
-> Kalau `db:seed` dijalankan sebelum langkah 2, sekarang ia berhenti dengan pesan
-> "schema has not been created yet" beserta langkah di atas — bukan `P2021` mentah.
+> Kalau `db:push` tidak bisa konek ke database, pakai jalur manual:
+> `pnpm db:ddl:postgres` → tempel `prisma/schema.postgres.sql` ke Supabase SQL Editor.
 
-> **Catatan engine Prisma**: pembuatan DDL (`db:ddl:postgres`) berjalan 100% offline lewat
-> schema-engine WASM (`packages/database/scripts/export-ddl.mjs`) dengan
-> `@prisma/schema-engine-wasm` dipin sebagai devDependency `@mentari/database` — tidak perlu
-> jaringan ke `binaries.prisma.sh`, bahkan tidak perlu `.env`. Skrip ini menjawab sendiri
-> beberapa query versi server yang dibutuhkan `diff`, jadi aman dijalankan di mesin mana pun.
-> Jalur MySQL tetap lewat `db:push:mysql`. `pnpm dev` sengaja menjalankan web + api via `pnpm -r --parallel` (bukan turbo)
-> agar tidak bergantung pada binary native turbo — turbo masih dipakai untuk `pnpm build`/`pnpm lint`.
+> **Catatan engine Prisma**: `db:push` tidak memakai schema engine. DDL dibuat offline oleh
+> `scripts/export-ddl.mjs` (schema-engine WASM hanya untuk menghasilkan `CREATE TABLE`, tanpa
+> menyentuh katalog), lalu dieksekusi lewat driver `pg`. Jadi tidak ada unduhan dari
+> `binaries.prisma.sh` dan tidak ada round-trip katalog. Jalur MySQL tetap lewat `db:push:mysql`.
 
 ## API ringkas (`/api/v1`)
 

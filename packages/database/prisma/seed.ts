@@ -52,17 +52,25 @@ async function assertSchemaPushed() {
   try {
     await prisma.$queryRaw`SELECT 1 FROM "authors" LIMIT 1`;
   } catch (error) {
-    const code = (error as { code?: string }).code;
-    if (code !== 'P2021') throw error;
+    // $queryRaw surfaces the raw Postgres error as P2010 ("relation ... does not
+    // exist"), while model queries give P2021 ("table ... does not exist").
+    // Cover both, and fall back to the message for safety.
+    const { code, message } = error as { code?: string; message?: string };
+    const missingTable =
+      code === 'P2010' ||
+      code === 'P2021' ||
+      /relation ".+" does not exist|TableDoesNotExist/i.test(message ?? '');
+    if (!missingTable) throw error;
     throw new Error([
       'The database schema has not been created yet (no "authors" table).',
       '',
-      'Create it first. Note that on Supabase `db:push` cannot do it:',
-      'adapter-pg fails to read the Postgres catalog (prisma/prisma#27403).',
+      'Create it first — one command, no manual SQL needed:',
       '',
-      '  pnpm db:ddl:postgres     # writes prisma/schema.postgres.sql, no DB needed',
-      '  # paste that file into Supabase Dashboard -> SQL Editor and Run it',
+      '  pnpm db:push             # creates all 25 tables in one transaction',
       '  pnpm db:seed             # then retry the seed',
+      '',
+      'Fallback if db:push cannot reach the database: `pnpm db:ddl:postgres`',
+      'writes prisma/schema.postgres.sql for the Supabase SQL Editor.',
     ].join('\n'));
   }
 }
@@ -248,7 +256,7 @@ async function main() {
     ['panduan-mpasi-6-bulan', 'seri-dongeng-nusantara', 0.62, 'SIDEBAR', 1],
     ['panduan-mpasi-6-bulan', 'teacher-academy-ecd', 0.55, 'SIDEBAR', 2],
     ['takaran-mpasi-6-24-bulan', 'buku-aktivitas-anak-kreatif', 0.6, 'SIDEBAR', 1],
-    ['persiapan-anak-masuk-sd', 'buku-tematik-sd', 0.95, 'SIDEBAR', 1],
+    ['checklist-persiapan-anak-masuk-sd', 'buku-tematik-sd', 0.95, 'SIDEBAR', 1],
     ['checklist-persiapan-anak-masuk-sd', 'cambridge-primary-english', 0.9, 'SIDEBAR', 2],
     ['checklist-persiapan-anak-masuk-sd', 'mentari-digital-learning', 0.88, 'BOTTOM', 1],
     ['checklist-persiapan-anak-masuk-sd', 'english-assessment', 0.8, 'BOTTOM', 2],
