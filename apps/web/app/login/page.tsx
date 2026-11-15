@@ -3,7 +3,7 @@
 import { Suspense, useState } from "react";
 import Link from "next/link";
 import { useRouter, useSearchParams } from "next/navigation";
-import { Eye, EyeOff, Loader2, LogIn, Sun, Info } from "lucide-react";
+import { Eye, EyeOff, Loader2, LogIn, Sun } from "lucide-react";
 import { useAuth } from "@/components/auth-provider";
 import { useDictionary } from "@/components/i18n-provider";
 import { ApiError } from "@/lib/client-api";
@@ -113,13 +113,6 @@ function LoginForm() {
             {busy ? dict.auth.loginBusy : dict.auth.loginSubmit}
           </button>
         </form>
-
-        <div className="mt-5 flex items-start gap-2 rounded-2xl border border-accent/30 bg-accent-soft/50 px-4 py-3 text-[11px] leading-5 text-accent-deep">
-          <Info size={14} className="mt-0.5 shrink-0" aria-hidden />
-          <span>
-            <strong>{dict.auth.demoNoteTitle}</strong>{dict.auth.demoNoteBody}<code className="rounded bg-white/70 px-1">mentari123</code>{dict.auth.demoNoteAdmin}
-          </span>
-        </div>
       </div>
     </div>
   );

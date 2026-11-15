@@ -1,60 +1,42 @@
 /**
- * Seed MentariSmartParent with realistic Indonesian parenting content.
- * Wipes existing data and re-creates it — intended for dev/staging.
+ * Seed data esensial Mentari Smart Parent.
  *
- * Usage: pnpm db:seed   (requires DATABASE_URL in the root .env)
+ * Bukan data demo. Yang dibuat hanya yang dibutuhkan aplikasi supaya bisa
+ * dibuka tanpa error: age groups, kategori, satu author bawaan, dan dua akun
+ * staf (admin + editor). Tidak ada konten/produk/thread/analitik palsu.
+ *
+ * Usage: pnpm db:seed   (butuh DATABASE_URL di .env root)
+ *        SEED_ADMIN_PASSWORD=... SEED_EDITOR_PASSWORD=... pnpm db:seed
  */
 import bcrypt from 'bcryptjs';
-import type { RecommendationPlacement } from '@mentari/shared';
 import { detectClientProvider, prisma } from '../src/index';
+import { AGE_GROUPS, CATEGORIES, DEMO_AUTHOR, SEED_USERS } from './seed-data';
 
 /**
- * Seeding with a client generated for a different provider dies halfway through
- * the wipe with "Driver Adapter ... not compatible with the provider ...".
- * Warn first so the fix (use:postgres / use:mysql) is obvious.
+ * Seeding dengan client yang di-generate untuk provider lain akan mati di tengah
+ * wipe dengan "Driver Adapter ... not compatible with the provider ...".
  */
 function warnOnProviderMismatch() {
   const url = process.env.DATABASE_URL ?? '';
-  const wants = url.startsWith('postgres') ? 'postgresql' : url.startsWith('mysql') ? 'mysql' : null;
+  const wants = url.startsWith('postgres') ? 'postgresql' : null;
   const client = detectClientProvider();
   if (!wants || !client || client === wants) return;
   console.warn([
     '',
     `⚠️  Generated Prisma client targets "${client}" but the database URL targets "${wants}".`,
-    '   Fix: pnpm --filter=@mentari/database use:' + (wants === 'postgresql' ? 'postgres' : 'mysql'),
+    '   Fix: pnpm db:generate',
     '',
   ].join('\n'));
 }
-import {
-  AGE_GROUPS, AUTHORS, CATEGORIES, CONTENTS, PRODUCTS, MILESTONES, BADGES,
-  LEARNING_PATHS, THREADS,
-} from './seed-data';
-
-// Deterministic PRNG for reproducible analytics seed data
-function mulberry32(seed: number) {
-  return function () {
-    let t = (seed += 0x6d2b79f5);
-    t = Math.imul(t ^ (t >>> 15), t | 1);
-    t ^= t + Math.imul(t ^ (t >>> 7), t | 61);
-    return ((t ^ (t >>> 14)) >>> 0) / 4294967296;
-  };
-}
-
-const DAY = 86_400_000;
-const now = Date.now();
 
 /**
- * The wipe below assumes the schema is already pushed. When it is not, the first
- * deleteMany dies with P2021 "The table public.<x> does not exist", which reads
- * like a seed bug instead of "you skipped db:push". Check up front instead.
+ * Wipe di bawah mengasumsikan schema sudah dibuat. Kalau belum, deleteMany
+ * pertama mati dengan P2021 "table does not exist" yang terbaca seperti bug seed.
  */
 async function assertSchemaPushed() {
   try {
-    await prisma.$queryRaw`SELECT 1 FROM "authors" LIMIT 1`;
+    await prisma.$queryRaw`SELECT 1 FROM "users" LIMIT 1`;
   } catch (error) {
-    // $queryRaw surfaces the raw Postgres error as P2010 ("relation ... does not
-    // exist"), while model queries give P2021 ("table ... does not exist").
-    // Cover both, and fall back to the message for safety.
     const { code, message } = error as { code?: string; message?: string };
     const missingTable =
       code === 'P2010' ||
@@ -62,26 +44,23 @@ async function assertSchemaPushed() {
       /relation ".+" does not exist|TableDoesNotExist/i.test(message ?? '');
     if (!missingTable) throw error;
     throw new Error([
-      'The database schema has not been created yet (no "authors" table).',
+      'The database schema has not been created yet (no "users" table).',
       '',
-      'Create it first — one command, no manual SQL needed:',
+      'Create it first:',
       '',
       '  pnpm db:push             # creates any missing tables; safe to re-run',
       '  pnpm db:seed             # then retry the seed',
-      '',
-      'db:push is idempotent, so it also finishes a schema that a previous run',
-      'left half-built. Fallback if it cannot reach the database:',
-      '`pnpm db:ddl:postgres` writes prisma/schema.postgres.sql for the SQL Editor.',
     ].join('\n'));
   }
 }
 
 async function main() {
   warnOnProviderMismatch();
-  console.log('🌱 Seeding MentariSmartParent...');
+  console.log('🌱 Seeding data esensial...');
   await assertSchemaPushed();
 
-  // ---------- wipe (FK-safe order) ----------
+  // ---------- wipe (urutan aman terhadap foreign key) ----------
+  // Seed ini idempoten: dijalankan ulang selalu menghasilkan state yang sama.
   await prisma.childMilestone.deleteMany();
   await prisma.milestone.deleteMany();
   await prisma.userBadge.deleteMany();
@@ -108,7 +87,7 @@ async function main() {
   await prisma.badge.deleteMany();
   await prisma.child.deleteMany();
   await prisma.user.deleteMany();
-  console.log('✓ cleared existing data');
+  console.log('✓ data lama dibersihkan');
 
   // ---------- age groups ----------
   const ageGroupBySlug = new Map<string, { id: string }>();
@@ -118,317 +97,94 @@ async function main() {
   }
   console.log(`✓ ${ageGroupBySlug.size} age groups`);
 
-  // ---------- categories (parents, then children) ----------
+  // ---------- kategori (induk dulu, baru anak) ----------
   const categoryBySlug = new Map<string, { id: string }>();
   for (const cat of CATEGORIES.filter((c) => !c.parent)) {
     const created = await prisma.category.create({
       data: {
-        name: cat.name, slug: cat.slug, description: cat.description,
-        icon: cat.icon, color: cat.color, sortOrder: cat.sortOrder ?? 0,
+        name: cat.name,
+        slug: cat.slug,
+        description: cat.description ?? null,
+        icon: cat.icon ?? null,
+        color: cat.color ?? null,
+        sortOrder: cat.sortOrder ?? 0,
       },
     });
     categoryBySlug.set(cat.slug, created);
   }
   for (const cat of CATEGORIES.filter((c) => c.parent)) {
     const parent = categoryBySlug.get(cat.parent!);
+    if (!parent) {
+      console.warn(`! kategori "${cat.slug}" dilewati: induk "${cat.parent}" tidak ada`);
+      continue;
+    }
     const created = await prisma.category.create({
       data: {
-        name: cat.name, slug: cat.slug, description: cat.description,
-        icon: cat.icon, color: cat.color, sortOrder: cat.sortOrder ?? 0,
-        parentId: parent?.id,
+        name: cat.name,
+        slug: cat.slug,
+        description: cat.description ?? null,
+        icon: cat.icon ?? null,
+        color: cat.color ?? null,
+        sortOrder: cat.sortOrder ?? 0,
+        parentId: parent.id,
       },
     });
     categoryBySlug.set(cat.slug, created);
   }
-  console.log(`✓ ${categoryBySlug.size} categories`);
+  console.log(`✓ ${categoryBySlug.size} kategori`);
 
-  // ---------- users ----------
-  const passwordHash = await bcrypt.hash('mentari123', 10);
-  const hash = (email: string) => ({ email, passwordHash, isActive: true });
-  const admin = await prisma.user.create({
-    data: { ...hash('admin@mentari.id'), fullName: 'Mentari Admin', role: 'ADMIN' },
-  });
-  const mentari = await prisma.user.create({
-    data: { ...hash('mentari@mentari.id'), fullName: 'Tim Mentari Smart Parent', role: 'EDITOR' },
-  });
-  const demo = await prisma.user.create({
-    data: { ...hash('demo@mentari.id'), fullName: 'Ibu Ratna', role: 'USER' },
-  });
-  const communityEmails = [
-    { email: 'ratna.dewi@example.com', fullName: 'Ratna Dewi' },
-    { email: 'budi.s@example.com', fullName: 'Budi Santoso' },
-    { email: 'sari.p@example.com', fullName: 'Sari Puspita' },
-    { email: 'dimas.p@example.com', fullName: 'Dimas Prakoso' },
-    { email: 'ratna.ningrum@example.com', fullName: 'Ratna Ningrum, S.Pd.' },
-  ];
-  const communityUsers = new Map<string, { id: string }>();
-  for (const u of communityEmails) {
-    const created = await prisma.user.create({
-      data: { ...hash(u.email), fullName: u.fullName, role: 'USER' },
-    });
-    communityUsers.set(u.email, created);
-  }
-  const findUser = (email: string) =>
-    email === 'mentari@mentari.id' ? mentari
-    : email === 'admin@mentari.id' ? admin
-    : email === 'demo@mentari.id' ? demo
-    : communityUsers.get(email)!;
-  console.log(`✓ ${3 + communityUsers.size} users`);
-
-  // ---------- products ----------
-  const productBySlug = new Map<string, { id: string }>();
-  for (const p of PRODUCTS) {
-    const created = await prisma.product.create({
-      data: {
-        name: p.name, slug: p.slug, description: p.description,
-        shortDescription: p.shortDescription, type: p.type, price: p.price,
-        currency: 'IDR', thumbnailUrl: p.thumbnailUrl, coverImageUrl: p.thumbnailUrl, images: JSON.stringify([p.thumbnailUrl]),
-        externalUrl: p.externalUrl, ctaText: p.ctaText,
-        isFeatured: p.isFeatured, sortOrder: p.sortOrder, isActive: true,
-        ageGroups: {
-          create: p.ageGroupSlugs.map((slug) => ({ ageGroupId: ageGroupBySlug.get(slug)!.id })),
-        },
-      },
-    });
-    productBySlug.set(p.slug, created);
-  }
-  console.log(`✓ ${productBySlug.size} products`);
-
-  // ---------- authors ----------
-  const authorBySlug = new Map<string, { id: string }>();
-  for (const a of AUTHORS) {
-    const row = await prisma.author.create({
-      data: {
-        name: a.name, slug: a.slug, title: a.title, bio: a.bio,
-        email: a.email, isActive: true, sortOrder: a.sortOrder,
-      },
-    });
-    authorBySlug.set(a.slug, row);
-  }
-  console.log(`✓ ${authorBySlug.size} authors`);
-
-  // ---------- contents (+ tags) ----------
-  const contentBySlug = new Map<string, { id: string }>();
-  const tagBySlug = new Map<string, { id: string }>();
-  const slugify = (s: string) =>
-    s.toLowerCase().normalize('NFD').replace(/[̀-ͯ]/g, '').replace(/[^a-z0-9\s-]/g, '').trim().replace(/\s+/g, '-').replace(/-+/g, '-');
-
-  for (const c of CONTENTS) {
-    const tagIds: string[] = [];
-    for (const tagName of c.tags) {
-      const slug = slugify(tagName);
-      let tag = tagBySlug.get(slug);
-      if (!tag) {
-        tag = await prisma.tag.create({ data: { name: tagName, slug } });
-        tagBySlug.set(slug, tag);
-      }
-      tagIds.push(tag.id);
-    }
-    const created = await prisma.content.create({
-      data: {
-        title: c.title, slug: c.slug, excerpt: c.excerpt, body: c.body,
-        type: c.type, status: 'PUBLISHED',
-        thumbnailUrl: c.thumbnailUrl ?? null,
-        videoUrl: c.videoUrl ?? null,
-        videoDuration: c.videoDuration ?? null,
-        readTime: c.readTime ?? null,
-        isFeatured: c.isFeatured ?? false,
-        isPremium: c.isPremium ?? false,
-        viewCount: c.viewCount, likeCount: c.likeCount ?? Math.round(c.viewCount * 0.06),
-        publishedAt: new Date(now - c.publishedDaysAgo * DAY),
-        authorId: authorBySlug.get(c.authorSlug)!.id,
-        metaTitle: c.metaTitle ?? null, metaDescription: c.metaDescription ?? null,
-        categories: {
-          create: c.categorySlugs.map((slug) => ({ categoryId: categoryBySlug.get(slug)!.id })),
-        },
-        ageGroups: {
-          create: c.ageGroupSlugs.map((slug) => ({ ageGroupId: ageGroupBySlug.get(slug)!.id })),
-        },
-        tags: { create: tagIds.map((tagId) => ({ tagId })) },
-      },
-    });
-    contentBySlug.set(c.slug, created);
-  }
-  console.log(`✓ ${contentBySlug.size} contents, ${tagBySlug.size} tags`);
-
-  // ---------- content ↔ product recommendations ----------
-  const recommendations: Array<[string, string, number, RecommendationPlacement, number]> = [
-    // [content slug, product slug, relevance, placement, order]
-    ['panduan-mpasi-6-bulan', 'seri-dongeng-nusantara', 0.62, 'SIDEBAR', 1],
-    ['panduan-mpasi-6-bulan', 'teacher-academy-ecd', 0.55, 'SIDEBAR', 2],
-    ['takaran-mpasi-6-24-bulan', 'buku-aktivitas-anak-kreatif', 0.6, 'SIDEBAR', 1],
-    ['checklist-persiapan-anak-masuk-sd', 'buku-tematik-sd', 0.95, 'SIDEBAR', 1],
-    ['checklist-persiapan-anak-masuk-sd', 'cambridge-primary-english', 0.9, 'SIDEBAR', 2],
-    ['checklist-persiapan-anak-masuk-sd', 'mentari-digital-learning', 0.88, 'BOTTOM', 1],
-    ['checklist-persiapan-anak-masuk-sd', 'english-assessment', 0.8, 'BOTTOM', 2],
-    ['tanda-tanda-siap-sekolah', 'english-assessment', 0.85, 'SIDEBAR', 1],
-    ['tanda-tanda-siap-sekolah', 'buku-tematik-sd', 0.78, 'SIDEBAR', 2],
-    ['permainan-edukatif-tanpa-gadget', 'buku-aktivitas-anak-kreatif', 0.92, 'SIDEBAR', 1],
-    ['permainan-edukatif-tanpa-gadget', 'seri-dongeng-nusantara', 0.75, 'BOTTOM', 1],
-    ['stimulasi-bahasa-anak-1-3-tahun', 'seri-dongeng-nusantara', 0.9, 'SIDEBAR', 1],
-    ['stimulasi-bahasa-anak-1-3-tahun', 'buku-aktivitas-anak-kreatif', 0.7, 'BOTTOM', 1],
-    ['membentuk-self-esteem-anak-kalimat-ajaib', 'seri-dongeng-nusantara', 0.72, 'SIDEBAR', 1],
-    ['pendekatan-montessori-anak-malas-belajar', 'mentari-digital-learning', 0.88, 'SIDEBAR', 1],
-    ['pendekatan-montessori-anak-malas-belajar', 'buku-tematik-sd', 0.82, 'BOTTOM', 1],
-    ['eksperimen-sains-sederhana-di-dapur', 'buku-aktivitas-anak-kreatif', 0.85, 'SIDEBAR', 1],
-    ['keamanan-digital-anak-aturan-3c', 'mentari-digital-learning', 0.8, 'SIDEBAR', 1],
-    ['screen-time-balita-batas-aman', 'mentari-digital-learning', 0.7, 'SIDEBAR', 1],
-    ['checklist-bekal-sekolah-sehat', 'buku-tematik-sd', 0.6, 'SIDEBAR', 1],
-    ['infografis-milestone-bicara-0-5-tahun', 'teacher-academy-ecd', 0.65, 'SIDEBAR', 1],
-    ['kebutuhan-asi-bayi-sesuai-usia', 'teacher-academy-ecd', 0.6, 'SIDEBAR', 1],
-    ['jadwal-imunisasi-dasar-lengkap', 'teacher-academy-ecd', 0.55, 'SIDEBAR', 1],
-    ['co-parenting-setelah-bercerai', 'seri-dongeng-nusantara', 0.5, 'BOTTOM', 1],
-  ];
-  for (const [contentSlug, productSlug, relevanceScore, placement, sortOrder] of recommendations) {
-    const content = contentBySlug.get(contentSlug);
-    const product = productBySlug.get(productSlug);
-    if (!content || !product) {
-      console.warn(`! skipping recommendation ${contentSlug} → ${productSlug} (not found)`);
-      continue;
-    }
-    await prisma.contentProduct.create({
-      data: { contentId: content.id, productId: product.id, relevanceScore, placement, sortOrder },
-    });
-  }
-  console.log('✓ content-product recommendations');
-
-  // ---------- milestones ----------
-  for (const m of MILESTONES) {
-    await prisma.milestone.create({
-      data: {
-        title: m.title, description: m.description, category: m.category,
-        sortOrder: m.sortOrder, ageGroupId: ageGroupBySlug.get(m.ageGroupSlug)!.id,
-      },
-    });
-  }
-  console.log(`✓ ${MILESTONES.length} milestones`);
-
-  // ---------- badges ----------
-  const badgeBySlug = new Map<string, { id: string }>();
-  for (const b of BADGES) {
-    const created = await prisma.badge.create({ data: b });
-    badgeBySlug.set(b.slug, created);
-  }
-  console.log(`✓ ${badgeBySlug.size} badges`);
-
-  // ---------- learning paths ----------
-  for (const lp of LEARNING_PATHS) {
-    const path = await prisma.learningPath.create({
-      data: {
-        title: lp.title, slug: lp.slug, description: lp.description,
-        difficulty: lp.difficulty, estimatedTime: lp.estimatedTime,
-        isPublished: true, sortOrder: lp.sortOrder,
-        thumbnailUrl: lp.thumbnailUrl ?? null,
-      },
-    });
-    for (const [index, contentSlug] of lp.contentSlugs.entries()) {
-      const content = contentBySlug.get(contentSlug);
-      if (!content) continue;
-      await prisma.learningPathItem.create({
-        data: { learningPathId: path.id, contentId: content.id, sortOrder: index + 1 },
-      });
-    }
-  }
-  console.log(`✓ ${LEARNING_PATHS.length} learning paths`);
-
-  // ---------- demo child + gamification + badges + bookmarks ----------
-  const birthDate = new Date(now);
-  birthDate.setFullYear(birthDate.getFullYear() - 5);
-  birthDate.setMonth(birthDate.getMonth() - 2);
-  const child = await prisma.child.create({
-    data: { userId: demo.id, name: 'Aisha', birthDate, gender: 'FEMALE' },
-  });
-  const gamProfile = await prisma.gamificationProfile.create({
+  // ---------- author bawaan ----------
+  await prisma.author.create({
     data: {
-      userId: demo.id, totalPoints: 130, currentStreak: 7, longestStreak: 14,
-      lastActiveDate: new Date(now), level: 3,
+      name: DEMO_AUTHOR.name,
+      slug: DEMO_AUTHOR.slug,
+      title: DEMO_AUTHOR.title,
+      bio: DEMO_AUTHOR.bio,
+      isActive: true,
+      sortOrder: DEMO_AUTHOR.sortOrder,
     },
   });
-  for (const slug of ['langkah-pertama', 'streak-7-hari', 'pembaca-setia']) {
-    await prisma.userBadge.create({
-      data: { gamificationProfileId: gamProfile.id, badgeId: badgeBySlug.get(slug)!.id },
-    });
-  }
-  // Give Aisha a couple of completed milestones (bayi & batita stages)
-  const batitaMilestones = await prisma.milestone.findMany({
-    where: { ageGroup: { slug: { in: ['bayi', 'batita'] } } },
-    orderBy: { sortOrder: 'asc' },
-    take: 4,
-  });
-  for (const m of batitaMilestones) {
-    await prisma.childMilestone.create({
-      data: { childId: child.id, milestoneId: m.id, isCompleted: true, completedAt: new Date(now - 180 * DAY) },
-    });
-  }
-  // Demo bookmarks
-  for (const slug of ['panduan-mpasi-6-bulan', 'checklist-persiapan-anak-masuk-sd', 'permainan-edukatif-tanpa-gadget']) {
-    const content = contentBySlug.get(slug);
-    if (content) {
-      await prisma.bookmark.create({ data: { userId: demo.id, contentId: content.id } });
-    }
-  }
-  console.log('✓ demo account (demo@mentari.id / mentari123) with child Aisha, badges & bookmarks');
+  console.log('✓ 1 author bawaan');
 
-  // ---------- community ----------
-  for (const t of THREADS) {
-    const author = findUser(t.authorEmail);
-    const thread = await prisma.communityThread.create({
+  // ---------- akun staf: admin + editor ----------
+  const created: Array<{ email: string; role: string; passwordFromEnv: boolean }> = [];
+  for (const u of SEED_USERS) {
+    const fromEnv = process.env[u.envVar];
+    const plain = fromEnv || u.defaultPassword;
+    if (plain.length < 8) {
+      throw new Error(`${u.envVar} minimal 8 karakter (saat ini ${plain.length}).`);
+    }
+    const passwordHash = await bcrypt.hash(plain, 10);
+    // Gamification profile opsional, tapi dibuat supaya /gamification/me tidak
+    // mengembalikan 404 untuk akun staf yang login.
+    await prisma.user.create({
       data: {
-        title: t.title, body: t.body, categorySlug: t.categorySlug,
-        isPinned: t.isPinned ?? false, userId: author.id,
-        likeCount: t.likeCount, viewCount: t.viewCount, commentCount: t.comments.length,
-        createdAt: new Date(now - Math.round((t.viewCount % 20) + 3) * DAY),
+        email: u.email,
+        fullName: u.fullName,
+        role: u.role,
+        passwordHash,
+        isActive: true,
+        gamificationProfile: { create: { totalPoints: 0, currentStreak: 0, longestStreak: 0, level: 1 } },
       },
     });
-    for (const comment of t.comments) {
-      const commenter = findUser(comment.authorEmail);
-      await prisma.communityComment.create({
-        data: { threadId: thread.id, userId: commenter.id, body: comment.body, likeCount: (comment.body.length % 9) + 1 },
-      });
-    }
+    created.push({ email: u.email, role: u.role, passwordFromEnv: Boolean(fromEnv) });
   }
-  console.log(`✓ ${THREADS.length} community threads`);
+  console.log(`✓ ${created.length} akun staf`);
 
-  // ---------- analytics: views & product clicks (last 30 days) ----------
-  const rand = mulberry32(20250601);
-  const contentList = [...contentBySlug.values()];
-  const productList = [...productBySlug.values()];
-  let viewRows = 0;
-  for (let d = 0; d < 30; d += 1) {
-    const perDay = Math.round(12 + rand() * 22);
-    for (let i = 0; i < perDay; i += 1) {
-      const content = contentList[Math.floor(rand() * contentList.length)];
-      await prisma.contentView.create({
-        data: {
-          contentId: content.id,
-          userId: rand() > 0.55 ? demo.id : null,
-          sessionId: `sess_${d}_${i}`,
-          duration: Math.round(30 + rand() * 420),
-          createdAt: new Date(now - d * DAY - Math.round(rand() * DAY)),
-        },
-      });
-      viewRows += 1;
-    }
+  console.log('\n✅ Seed selesai. Akun yang dibuat:');
+  for (const u of created) {
+    console.log(`   • ${u.role.padEnd(6)} ${u.email}  ${u.passwordFromEnv ? '(password dari env)' : '(password default)'}`);
   }
-  let clickRows = 0;
-  const sources = ['SIDEBAR', 'SIDEBAR', 'SIDEBAR', 'INLINE', 'BOTTOM', 'BANNER'];
-  for (let i = 0; i < 48; i += 1) {
-    const product = productList[Math.floor(rand() * productList.length)];
-    const content = contentList[Math.floor(rand() * contentList.length)];
-    await prisma.productClick.create({
-      data: {
-        productId: product.id,
-        contentId: content.id,
-        userId: rand() > 0.6 ? demo.id : null,
-        source: sources[Math.floor(rand() * sources.length)],
-        createdAt: new Date(now - Math.floor(rand() * 29) * DAY),
-      },
-    });
-    clickRows += 1;
+  const usingDefault = created.some((u) => !u.passwordFromEnv);
+  if (usingDefault) {
+    console.log([
+      '',
+      '⚠️  Masih ada akun dengan password default. Untuk server yang bisa diakses',
+      '   publik, jalankan ulang dengan password sendiri:',
+      '',
+      '   SEED_ADMIN_PASSWORD=\'...\' SEED_EDITOR_PASSWORD=\'...\' pnpm db:seed',
+    ].join('\n'));
   }
-  console.log(`✓ ${viewRows} content views & ${clickRows} product clicks (30 days)`);
-
-  console.log('\n✅ Seed complete. Login demo: demo@mentari.id / mentari123 · admin: admin@mentari.id / mentari123');
 }
 
 main()

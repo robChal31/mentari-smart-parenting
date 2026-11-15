@@ -22,7 +22,7 @@ export default function RegisterPage() {
 
   async function onSubmit(event: React.FormEvent) {
     event.preventDefault();
-    if (password.length < 6) {
+    if (password.length < 8) {
       setError(dict.auth.passwordMinError);
       return;
     }
@@ -71,7 +71,7 @@ export default function RegisterPage() {
           </div>
           <div>
             <label htmlFor="password" className="text-[11px] font-extrabold uppercase tracking-[0.14em] text-muted">{dict.auth.password} <span className="normal-case text-muted/70">{dict.auth.passwordMin}</span></label>
-            <input id="password" type="password" required minLength={6} value={password} onChange={(e) => setPassword(e.target.value)} autoComplete="new-password" placeholder="••••••••" className="mt-1.5 w-full rounded-2xl border border-sand bg-white px-4 py-3 text-sm outline-none transition focus:border-primary focus:ring-2 focus:ring-primary/15" />
+            <input id="password" type="password" required minLength={8} value={password} onChange={(e) => setPassword(e.target.value)} autoComplete="new-password" placeholder="••••••••" className="mt-1.5 w-full rounded-2xl border border-sand bg-white px-4 py-3 text-sm outline-none transition focus:border-primary focus:ring-2 focus:ring-primary/15" />
           </div>
           <label className="flex cursor-pointer items-start gap-2 text-xs leading-5 text-muted">
             <input type="checkbox" required checked={agree} onChange={(e) => setAgree(e.target.checked)} className="mt-0.5 h-4 w-4 accent-[#FF6B35]" />
