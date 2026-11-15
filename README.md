@@ -113,6 +113,18 @@ Fallback kalau auto-load tidak bekerja (custom shell, dst): pakai syntax PowerSh
 > Catatan: setelah `pnpm db:generate`, folder `packages/database/src/generated` bisa tampak
 > berubah di git (artifact generator Prisma) — jangan di-commit kecuali memang disengaja.
 
+> **Error `The Driver Adapter @prisma/adapter-pg ... is not compatible with the provider sqlite`**:
+> klien Prisma yang di-commit di-generate untuk **satu** provider (SQLite). Mengubah
+> `DATABASE_URL` ke Supabase **tidak** otomatis mengubah klien. Perintah `db:push:supabase`,
+> `db:ddl:postgres`, `db:seed`, dan `pnpm dev` semuanya **tidak** men-generate ulang, jadi API
+> crash setiap restart. Perbaikan satu perintah:
+> ```powershell
+> pnpm db:check                       # cek: URL vs klien yang ter-generate
+> pnpm --filter=@mentari/database use:postgres   # generate ulang + build
+> ```
+> `use:sqlite` untuk kembali ke dev lokal, `use:mysql` untuk MySQL. Mengganti provider
+> menghapus/menulis `packages/database/src/generated` — jangan commit hasilnya kecuali disengaja.
+>
 > **Error `Column type 'char' could not be deserialized from the database`**: hampir selalu
 > berarti `.env` menunjuk ke Supabase/Postgres (atau MySQL) sementara perintah yang jalan
 > masih memakai `schema.sqlite.prisma` (default `db:push`). Engine WASM lalu gagal saat
