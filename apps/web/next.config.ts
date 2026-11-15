@@ -18,6 +18,10 @@ function apiOrigin(raw: string): string {
 const apiInternal = apiOrigin(process.env.API_INTERNAL_URL ?? "http://localhost:4000");
 
 const nextConfig: NextConfig = {
+  // Wajib untuk proses deploy: GitHub Actions menyalin `.next/standalone` ke VPS.
+  // Tanpa ini folder tersebut tidak pernah dibuat dan langkah `cp` gagal.
+  // Standalone membundel hanya dependency yang benar-benar dipakai server.
+  output: "standalone",
   turbopack: {
     rules: {
       "*.css": {

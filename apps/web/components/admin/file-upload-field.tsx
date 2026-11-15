@@ -14,9 +14,9 @@ import { getToken } from "@/lib/client-api";
  */
 const IMAGE_MAX = 5 * 1024 * 1024;
 const GIF_MAX = 8 * 1024 * 1024;
-const VIDEO_MAX = 25 * 1024 * 1024;
 
-export type UploadKind = "image" | "any";
+// Video TIDAK diunggah — kolom video diisi URL (YouTube/embed atau berkas yang
+// di-host sendiri). Komponen ini hanya untuk gambar.
 
 export function formatBytes(bytes: number): string {
   if (bytes < 1024) return `${bytes} B`;
@@ -73,11 +73,8 @@ async function compressImage(file: File): Promise<File> {
   }
 }
 
-function limitFor(file: File, kind: UploadKind): number {
-  if (file.type === "image/gif") return GIF_MAX;
-  if (file.type.startsWith("video/") || /\.(mp4|webm)$/i.test(file.name)) return VIDEO_MAX;
-  if (file.type.startsWith("image/")) return IMAGE_MAX;
-  return kind === "image" ? IMAGE_MAX : VIDEO_MAX;
+function limitFor(file: File): number {
+  return file.type === "image/gif" ? GIF_MAX : IMAGE_MAX;
 }
 
 /**
@@ -91,7 +88,6 @@ export function FileUploadField({
   label,
   value,
   onChange,
-  kind = "image",
   subdir = "content",
   hint,
   previewClassName = "h-24 w-40",
@@ -99,7 +95,6 @@ export function FileUploadField({
   label: string;
   value: string;
   onChange: (url: string) => void;
-  kind?: UploadKind;
   subdir?: string;
   hint?: string;
   previewClassName?: string;
@@ -109,9 +104,7 @@ export function FileUploadField({
   const [error, setError] = useState<string | null>(null);
   const [notice, setNotice] = useState<string | null>(null);
 
-  const isVideo = kind === "any" && /\.(mp4|webm)(\?|$)/i.test(value);
-  const accept =
-    kind === "image" ? "image/jpeg,image/png,image/webp,image/gif" : "image/*,video/mp4,video/webm";
+  const accept = "image/jpeg,image/png,image/webp,image/gif";
 
   async function handlePick(event: React.ChangeEvent<HTMLInputElement>) {
     const picked = event.target.files?.[0];
@@ -122,7 +115,7 @@ export function FileUploadField({
     setError(null);
     setNotice(null);
 
-    const limit = limitFor(picked, kind);
+    const limit = limitFor(picked);
     if (picked.size > limit) {
       setError(
         `Berkas ${formatBytes(picked.size)}, melebihi batas ${formatBytes(limit)}. ` +
@@ -133,7 +126,7 @@ export function FileUploadField({
 
     setBusy(true);
     try {
-      const file = kind === "image" || picked.type.startsWith("image/") ? await compressImage(picked) : picked;
+      const file = await compressImage(picked);
 
       if (file.size > limit) {
         setError(`Setelah dikecilkan masih ${formatBytes(file.size)}, batasnya ${formatBytes(limit)}.`);
@@ -146,7 +139,7 @@ export function FileUploadField({
 
       const token = getToken();
       const res = await fetch(
-        `/api/v1/uploads?kind=${kind}&subdir=${encodeURIComponent(subdir)}`,
+        `/api/v1/uploads?subdir=${encodeURIComponent(subdir)}`,
         {
           method: "POST",
           headers: token ? { authorization: `Bearer ${token}` } : undefined,
@@ -190,19 +183,15 @@ export function FileUploadField({
       <div className="mt-1.5 flex items-start gap-3">
         {value ? (
           <div className="relative shrink-0">
-            {isVideo ? (
-              <video src={value} className={`${previewClassName} rounded-2xl border border-sand object-cover`} muted playsInline />
-            ) : (
-              // eslint-disable-next-line @next/next/no-img-element
-              <img
-                src={value}
-                alt=""
-                className={`${previewClassName} rounded-2xl border border-sand object-cover`}
-                onError={(e) => {
-                  e.currentTarget.style.opacity = "0.25";
-                }}
-              />
-            )}
+            {/* eslint-disable-next-line @next/next/no-img-element */}
+            <img
+              src={value}
+              alt=""
+              className={`${previewClassName} rounded-2xl border border-sand object-cover`}
+              onError={(e) => {
+                e.currentTarget.style.opacity = "0.25";
+              }}
+            />
           </div>
         ) : (
           <div
@@ -259,16 +248,13 @@ export function FileUploadField({
           <input
             value={value}
             onChange={(e) => onChange(e.target.value)}
-            placeholder={kind === "image" ? "/uploads/content/….jpg" : "https://www.youtube.com/embed/…"}
+            placeholder="/uploads/content/….jpg"
             aria-label={`${label} (URL)`}
             className="mt-2 w-full rounded-2xl border border-sand bg-white px-3 py-2 text-[11px] text-muted outline-none transition focus:border-primary"
           />
 
           <p className="mt-1 text-[10px] leading-relaxed text-muted">
-            {hint ??
-              (kind === "image"
-                ? "JPG, PNG, WebP (maks 5 MB) atau GIF (maks 8 MB). Foto besar dikecilkan otomatis ke 1600px."
-                : "Gambar maks 5 MB, atau MP4/WebM maks 25 MB.")}
+            {hint ?? "JPG, PNG, WebP (maks 5 MB) atau GIF (maks 8 MB). Foto besar dikecilkan otomatis ke 1600px."}
           </p>
           {notice && <p className="mt-1 text-[10px] font-semibold text-accent-deep">{notice}</p>}
           {error && (

@@ -233,7 +233,14 @@ berkas**, bukan lagi tempel URL. Berkas disimpan di disk VPS dan disajikan API.
 - Header `X-Content-Type-Options: nosniff` dan CSP ketat dipasang pada semua berkas unggahan.
 
 Batas ukuran bisa diubah tanpa mengubah kode lewat `UPLOAD_IMAGE_MAX_BYTES`,
-`UPLOAD_GIF_MAX_BYTES`, `UPLOAD_VIDEO_MAX_BYTES`, dan `UPLOAD_HARD_LIMIT_BYTES`.
+`UPLOAD_GIF_MAX_BYTES`, dan `UPLOAD_HARD_LIMIT_BYTES` (default 8 MB, ikut batas terbesar).
+
+**Video tidak diunggah.** Kolom video pada artikel, produk, dan learning path hanya menerima
+tautan. Bentuk `youtu.be/<id>`, `watch?v=<id>`, `shorts/<id>`, dan `live/<id>` otomatis
+dinormalkan menjadi `https://www.youtube.com/embed/<id>` saat kolom kehilangan fokus; tautan
+Vimeo atau berkas `.mp4` yang kamu host sendiri dibiarkan apa adanya. Alasannya: video lebih
+cepat menghabiskan disk dan bandwidth VPS daripada manfaatnya, dan YouTube sudah menangani
+transcoding serta adaptive bitrate. Endpoint upload menolak MP4/WebM secara eksplisit.
 
 ## Testing smoke
 

@@ -7,6 +7,7 @@ import { apiData, ApiError } from "@/lib/client-api";
 import { Combobox } from "@/components/combobox";
 import { SlugField } from "./slug-field";
 import { FileUploadField } from "./file-upload-field";
+import { normaliseVideoUrl } from "@/lib/format";
 import type { AdminContentDetailDto, AgeGroupDto, AuthorDto, CategoryDto } from "@mentari/shared";
 
 const CONTENT_TYPES = ["ARTICLE", "VIDEO", "INFOGRAPHIC", "TIPS", "ACTIVITY"] as const;
@@ -256,7 +257,6 @@ export function ContentForm({
             label={dict.admin.thumbnailLabel}
             value={thumbnailUrl}
             onChange={setThumbnailUrl}
-            kind="image"
             subdir="content"
             previewClassName="h-24 w-40"
           />
@@ -267,9 +267,15 @@ export function ContentForm({
           <input
             value={videoUrl}
             onChange={(e) => setVideoUrl(e.target.value)}
-            placeholder="https://www.youtube.com/embed/…"
+            onBlur={(e) => setVideoUrl(normaliseVideoUrl(e.target.value))}
+            placeholder="https://youtu.be/… atau https://…/video.mp4"
             className={`mt-1.5 w-full ${inputClass}`}
           />
+          <span className="mt-1 block text-[10px] leading-relaxed text-muted">
+            Tempel link video — tidak perlu unggah berkas. Bentuk <code>youtu.be/…</code>,{" "}
+            <code>watch?v=…</code>, dan <code>shorts/…</code> otomatis diubah ke tautan embed saat
+            kolom ditinggalkan.
+          </span>
         </label>
 
         <label>

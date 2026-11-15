@@ -179,7 +179,6 @@ export function LearningPathForm({
             label={dict.admin.thumbnailUrlLabel}
             value={thumbnailUrl}
             onChange={setThumbnailUrl}
-            kind="image"
             subdir="learning-path"
             previewClassName="h-24 w-44"
           />

@@ -105,7 +105,6 @@ export function ProductForm({
             label={dict.admin.coverImageLabel}
             value={coverImageUrl}
             onChange={setCoverImageUrl}
-            kind="image"
             subdir="product"
             previewClassName="h-24 w-24"
             hint="JPG, PNG, WebP (maks 5 MB). Foto besar dikecilkan otomatis ke 1600px."
