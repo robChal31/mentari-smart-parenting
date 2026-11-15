@@ -1,6 +1,21 @@
 import type { NextConfig } from "next";
 
-const apiInternal = process.env.API_INTERNAL_URL ?? "http://localhost:4000";
+// The rewrite target must be an address that actually accepts IPv4. On Windows
+// `localhost` resolves to ::1 first, which a 0.0.0.0-bound API refuses; pin the
+// loopback so the browser proxy and SSR agree on the same host.
+function apiOrigin(raw: string): string {
+  try {
+    const url = new URL(raw);
+    if (url.hostname === "localhost" || url.hostname === "[::1]" || url.hostname === "::1") {
+      url.hostname = "127.0.0.1";
+    }
+    return url.origin;
+  } catch {
+    return raw.replace(/\/+$/, "");
+  }
+}
+
+const apiInternal = apiOrigin(process.env.API_INTERNAL_URL ?? "http://localhost:4000");
 
 const nextConfig: NextConfig = {
   turbopack: {

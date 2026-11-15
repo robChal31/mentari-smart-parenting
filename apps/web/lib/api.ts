@@ -13,7 +13,32 @@ import type {
   PaginationMeta,
 } from "@mentari/shared";
 
-const API_INTERNAL = process.env.API_INTERNAL_URL ?? "http://localhost:4000";
+/**
+ * Where the Next.js server finds the NestJS API.
+ *
+ * `localhost` is a trap on Windows: it resolves to the IPv6 `::1` first, and
+ * Node listens on IPv4 only (`app.listen(port, "0.0.0.0")` or plain `listen(port)`).
+ * The connection is refused with no useful error, so the page dies with
+ * "Tidak dapat terhubung ke server API" even though the API logged "ready".
+ *
+ * Pin the IPv4 loopback explicitly. A hostname that is not a loopback alias
+ * (a container name, a real host) is passed through untouched.
+ */
+function normaliseInternalUrl(raw: string): string {
+  try {
+    const url = new URL(raw);
+    if (url.hostname === "localhost" || url.hostname === "[::1]" || url.hostname === "::1") {
+      url.hostname = "127.0.0.1";
+    }
+    return url.origin;
+  } catch {
+    return raw.replace(/\/+$/, "");
+  }
+}
+
+const API_INTERNAL = normaliseInternalUrl(
+  process.env.API_INTERNAL_URL ?? "http://localhost:4000",
+);
 
 export interface Paginated<T> {
   items: T[];
@@ -59,6 +84,28 @@ const CONNECT_BACKOFF_MS = [200, 500];
 
 const sleep = (ms: number) => new Promise<void>((resolve) => setTimeout(resolve, ms));
 
+/**
+ * Turn a failed connection into a message that names the real cause: the exact
+ * URL we dialled and the OS errno. The old generic text hid a host/port
+ * mismatch, so a "the API says ready but the page fails" report carried zero
+ * diagnostic information.
+ */
+function connectMessage(path: string, error: unknown): string {
+  let code: string | undefined;
+  if (error && typeof error === "object") {
+    const err = error as { code?: unknown; cause?: unknown };
+    if (typeof err.code === "string") code = err.code;
+    const cause = err.cause as { code?: unknown; errors?: unknown[] } | undefined;
+    if (!code && cause && typeof cause.code === "string") code = cause.code;
+    if (!code && cause && Array.isArray(cause.errors)) {
+      const first = cause.errors[0] as { code?: unknown } | undefined;
+      if (first && typeof first.code === "string") code = first.code;
+    }
+  }
+  const reason = code ? ` — ${code}` : "";
+  return `Tidak dapat terhubung ke server API di ${API_INTERNAL}/api/v1${path}${reason}.`;
+}
+
 async function fetchWithRetry(url: string, init?: RequestInit): Promise<Response> {
   let lastError: unknown;
   for (let attempt = 0; attempt < CONNECT_ATTEMPTS; attempt++) {
@@ -79,8 +126,8 @@ async function fetchServer<T>(path: string, init?: RequestInit): Promise<T | nul
       cache: "no-store",
       ...init,
     });
-  } catch {
-    throw new ApiServerError(null, "Tidak dapat terhubung ke server API.");
+  } catch (error) {
+    throw new ApiServerError(null, connectMessage(path, error));
   }
   const body = parseApiBody(await res.text());
   if (res.status === 404) return null; // genuine "not found" — callers render 404
@@ -94,8 +141,8 @@ async function fetchServerPaginated<T>(path: string): Promise<Paginated<T>> {
   let res: Response;
   try {
     res = await fetchWithRetry(`${API_INTERNAL}/api/v1${path}`, { cache: "no-store" });
-  } catch {
-    throw new ApiServerError(null, "Tidak dapat terhubung ke server API.");
+  } catch (error) {
+    throw new ApiServerError(null, connectMessage(path, error));
   }
   const body = parseApiBody(await res.text());
   if (!res.ok || !body || body.success !== true || !Array.isArray(body.data)) {
