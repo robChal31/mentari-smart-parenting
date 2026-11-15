@@ -406,6 +406,7 @@ export type BookmarkCreateOrConnectWithoutUserInput = {
 
 export type BookmarkCreateManyUserInputEnvelope = {
   data: Prisma.BookmarkCreateManyUserInput | Prisma.BookmarkCreateManyUserInput[]
+  skipDuplicates?: boolean
 }
 
 export type BookmarkUpsertWithWhereUniqueWithoutUserInput = {
@@ -453,6 +454,7 @@ export type BookmarkCreateOrConnectWithoutContentInput = {
 
 export type BookmarkCreateManyContentInputEnvelope = {
   data: Prisma.BookmarkCreateManyContentInput | Prisma.BookmarkCreateManyContentInput[]
+  skipDuplicates?: boolean
 }
 
 export type BookmarkUpsertWithWhereUniqueWithoutContentInput = {
@@ -1243,6 +1245,7 @@ export type BookmarkCreateManyArgs<ExtArgs extends runtime.Types.Extensions.Inte
    * The data used to create many Bookmarks.
    */
   data: Prisma.BookmarkCreateManyInput | Prisma.BookmarkCreateManyInput[]
+  skipDuplicates?: boolean
 }
 
 /**
@@ -1261,6 +1264,7 @@ export type BookmarkCreateManyAndReturnArgs<ExtArgs extends runtime.Types.Extens
    * The data used to create many Bookmarks.
    */
   data: Prisma.BookmarkCreateManyInput | Prisma.BookmarkCreateManyInput[]
+  skipDuplicates?: boolean
   /**
    * Choose, which related nodes to fetch as well
    */

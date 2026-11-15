@@ -1429,6 +1429,7 @@ export type GamificationProfileCreateManyArgs<ExtArgs extends runtime.Types.Exte
    * The data used to create many GamificationProfiles.
    */
   data: Prisma.GamificationProfileCreateManyInput | Prisma.GamificationProfileCreateManyInput[]
+  skipDuplicates?: boolean
 }
 
 /**
@@ -1447,6 +1448,7 @@ export type GamificationProfileCreateManyAndReturnArgs<ExtArgs extends runtime.T
    * The data used to create many GamificationProfiles.
    */
   data: Prisma.GamificationProfileCreateManyInput | Prisma.GamificationProfileCreateManyInput[]
+  skipDuplicates?: boolean
   /**
    * Choose, which related nodes to fetch as well
    */

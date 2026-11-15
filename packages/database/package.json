@@ -23,7 +23,6 @@
     "db:push:supabase:cli": "prisma db push --config prisma.config.supabase.ts",
     "db:generate:postgres": "prisma generate --schema prisma/schema.postgres.prisma && node scripts/patch-generated.mjs",
     "db:ddl:postgres": "node scripts/export-ddl.mjs",
-    "use:sqlite": "node scripts/use-provider.mjs sqlite",
     "use:postgres": "node scripts/use-provider.mjs postgres",
     "use:mysql": "node scripts/use-provider.mjs mysql",
     "use:check": "node scripts/use-provider.mjs --check"

@@ -359,6 +359,7 @@ export type ContentTagCreateOrConnectWithoutContentInput = {
 
 export type ContentTagCreateManyContentInputEnvelope = {
   data: Prisma.ContentTagCreateManyContentInput | Prisma.ContentTagCreateManyContentInput[]
+  skipDuplicates?: boolean
 }
 
 export type ContentTagUpsertWithWhereUniqueWithoutContentInput = {
@@ -400,6 +401,7 @@ export type ContentTagCreateOrConnectWithoutTagInput = {
 
 export type ContentTagCreateManyTagInputEnvelope = {
   data: Prisma.ContentTagCreateManyTagInput | Prisma.ContentTagCreateManyTagInput[]
+  skipDuplicates?: boolean
 }
 
 export type ContentTagUpsertWithWhereUniqueWithoutTagInput = {
@@ -1162,6 +1164,7 @@ export type ContentTagCreateManyArgs<ExtArgs extends runtime.Types.Extensions.In
    * The data used to create many ContentTags.
    */
   data: Prisma.ContentTagCreateManyInput | Prisma.ContentTagCreateManyInput[]
+  skipDuplicates?: boolean
 }
 
 /**
@@ -1180,6 +1183,7 @@ export type ContentTagCreateManyAndReturnArgs<ExtArgs extends runtime.Types.Exte
    * The data used to create many ContentTags.
    */
   data: Prisma.ContentTagCreateManyInput | Prisma.ContentTagCreateManyInput[]
+  skipDuplicates?: boolean
   /**
    * Choose, which related nodes to fetch as well
    */

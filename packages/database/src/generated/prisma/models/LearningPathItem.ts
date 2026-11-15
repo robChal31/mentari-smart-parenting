@@ -498,6 +498,7 @@ export type LearningPathItemCreateOrConnectWithoutContentInput = {
 
 export type LearningPathItemCreateManyContentInputEnvelope = {
   data: Prisma.LearningPathItemCreateManyContentInput | Prisma.LearningPathItemCreateManyContentInput[]
+  skipDuplicates?: boolean
 }
 
 export type LearningPathItemUpsertWithWhereUniqueWithoutContentInput = {
@@ -551,6 +552,7 @@ export type LearningPathItemCreateOrConnectWithoutLearningPathInput = {
 
 export type LearningPathItemCreateManyLearningPathInputEnvelope = {
   data: Prisma.LearningPathItemCreateManyLearningPathInput | Prisma.LearningPathItemCreateManyLearningPathInput[]
+  skipDuplicates?: boolean
 }
 
 export type LearningPathItemUpsertWithWhereUniqueWithoutLearningPathInput = {
@@ -1369,6 +1371,7 @@ export type LearningPathItemCreateManyArgs<ExtArgs extends runtime.Types.Extensi
    * The data used to create many LearningPathItems.
    */
   data: Prisma.LearningPathItemCreateManyInput | Prisma.LearningPathItemCreateManyInput[]
+  skipDuplicates?: boolean
 }
 
 /**
@@ -1387,6 +1390,7 @@ export type LearningPathItemCreateManyAndReturnArgs<ExtArgs extends runtime.Type
    * The data used to create many LearningPathItems.
    */
   data: Prisma.LearningPathItemCreateManyInput | Prisma.LearningPathItemCreateManyInput[]
+  skipDuplicates?: boolean
   /**
    * Choose, which related nodes to fetch as well
    */

@@ -614,6 +614,7 @@ export type CommunityCommentCreateOrConnectWithoutUserInput = {
 
 export type CommunityCommentCreateManyUserInputEnvelope = {
   data: Prisma.CommunityCommentCreateManyUserInput | Prisma.CommunityCommentCreateManyUserInput[]
+  skipDuplicates?: boolean
 }
 
 export type CommunityCommentUpsertWithWhereUniqueWithoutUserInput = {
@@ -675,6 +676,7 @@ export type CommunityCommentCreateOrConnectWithoutThreadInput = {
 
 export type CommunityCommentCreateManyThreadInputEnvelope = {
   data: Prisma.CommunityCommentCreateManyThreadInput | Prisma.CommunityCommentCreateManyThreadInput[]
+  skipDuplicates?: boolean
 }
 
 export type CommunityCommentUpsertWithWhereUniqueWithoutThreadInput = {
@@ -749,6 +751,7 @@ export type CommunityCommentCreateOrConnectWithoutParentInput = {
 
 export type CommunityCommentCreateManyParentInputEnvelope = {
   data: Prisma.CommunityCommentCreateManyParentInput | Prisma.CommunityCommentCreateManyParentInput[]
+  skipDuplicates?: boolean
 }
 
 export type CommunityCommentUpsertWithoutRepliesInput = {
@@ -1717,6 +1720,7 @@ export type CommunityCommentCreateManyArgs<ExtArgs extends runtime.Types.Extensi
    * The data used to create many CommunityComments.
    */
   data: Prisma.CommunityCommentCreateManyInput | Prisma.CommunityCommentCreateManyInput[]
+  skipDuplicates?: boolean
 }
 
 /**
@@ -1735,6 +1739,7 @@ export type CommunityCommentCreateManyAndReturnArgs<ExtArgs extends runtime.Type
    * The data used to create many CommunityComments.
    */
   data: Prisma.CommunityCommentCreateManyInput | Prisma.CommunityCommentCreateManyInput[]
+  skipDuplicates?: boolean
   /**
    * Choose, which related nodes to fetch as well
    */
