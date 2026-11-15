@@ -81,6 +81,18 @@ jobs:
           # `pnpm deploy` menyalin src/ dan tsconfig juga; tidak dipakai runtime.
           rm -rf deploy/api/src deploy/api/tsconfig.json deploy/api/tsconfig.build.json
 
+          # Seeder dibutuhkan di VPS untuk mengisi data esensial (age groups,
+          # kategori, akun staf). `pnpm deploy --prod` membuang devDependency —
+          # termasuk `tsx` — jadi `pnpm db:seed` TIDAK BISA dijalankan dari
+          # artefak. Karena itu `packages/database` mem-build seed.ts menjadi
+          # dist/seed.js biasa (lihat `build` di package.json-nya), dan runner
+          # script di bawah menjalankannya dengan Node apa adanya.
+          test -f deploy/api/node_modules/@mentari/database/dist/seed.js || {
+            echo "dist/seed.js tidak ikut ter-build — cek script build @mentari/database"; exit 1;
+          }
+          mkdir -p deploy/scripts
+          cp scripts/seed.mjs deploy/scripts/seed.mjs
+
           # Salin schema.prisma dari packages/database ke dalam artefak API
           mkdir -p deploy/api/prisma
           cp packages/database/prisma/schema.prisma deploy/api/prisma/
@@ -95,6 +107,8 @@ jobs:
           test -f deploy/web/apps/web/server.js
           test -f deploy/api/dist/main.js
           test -f deploy/api/prisma/schema.prisma
+          test -f deploy/api/node_modules/@mentari/database/dist/seed.js
+          test -f deploy/scripts/seed.mjs
           test -f deploy/ecosystem.config.js
           echo "artefak lengkap"
 

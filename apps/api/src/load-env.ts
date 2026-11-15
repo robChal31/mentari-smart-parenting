@@ -1,22 +1,40 @@
-// Minimal root-.env auto-loader (no external deps). Walk upward from
-// __dirname and load the nearest .env (apps/api/src → … → repo root).
-// Existing env vars win. Node ≥ 20.12.
+// Minimal .env auto-loader (no external deps). Walk upward from __dirname and
+// load the nearest .env (apps/api/src → … → repo root). Existing env vars win.
+// Node ≥ 20.12.
+//
+// Urutan pencarian sama dengan @mentari/database (packages/database/src/env.ts):
+//   1. $ENV_FILE                          — eksplisit, mis. /var/lib/mentari/.env
+//   2. .env terdekat, naik dari __dirname — alur repo
+//   3. /var/lib/mentari/.env              — lokasi standar produksi di VPS
+//
+// Tanpa nomor 1 dan 3, artefak hasil GitHub Actions di /home/ubuntu/apps
+// tidak akan pernah menemukan .env-nya: tidak ada repo di VPS, dan .env
+// produksi memang disimpan di luar folder deploy.
 import path from 'node:path';
 
+/** Sama dengan PRODUCTION_ENV_FILE di @mentari/database. */
+const PRODUCTION_ENV_FILE = '/var/lib/mentari/.env';
+
 let loadedFrom: string | null = null;
-let dir = __dirname;
-for (;;) {
+
+function tryLoad(file: string): boolean {
   try {
-    const candidate = path.join(dir, '.env');
-    process.loadEnvFile(candidate);
-    loadedFrom = candidate;
-    break;
+    process.loadEnvFile(file);
+    loadedFrom = file;
+    return true;
   } catch {
-    // keep walking upward
+    return false;
   }
-  const parent = path.dirname(dir);
-  if (parent === dir) break;
-  dir = parent;
+}
+
+if (!(process.env.ENV_FILE && tryLoad(process.env.ENV_FILE))) {
+  for (let dir = __dirname; ; ) {
+    if (tryLoad(path.join(dir, '.env'))) break;
+    const parent = path.dirname(dir);
+    if (parent === dir) break;
+    dir = parent;
+  }
+  if (!loadedFrom) tryLoad(PRODUCTION_ENV_FILE);
 }
 
 /**

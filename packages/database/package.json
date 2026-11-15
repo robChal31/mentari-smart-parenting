@@ -12,7 +12,7 @@
     "db:seed": "tsx prisma/seed.ts",
     "db:reset": "node scripts/push-pg.mjs --force",
     "lint": "echo 'database: no lint configured'",
-    "build": "tsup src/index.ts --format cjs --dts --sourcemap --clean --external @prisma/client --external @prisma/adapter-pg --external pg",
+    "build": "tsup src/index.ts --format cjs --dts --sourcemap --clean --external @prisma/client --external @prisma/adapter-pg --external pg && tsup prisma/seed.ts --format cjs --external @prisma/client --external @prisma/adapter-pg --external pg",
     "dev": "tsup src/index.ts --format cjs --dts --watch --external @prisma/client",
     "prepublishOnly": "pnpm build",
     "db:ddl:postgres": "node scripts/export-ddl.mjs"

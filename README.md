@@ -36,7 +36,7 @@ Prasyarat: **Node ≥ 20** dan **pnpm 9**.
 pnpm install        # install seluruh workspace
 pnpm db:check       # pastikan klien Prisma cocok dengan .env (harus "postgres ✅ match")
 pnpm db:push        # buat 25 tabel di PostgreSQL (satu transaksi)
-pnpm db:seed        # isi data demo
+pnpm db:seed        # isi data esensial (kategori, age group, akun staf)
 pnpm dev            # web http://localhost:3001 · api http://127.0.0.1:3001/api/v1
                     # (first build @mentari/shared & @mentari/database otomatis)
 ```
@@ -71,7 +71,7 @@ Atau per app: `pnpm dev:web` / `pnpm dev:api`.
         transaksi, tanpa schema engine — jadi bug katalog `char`
         (`prisma/prisma#27403`) tidak pernah tersentuh. Untuk membuat database-nya sendiri:
         `sudo -u postgres createuser mentari -P` lalu `createdb -O mentari mentari_smart_parent`.
-     4. `pnpm db:seed` untuk data demo (opsional; menghapus data yang ada).
+     4. `pnpm db:seed` untuk data esensial (opsional; menghapus data yang ada).
      5. `DATABASE_URL` yang sama dipakai runtime — client factory memilih adapter
         `@prisma/adapter-pg` otomatis dari scheme URL (`mysql://` → MariaDB, `postgres(ql)://` → pg).
    - **TLS**: Postgres di loopback tidak memakai TLS. Kalau database berada di server lain,
@@ -99,6 +99,45 @@ Atau per app: `pnpm dev:web` / `pnpm dev:api`.
 4. **Web**: `NEXT_PUBLIC_SITE_URL`, `API_INTERNAL_URL` (URL internal service API). Browser tetap
    same-origin lewat rewrites (`/api/*` dan `/uploads/*`).
 5. **Seed**: `pnpm db:seed` memakai bcrypt untuk password default — **ganti password demo sebelum go-live**.
+   Di VPS yang di-deploy lewat GitHub Actions, **jangan** pakai `pnpm db:seed` dan **jangan** clone
+   repo: seeder sudah ikut terkirim sebagai artefak. Lihat
+   [Seed di VPS tanpa clone](#seed-di-vps-tanpa-clone).
+
+### Seed di VPS tanpa clone
+
+`pnpm db:seed` menjalankan `tsx prisma/seed.ts`. `tsx` adalah **devDependency**, dan
+`pnpm --filter=@mentari/api deploy --prod` membuang devDependency — jadi perintah itu tidak
+mungkin dijalankan di `/home/ubuntu/apps`, apa pun isi `.env`-nya. Clone repo kedua hanya untuk
+seed juga tidak perlu: satu file bisa dijalankan langsung dari artefak.
+
+**Sekali per baris perintah, di VPS:**
+
+```bash
+# 1. Konfigurasi (sekali saja). API dan seeder sama-sama membaca file ini.
+sudo mkdir -p /var/lib/mentari
+sudo nano /var/lib/mentari/.env
+```
+
+```env
+DATABASE_URL="postgresql://mentari:<password>@127.0.0.1:5432/mentari_smart_parent"
+```
+
+```bash
+# 2. Isi data esensial (age groups, 29 kategori, 1 author, akun admin + editor)
+SEED_ADMIN_PASSWORD='...' SEED_EDITOR_PASSWORD='...' node /home/ubuntu/apps/scripts/seed.mjs
+
+# 3. Muat ulang API supaya pasti memakai data yang baru
+pm2 restart mentari-api
+```
+
+Tanpa `SEED_ADMIN_PASSWORD` / `SEED_EDITOR_PASSWORD`, akun kembali ke password default yang
+tertulis di repo publik (`mentari123`). Selalu set keduanya di server yang bisa diakses publik.
+
+Seeder **menghapus seluruh isi tabel** sebelum mengisi (idempoten). Aman saat database masih
+kosong; **jangan dijalankan setelah ada konten nyata**.
+
+Lokasi `.env` yang dibaca (urutan, yang pertama ada dipakai): `$ENV_FILE` → `.env` terdekat
+dengan walk-up dari folder artefak → `/var/lib/mentari/.env`.
 
 ### Environment variables
 
@@ -113,7 +152,7 @@ pnpm install          # tanpa ini: Error "Cannot find module '@prisma/adapter-pg
 # Isi .env di ROOT repo (bukan .env.example — file itu cuma template, jangan isi kredensial asli!)
 # Lalu cukup:
 pnpm --filter=@mentari/database db:push            # buat tabel di PostgreSQL
-pnpm --filter=@mentari/database db:seed            # isi data demo (opsional)
+pnpm --filter=@mentari/database db:seed            # isi data esensial (opsional)
 ```
 
 Fallback kalau auto-load tidak bekerja (custom shell, dst): pakai syntax PowerShell:
@@ -128,7 +167,8 @@ perintah di bawah memakai `schema.postgres.prisma` dan membaca `DATABASE_URL` da
 |---|---|
 | `pnpm db:check` | bandingkan URL vs provider klien Prisma yang ter-generate (tanpa mengubah apa pun) |
 | `pnpm db:push` | **buat skema di PostgreSQL** — 25 tabel, satu transaksi; idempotent, aman diulang |
-| `pnpm db:seed` | wipe & re-seed data demo (25 konten, 7 produk, 23 milestone, dst.) |
+| `pnpm db:seed` | wipe & re-seed **data esensial** (6 age group, 29 kategori, 1 author, 2 akun staf) |
+| `node scripts/seed.mjs` | sama, tapi dari **artefak deploy** — tanpa repo, pnpm, atau tsx (dipakai di VPS) |
 | `pnpm db:reset` | hapus skema lalu buat ulang (`db:push --force`) |
 | `pnpm db:push:mysql` | push `schema.prisma` (MySQL) via Prisma CLI |
 | `pnpm db:ddl:postgres` | tulis `prisma/schema.postgres.sql` (offline) — hanya kalau `db:push` tidak bisa konek |
