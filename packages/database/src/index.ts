@@ -11,6 +11,7 @@
 import './env';
 import { loadEnvFiles } from './env';
 loadEnvFiles(__dirname);
+import { readFileSync } from 'node:fs';
 import path from 'node:path';
 import { PrismaLibSql } from '@prisma/adapter-libsql';
 import { PrismaMariaDb } from '@prisma/adapter-mariadb';
@@ -27,8 +28,28 @@ function resolveSqliteUrl(url: string): string {
   return `file:${absolute}`;
 }
 
+/**
+ * Read the provider baked into the generated client (internal/class.ts embeds
+ * the schema source). Used only to explain a provider mismatch — never to
+ * decide which adapter to build.
+ */
+export function detectClientProvider(): 'sqlite' | 'postgresql' | 'mysql' | null {
+  // The bundled dist/index.js embeds the same inlineSchema string; look there
+  // first (that is what actually runs), then fall back to the generated source.
+  const candidates: string[] = [];
+  try { candidates.push(readFileSync(__filename, 'utf8')); } catch {}
+  try {
+    candidates.push(readFileSync(path.join(__dirname, 'generated/prisma/internal/class.ts'), 'utf8'));
+  } catch {}
+  for (const source of candidates) {
+    const match = source.match(/provider = \W*?(postgresql|sqlite|mysql)/);
+    if (match) return match[1] as 'sqlite' | 'postgresql' | 'mysql';
+  }
+  return null;
+}
+
 /** Wrap client construction to print an actionable message on provider mismatch. */
-function withProviderHint(build: () => PrismaClient): PrismaClient {
+function withProviderHint(build: () => PrismaClient, target = '(unknown)'): PrismaClient {
   try {
     return build();
   } catch (error) {
@@ -38,12 +59,19 @@ function withProviderHint(build: () => PrismaClient): PrismaClient {
         message,
         '',
         'Hint: the committed Prisma client is generated for ONE provider (SQLite by default).',
+        `The generated client currently targets: ${detectClientProvider() ?? 'unknown'}`,
+        `Your DATABASE_URL targets: ${target}`,
+        '',
         'Regenerate it for your target database, then rebuild & restart:',
         '  • local dev (SQLite):  pnpm --filter=@mentari/database db:generate',
         '  • Supabase (Postgres): pnpm --filter=@mentari/database db:generate:postgres',
         '  • MySQL:               pnpm --filter=@mentari/database db:generate:mysql',
         '  then:                  pnpm --filter=@mentari/database build',
-      ].join('\n'));
+        '',
+        'Note: db:push:supabase / db:ddl:postgres / db:seed do NOT regenerate the client.',
+        'Switching to Supabase needs db:generate:postgres, and switching back needs',
+        'db:generate — otherwise the API keeps crashing with this error on every restart.',
+      ].filter((line, i, all) => !(line === '' && i > 0 && all[i - 1] === '')).join('\n'));
     }
     throw error;
   }
@@ -54,15 +82,15 @@ export function createPrismaClient(
 ): PrismaClient {
   if (databaseUrl.startsWith('file:') || databaseUrl.startsWith('libsql:')) {
     const adapter = new PrismaLibSql({ url: resolveSqliteUrl(databaseUrl) });
-    return withProviderHint(() => new PrismaClient({ adapter }));
+    return withProviderHint(() => new PrismaClient({ adapter }), 'sqlite');
   }
   if (databaseUrl.startsWith('mysql://')) {
     const adapter = new PrismaMariaDb(databaseUrl);
-    return withProviderHint(() => new PrismaClient({ adapter }));
+    return withProviderHint(() => new PrismaClient({ adapter }), 'mysql');
   }
   if (databaseUrl.startsWith('postgres://') || databaseUrl.startsWith('postgresql://')) {
     const adapter = new PrismaPg({ connectionString: databaseUrl });
-    return withProviderHint(() => new PrismaClient({ adapter }));
+    return withProviderHint(() => new PrismaClient({ adapter }), 'postgresql');
   }
   throw new Error(
     `Unsupported DATABASE_URL scheme. Use file:./dev.db (sqlite), mysql://user:pass@host:3306/db, or postgresql://… (Supabase). Got: ${databaseUrl}`,
