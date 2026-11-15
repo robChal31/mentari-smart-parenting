@@ -252,7 +252,6 @@ function AuthorForm({
             label={dict.admin.authorAvatarLabel}
             value={avatarUrl}
             onChange={setAvatarUrl}
-            kind="image"
             subdir="author"
             previewClassName="h-20 w-20"
             hint="Foto persegi (1:1) paling rapi. JPG/PNG/WebP maks 5 MB."

@@ -54,6 +54,11 @@ packages/database/dev.db
 # Generated DDL dump (db:ddl:postgres)
 packages/database/prisma/schema.postgres.sql
 
-# Berkas unggahan (disajikan API, jangan masuk repo)
-uploads/
+# Berkas unggahan runtime (disajikan API, jangan masuk repo).
+#
+# HANYA folder data di root dan di apps/api. JANGAN pakai pola `uploads/` polos:
+# pola itu juga mencocokkan `apps/api/src/uploads/` — folder KODE SUMBER modul
+# upload — sehingga file .ts-nya tidak pernah ter-commit dan build gagal dengan
+# "Cannot find module './uploads/uploads.module'".
+/uploads/
 apps/api/uploads/
