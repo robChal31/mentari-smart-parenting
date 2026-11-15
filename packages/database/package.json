@@ -8,18 +8,18 @@
   "scripts": {
     "db:generate": "prisma generate --schema prisma/schema.postgres.prisma && node scripts/patch-generated.mjs",
     "db:generate:mysql": "PRISMA_SCHEMA=prisma/schema.prisma prisma generate --schema prisma/schema.prisma && node scripts/patch-generated.mjs",
-    "db:push": "node scripts/push-wasm.mjs prisma/schema.postgres.prisma",
+    "db:push": "node scripts/push-pg.mjs",
     "db:push:cli": "prisma db push",
-    "db:push:offline": "node scripts/push-wasm.mjs prisma/schema.postgres.prisma",
+    "db:push:offline": "node scripts/push-pg.mjs",
     "db:push:mysql": "prisma db push --config prisma.config.mysql.ts",
     "db:seed": "tsx prisma/seed.ts",
-    "db:reset": "pnpm db:ddl:postgres",
+    "db:reset": "node scripts/push-pg.mjs --force",
     "db:reset:cli": "pnpm db:push:supabase:cli && pnpm db:seed",
     "lint": "echo 'database: no lint configured'",
     "build": "tsup src/index.ts --format cjs --dts --sourcemap --clean --external @prisma/client --external @prisma/adapter-mariadb --external @prisma/adapter-pg --external pg --external mariadb",
     "dev": "tsup src/index.ts --format cjs --dts --watch --external @prisma/client",
     "prepublishOnly": "pnpm build",
-    "db:push:supabase": "node scripts/push-wasm.mjs prisma/schema.postgres.prisma",
+    "db:push:supabase": "node scripts/push-pg.mjs",
     "db:push:supabase:cli": "prisma db push --config prisma.config.supabase.ts",
     "db:generate:postgres": "prisma generate --schema prisma/schema.postgres.prisma && node scripts/patch-generated.mjs",
     "db:ddl:postgres": "node scripts/export-ddl.mjs",
@@ -32,7 +32,8 @@
     "@prisma/adapter-pg": "7.10.1",
     "@prisma/client": "^7.10.1",
     "@prisma/driver-adapter-utils": "^7.10.1",
-    "mariadb": "^3.5.5"
+    "mariadb": "^3.5.5",
+    "pg": "^8.23.1"
   },
   "devDependencies": {
     "@mentari/shared": "workspace:*",

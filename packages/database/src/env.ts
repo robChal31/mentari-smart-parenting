@@ -2,7 +2,7 @@
 // Minimal root-.env auto-loader (no external deps).
 //
 // The monorepo keeps ONE .env at the repository root, but plain Node
-// scripts (seed, push-wasm) and the NestJS API never loaded it — on
+// scripts (seed, db:push) and the NestJS API never loaded it — on
 // Windows that meant `pnpm db:seed` silently used no DATABASE_URL at all
 // (or failed to find modules/env). Walk upward from `startDir` and load
 // the NEAREST .env found (cwd → … → repo root). Existing environment
