@@ -5,7 +5,28 @@
  * Usage: pnpm db:seed   (requires the sqlite dev.db at packages/database/)
  */
 import bcrypt from 'bcryptjs';
-import { prisma } from '../src/index';
+import { detectClientProvider, prisma } from '../src/index';
+
+/**
+ * Seeding into Supabase while the client is still generated for SQLite dies with
+ * "Driver Adapter ... not compatible with the provider sqlite" halfway through.
+ * Warn first so the fix (db:generate:postgres) is obvious.
+ */
+function warnOnProviderMismatch() {
+  const url = process.env.DATABASE_URL ?? 'file:./dev.db';
+  const wants = url.startsWith('postgres') ? 'postgresql' : url.startsWith('mysql') ? 'mysql' : 'sqlite';
+  const client = detectClientProvider();
+  if (client && client !== wants) {
+    console.warn([
+      '',
+      `⚠️  Generated Prisma client targets "${client}" but DATABASE_URL targets "${wants}".`,
+      client === 'sqlite'
+        ? '   Fix: pnpm --filter=@mentari/database db:generate:postgres && pnpm --filter=@mentari/database build'
+        : '   Fix: pnpm --filter=@mentari/database db:generate && pnpm --filter=@mentari/database build',
+      '',
+    ].join('\n'));
+  }
+}
 import {
   AGE_GROUPS, AUTHORS, CATEGORIES, CONTENTS, PRODUCTS, MILESTONES, BADGES,
   LEARNING_PATHS, THREADS,
@@ -25,6 +46,7 @@ const DAY = 86_400_000;
 const now = Date.now();
 
 async function main() {
+  warnOnProviderMismatch();
   console.log('🌱 Seeding MentariSmartParent...');
 
   // ---------- wipe (FK-safe order) ----------

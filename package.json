@@ -17,6 +17,7 @@
     "db:push:supabase": "pnpm --filter=@mentari/database db:push:supabase",
     "db:ddl:postgres": "pnpm --filter=@mentari/database db:ddl:postgres",
     "db:setup": "pnpm db:generate && pnpm db:push && pnpm db:seed",
+    "db:check": "pnpm --filter=@mentari/database use:check",
     "setup": "pnpm install && pnpm db:setup"
   },
   "engines": {
