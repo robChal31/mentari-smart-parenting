@@ -3,21 +3,22 @@
  * and rebuild the package in one step.
  *
  * Why this exists: `src/generated/prisma` is committed and is generated for ONE
- * provider at a time (SQLite by default). Nothing else in the toolchain
- * regenerates it — not `db:push:supabase`, not `db:ddl:postgres`, not `db:seed`,
- * and not `pnpm dev`. So after pointing DATABASE_URL at Supabase, the API boots
- * with an SQLite client, picks the `pg` adapter from the URL scheme, and dies
- * with:
+ * provider at a time. Nothing else in the toolchain regenerates it — not
+ * `db:push`, not `db:ddl:postgres`, not `db:seed`, and not `pnpm dev`. Pointing
+ * DATABASE_URL at a different provider therefore leaves the API booting with a
+ * stale client and dying with:
  *   The Driver Adapter `@prisma/adapter-pg` ... is not compatible with the
  *   provider `sqlite`.
  * This script removes the guesswork: it reads DATABASE_URL, regenerates for the
  * matching provider, and rebuilds.
  *
+ * Supported providers: postgres (default) and mysql. SQLite is no longer
+ * supported — the repo targets Supabase.
+ *
  * Usage:
- *   node scripts/use-provider.mjs            # follow DATABASE_URL from .env
- *   node scripts/use-provider.mjs sqlite     # force a provider
- *   node scripts/use-provider.mjs postgres
- *   node scripts/use-provider.mjs mysql
+ *   node scripts/use-provider.mjs            # reconcile with DATABASE_URL
+ *   node scripts/use-provider.mjs postgres   # force Postgres / Supabase
+ *   node scripts/use-provider.mjs mysql      # force MySQL
  *   node scripts/use-provider.mjs --check    # report only, change nothing
  */
 import { execFileSync } from 'node:child_process';
@@ -36,14 +37,9 @@ for (let dir = process.cwd(); ; ) {
 const root = path.resolve(path.dirname(fileURLToPath(import.meta.url)), '..');
 const args = process.argv.slice(2);
 const checkOnly = args.includes('--check');
-const forced = args.find((a) => ['sqlite', 'postgres', 'mysql'].includes(a));
+const forced = args.find((a) => ['postgres', 'mysql'].includes(a));
 
 const PROVIDERS = {
-  sqlite: {
-    label: 'SQLite (local dev)',
-    schema: 'prisma/schema.sqlite.prisma',
-    generate: 'db:generate',
-  },
   postgres: {
     label: 'PostgreSQL / Supabase',
     schema: 'prisma/schema.postgres.prisma',
@@ -57,10 +53,9 @@ const PROVIDERS = {
 };
 
 function providerFromUrl(url) {
-  if (!url) return 'sqlite';
-  if (url.startsWith('postgres://') || url.startsWith('postgresql://')) return 'postgres';
-  if (url.startsWith('mysql://')) return 'mysql';
-  return 'sqlite';
+  if (url?.startsWith('postgres://') || url?.startsWith('postgresql://')) return 'postgres';
+  if (url?.startsWith('mysql://')) return 'mysql';
+  return null;
 }
 
 /**
@@ -78,12 +73,27 @@ function generatedProvider() {
   }
 }
 
-const url = process.env.DATABASE_URL ?? 'file:./dev.db';
+const url = process.env.SUPABASE_DATABASE_URL ?? process.env.DATABASE_URL ?? '';
 const wanted = forced ?? providerFromUrl(url);
 const current = generatedProvider();
-const masked = url.replace(/(:\/\/[^:/\s]+:)[^@/\s]*(@)/, '$1***$2');
+const masked = url ? url.replace(/(:\/\/[^:/\s]+:)[^@/\s]*(@)/, '$1***$2') : '(not set)';
 
-console.log(`DATABASE_URL       : ${masked}`);
+console.log(`Database URL       : ${masked}`);
+
+if (!wanted) {
+  console.error([
+    '',
+    'ERROR: no Postgres/MySQL URL found.',
+    '',
+    'This repo targets Supabase. Add to the root .env:',
+    '  SUPABASE_DATABASE_URL="postgresql://postgres:<password>@db.<project-ref>.supabase.co:5432/postgres"',
+    '  DATABASE_URL="postgresql://postgres:<password>@db.<project-ref>.supabase.co:5432/postgres"',
+    '',
+    'SQLite is no longer supported.',
+  ].join('\n'));
+  process.exit(1);
+}
+
 console.log(`Database expects   : ${wanted} (${PROVIDERS[wanted].label})`);
 console.log(`Generated client   : ${current ?? 'unknown'}${current === wanted ? '  ✅ match' : '  ⚠️  MISMATCH'}`);
 
@@ -114,8 +124,5 @@ if (wanted === 'postgres') {
   console.log('  pnpm --filter=@mentari/database db:seed');
 } else if (wanted === 'mysql') {
   console.log('  pnpm --filter=@mentari/database db:push:mysql');
-  console.log('  pnpm --filter=@mentari/database db:seed');
-} else {
-  console.log('  pnpm --filter=@mentari/database db:push');
   console.log('  pnpm --filter=@mentari/database db:seed');
 }

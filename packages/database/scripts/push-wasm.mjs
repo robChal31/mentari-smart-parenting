@@ -8,16 +8,16 @@
  * This script calls the WASM engine directly — no native binary, no network.
  *
  * Usage: node scripts/push-wasm.mjs [schema path] [database url] [--force]
- *   defaults: schema=prisma/schema.sqlite.prisma  url=$DATABASE_URL or file:./dev.db
- *   works for file:/libsql:/mysql:/postgres(ql): URLs — adapter is picked from the scheme.
- *   For Supabase: set SUPABASE_DATABASE_URL in your root .env, then
- *   pnpm db:push:supabase   (no shell-specific env syntax required)
+ *   defaults: schema=prisma/schema.postgres.prisma
+ *             url=$SUPABASE_DATABASE_URL or $DATABASE_URL
+ *   works for postgres(ql):/mysql:/file:/libsql: URLs — adapter follows the scheme.
+ *   SQLite is no longer a supported target; it survives only as an escape hatch
+ *   (pass prisma/schema.sqlite.prisma explicitly) and prints a warning.
  */
 import { readFileSync } from 'node:fs';
 import path from 'node:path';
 import { fileURLToPath } from 'node:url';
 import { SchemaEngine } from '@prisma/schema-engine-wasm';
-import { PrismaLibSql } from '@prisma/adapter-libsql';
 import { PrismaMariaDb } from '@prisma/adapter-mariadb';
 import { PrismaPg } from '@prisma/adapter-pg';
 import { bindMigrationAwareSqlAdapterFactory } from '@prisma/driver-adapter-utils';
@@ -35,9 +35,23 @@ const root = path.resolve(path.dirname(fileURLToPath(import.meta.url)), '..');
 const args = process.argv.slice(2);
 const force = args.includes('--force');
 const positional = args.filter((a) => !a.startsWith('--'));
-const schemaPath = positional[0] ?? 'prisma/schema.sqlite.prisma';
+const schemaPath = positional[0] ?? 'prisma/schema.postgres.prisma';
 const schemaAbs = path.resolve(root, schemaPath);
-const url = positional[1] ?? process.env.SUPABASE_DATABASE_URL ?? process.env.DATABASE_URL ?? 'file:./dev.db';
+const url =
+  positional[1] ??
+  process.env.SUPABASE_DATABASE_URL ??
+  process.env.DATABASE_URL;
+
+if (!url) {
+  console.error([
+    'ERROR: no database URL configured.',
+    '',
+    'Set SUPABASE_DATABASE_URL (preferred) or DATABASE_URL in the root .env:',
+    '  SUPABASE_DATABASE_URL="postgresql://postgres:<password>@db.<project-ref>.supabase.co:5432/postgres"',
+    'Never commit this file — .env is gitignored.',
+  ].join('\n'));
+  process.exit(1);
+}
 // Refuse the .env.example placeholder — otherwise the WASM engine dies with an
 // opaque "External error id#0" and (worse) would print your real password into
 // terminal logs if we logged the raw URL.
@@ -60,24 +74,16 @@ const isSqliteSchema = !schemaPath.includes('postgres') && !schemaPath.includes(
 if (isSqliteSchema && (isPostgresUrl || isMysqlUrl)) {
   const flavour = isPostgresUrl ? 'Postgres/Supabase' : 'MySQL';
   console.error([
-    `ERROR: ${schemaPath} (SQLite) cannot be pushed to a ${flavour} database.`,
+    `ERROR: ${schemaPath} is the SQLite schema and cannot be pushed to a ${flavour} database.`,
     '',
-    'The database URL in .env points at a real server, but the default schema is SQLite.',
-    'Pick the schema that matches your database instead:',
-    ...(isPostgresUrl ? [
-      '  pnpm --filter=@mentari/database db:push:supabase     # schema.postgres.prisma (WASM)',
-      '  pnpm --filter=@mentari/database db:push:supabase:cli # same, official CLI',
-    ] : [
-      '  pnpm --filter=@mentari/database db:push:mysql        # schema.prisma (MySQL)',
-    ]),
+    'SQLite is no longer a supported target. The defaults now expect Postgres:',
+    '  pnpm db:push              # schema.postgres.prisma -> SUPABASE_DATABASE_URL',
+    ...(isPostgresUrl ? [] : ['  pnpm --filter=@mentari/database db:push:mysql   # MySQL instead']),
     '',
-    'If that fails with "Column type \'char\' could not be deserialized", the WASM',
+    'If db:push fails with "Column type \'char\' could not be deserialized", the WASM',
     'engine cannot describe hosted Postgres — apply the DDL manually instead:',
-    '  pnpm --filter=@mentari/database db:ddl:postgres       # writes prisma/schema.postgres.sql',
+    '  pnpm db:ddl:postgres      # writes prisma/schema.postgres.sql',
     '  then paste it into Supabase Dashboard -> SQL Editor.',
-    '',
-    'Working on the local SQLite dev database? Point DATABASE_URL back at',
-    '  DATABASE_URL="file:./dev.db"',
   ].join('\n'));
   process.exit(1);
 }
@@ -92,7 +98,9 @@ function makeAdapter(rawUrl) {
   if (rawUrl.startsWith('postgres://') || rawUrl.startsWith('postgresql://')) {
     return bindMigrationAwareSqlAdapterFactory(new PrismaPg({ connectionString: rawUrl }));
   }
-  return bindMigrationAwareSqlAdapterFactory(new PrismaLibSql({ url: rawUrl }));
+  throw new Error(
+    `Unsupported DATABASE_URL scheme: ${rawUrl.split(':')[0]}://. Use postgresql:// or mysql://.`,
+  );
 }
 const adapter = makeAdapter(url);
 const engine = await SchemaEngine.new(

@@ -1,5 +1,15 @@
 // Seed dataset — Indonesian parenting content for MentariSmartParent.
 // Kept separate from the runner for readability.
+//
+// Enums are typed against @mentari/shared so the dataset stays valid for the
+// Postgres/MySQL schemas (Prisma enums), not just the legacy string-enum one.
+import type {
+  ContentType,
+  Difficulty,
+  MilestoneCategory,
+  ProductType,
+  RecommendationPlacement,
+} from '@mentari/shared';
 
 export const AGE_GROUPS = [
   { name: 'Bayi (0-12 Bulan)', slug: 'bayi', minAge: 0, maxAge: 12, description: 'Konten untuk newborn hingga 12 bulan: MPASI, imunisasi, stimulasi dini.' },
@@ -51,7 +61,7 @@ export const CATEGORIES: Array<{
 ];
 
 export const PRODUCTS: Array<{
-  name: string; slug: string; description: string; shortDescription: string; type: string;
+  name: string; slug: string; description: string; shortDescription: string; type: ProductType;
   price: number; thumbnailUrl: string; coverImageUrl?: string; externalUrl: string; ctaText: string;
   isFeatured: boolean; sortOrder: number; ageGroupSlugs: string[];
 }> = [
@@ -202,7 +212,7 @@ export const AUTHOR_SLUGS = {
 } as const;
 
 export interface SeedContent {
-  title: string; slug: string; excerpt: string; body?: string; type: string;
+  title: string; slug: string; excerpt: string; body?: string; type: ContentType;
   videoUrl?: string; videoDuration?: number; readTime?: number;
   thumbnailUrl?: string;
   isFeatured?: boolean; isPremium?: boolean; viewCount: number; likeCount?: number;
@@ -871,7 +881,7 @@ Anak belajar observasi, kosakata alam, dan menghargai lingkungan — gratis, tan
   },
 ];
 
-export const MILESTONES: Array<{ title: string; description?: string; ageGroupSlug: string; category: string; sortOrder: number }> = [
+export const MILESTONES: Array<{ title: string; description?: string; ageGroupSlug: string; category: MilestoneCategory; sortOrder: number }> = [
   // Bayi
   { title: 'Mengangkat kepala saat tengkurap', ageGroupSlug: 'bayi', category: 'PHYSICAL', sortOrder: 1 },
   { title: 'Tersenyum responsif saat diajak bicara/tersenyum', ageGroupSlug: 'bayi', category: 'SOCIAL_EMOTIONAL', sortOrder: 2 },
@@ -916,7 +926,7 @@ export const BADGES: Array<{ name: string; slug: string; description: string; po
 ];
 
 export const LEARNING_PATHS: Array<{
-  title: string; slug: string; description: string; difficulty: string; estimatedTime: number; sortOrder: number;
+  title: string; slug: string; description: string; difficulty: Difficulty; estimatedTime: number; sortOrder: number;
   thumbnailUrl?: string;
   contentSlugs: string[];
 }> = [

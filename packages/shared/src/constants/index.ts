@@ -101,7 +101,10 @@ export function ageLabel(birthDate: Date, now: Date = new Date()): string {
   return `${years} tahun ${months} bulan`;
 }
 
-export const DIFFICULTY_LABELS = {
+export const DIFFICULTIES = ['BEGINNER', 'INTERMEDIATE', 'ADVANCED'] as const;
+export type Difficulty = (typeof DIFFICULTIES)[number];
+
+export const DIFFICULTY_LABELS: Record<Difficulty, string> = {
   BEGINNER: 'Pemula',
   INTERMEDIATE: 'Menengah',
   ADVANCED: 'Lanjutan',
