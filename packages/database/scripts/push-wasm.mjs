@@ -10,9 +10,18 @@
  * Usage: node scripts/push-wasm.mjs [schema path] [database url] [--force]
  *   defaults: schema=prisma/schema.postgres.prisma
  *             url=$SUPABASE_DATABASE_URL or $DATABASE_URL
- *   works for postgres(ql):/mysql:/file:/libsql: URLs — adapter follows the scheme.
- *   SQLite is no longer a supported target; it survives only as an escape hatch
- *   (pass prisma/schema.sqlite.prisma explicitly) and prints a warning.
+ *   works for postgres(ql):/mysql: URLs — adapter follows the scheme.
+ *
+ * KNOWN LIMITATION — Postgres on Supabase cannot be pushed by this script.
+ * @prisma/adapter-pg reads the Postgres catalog to describe the current schema,
+ * and trips over the `char` type (OID 18) with
+ *
+ *   Column type 'char' could not be deserialized from the database.
+ *
+ * The failure lives in adapter-pg's type mapping (prisma/prisma#27403) and hits
+ * an empty database too, so retrying or wiping the schema changes nothing. The
+ * script detects it and points at `db:ddl:postgres`, which writes the same DDL
+ * without a database. MySQL is unaffected and still pushes normally.
  */
 import { readFileSync } from 'node:fs';
 import path from 'node:path';
@@ -80,11 +89,36 @@ if (isSqliteSchema && (isPostgresUrl || isMysqlUrl)) {
     '  pnpm db:push              # schema.postgres.prisma -> SUPABASE_DATABASE_URL',
     ...(isPostgresUrl ? [] : ['  pnpm --filter=@mentari/database db:push:mysql   # MySQL instead']),
     '',
-    'If db:push fails with "Column type \'char\' could not be deserialized", the WASM',
-    'engine cannot describe hosted Postgres — apply the DDL manually instead:',
-    '  pnpm db:ddl:postgres      # writes prisma/schema.postgres.sql',
+    'Postgres/Supabase cannot be pushed by this script at all — adapter-pg cannot',
+    'describe the Postgres catalog ("Column type \'char\' could not be deserialized").',
+    'Create the schema from generated DDL instead:',
+    '  pnpm db:ddl:postgres      # writes prisma/schema.postgres.sql (offline)',
     '  then paste it into Supabase Dashboard -> SQL Editor.',
   ].join('\n'));
+  process.exit(1);
+}
+
+// Postgres cannot be pushed by this script: adapter-pg's catalog describe trips
+// over the `char` type (OID 18) on ANY Postgres — empty database included — so a
+// round-trip to Supabase only ends in a confusing WASM stack trace. Short-circuit
+// with the fix instead. See the header comment / prisma/prisma#27403.
+if (isPostgresUrl) {
+  console.error('');
+  console.error('ERROR: pushing a Postgres schema through this script cannot work.');
+  console.error('');
+  console.error('@prisma/adapter-pg reads the Postgres catalog to diff your schema, and');
+  console.error("fails on the built-in `char` type with:");
+  console.error("  Column type 'char' could not be deserialized from the database.");
+  console.error('');
+  console.error('This is an upstream bug (prisma/prisma#27403), not your data, and it');
+  console.error('happens on an empty database too — retrying or wiping will not help.');
+  console.error('');
+  console.error('Create the schema from DDL instead (works fully offline):');
+  console.error('  pnpm db:ddl:postgres     # writes prisma/schema.postgres.sql');
+  console.error('  # paste that file into Supabase Dashboard -> SQL Editor and Run it');
+  console.error('  pnpm db:seed             # then fill in the demo data');
+  console.error('');
+  console.error('MySQL is unaffected: pnpm --filter=@mentari/database db:push:mysql');
   process.exit(1);
 }
 
@@ -109,11 +143,31 @@ const engine = await SchemaEngine.new(
   adapter,
 );
 
-const result = await engine.schemaPush({
-  force,
-  schema: { files: [{ path: schemaAbs, content }] },
-  filters: { externalTables: [], externalEnums: [] },
-});
+let result;
+try {
+  result = await engine.schemaPush({
+    force,
+    schema: { files: [{ path: schemaAbs, content }] },
+    filters: { externalTables: [], externalEnums: [] },
+  });
+} catch (error) {
+  const message = String(error);
+  const isCharBug = /Column type 'char' could not be deserialized/i.test(message);
+  if (!isCharBug) throw error;
+
+  console.error('');
+  console.error('ERROR: adapter-pg cannot describe a Postgres catalog — this is a known');
+  console.error('engine/adapter bug (prisma/prisma#27403), not a problem with your data.');
+  console.error('It fails on an empty database too, so wiping or retrying will not help.');
+  console.error('');
+  console.error('Use the offline DDL path instead:');
+  console.error('  pnpm db:ddl:postgres     # writes prisma/schema.postgres.sql, no DB needed');
+  console.error('  # paste that file into Supabase Dashboard -> SQL Editor and Run it');
+  console.error('  pnpm db:seed             # then fill in the demo data');
+  if (isPostgresUrl) console.error('\n(MySQL is not affected — db:push:mysql works normally.)');
+  await engine[Symbol.dispose]?.().catch(() => {});
+  process.exit(1);
+}
 
 console.log(`schemaPush OK — executed ${result.executedSteps} step(s).`);
 if (result.unexecutable?.length) {
