@@ -14,14 +14,14 @@ export async function generateMetadata(): Promise<Metadata> {
     metadataBase: new URL(SITE),
     title: {
       default: dict.seo.titleDefault,
-      template: "%s · MentariSmartParent",
+      template: "%s · Mentari Smart Parent",
     },
     description: dict.seo.description,
     keywords: [...dict.seo.keywords],
     openGraph: {
       type: "website",
       locale: dict.seo.ogLocale,
-      siteName: "MentariSmartParent",
+      siteName: "Mentari Smart Parent",
     },
     robots: { index: true, follow: true },
   };

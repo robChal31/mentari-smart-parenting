@@ -22,7 +22,7 @@ async function bootstrap() {
 
   const port = Number(process.env.API_PORT ?? 4000);
   await app.listen(port, '0.0.0.0');
-  Logger.log(`🚀 MentariSmartParent API ready at http://0.0.0.0:${port}/${prefix}`, 'Bootstrap');
+  Logger.log(`🚀 Mentari Smart Parent API ready at http://0.0.0.0:${port}/${prefix}`, 'Bootstrap');
 }
 
 bootstrap().catch((err) => {

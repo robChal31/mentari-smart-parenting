@@ -1,9 +1,9 @@
 // ============================================================
-// MentariSmartParent — Shared Constants
+// Mentari Smart Parent — Shared Constants
 // ============================================================
 
 export const BRAND = {
-  name: 'MentariSmartParent',
+  name: 'Mentari Smart Parent',
   tagline: 'Tumbuh Bersama, Belajar Bersama',
   company: 'Mentari Group',
   primary: '#FF6B35',

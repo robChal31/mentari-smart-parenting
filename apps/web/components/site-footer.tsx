@@ -9,7 +9,7 @@ export async function SiteFooter() {
   return (
     <footer className="mt-16 bg-secondary text-white/85">
       {/* Newsletter band */}
-      <div className="border-b border-white/10">
+      {/* <div className="border-b border-white/10">
         <div className="mx-auto grid max-w-7xl gap-6 px-4 py-10 sm:px-6 md:grid-cols-2 md:items-center">
           <div>
             <p className="font-heading text-lg font-bold text-white">{dict.footer.newsletterTitle}</p>
@@ -17,7 +17,7 @@ export async function SiteFooter() {
           </div>
           <NewsletterForm compact />
         </div>
-      </div>
+      </div> */}
 
       <div className="mx-auto grid max-w-7xl gap-10 px-4 py-12 sm:grid-cols-2 sm:px-6 lg:grid-cols-4">
         <div>
@@ -25,7 +25,7 @@ export async function SiteFooter() {
             <span className="grid h-8 w-8 place-items-center rounded-xl bg-white/10">
               <Sun size={17} className="text-[#FFD9A0]" fill="currentColor" aria-hidden />
             </span>
-            <p className="font-heading font-extrabold text-white">MentariSmartParent</p>
+            <p className="font-heading font-extrabold text-white">Mentari Smart Parent</p>
           </div>
           <p className="mt-3 text-sm leading-6 text-white/65">{dict.footer.tagline}</p>
         </div>
@@ -60,9 +60,8 @@ export async function SiteFooter() {
       </div>
 
       <div className="border-t border-white/10">
-        <div className="mx-auto flex max-w-7xl flex-col gap-2 px-4 py-4 text-xs text-white/50 sm:flex-row sm:items-center sm:justify-between sm:px-6">
-          <p>© {new Date().getFullYear()} MentariSmartParent · Mentari Group. {dict.footer.rights}</p>
-          <p>{dict.footer.disclaimer}</p>
+        <div className="mx-auto flex max-w-7xl flex-col gap-2 px-4 py-4 text-xs text-white/50 sm:flex-row sm:items-center sm:justify-center sm:px-6">
+          <p>© {new Date().getFullYear()} Mentari Smart Parent · Mentari Group. {dict.footer.rights}</p>
         </div>
       </div>
     </footer>

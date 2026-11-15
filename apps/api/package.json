@@ -2,7 +2,7 @@
   "name": "@mentari/api",
   "version": "1.0.0",
   "private": true,
-  "description": "MentariSmartParent backend — NestJS REST API (/api/v1)",
+  "description": "Mentari Smart Parent backend — NestJS REST API (/api/v1)",
   "scripts": {
     "build": "tsc -p tsconfig.build.json",
     "start": "node dist/main.js",
