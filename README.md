@@ -113,6 +113,20 @@ Fallback kalau auto-load tidak bekerja (custom shell, dst): pakai syntax PowerSh
 > Catatan: setelah `pnpm db:generate`, folder `packages/database/src/generated` bisa tampak
 > berubah di git (artifact generator Prisma) — jangan di-commit kecuali memang disengaja.
 
+> **Error `Column type 'char' could not be deserialized from the database`**: hampir selalu
+> berarti `.env` menunjuk ke Supabase/Postgres (atau MySQL) sementara perintah yang jalan
+> masih memakai `schema.sqlite.prisma` (default `db:push`). Engine WASM lalu gagal saat
+> membaca katalog Postgres. Perbaikan:
+> 1. **Mau lanjut di SQLite lokal** → set `DATABASE_URL="file:./dev.db"` di `.env` root, lalu `pnpm db:setup`.
+> 2. **Mau pakai Supabase** → ikuti urutan di bagian *Production deployment*: `db:generate:postgres`
+>    → isi `SUPABASE_DATABASE_URL` (port 5432, bukan pooler 6543) → `db:push:supabase`.
+>    Jika push WASM tetap gagal dengan error `char` yang sama (bug describe katalog hosted
+>    Postgres), jalankan `pnpm db:ddl:postgres` lalu tempel `packages/database/prisma/schema.postgres.sql`
+>    ke Supabase SQL Editor.
+>
+> `db:push` kini menolak lebih awal dengan pesan jelas jika schema SQLite dipakai ke URL
+> server, jadi kamu tidak lagi melihat stack trace WASM yang samar.
+
 > **Catatan engine Prisma**: `pnpm db:push`/`db:reset` berjalan 100% offline lewat schema-engine
 > WASM (`packages/database/scripts/push-wasm.mjs`) dengan `@prisma/schema-engine-wasm` dipin sebagai
 > devDependency `@mentari/database` — tidak perlu jaringan ke `binaries.prisma.sh`. Jika Anda

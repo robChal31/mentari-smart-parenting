@@ -50,6 +50,38 @@ if (url.includes('<') || url.includes('>')) {
   ].join('\n'));
   process.exit(1);
 }
+// The default schema is SQLite, but the URL may point at a real Postgres/MySQL
+// server (e.g. someone put a Supabase URL in DATABASE_URL). The WASM engine then
+// dies with an opaque "Column type 'char' could not be deserialized" — a known
+// limitation of describing hosted Postgres catalogs. Fail early with a fix.
+const isPostgresUrl = /^postgres(ql)?:\/\//.test(url);
+const isMysqlUrl = url.startsWith('mysql://');
+const isSqliteSchema = !schemaPath.includes('postgres') && !schemaPath.includes('.mysql') && schemaPath.includes('sqlite');
+if (isSqliteSchema && (isPostgresUrl || isMysqlUrl)) {
+  const flavour = isPostgresUrl ? 'Postgres/Supabase' : 'MySQL';
+  console.error([
+    `ERROR: ${schemaPath} (SQLite) cannot be pushed to a ${flavour} database.`,
+    '',
+    'The database URL in .env points at a real server, but the default schema is SQLite.',
+    'Pick the schema that matches your database instead:',
+    ...(isPostgresUrl ? [
+      '  pnpm --filter=@mentari/database db:push:supabase     # schema.postgres.prisma (WASM)',
+      '  pnpm --filter=@mentari/database db:push:supabase:cli # same, official CLI',
+    ] : [
+      '  pnpm --filter=@mentari/database db:push:mysql        # schema.prisma (MySQL)',
+    ]),
+    '',
+    'If that fails with "Column type \'char\' could not be deserialized", the WASM',
+    'engine cannot describe hosted Postgres — apply the DDL manually instead:',
+    '  pnpm --filter=@mentari/database db:ddl:postgres       # writes prisma/schema.postgres.sql',
+    '  then paste it into Supabase Dashboard -> SQL Editor.',
+    '',
+    'Working on the local SQLite dev database? Point DATABASE_URL back at',
+    '  DATABASE_URL="file:./dev.db"',
+  ].join('\n'));
+  process.exit(1);
+}
+
 const maskedUrl = url.replace(/(:\/\/[^:/\s]+:)[^@/\s]*(@)/, '$1***$2');
 const content = readFileSync(schemaAbs, 'utf8');
 
