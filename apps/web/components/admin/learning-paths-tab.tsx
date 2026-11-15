@@ -9,12 +9,17 @@ import { useDictionary } from "@/components/i18n-provider";
 import { apiData, apiPaginated } from "@/lib/client-api";
 import { format } from "@/lib/i18n/format";
 import { LearningPathForm } from "./learning-path-form";
+import { AdminPagination } from "./admin-pagination";
 import type { LearningPathDto } from "@mentari/shared";
+
+const PAGE_SIZE = 20;
 
 export function LearningPathsTab() {
   const dict = useDictionary();
   const [items, setItems] = useState<LearningPathDto[]>([]);
+  const [total, setTotal] = useState(0);
   const [q, setQ] = useState("");
+  const [page, setPage] = useState(1);
   const [busy, setBusy] = useState(false);
   const [loadError, setLoadError] = useState(false);
   const [showForm, setShowForm] = useState(false);
@@ -25,14 +30,26 @@ export function LearningPathsTab() {
   const load = useCallback(() => {
     setBusy(true);
     setLoadError(false);
-    const params = new URLSearchParams({ limit: "50", ...(q.trim() ? { q: q.trim() } : {}) });
+    const params = new URLSearchParams({
+      limit: String(PAGE_SIZE),
+      page: String(page),
+      ...(q.trim() ? { q: q.trim() } : {}),
+    });
     apiPaginated<LearningPathDto>(`/admin/learning-paths?${params}`)
-      .then((envelope) => setItems(envelope.data))
+      .then((envelope) => {
+        setItems(envelope.data);
+        setTotal(envelope.meta?.total ?? envelope.data.length);
+      })
       .catch(() => setLoadError(true))
       .finally(() => setBusy(false));
-  }, [q]);
+  }, [q, page]);
 
   useEffect(() => { load(); }, [load]);
+  // Searching always restarts at page 1, otherwise a stale page can point past the end.
+  function changeQuery(next: string) {
+    setQ(next);
+    setPage(1);
+  }
 
   async function togglePublished(path: LearningPathDto) {
     await apiData(`/admin/learning-paths/${path.id}`, { method: "PATCH", body: { isPublished: !path.isPublished } }).catch(() => undefined);
@@ -66,7 +83,7 @@ export function LearningPathsTab() {
       <div className="flex flex-wrap items-center gap-3">
         <label className="flex min-w-0 flex-1 items-center gap-2 rounded-2xl border border-sand bg-white px-4 py-2.5 focus-within:border-primary">
           <Search size={15} className="shrink-0 text-muted" aria-hidden />
-          <input value={q} onChange={(e) => setQ(e.target.value)} placeholder={dict.admin.learningPathsSearchPlaceholder} aria-label={dict.admin.learningPathsSearchPlaceholder} className="w-full bg-transparent text-sm outline-none" />
+          <input value={q} onChange={(e) => changeQuery(e.target.value)} placeholder={dict.admin.learningPathsSearchPlaceholder} aria-label={dict.admin.learningPathsSearchPlaceholder} className="w-full bg-transparent text-sm outline-none" />
         </label>
         <button onClick={startCreate} className="inline-flex items-center gap-1.5 rounded-2xl bg-primary px-4 py-2.5 text-xs font-bold text-white hover:bg-primary-deep">
           {showForm ? <X size={13} /> : <Plus size={13} />} {showForm ? dict.common.close : dict.admin.addLearningPath}
@@ -101,7 +118,7 @@ export function LearningPathsTab() {
 
       <div className="mt-4 overflow-hidden rounded-3xl border border-sand bg-white">
         <div className="border-b border-sand bg-cream/40 px-5 py-3 text-[10px] font-extrabold uppercase tracking-[0.14em] text-muted">
-          <span>{busy ? dict.admin.loading : format(dict.admin.learningPathsCount, { count: items.length })}</span>
+          <span>{busy ? dict.admin.loading : format(dict.admin.learningPathsCount, { count: total })}</span>
         </div>
         <ul className="divide-y divide-sand/70">
           {items.map((path) => (
@@ -142,6 +159,7 @@ export function LearningPathsTab() {
           ))}
           {!busy && items.length === 0 && <li className="px-5 py-8 text-center text-xs text-muted">{dict.admin.noLearningPaths}</li>}
         </ul>
+        <AdminPagination page={page} limit={PAGE_SIZE} total={total} onPageChange={setPage} disabled={busy} />
       </div>
     </div>
   );

@@ -404,6 +404,7 @@ export const ModelName = {
   AgeGroup: 'AgeGroup',
   Content: 'Content',
   Category: 'Category',
+  Author: 'Author',
   Tag: 'Tag',
   ContentCategory: 'ContentCategory',
   ContentAgeGroup: 'ContentAgeGroup',
@@ -436,7 +437,7 @@ export type TypeMap<ExtArgs extends runtime.Types.Extensions.InternalArgs = runt
     omit: GlobalOmitOptions
   }
   meta: {
-    modelProps: "user" | "child" | "milestone" | "childMilestone" | "ageGroup" | "content" | "category" | "tag" | "contentCategory" | "contentAgeGroup" | "contentTag" | "product" | "productAgeGroup" | "contentProduct" | "learningPath" | "learningPathItem" | "bookmark" | "communityThread" | "communityComment" | "gamificationProfile" | "badge" | "userBadge" | "contentView" | "productClick"
+    modelProps: "user" | "child" | "milestone" | "childMilestone" | "ageGroup" | "content" | "category" | "author" | "tag" | "contentCategory" | "contentAgeGroup" | "contentTag" | "product" | "productAgeGroup" | "contentProduct" | "learningPath" | "learningPathItem" | "bookmark" | "communityThread" | "communityComment" | "gamificationProfile" | "badge" | "userBadge" | "contentView" | "productClick"
     txIsolationLevel: TransactionIsolationLevel
   }
   model: {
@@ -955,6 +956,80 @@ export type TypeMap<ExtArgs extends runtime.Types.Extensions.InternalArgs = runt
         count: {
           args: Prisma.CategoryCountArgs<ExtArgs>
           result: runtime.Types.Utils.Optional<Prisma.CategoryCountAggregateOutputType> | number
+        }
+      }
+    }
+    Author: {
+      payload: Prisma.$AuthorPayload<ExtArgs>
+      fields: Prisma.AuthorFieldRefs
+      operations: {
+        findUnique: {
+          args: Prisma.AuthorFindUniqueArgs<ExtArgs>
+          result: runtime.Types.Utils.PayloadToResult<Prisma.$AuthorPayload> | null
+        }
+        findUniqueOrThrow: {
+          args: Prisma.AuthorFindUniqueOrThrowArgs<ExtArgs>
+          result: runtime.Types.Utils.PayloadToResult<Prisma.$AuthorPayload>
+        }
+        findFirst: {
+          args: Prisma.AuthorFindFirstArgs<ExtArgs>
+          result: runtime.Types.Utils.PayloadToResult<Prisma.$AuthorPayload> | null
+        }
+        findFirstOrThrow: {
+          args: Prisma.AuthorFindFirstOrThrowArgs<ExtArgs>
+          result: runtime.Types.Utils.PayloadToResult<Prisma.$AuthorPayload>
+        }
+        findMany: {
+          args: Prisma.AuthorFindManyArgs<ExtArgs>
+          result: runtime.Types.Utils.PayloadToResult<Prisma.$AuthorPayload>[]
+        }
+        create: {
+          args: Prisma.AuthorCreateArgs<ExtArgs>
+          result: runtime.Types.Utils.PayloadToResult<Prisma.$AuthorPayload>
+        }
+        createMany: {
+          args: Prisma.AuthorCreateManyArgs<ExtArgs>
+          result: BatchPayload
+        }
+        createManyAndReturn: {
+          args: Prisma.AuthorCreateManyAndReturnArgs<ExtArgs>
+          result: runtime.Types.Utils.PayloadToResult<Prisma.$AuthorPayload>[]
+        }
+        delete: {
+          args: Prisma.AuthorDeleteArgs<ExtArgs>
+          result: runtime.Types.Utils.PayloadToResult<Prisma.$AuthorPayload>
+        }
+        update: {
+          args: Prisma.AuthorUpdateArgs<ExtArgs>
+          result: runtime.Types.Utils.PayloadToResult<Prisma.$AuthorPayload>
+        }
+        deleteMany: {
+          args: Prisma.AuthorDeleteManyArgs<ExtArgs>
+          result: BatchPayload
+        }
+        updateMany: {
+          args: Prisma.AuthorUpdateManyArgs<ExtArgs>
+          result: BatchPayload
+        }
+        updateManyAndReturn: {
+          args: Prisma.AuthorUpdateManyAndReturnArgs<ExtArgs>
+          result: runtime.Types.Utils.PayloadToResult<Prisma.$AuthorPayload>[]
+        }
+        upsert: {
+          args: Prisma.AuthorUpsertArgs<ExtArgs>
+          result: runtime.Types.Utils.PayloadToResult<Prisma.$AuthorPayload>
+        }
+        aggregate: {
+          args: Prisma.AuthorAggregateArgs<ExtArgs>
+          result: runtime.Types.Utils.Optional<Prisma.AggregateAuthor>
+        }
+        groupBy: {
+          args: Prisma.AuthorGroupByArgs<ExtArgs>
+          result: runtime.Types.Utils.Optional<Prisma.AuthorGroupByOutputType>[]
+        }
+        count: {
+          args: Prisma.AuthorCountArgs<ExtArgs>
+          result: runtime.Types.Utils.Optional<Prisma.AuthorCountAggregateOutputType> | number
         }
       }
     }
@@ -2246,9 +2321,6 @@ export type TypeMap<ExtArgs extends runtime.Types.Extensions.InternalArgs = runt
  */
 
 export const TransactionIsolationLevel = runtime.makeStrictEnum({
-  ReadUncommitted: 'ReadUncommitted',
-  ReadCommitted: 'ReadCommitted',
-  RepeatableRead: 'RepeatableRead',
   Serializable: 'Serializable'
 } as const)
 
@@ -2343,9 +2415,7 @@ export const ContentScalarFieldEnum = {
   viewCount: 'viewCount',
   likeCount: 'likeCount',
   publishedAt: 'publishedAt',
-  authorName: 'authorName',
-  authorTitle: 'authorTitle',
-  authorAvatarUrl: 'authorAvatarUrl',
+  authorId: 'authorId',
   metaTitle: 'metaTitle',
   metaDescription: 'metaDescription',
   createdAt: 'createdAt',
@@ -2370,6 +2440,23 @@ export const CategoryScalarFieldEnum = {
 } as const
 
 export type CategoryScalarFieldEnum = (typeof CategoryScalarFieldEnum)[keyof typeof CategoryScalarFieldEnum]
+
+
+export const AuthorScalarFieldEnum = {
+  id: 'id',
+  name: 'name',
+  slug: 'slug',
+  title: 'title',
+  bio: 'bio',
+  avatarUrl: 'avatarUrl',
+  email: 'email',
+  isActive: 'isActive',
+  sortOrder: 'sortOrder',
+  createdAt: 'createdAt',
+  updatedAt: 'updatedAt'
+} as const
+
+export type AuthorScalarFieldEnum = (typeof AuthorScalarFieldEnum)[keyof typeof AuthorScalarFieldEnum]
 
 
 export const TagScalarFieldEnum = {
@@ -2415,6 +2502,7 @@ export const ProductScalarFieldEnum = {
   type: 'type',
   price: 'price',
   currency: 'currency',
+  coverImageUrl: 'coverImageUrl',
   thumbnailUrl: 'thumbnailUrl',
   images: 'images',
   externalUrl: 'externalUrl',
@@ -2594,37 +2682,12 @@ export const SortOrder = {
 export type SortOrder = (typeof SortOrder)[keyof typeof SortOrder]
 
 
-export const NullableJsonNullValueInput = {
-  DbNull: DbNull,
-  JsonNull: JsonNull
-} as const
-
-export type NullableJsonNullValueInput = (typeof NullableJsonNullValueInput)[keyof typeof NullableJsonNullValueInput]
-
-
-export const QueryMode = {
-  default: 'default',
-  insensitive: 'insensitive'
-} as const
-
-export type QueryMode = (typeof QueryMode)[keyof typeof QueryMode]
-
-
 export const NullsOrder = {
   first: 'first',
   last: 'last'
 } as const
 
 export type NullsOrder = (typeof NullsOrder)[keyof typeof NullsOrder]
-
-
-export const JsonNullValueFilter = {
-  DbNull: DbNull,
-  JsonNull: JsonNull,
-  AnyNull: AnyNull
-} as const
-
-export type JsonNullValueFilter = (typeof JsonNullValueFilter)[keyof typeof JsonNullValueFilter]
 
 
 
@@ -2637,27 +2700,6 @@ export type JsonNullValueFilter = (typeof JsonNullValueFilter)[keyof typeof Json
  * Reference to a field of type 'String'
  */
 export type StringFieldRefInput<$PrismaModel> = FieldRefInputType<$PrismaModel, 'String'>
-    
-
-
-/**
- * Reference to a field of type 'String[]'
- */
-export type ListStringFieldRefInput<$PrismaModel> = FieldRefInputType<$PrismaModel, 'String[]'>
-    
-
-
-/**
- * Reference to a field of type 'UserRole'
- */
-export type EnumUserRoleFieldRefInput<$PrismaModel> = FieldRefInputType<$PrismaModel, 'UserRole'>
-    
-
-
-/**
- * Reference to a field of type 'UserRole[]'
- */
-export type ListEnumUserRoleFieldRefInput<$PrismaModel> = FieldRefInputType<$PrismaModel, 'UserRole[]'>
     
 
 
@@ -2676,41 +2718,6 @@ export type DateTimeFieldRefInput<$PrismaModel> = FieldRefInputType<$PrismaModel
 
 
 /**
- * Reference to a field of type 'DateTime[]'
- */
-export type ListDateTimeFieldRefInput<$PrismaModel> = FieldRefInputType<$PrismaModel, 'DateTime[]'>
-    
-
-
-/**
- * Reference to a field of type 'Gender'
- */
-export type EnumGenderFieldRefInput<$PrismaModel> = FieldRefInputType<$PrismaModel, 'Gender'>
-    
-
-
-/**
- * Reference to a field of type 'Gender[]'
- */
-export type ListEnumGenderFieldRefInput<$PrismaModel> = FieldRefInputType<$PrismaModel, 'Gender[]'>
-    
-
-
-/**
- * Reference to a field of type 'MilestoneCategory'
- */
-export type EnumMilestoneCategoryFieldRefInput<$PrismaModel> = FieldRefInputType<$PrismaModel, 'MilestoneCategory'>
-    
-
-
-/**
- * Reference to a field of type 'MilestoneCategory[]'
- */
-export type ListEnumMilestoneCategoryFieldRefInput<$PrismaModel> = FieldRefInputType<$PrismaModel, 'MilestoneCategory[]'>
-    
-
-
-/**
  * Reference to a field of type 'Int'
  */
 export type IntFieldRefInput<$PrismaModel> = FieldRefInputType<$PrismaModel, 'Int'>
@@ -2718,121 +2725,9 @@ export type IntFieldRefInput<$PrismaModel> = FieldRefInputType<$PrismaModel, 'In
 
 
 /**
- * Reference to a field of type 'Int[]'
- */
-export type ListIntFieldRefInput<$PrismaModel> = FieldRefInputType<$PrismaModel, 'Int[]'>
-    
-
-
-/**
- * Reference to a field of type 'ContentType'
- */
-export type EnumContentTypeFieldRefInput<$PrismaModel> = FieldRefInputType<$PrismaModel, 'ContentType'>
-    
-
-
-/**
- * Reference to a field of type 'ContentType[]'
- */
-export type ListEnumContentTypeFieldRefInput<$PrismaModel> = FieldRefInputType<$PrismaModel, 'ContentType[]'>
-    
-
-
-/**
- * Reference to a field of type 'ContentStatus'
- */
-export type EnumContentStatusFieldRefInput<$PrismaModel> = FieldRefInputType<$PrismaModel, 'ContentStatus'>
-    
-
-
-/**
- * Reference to a field of type 'ContentStatus[]'
- */
-export type ListEnumContentStatusFieldRefInput<$PrismaModel> = FieldRefInputType<$PrismaModel, 'ContentStatus[]'>
-    
-
-
-/**
- * Reference to a field of type 'ProductType'
- */
-export type EnumProductTypeFieldRefInput<$PrismaModel> = FieldRefInputType<$PrismaModel, 'ProductType'>
-    
-
-
-/**
- * Reference to a field of type 'ProductType[]'
- */
-export type ListEnumProductTypeFieldRefInput<$PrismaModel> = FieldRefInputType<$PrismaModel, 'ProductType[]'>
-    
-
-
-/**
- * Reference to a field of type 'Decimal'
- */
-export type DecimalFieldRefInput<$PrismaModel> = FieldRefInputType<$PrismaModel, 'Decimal'>
-    
-
-
-/**
- * Reference to a field of type 'Decimal[]'
- */
-export type ListDecimalFieldRefInput<$PrismaModel> = FieldRefInputType<$PrismaModel, 'Decimal[]'>
-    
-
-
-/**
- * Reference to a field of type 'Json'
- */
-export type JsonFieldRefInput<$PrismaModel> = FieldRefInputType<$PrismaModel, 'Json'>
-    
-
-
-/**
- * Reference to a field of type 'QueryMode'
- */
-export type EnumQueryModeFieldRefInput<$PrismaModel> = FieldRefInputType<$PrismaModel, 'QueryMode'>
-    
-
-
-/**
  * Reference to a field of type 'Float'
  */
 export type FloatFieldRefInput<$PrismaModel> = FieldRefInputType<$PrismaModel, 'Float'>
-    
-
-
-/**
- * Reference to a field of type 'Float[]'
- */
-export type ListFloatFieldRefInput<$PrismaModel> = FieldRefInputType<$PrismaModel, 'Float[]'>
-    
-
-
-/**
- * Reference to a field of type 'RecommendationPlacement'
- */
-export type EnumRecommendationPlacementFieldRefInput<$PrismaModel> = FieldRefInputType<$PrismaModel, 'RecommendationPlacement'>
-    
-
-
-/**
- * Reference to a field of type 'RecommendationPlacement[]'
- */
-export type ListEnumRecommendationPlacementFieldRefInput<$PrismaModel> = FieldRefInputType<$PrismaModel, 'RecommendationPlacement[]'>
-    
-
-
-/**
- * Reference to a field of type 'Difficulty'
- */
-export type EnumDifficultyFieldRefInput<$PrismaModel> = FieldRefInputType<$PrismaModel, 'Difficulty'>
-    
-
-
-/**
- * Reference to a field of type 'Difficulty[]'
- */
-export type ListEnumDifficultyFieldRefInput<$PrismaModel> = FieldRefInputType<$PrismaModel, 'Difficulty[]'>
     
 
 /**
@@ -2993,6 +2888,7 @@ export type GlobalOmitConfig = {
   ageGroup?: Prisma.AgeGroupOmit
   content?: Prisma.ContentOmit
   category?: Prisma.CategoryOmit
+  author?: Prisma.AuthorOmit
   tag?: Prisma.TagOmit
   contentCategory?: Prisma.ContentCategoryOmit
   contentAgeGroup?: Prisma.ContentAgeGroupOmit

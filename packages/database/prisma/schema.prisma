@@ -157,9 +157,7 @@ model Content {
   viewCount       Int           @default(0) @map("view_count")
   likeCount       Int           @default(0) @map("like_count")
   publishedAt     DateTime?     @map("published_at")
-  authorName      String?       @map("author_name")
-  authorTitle     String?       @map("author_title")
-  authorAvatarUrl String?       @map("author_avatar_url")
+  authorId        String?       @map("author_id")
   metaTitle       String?       @map("meta_title")
   metaDescription String?       @map("meta_description") @db.Text
   createdAt       DateTime      @default(now()) @map("created_at")
@@ -172,9 +170,11 @@ model Content {
   bookmarks       Bookmark[]
   views           ContentView[]
   learningPathItems LearningPathItem[]
+  author            Author?       @relation(fields: [authorId], references: [id], onDelete: SetNull)
 
   @@index([status, publishedAt])
   @@index([type, status])
+  @@index([authorId])
   @@map("contents")
 }
 
@@ -211,6 +211,24 @@ model Category {
   contents    ContentCategory[]
 
   @@map("categories")
+}
+
+model Author {
+  id          String    @id @default(uuid())
+  name        String
+  slug        String    @unique
+  title       String?
+  bio         String?
+  avatarUrl   String?   @map("avatar_url")
+  email       String?   @unique
+  isActive    Boolean   @default(true) @map("is_active")
+  sortOrder   Int       @default(0) @map("sort_order")
+  createdAt   DateTime  @default(now()) @map("created_at")
+  updatedAt   DateTime  @updatedAt @map("updated_at")
+
+  contents    Content[]
+
+  @@map("authors")
 }
 
 model Tag {
@@ -270,6 +288,7 @@ model Product {
   type            ProductType
   price           Decimal?      @db.Decimal(12, 2)
   currency        String        @default("IDR")
+  coverImageUrl   String?       @map("cover_image_url")
   thumbnailUrl    String?       @map("thumbnail_url")
   images          Json?
   externalUrl     String?       @map("external_url")

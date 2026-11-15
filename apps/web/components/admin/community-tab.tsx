@@ -8,6 +8,7 @@ import {
 import { AdminErrorBanner } from "@/components/admin/admin-error";
 import { useDictionary, useLocale } from "@/components/i18n-provider";
 import { apiData, apiPaginated } from "@/lib/client-api";
+import { AdminPagination } from "./admin-pagination";
 import { format } from "@/lib/i18n/format";
 import { formatDate } from "@/lib/format";
 
@@ -38,11 +39,15 @@ interface AdminThreadDetail extends AdminThread {
   }>;
 }
 
+const PAGE_SIZE = 20;
+
 export function CommunityTab() {
   const dict = useDictionary();
   const locale = useLocale();
   const [items, setItems] = useState<AdminThread[]>([]);
+  const [total, setTotal] = useState(0);
   const [q, setQ] = useState("");
+  const [page, setPage] = useState(1);
   const [filter, setFilter] = useState<Filter>("all");
   const [busy, setBusy] = useState(false);
   const [loadError, setLoadError] = useState(false);
@@ -56,14 +61,32 @@ export function CommunityTab() {
   const load = useCallback(() => {
     setBusy(true);
     setLoadError(false);
-    const params = new URLSearchParams({ limit: "50", ...(q.trim() ? { q: q.trim() } : {}), ...(filter !== "all" ? { filter } : {}) });
+    const params = new URLSearchParams({
+      limit: String(PAGE_SIZE),
+      page: String(page),
+      ...(q.trim() ? { q: q.trim() } : {}),
+      ...(filter !== "all" ? { filter } : {}),
+    });
     apiPaginated<AdminThread>(`/admin/community/threads?${params}`)
-      .then((envelope) => setItems(envelope.data))
+      .then((envelope) => {
+        setItems(envelope.data);
+        setTotal(envelope.meta?.total ?? envelope.data.length);
+      })
       .catch(() => setLoadError(true))
       .finally(() => setBusy(false));
-  }, [q, filter]);
+  }, [q, filter, page]);
 
   useEffect(() => { load(); }, [load]);
+  // Changing a filter always restarts at page 1, otherwise a stale page can point past the end.
+  function changeQuery(next: string) {
+    setQ(next);
+    setPage(1);
+  }
+
+  function changeFilter(next: Filter) {
+    setFilter(next);
+    setPage(1);
+  }
 
   async function togglePin(thread: AdminThread) {
     await apiData(`/admin/community/threads/${thread.id}/pin`, { method: "PATCH", body: { value: !thread.isPinned } }).catch(() => undefined);
@@ -119,11 +142,11 @@ export function CommunityTab() {
       <div className="flex flex-wrap items-center gap-3">
         <label className="flex min-w-0 flex-1 items-center gap-2 rounded-2xl border border-sand bg-white px-4 py-2.5 focus-within:border-primary">
           <Search size={15} className="shrink-0 text-muted" aria-hidden />
-          <input value={q} onChange={(e) => setQ(e.target.value)} placeholder={dict.admin.communitySearchPlaceholder} aria-label={dict.admin.communitySearchPlaceholder} className="w-full bg-transparent text-sm outline-none" />
+          <input value={q} onChange={(e) => changeQuery(e.target.value)} placeholder={dict.admin.communitySearchPlaceholder} aria-label={dict.admin.communitySearchPlaceholder} className="w-full bg-transparent text-sm outline-none" />
         </label>
         <div className="flex flex-wrap items-center gap-1.5" role="group" aria-label="Filter">
           {filters.map(([value, label]) => (
-            <button key={value} onClick={() => setFilter(value)} aria-pressed={filter === value} className={`rounded-full px-3.5 py-2 text-[11px] font-bold transition ${filter === value ? "bg-secondary text-white" : "border border-sand bg-white text-ink/75 hover:border-secondary/35"}`}>
+            <button key={value} onClick={() => changeFilter(value)} aria-pressed={filter === value} className={`rounded-full px-3.5 py-2 text-[11px] font-bold transition ${filter === value ? "bg-secondary text-white" : "border border-sand bg-white text-ink/75 hover:border-secondary/35"}`}>
               {label}
             </button>
           ))}
@@ -147,7 +170,7 @@ export function CommunityTab() {
 
       <div className="mt-4 overflow-hidden rounded-3xl border border-sand bg-white">
         <div className="border-b border-sand bg-cream/40 px-5 py-3 text-[10px] font-extrabold uppercase tracking-[0.14em] text-muted">
-          <span>{busy ? dict.admin.loading : format(dict.admin.threadsCount, { count: items.length })}</span>
+          <span>{busy ? dict.admin.loading : format(dict.admin.threadsCount, { count: total })}</span>
         </div>
         <ul className="divide-y divide-sand/70">
           {items.map((thread) => (
@@ -220,6 +243,7 @@ export function CommunityTab() {
           ))}
           {!busy && items.length === 0 && <li className="px-5 py-8 text-center text-xs text-muted">{dict.admin.noThreads}</li>}
         </ul>
+        <AdminPagination page={page} limit={PAGE_SIZE} total={total} onPageChange={setPage} disabled={busy} />
       </div>
     </div>
   );

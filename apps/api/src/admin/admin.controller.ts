@@ -11,19 +11,23 @@ import {
 import { z } from 'zod';
 import {
   contentProductSchema,
+  createAuthorSchema,
   createCategorySchema,
   createContentSchema,
   createLearningPathSchema,
   createProductSchema,
+  updateAuthorSchema,
   updateCategorySchema,
   updateContentSchema,
   updateLearningPathSchema,
   updateProductSchema,
   type ContentProductInput,
+  type CreateAuthorInput,
   type CreateCategoryInput,
   type CreateContentInput,
   type CreateLearningPathInput,
   type CreateProductInput,
+  type UpdateAuthorInput,
   type UpdateCategoryInput,
   type UpdateContentInput,
   type UpdateLearningPathInput,
@@ -67,6 +71,11 @@ export class AdminController {
     return this.admin.createContent(body).then((data) => ok(data));
   }
 
+  @Get('contents/:id')
+  findContent(@Param('id') id: string) {
+    return this.admin.findContent(id).then((data) => ok(data));
+  }
+
   @Patch('contents/:id')
   updateContent(
     @Param('id') id: string,
@@ -78,6 +87,30 @@ export class AdminController {
   @Delete('contents/:id')
   deleteContent(@Param('id') id: string) {
     return this.admin.deleteContent(id).then((data) => ok(data));
+  }
+
+  // ---------- Authors ----------
+  @Get('authors')
+  async listAuthors(@Query('page') page?: string, @Query('limit') limit?: string, @Query('q') q?: string) {
+    const pageNum = Math.max(1, Number(page) || 1);
+    const limitNum = Math.min(100, Math.max(1, Number(limit) || 20));
+    const { items, total } = await this.admin.listAuthors({ page: pageNum, limit: limitNum, q: q?.trim() || undefined });
+    return paginated(items, pageNum, limitNum, total);
+  }
+
+  @Post('authors')
+  createAuthor(@Body(new ZodValidationPipe(createAuthorSchema)) body: CreateAuthorInput) {
+    return this.admin.createAuthor(body).then((data) => ok(data));
+  }
+
+  @Patch('authors/:id')
+  updateAuthor(@Param('id') id: string, @Body(new ZodValidationPipe(updateAuthorSchema)) body: UpdateAuthorInput) {
+    return this.admin.updateAuthor(id, body).then((data) => ok(data));
+  }
+
+  @Delete('authors/:id')
+  deleteAuthor(@Param('id') id: string) {
+    return this.admin.deleteAuthor(id).then((data) => ok(data));
   }
 
   // ---------- Products ----------

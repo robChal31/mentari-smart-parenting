@@ -359,7 +359,6 @@ export type ContentAgeGroupCreateOrConnectWithoutAgeGroupInput = {
 
 export type ContentAgeGroupCreateManyAgeGroupInputEnvelope = {
   data: Prisma.ContentAgeGroupCreateManyAgeGroupInput | Prisma.ContentAgeGroupCreateManyAgeGroupInput[]
-  skipDuplicates?: boolean
 }
 
 export type ContentAgeGroupUpsertWithWhereUniqueWithoutAgeGroupInput = {
@@ -401,7 +400,6 @@ export type ContentAgeGroupCreateOrConnectWithoutContentInput = {
 
 export type ContentAgeGroupCreateManyContentInputEnvelope = {
   data: Prisma.ContentAgeGroupCreateManyContentInput | Prisma.ContentAgeGroupCreateManyContentInput[]
-  skipDuplicates?: boolean
 }
 
 export type ContentAgeGroupUpsertWithWhereUniqueWithoutContentInput = {
@@ -1164,7 +1162,6 @@ export type ContentAgeGroupCreateManyArgs<ExtArgs extends runtime.Types.Extensio
    * The data used to create many ContentAgeGroups.
    */
   data: Prisma.ContentAgeGroupCreateManyInput | Prisma.ContentAgeGroupCreateManyInput[]
-  skipDuplicates?: boolean
 }
 
 /**
@@ -1183,7 +1180,6 @@ export type ContentAgeGroupCreateManyAndReturnArgs<ExtArgs extends runtime.Types
    * The data used to create many ContentAgeGroups.
    */
   data: Prisma.ContentAgeGroupCreateManyInput | Prisma.ContentAgeGroupCreateManyInput[]
-  skipDuplicates?: boolean
   /**
    * Choose, which related nodes to fetch as well
    */

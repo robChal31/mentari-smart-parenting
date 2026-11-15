@@ -3,11 +3,13 @@ import { prisma } from '@mentari/database';
 import {
   countProfanity,
   slugify,
+  type CreateAuthorInput,
   type CreateCategoryInput,
   type CreateContentInput,
   type CreateLearningPathInput,
   type CreateProductInput,
   type ContentProductInput,
+  type UpdateAuthorInput,
   type UpdateCategoryInput,
   type UpdateContentInput,
   type UpdateLearningPathInput,
@@ -15,6 +17,9 @@ import {
 } from '@mentari/shared';
 import {
   contentInclude,
+  serializeAdminContentDetail,
+  serializeAdminContentSummary,
+  serializeAuthor,
   serializeCategory,
   serializeComment,
   serializeContentSummary,
@@ -115,14 +120,14 @@ export class AdminService {
         take: query.limit,
       }),
     ]);
-    return { items: rows.map(serializeContentSummary), total };
+    return { items: rows.map(serializeAdminContentSummary), total };
   }
 
   private contentWriteData(input: UpdateContentInput | CreateContentInput) {
     const data: Record<string, unknown> = {};
     const direct = [
       'excerpt', 'body', 'thumbnailUrl', 'videoUrl', 'videoDuration', 'readTime',
-      'isPremium', 'authorName', 'authorTitle', 'authorAvatarUrl',
+      'isPremium', 'authorId',
       'metaTitle', 'metaDescription', 'status',
     ] as const;
     for (const key of direct) {
@@ -192,13 +197,14 @@ export class AdminService {
       },
     });
     await this.syncContentTaxonomy(content.id, input);
-    return this.findContent(content.id);
+    return await this.findContent(content.id);
   }
 
+  /** Admin detail — includes drafts, body, video, SEO fields and taxonomy slugs. */
   async findContent(id: string) {
     const content = await prisma.content.findUnique({ where: { id }, include: contentInclude });
     if (!content) throw new NotFoundException({ code: 'NOT_FOUND', message: 'Konten tidak ditemukan.' });
-    return serializeContentSummary(content);
+    return serializeAdminContentDetail(content);
   }
 
   async updateContent(id: string, input: UpdateContentInput) {
@@ -212,7 +218,7 @@ export class AdminService {
     }
     await prisma.content.update({ where: { id }, data });
     await this.syncContentTaxonomy(id, input);
-    return this.findContent(id);
+    return await this.findContent(id);
   }
 
   async deleteContent(id: string) {
@@ -220,6 +226,92 @@ export class AdminService {
     if (!existing) throw new NotFoundException({ code: 'NOT_FOUND', message: 'Konten tidak ditemukan.' });
     await prisma.content.update({ where: { id }, data: { status: 'ARCHIVED' } });
     return { archived: true };
+  }
+
+  // ---------- Authors ----------
+  async listAuthors(query: { page: number; limit: number; q?: string }) {
+    const where: Record<string, unknown> = query.q
+      ? { OR: [{ name: { contains: query.q } }, { slug: { contains: query.q } }] }
+      : {};
+    const [total, rows] = await Promise.all([
+      prisma.author.count({ where }),
+      prisma.author.findMany({
+        where,
+        include: { _count: { select: { contents: true } } },
+        orderBy: [{ sortOrder: 'asc' }, { name: 'asc' }],
+        skip: (query.page - 1) * query.limit,
+        take: query.limit,
+      }),
+    ]);
+    return { items: rows.map(serializeAuthor), total };
+  }
+
+  /** Public list — only active authors, used by the content form picker. */
+  async listActiveAuthors() {
+    const rows = await prisma.author.findMany({
+      where: { isActive: true },
+      orderBy: [{ sortOrder: 'asc' }, { name: 'asc' }],
+    });
+    return rows.map(serializeAuthor);
+  }
+
+  async createAuthor(input: CreateAuthorInput) {
+    const slug = input.slug ?? await uniqueSlug(input.name, async (s) => Boolean(await prisma.author.findUnique({ where: { slug: s } })));
+    if (await prisma.author.findUnique({ where: { slug } })) {
+      throw new BadRequestException({ code: 'DUPLICATE', message: 'Slug author sudah digunakan.' });
+    }
+    if (input.email) {
+      const emailTaken = await prisma.author.findUnique({ where: { email: input.email } });
+      if (emailTaken) throw new BadRequestException({ code: 'DUPLICATE', message: 'Email author sudah digunakan.' });
+    }
+    const author = await prisma.author.create({
+      data: {
+        name: input.name,
+        slug,
+        title: input.title ?? null,
+        bio: input.bio ?? null,
+        avatarUrl: input.avatarUrl ?? null,
+        email: input.email ?? null,
+        isActive: input.isActive ?? true,
+        sortOrder: input.sortOrder ?? 0,
+      },
+      include: { _count: { select: { contents: true } } },
+    });
+    return serializeAuthor(author);
+  }
+
+  async updateAuthor(id: string, input: UpdateAuthorInput) {
+    const existing = await prisma.author.findUnique({ where: { id } });
+    if (!existing) throw new NotFoundException({ code: 'NOT_FOUND', message: 'Author tidak ditemukan.' });
+    if (input.slug && input.slug !== existing.slug) {
+      const taken = await prisma.author.findUnique({ where: { slug: input.slug } });
+      if (taken) throw new BadRequestException({ code: 'DUPLICATE', message: 'Slug author sudah digunakan.' });
+    }
+    if (input.email && input.email !== existing.email) {
+      const taken = await prisma.author.findUnique({ where: { email: input.email } });
+      if (taken) throw new BadRequestException({ code: 'DUPLICATE', message: 'Email author sudah digunakan.' });
+    }
+    const { slug, ...rest } = input;
+    const author = await prisma.author.update({
+      where: { id },
+      data: { ...rest, ...(slug !== undefined ? { slug } : {}) },
+      include: { _count: { select: { contents: true } } },
+    });
+    return serializeAuthor(author);
+  }
+
+  /**
+   * Delete an author. Contents keep existing (authorId is set null by the FK),
+   * so an accidental delete never removes published articles.
+   */
+  async deleteAuthor(id: string) {
+    const existing = await prisma.author.findUnique({
+      where: { id },
+      include: { _count: { select: { contents: true } } },
+    });
+    if (!existing) throw new NotFoundException({ code: 'NOT_FOUND', message: 'Author tidak ditemukan.' });
+    await prisma.author.delete({ where: { id } });
+    return { deleted: true, detachedContents: existing._count.contents };
   }
 
   // ---------- Products ----------
@@ -251,6 +343,7 @@ export class AdminService {
         type: input.type,
         price: input.price ?? null,
         currency: input.currency ?? 'IDR',
+        coverImageUrl: input.coverImageUrl ?? input.thumbnailUrl ?? null,
         thumbnailUrl: input.thumbnailUrl ?? null,
         images: input.images ? JSON.stringify(input.images) : undefined,
         externalUrl: input.externalUrl ?? null,

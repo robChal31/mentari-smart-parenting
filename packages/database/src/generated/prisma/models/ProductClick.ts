@@ -448,7 +448,6 @@ export type ProductClickCreateOrConnectWithoutUserInput = {
 
 export type ProductClickCreateManyUserInputEnvelope = {
   data: Prisma.ProductClickCreateManyUserInput | Prisma.ProductClickCreateManyUserInput[]
-  skipDuplicates?: boolean
 }
 
 export type ProductClickUpsertWithWhereUniqueWithoutUserInput = {
@@ -502,7 +501,6 @@ export type ProductClickCreateOrConnectWithoutProductInput = {
 
 export type ProductClickCreateManyProductInputEnvelope = {
   data: Prisma.ProductClickCreateManyProductInput | Prisma.ProductClickCreateManyProductInput[]
-  skipDuplicates?: boolean
 }
 
 export type ProductClickUpsertWithWhereUniqueWithoutProductInput = {
@@ -1321,7 +1319,6 @@ export type ProductClickCreateManyArgs<ExtArgs extends runtime.Types.Extensions.
    * The data used to create many ProductClicks.
    */
   data: Prisma.ProductClickCreateManyInput | Prisma.ProductClickCreateManyInput[]
-  skipDuplicates?: boolean
 }
 
 /**
@@ -1340,7 +1337,6 @@ export type ProductClickCreateManyAndReturnArgs<ExtArgs extends runtime.Types.Ex
    * The data used to create many ProductClicks.
    */
   data: Prisma.ProductClickCreateManyInput | Prisma.ProductClickCreateManyInput[]
-  skipDuplicates?: boolean
   /**
    * Choose, which related nodes to fetch as well
    */

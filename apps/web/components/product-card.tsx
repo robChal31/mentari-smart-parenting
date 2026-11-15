@@ -1,5 +1,6 @@
 "use client";
 
+import Image from "next/image";
 import type { ProductDto } from "@mentari/shared";
 import { ArrowRight, BookOpen, GraduationCap, Languages, MonitorPlay } from "lucide-react";
 import { useDictionary } from "@/components/i18n-provider";
@@ -44,6 +45,7 @@ export function ProductCard({
   compact?: boolean;
 }) {
   const dict = useDictionary();
+  const cover = product.coverImageUrl ?? product.thumbnailUrl ?? null;
 
   function trackClick() {
     try {
@@ -85,14 +87,30 @@ export function ProductCard({
       }`}
     >
       <div className={`flex ${compact ? "flex-row items-center gap-3" : "flex-col gap-2"}`}>
-        <span
-          aria-hidden
-          className={`grid shrink-0 place-items-center rounded-xl bg-gradient-to-br ${gradientFor(product.id)} ${
-            compact ? "h-16 w-16" : "h-24 w-full"
-          }`}
-        >
-          {TYPE_ICONS[product.type] ?? <BookOpen size={26} />}
-        </span>
+        {cover ? (
+          <span
+            className={`relative shrink-0 overflow-hidden rounded-xl bg-cream ring-1 ring-black/5 ${
+              compact ? "h-16 w-16" : "aspect-[4/3] w-full"
+            }`}
+          >
+            <Image
+              src={cover}
+              alt={product.name}
+              fill
+              sizes={compact ? "64px" : "(max-width: 768px) 45vw, 220px"}
+              className="object-cover"
+            />
+          </span>
+        ) : (
+          <span
+            aria-hidden
+            className={`grid shrink-0 place-items-center rounded-xl bg-gradient-to-br ${gradientFor(product.id)} ${
+              compact ? "h-16 w-16" : "h-24 w-full"
+            }`}
+          >
+            {TYPE_ICONS[product.type] ?? <BookOpen size={26} />}
+          </span>
+        )}
         <div className="min-w-0">
           <p className="text-[9px] font-extrabold uppercase tracking-[0.14em] text-accent-deep">
             {(dict.productTypes as Record<string, string>)[product.type] ?? product.type}

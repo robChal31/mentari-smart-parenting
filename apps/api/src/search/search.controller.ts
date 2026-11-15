@@ -32,7 +32,7 @@ export class SearchController {
       OR: [
         { title: { contains: query } },
         { excerpt: { contains: query } },
-        { authorName: { contains: query } },
+        { author: { is: { name: { contains: query } } } },
         { tags: { some: { tag: { name: { contains: query } } } } },
       ],
     };

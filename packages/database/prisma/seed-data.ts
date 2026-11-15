@@ -52,7 +52,7 @@ export const CATEGORIES: Array<{
 
 export const PRODUCTS: Array<{
   name: string; slug: string; description: string; shortDescription: string; type: string;
-  price: number; thumbnailUrl: string; externalUrl: string; ctaText: string;
+  price: number; thumbnailUrl: string; coverImageUrl?: string; externalUrl: string; ctaText: string;
   isFeatured: boolean; sortOrder: number; ageGroupSlugs: string[];
 }> = [
   {
@@ -132,7 +132,7 @@ export const PRODUCTS: Array<{
     shortDescription: 'Sertifikasi guru PAUD/TK — 8 minggu, online + praktik.',
     type: 'TEACHER_ACADEMY',
     price: 750000,
-    thumbnailUrl: '/images/products/teacher-academy.jpg',
+    thumbnailUrl: '/images/products/teacher-academy-ecd.jpg',
     externalUrl: 'https://academy.mentari.co.id',
     ctaText: 'Lihat Kurikulum',
     isFeatured: false,
@@ -146,7 +146,7 @@ export const PRODUCTS: Array<{
     shortDescription: '120 halaman puzzle & aktivitas motorik halus untuk 3–6 tahun.',
     type: 'BOOK_SELF_PUBLISHED',
     price: 68000,
-    thumbnailUrl: '/images/products/buku-aktivitas.jpg',
+    thumbnailUrl: '/images/products/buku-aktivitas-anak-kreatif.jpg',
     externalUrl: 'https://mentari.co.id/produk/buku-aktivitas-anak-kreatif',
     ctaText: 'Lihat di Mentari',
     isFeatured: true,
@@ -155,18 +155,58 @@ export const PRODUCTS: Array<{
   },
 ];
 
-const MIRA = { authorName: 'Mira Adityasari, M.Psi.', authorTitle: 'Psikolog Anak & Keluarga' };
-const DRSARI = { authorName: 'dr. Sari Wulandari, Sp.A', authorTitle: 'Dokter Spesialis Anak' };
-const DIMAS = { authorName: 'Dimas Prakoso', authorTitle: 'Fasilitator Parenting Mentari' };
-const RATNA = { authorName: 'Ratna Ningrum, S.Pd.', authorTitle: 'Konsultan Pendidikan Anak Usia Dini' };
-const TEAM = { authorName: 'Tim Mentari Smart Parent', authorTitle: 'Editorial Mentari Group' };
+export interface SeedAuthor {
+  name: string; slug: string; title: string; bio: string; email: string; sortOrder: number;
+}
+
+/** Editorial team — referenced by CONTENTS[].authorSlug (was inline text before v2). */
+export const AUTHORS: SeedAuthor[] = [
+  {
+    name: 'Mira Adityasari, M.Psi.', slug: 'mira-adityasari',
+    title: 'Psikolog Anak & Keluarga',
+    bio: 'Psikolog klinis anak dengan 10 tahun pengalaman menangani tantrum, sibling rivalry, dan stimulasi dini. Menulis rubrik psikologi di MentariSmartParent.',
+    email: 'mira@mentari.id', sortOrder: 1,
+  },
+  {
+    name: 'dr. Sari Wulandari, Sp.A', slug: 'sari-wulandari',
+    title: 'Dokter Spesialis Anak',
+    bio: 'Dokter spesialis anak yang fokus pada nutrisi, imunisasi, dan tumbuh kembang usia 0–6 tahun. Meninjau seluruh konten gizi dan kesehatan.',
+    email: 'sari@mentari.id', sortOrder: 2,
+  },
+  {
+    name: 'Dimas Prakoso', slug: 'dimas-prakoso',
+    title: 'Fasilitator Parenting Mentari',
+    bio: 'Praktisi neurosains dan edukasi. Menulis tentang cara anak belajar, mengingat, dan membangun kebiasaan belajar yang sehat.',
+    email: 'dimas@mentari.id', sortOrder: 3,
+  },
+  {
+    name: 'Ratna Ningrum, S.Pd.', slug: 'ratna-ningrum',
+    title: 'Konsultan Pendidikan Anak Usia Dini',
+    bio: 'Konsultan PAUD dan pendidik bersertifikat. Fokus pada metode bermain sambil belajar dan kesiapan sekolah.',
+    email: 'ratna@mentari.id', sortOrder: 4,
+  },
+  {
+    name: 'Tim Mentari Smart Parent', slug: 'tim-mentari',
+    title: 'Editorial Mentari Group',
+    bio: 'Tim editorial internal yang merangkum kabar, pengumuman, dan panduan praktis untuk orang tua.',
+    email: 'redaksi@mentari.id', sortOrder: 5,
+  },
+];
+
+export const AUTHOR_SLUGS = {
+  MIRA: 'mira-adityasari',
+  DRSARI: 'sari-wulandari',
+  DIMAS: 'dimas-prakoso',
+  RATNA: 'ratna-ningrum',
+  TEAM: 'tim-mentari',
+} as const;
 
 export interface SeedContent {
   title: string; slug: string; excerpt: string; body?: string; type: string;
   videoUrl?: string; videoDuration?: number; readTime?: number;
   thumbnailUrl?: string;
   isFeatured?: boolean; isPremium?: boolean; viewCount: number; likeCount?: number;
-  publishedDaysAgo: number; author: { authorName: string; authorTitle: string };
+  publishedDaysAgo: number; authorSlug: string;
   categorySlugs: string[]; ageGroupSlugs: string[]; tags: string[];
   metaTitle?: string; metaDescription?: string;
 }
@@ -184,7 +224,7 @@ export const CONTENTS: SeedContent[] = [
     viewCount: 24512,
     likeCount: 1287,
     publishedDaysAgo: 3,
-    author: DRSARI,
+    authorSlug: AUTHOR_SLUGS.DRSARI,
     categorySlugs: ['gizi-anak'],
     ageGroupSlugs: ['bayi', 'batita'],
     tags: ['mpasi', 'gizi', 'bayi'],
@@ -202,7 +242,7 @@ export const CONTENTS: SeedContent[] = [
     viewCount: 18930,
     likeCount: 942,
     publishedDaysAgo: 9,
-    author: DRSARI,
+    authorSlug: AUTHOR_SLUGS.DRSARI,
     categorySlugs: ['gizi-anak'],
     ageGroupSlugs: ['bayi'],
     tags: ['mpasi', 'gizi', 'bayi'],
@@ -218,7 +258,7 @@ export const CONTENTS: SeedContent[] = [
     viewCount: 12540,
     likeCount: 655,
     publishedDaysAgo: 15,
-    author: DRSARI,
+    authorSlug: AUTHOR_SLUGS.DRSARI,
     categorySlugs: ['gizi-anak'],
     ageGroupSlugs: ['bayi'],
     tags: ['asi', 'bayi', 'menyusui'],
@@ -235,7 +275,7 @@ export const CONTENTS: SeedContent[] = [
     viewCount: 31208,
     likeCount: 1754,
     publishedDaysAgo: 5,
-    author: MIRA,
+    authorSlug: AUTHOR_SLUGS.MIRA,
     categorySlugs: ['mengelola-emosi', 'sosial-emosional'],
     ageGroupSlugs: ['batita', 'prasekolah'],
     tags: ['tantrum', 'emosi', 'disiplin-positif'],
@@ -251,7 +291,7 @@ export const CONTENTS: SeedContent[] = [
     viewCount: 9874,
     likeCount: 512,
     publishedDaysAgo: 21,
-    author: MIRA,
+    authorSlug: AUTHOR_SLUGS.MIRA,
     categorySlugs: ['mengelola-emosi'],
     ageGroupSlugs: ['batita', 'prasekolah', 'sd-awal'],
     tags: ['tantrum', 'emosi', 'webinar'],
@@ -267,7 +307,7 @@ export const CONTENTS: SeedContent[] = [
     viewCount: 15467,
     likeCount: 788,
     publishedDaysAgo: 12,
-    author: MIRA,
+    authorSlug: AUTHOR_SLUGS.MIRA,
     categorySlugs: ['mengelola-emosi', 'psikologi-anak'],
     ageGroupSlugs: ['batita', 'prasekolah'],
     tags: ['tantrum', 'emosi'],
@@ -283,7 +323,7 @@ export const CONTENTS: SeedContent[] = [
     viewCount: 11203,
     likeCount: 590,
     publishedDaysAgo: 27,
-    author: { authorName: 'Redaksi Hidup Sehat tvOne', authorTitle: 'Media Kesehatan' },
+    authorSlug: AUTHOR_SLUGS.TEAM,
     categorySlugs: ['mengelola-emosi'],
     ageGroupSlugs: ['prasekolah'],
     tags: ['tantrum', 'kesehatan'],
@@ -299,7 +339,7 @@ export const CONTENTS: SeedContent[] = [
     viewCount: 28934,
     likeCount: 1567,
     publishedDaysAgo: 2,
-    author: DRSARI,
+    authorSlug: AUTHOR_SLUGS.DRSARI,
     categorySlugs: ['gizi-anak'],
     ageGroupSlugs: ['bayi'],
     tags: ['mpasi', 'menu-bayi', 'gizi'],
@@ -339,7 +379,7 @@ Gula dan garam tambahan, madu (di bawah 1 tahun), susu sapi murni sebagai minuma
     viewCount: 16721,
     likeCount: 723,
     publishedDaysAgo: 8,
-    author: DRSARI,
+    authorSlug: AUTHOR_SLUGS.DRSARI,
     categorySlugs: ['imunisasi', 'kesehatan-fisik'],
     ageGroupSlugs: ['bayi'],
     tags: ['imunisasi', 'vaksin', 'bayi'],
@@ -373,7 +413,7 @@ Diskusikan kondisi khusus (alergi, prematur, penyakit bawaan) dengan dokter anak
     viewCount: 27650,
     likeCount: 1689,
     publishedDaysAgo: 6,
-    author: RATNA,
+    authorSlug: AUTHOR_SLUGS.RATNA,
     categorySlugs: ['permainan-edukatif', 'diy-crafts'],
     ageGroupSlugs: ['prasekolah'],
     tags: ['permainan-edukatif', 'tanpa-gadget', 'bonding'],
@@ -410,7 +450,7 @@ Setiap permainan di atas melatih eksekutif fungsi: fokus, bergiliran, dan menyel
     viewCount: 33412,
     likeCount: 1841,
     publishedDaysAgo: 4,
-    author: RATNA,
+    authorSlug: AUTHOR_SLUGS.RATNA,
     categorySlugs: ['persiapan-sekolah'],
     ageGroupSlugs: ['prasekolah', 'sd-awal'],
     tags: ['masuk-sd', 'school-readiness', 'checklist'],
@@ -445,7 +485,7 @@ Anak yang siap secara emosional dan sosial akan jauh lebih cepat beradaptasi dar
     viewCount: 21305,
     likeCount: 1102,
     publishedDaysAgo: 7,
-    author: DRSARI,
+    authorSlug: AUTHOR_SLUGS.DRSARI,
     categorySlugs: ['screen-time', 'digital-teknologi'],
     ageGroupSlugs: ['batita', 'prasekolah'],
     tags: ['screen-time', 'gadget', 'balita'],
@@ -477,7 +517,7 @@ Kalau anak telanjur terbiasa, kurangi bertahap — bukan drastis dalam semalam.`
     viewCount: 30154,
     likeCount: 1734,
     publishedDaysAgo: 10,
-    author: MIRA,
+    authorSlug: AUTHOR_SLUGS.MIRA,
     categorySlugs: ['disiplin-positif'],
     ageGroupSlugs: ['prasekolah', 'sd-awal', 'sd-akhir'],
     tags: ['disiplin-positif', 'tanpa-memukul', 'karakter'],
@@ -506,7 +546,7 @@ Disiplin bukan tentang mempertahankan otoritas, tapi membimbing anak memahami da
     viewCount: 19847,
     likeCount: 1011,
     publishedDaysAgo: 11,
-    author: RATNA,
+    authorSlug: AUTHOR_SLUGS.RATNA,
     categorySlugs: ['bahasa'],
     ageGroupSlugs: ['batita'],
     tags: ['bahasa', 'stimulasi', 'batita'],
@@ -541,7 +581,7 @@ Bila ada tanda ini, segera konsultasikan ke dokter anak atau terapis wicara.`,
     viewCount: 14356,
     likeCount: 645,
     publishedDaysAgo: 14,
-    author: DIMAS,
+    authorSlug: AUTHOR_SLUGS.DIMAS,
     categorySlugs: ['kesehatan-fisik'],
     ageGroupSlugs: ['batita', 'prasekolah', 'sd-awal'],
     tags: ['tidur', 'rutinitas', 'kesehatan'],
@@ -573,7 +613,7 @@ Konsistensi 2 minggu biasanya cukup membentuk kebiasaan. Jika anak sering terban
     viewCount: 17690,
     likeCount: 834,
     publishedDaysAgo: 18,
-    author: RATNA,
+    authorSlug: AUTHOR_SLUGS.RATNA,
     categorySlugs: ['persiapan-sekolah'],
     ageGroupSlugs: ['prasekolah'],
     tags: ['masuk-sd', 'school-readiness'],
@@ -606,7 +646,7 @@ Kunjungi sekolahnya, bertemu guru, latihan pemisahan bertahap (mulai 1–2 jam),
     viewCount: 22467,
     likeCount: 1203,
     publishedDaysAgo: 16,
-    author: RATNA,
+    authorSlug: AUTHOR_SLUGS.RATNA,
     categorySlugs: ['belajar-di-rumah', 'kurikulum-akademik'],
     ageGroupSlugs: ['sd-awal', 'sd-akhir'],
     tags: ['montessori', 'belajar-di-rumah', 'motivasi'],
@@ -633,7 +673,7 @@ Mulai minggu ini: pilih SATU sudut belajar di rumah dan tata ulang bersama anak.
     viewCount: 8932,
     likeCount: 487,
     publishedDaysAgo: 24,
-    author: MIRA,
+    authorSlug: AUTHOR_SLUGS.MIRA,
     categorySlugs: ['co-parenting'],
     ageGroupSlugs: ['semua-usia'],
     tags: ['co-parenting', 'perceraian', 'keluarga'],
@@ -660,7 +700,7 @@ Anak paling menderita bukan karena orang tuanya berpisah, tapi karena terus terp
     viewCount: 13478,
     likeCount: 698,
     publishedDaysAgo: 19,
-    author: DIMAS,
+    authorSlug: AUTHOR_SLUGS.DIMAS,
     categorySlugs: ['keamanan-digital'],
     ageGroupSlugs: ['sd-awal', 'sd-akhir'],
     tags: ['keamanan-digital', 'internet', 'sd'],
@@ -693,7 +733,7 @@ Buat “kontrak digital keluarga” tertulis dan tinjau ulang setiap 6 bulan sei
     viewCount: 25893,
     likeCount: 1512,
     publishedDaysAgo: 1,
-    author: MIRA,
+    authorSlug: AUTHOR_SLUGS.MIRA,
     categorySlugs: ['self-esteem'],
     ageGroupSlugs: ['semua-usia', 'batita', 'prasekolah'],
     tags: ['self-esteem', 'pujian', 'karakter'],
@@ -724,7 +764,7 @@ Buat “kontrak digital keluarga” tertulis dan tinjau ulang setiap 6 bulan sei
     viewCount: 17200,
     likeCount: 745,
     publishedDaysAgo: 5,
-    author: DIMAS,
+    authorSlug: AUTHOR_SLUGS.DIMAS,
     categorySlugs: ['kesehatan-fisik', 'parenting-tips'],
     ageGroupSlugs: ['semua-usia'],
     tags: ['tidur', 'tips'],
@@ -744,7 +784,7 @@ Buat “kontrak digital keluarga” tertulis dan tinjau ulang setiap 6 bulan sei
     viewCount: 14500,
     likeCount: 512,
     publishedDaysAgo: 13,
-    author: DRSARI,
+    authorSlug: AUTHOR_SLUGS.DRSARI,
     categorySlugs: ['gizi-anak'],
     ageGroupSlugs: ['sd-awal', 'sd-akhir'],
     tags: ['bekal', 'gizi', 'sekolah'],
@@ -765,7 +805,7 @@ Plus air putih. Siapkan malam sebelumnya agar pagi lebih santai.`,
     viewCount: 20113,
     likeCount: 1340,
     publishedDaysAgo: 9,
-    author: RATNA,
+    authorSlug: AUTHOR_SLUGS.RATNA,
     categorySlugs: ['diy-crafts', 'kognitif'],
     ageGroupSlugs: ['prasekolah', 'sd-awal'],
     tags: ['sains', 'eksperimen', 'aktivitas'],
@@ -796,7 +836,7 @@ Setelah eksperimen, tanya: “Menurut kamu kenapa bisa begitu?” — biarkan an
     viewCount: 12570,
     likeCount: 689,
     publishedDaysAgo: 22,
-    author: DIMAS,
+    authorSlug: AUTHOR_SLUGS.DIMAS,
     categorySlugs: ['outdoor-activities'],
     ageGroupSlugs: ['prasekolah', 'sd-awal'],
     tags: ['outdoor', 'aktivitas', 'alam'],
@@ -816,7 +856,7 @@ Anak belajar observasi, kosakata alam, dan menghargai lingkungan — gratis, tan
     viewCount: 19023,
     likeCount: 978,
     publishedDaysAgo: 6,
-    author: TEAM,
+    authorSlug: AUTHOR_SLUGS.TEAM,
     categorySlugs: ['bahasa', 'kognitif'],
     ageGroupSlugs: ['bayi', 'batita', 'prasekolah'],
     tags: ['milestone', 'bahasa', 'infografis'],
