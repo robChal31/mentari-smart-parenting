@@ -13,7 +13,7 @@
  * This is not about your data: it happens on an empty database too, and it is
  * documented upstream (prisma/prisma#27403). Prisma 8 removed the code path
  * entirely. Until the project upgrades, the reliable way to create the schema on
- * Supabase is to generate the SQL locally and paste it into the SQL Editor.
+ * a fresh server is to generate the SQL locally and apply it with psql.
  *
  * How
  * ---
@@ -55,7 +55,7 @@ const content = readFileSync(schemaAbs, 'utf8');
 /**
  * Answers the handful of queries the engine issues while diffing against an
  * empty database. Never opens a socket, so no URL, password or network is
- * needed. Postgres is reported as 16.2 (what Supabase runs); the version only
+ * needed. A neutral Postgres version is reported; the version only
  * affects feature detection.
  */
 function createOfflineAdapter() {
@@ -112,9 +112,9 @@ async function createLiveAdapter() {
     if (parent === dir) break;
     dir = parent;
   }
-  const url = positional[2] ?? process.env.SUPABASE_DATABASE_URL ?? process.env.DATABASE_URL;
+  const url = positional[2] ?? process.env.DATABASE_URL;
   if (!url) {
-    console.error('No database URL. Set SUPABASE_DATABASE_URL in the root .env, or drop --live.');
+    console.error('No database URL. Set DATABASE_URL in the root .env, or drop --live.');
     process.exit(1);
   }
   if (url.includes('<') || url.includes('>')) {
@@ -217,7 +217,7 @@ console.log(`✅ Wrote ${idempotent.length} bytes of DDL to ${path.relative(root
 console.log(`   ${tableCount} tables, ${enumCount} enums/types`);
 console.log('');
 console.log('This DDL is idempotent — safe to re-run on a partially created database.');
-console.log('Next: open Supabase Dashboard -> SQL Editor, paste that file, press Run.');
+console.log('Next: apply it with  psql "$DATABASE_URL" -f <file>');
 console.log('Then seed the demo data:');
 console.log('  pnpm db:seed');
 await engine[Symbol.dispose]?.();

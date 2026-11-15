@@ -5,6 +5,8 @@ import { ArrowRight, Loader2, Save, Trash2 } from "lucide-react";
 import { useDictionary } from "@/components/i18n-provider";
 import { apiData, ApiError } from "@/lib/client-api";
 import { Combobox } from "@/components/combobox";
+import { SlugField } from "./slug-field";
+import { FileUploadField } from "./file-upload-field";
 import type { AdminContentDetailDto, AgeGroupDto, AuthorDto, CategoryDto } from "@mentari/shared";
 
 const CONTENT_TYPES = ["ARTICLE", "VIDEO", "INFOGRAPHIC", "TIPS", "ACTIVITY"] as const;
@@ -183,16 +185,7 @@ export function ContentForm({
           />
         </label>
 
-        <label>
-          <span className={labelClass}>{dict.admin.slugOptional}</span>
-          <input
-            value={slug}
-            onChange={(e) => setSlug(e.target.value.toLowerCase())}
-            placeholder={dict.admin.slugAutoHint}
-            pattern="[a-z0-9-]*"
-            className={`mt-1.5 w-full ${inputClass}`}
-          />
-        </label>
+        <SlugField title={title} slug={slug} onChange={setSlug} locked={isEdit} />
 
         <div>
           <span className={labelClass}>{dict.admin.typeAria}</span>
@@ -258,15 +251,16 @@ export function ContentForm({
           <span className="mt-1 block text-[10px] text-muted">{dict.admin.bodyHint}</span>
         </label>
 
-        <label>
-          <span className={labelClass}>{dict.admin.thumbnailLabel}</span>
-          <input
+        <div className="sm:col-span-2">
+          <FileUploadField
+            label={dict.admin.thumbnailLabel}
             value={thumbnailUrl}
-            onChange={(e) => setThumbnailUrl(e.target.value)}
-            placeholder="/content-thumbs/mpasi.jpg"
-            className={`mt-1.5 w-full ${inputClass}`}
+            onChange={setThumbnailUrl}
+            kind="image"
+            subdir="content"
+            previewClassName="h-24 w-40"
           />
-        </label>
+        </div>
 
         <label>
           <span className={labelClass}>{dict.admin.videoUrlLabel}</span>
@@ -313,18 +307,6 @@ export function ContentForm({
           />
         </label>
       </div>
-
-      {thumbnailUrl.trim() && (
-        <div className="mt-3">
-          <span className={labelClass}>{dict.admin.thumbnailPreview}</span>
-          {/* eslint-disable-next-line @next/next/no-img-element */}
-          <img
-            src={thumbnailUrl}
-            alt=""
-            className="mt-1.5 h-24 w-40 rounded-xl border border-sand object-cover"
-          />
-        </div>
-      )}
 
       {categories.length > 0 && (
         <fieldset className="mt-4">

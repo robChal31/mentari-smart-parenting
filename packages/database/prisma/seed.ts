@@ -2,7 +2,7 @@
  * Seed MentariSmartParent with realistic Indonesian parenting content.
  * Wipes existing data and re-creates it — intended for dev/staging.
  *
- * Usage: pnpm db:seed   (requires SUPABASE_DATABASE_URL / DATABASE_URL in the root .env)
+ * Usage: pnpm db:seed   (requires DATABASE_URL in the root .env)
  */
 import bcrypt from 'bcryptjs';
 import type { RecommendationPlacement } from '@mentari/shared';
@@ -14,7 +14,7 @@ import { detectClientProvider, prisma } from '../src/index';
  * Warn first so the fix (use:postgres / use:mysql) is obvious.
  */
 function warnOnProviderMismatch() {
-  const url = process.env.SUPABASE_DATABASE_URL ?? process.env.DATABASE_URL ?? '';
+  const url = process.env.DATABASE_URL ?? '';
   const wants = url.startsWith('postgres') ? 'postgresql' : url.startsWith('mysql') ? 'mysql' : null;
   const client = detectClientProvider();
   if (!wants || !client || client === wants) return;

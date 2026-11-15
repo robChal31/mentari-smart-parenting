@@ -7,6 +7,8 @@ import { useDictionary } from "@/components/i18n-provider";
 import { apiData, apiPaginated, ApiError } from "@/lib/client-api";
 import { format } from "@/lib/i18n/format";
 import { AdminPagination } from "./admin-pagination";
+import { SlugField } from "./slug-field";
+import { FileUploadField } from "./file-upload-field";
 import type { AuthorDto } from "@mentari/shared";
 
 const PAGE_SIZE = 20;
@@ -236,10 +238,7 @@ function AuthorForm({
           <span className={labelClass}>{dict.admin.authorTitleLabel}</span>
           <input value={title} onChange={(e) => setTitle(e.target.value)} placeholder="Psikolog Anak & Keluarga" className={`mt-1.5 w-full ${inputClass}`} />
         </label>
-        <label>
-          <span className={labelClass}>{dict.admin.slugOptional}</span>
-          <input value={slug} onChange={(e) => setSlug(e.target.value.toLowerCase())} placeholder={dict.admin.slugAutoHint} pattern="[a-z0-9-]*" className={`mt-1.5 w-full ${inputClass}`} />
-        </label>
+        <SlugField title={name} slug={slug} onChange={setSlug} locked={Boolean(initial)} />
         <label>
           <span className={labelClass}>{dict.admin.authorEmailLabel}</span>
           <input type="email" value={email} onChange={(e) => setEmail(e.target.value)} placeholder="nama@mentari.id" className={`mt-1.5 w-full ${inputClass}`} />
@@ -248,10 +247,17 @@ function AuthorForm({
           <span className={labelClass}>{dict.admin.authorBioLabel}</span>
           <textarea rows={3} value={bio} onChange={(e) => setBio(e.target.value)} className={`mt-1.5 w-full ${inputClass}`} />
         </label>
-        <label>
-          <span className={labelClass}>{dict.admin.authorAvatarLabel}</span>
-          <input value={avatarUrl} onChange={(e) => setAvatarUrl(e.target.value)} placeholder="/images/authors/mira.jpg" className={`mt-1.5 w-full ${inputClass}`} />
-        </label>
+        <div className="sm:col-span-2">
+          <FileUploadField
+            label={dict.admin.authorAvatarLabel}
+            value={avatarUrl}
+            onChange={setAvatarUrl}
+            kind="image"
+            subdir="author"
+            previewClassName="h-20 w-20"
+            hint="Foto persegi (1:1) paling rapi. JPG/PNG/WebP maks 5 MB."
+          />
+        </div>
         <label>
           <span className={labelClass}>{dict.admin.sortOrderLabel}</span>
           <input type="number" min={0} value={sortOrder} onChange={(e) => setSortOrder(e.target.value)} className={`mt-1.5 w-full ${inputClass}`} />

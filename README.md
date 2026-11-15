@@ -2,7 +2,7 @@
 
 **Sahabat tumbuh kembang anak Indonesia** — platform knowledge hub parenting berbasis bukti, terintegrasi katalog produk Mentari Group.
 
-Monorepo: **Next.js 16 (RSC) web** + **NestJS 11 API** + **shared Zod contracts** + **Prisma database** ([Supabase](#production-deployment) Postgres sebagai target utama, MySQL sebagai legacy). Web UI bilingual: **Bahasa Indonesia** (default) dan **English** (cookie `mentari.locale`, switcher di header).
+Monorepo: **Next.js 16 (RSC) web** + **NestJS 11 API** + **shared Zod contracts** + **Prisma database** (PostgreSQL yang di-host sendiri sebagai target utama, MySQL sebagai legacy). Web UI bilingual: **Bahasa Indonesia** (default) dan **English** (cookie `mentari.locale`, switcher di header).
 
 ## Arsitektur
 
@@ -13,7 +13,7 @@ mentari-smart-parenting/
 │   └── api/          @mentari/api  — NestJS REST API, prefix /api/v1, envelope { success, data, meta?, error? }
 └── packages/
     ├── shared/       @mentari/shared   — tipe DTO, konstanta, Zod validators (dipakai FE & BE)
-    └── database/     @mentari/database — Prisma schema (Supabase/Postgres + MySQL), seed data kaya
+    └── database/     @mentari/database — Prisma schema (PostgreSQL + MySQL), seed data kaya
 ```
 
 Aliran request di production:
@@ -21,7 +21,7 @@ Aliran request di production:
 ```
 Browser → Next.js (apps/web)
             ├─ RSC / generateMetadata  → API internal (API_INTERNAL_URL) untuk SSR konten (SEO)
-            └─ /api/* (rewrite proxy)  → NestJS → Prisma → Supabase Postgres (utama) / MySQL · JWT verify (Supabase Auth)
+            └─ /api/* (rewrite proxy)  → NestJS → Prisma → PostgreSQL (utama) / MySQL · JWT milik aplikasi sendiri
 ```
 
 Browser **tidak pernah** memanggil NestJS langsung — semua API call lewat `/api/v1/*` di origin yang sama.
@@ -35,7 +35,7 @@ Prasyarat: **Node ≥ 20** dan **pnpm 9**.
 ```bash
 pnpm install        # install seluruh workspace
 pnpm db:check       # pastikan klien Prisma cocok dengan .env (harus "postgres ✅ match")
-pnpm db:push        # buat 25 tabel di Supabase (satu transaksi)
+pnpm db:push        # buat 25 tabel di PostgreSQL (satu transaksi)
 pnpm db:seed        # isi data demo
 pnpm dev            # web http://localhost:3001 · api http://localhost:4000/api/v1
                     # (first build @mentari/shared & @mentari/database otomatis)
@@ -60,28 +60,26 @@ Atau per app: `pnpm dev:web` / `pnpm dev:api`.
 
 ## Production deployment
 
-1. **Database**: dua skema — `schema.postgres.prisma` (Supabase / PostgreSQL, target utama) dan `schema.prisma` (MySQL, legacy).
-   - **Supabase Postgres** (urutan penting):
+1. **Database**: dua skema — `schema.postgres.prisma` (PostgreSQL, target utama) dan `schema.prisma` (MySQL, legacy).
+   - **PostgreSQL lokal** (urutan penting di VPS yang sama dengan aplikasi):
      1. `pnpm --filter=@mentari/database use:postgres` — klien Prisma bersifat **single-provider**.
         Klien yang di-commit sudah Postgres, jadi langkah ini hanya perlu kalau `pnpm db:check`
         melaporkan MISMATCH. Tanpa klien yang cocok, seed/API melempar
         `Driver Adapter @prisma/adapter-pg … is not compatible with the provider …`.
-     2. Set `SUPABASE_DATABASE_URL` di `.env` root ke *direct connection* (port 5432). Password
-        tidak pernah di-log penuh.
+     2. Set `DATABASE_URL` di `.env` root, mis. `postgresql://mentari:<password>@127.0.0.1:5432/mentari_smartparent`.
      3. **Buat skemanya**: `pnpm db:push`. DDL Prisma dieksekusi lewat driver `pg` dalam satu
         transaksi, tanpa schema engine — jadi bug katalog `char`
-        (`prisma/prisma#27403`) tidak pernah tersentuh. Kalau mesinmu tidak bisa menjangkau
-        database (firewall/IP allowlist), pakai jalur manual: `pnpm db:ddl:postgres` lalu tempel
-        `packages/database/prisma/schema.postgres.sql` ke **Supabase Dashboard → SQL Editor**.
+        (`prisma/prisma#27403`) tidak pernah tersentuh. Untuk membuat database-nya sendiri:
+        `sudo -u postgres createuser mentari -P` lalu `createdb -O mentari mentari_smartparent`.
      4. `pnpm db:seed` untuk data demo (opsional; menghapus data yang ada).
-     5. Untuk runtime aplikasi set `DATABASE_URL=postgresql://…` — client factory memilih adapter
+     5. `DATABASE_URL` yang sama dipakai runtime — client factory memilih adapter
         `@prisma/adapter-pg` otomatis dari scheme URL (`mysql://` → MariaDB, `postgres(ql)://` → pg).
+   - **TLS**: Postgres di loopback tidak memakai TLS. Kalau database berada di server lain,
+     set `DATABASE_SSL=true` (dan `DATABASE_SSL_STRICT=true` bila sertifikatnya valid).
    - **MySQL**: `DATABASE_URL=mysql://… pnpm --filter=@mentari/database db:push:mysql`
      (jalur push sungguhan; tidak terkena bug `char`).
-   - **Seed ke Supabase**: `pnpm db:seed` (pakai akun service/direksi postgres, bukan anon).
-   - RLS: aplikasi tidak mengakses tabel secara langsung dari browser — semua lewat API dengan
-     koneksi owner DB, jadi Row Level Security boleh tetap nonaktif; jangan pernah expose
-     connection string ke `NEXT_PUBLIC_*`.
+   - RLS tidak relevan di sini: aplikasi tidak mengakses tabel langsung dari browser — semua
+     lewat API dengan koneksi owner DB. Jangan pernah expose connection string ke `NEXT_PUBLIC_*`.
    - **`.env` root otomatis di-load**: API, `db:seed`, `db:ddl:postgres`, dan config Prisma CLI
      memuat `.env` terdekat dengan walk-up dari cwd (built-in `process.loadEnvFile`, Node ≥ 20.12)
      — satu `.env` di root repo cukup, termasuk di Windows PowerShell/CMD. Tidak perlu syntax
@@ -89,13 +87,22 @@ Atau per app: `pnpm dev:web` / `pnpm dev:api`.
      Variabel environment yang sudah di-set di shell menang atas isi `.env`. Khusus web: Next.js
      **tidak** membaca root `.env` — set `NEXT_PUBLIC_SITE_URL` / `API_INTERNAL_URL` di
      `apps/web/.env.local` atau env hosting.
-2. **Auth (Supabase)**: set `SUPABASE_JWT_SECRET` di API. Token Supabase (aud `authenticated`) otomatis diverifikasi di `JwtAuthGuard`; user lokal di-provision on-the-fly saat login pertama.
-3. **Web**: `NEXT_PUBLIC_SITE_URL`, `API_INTERNAL_URL` (URL internal service API). Browser tetap same-origin lewat rewrites.
-4. **Seed**: `pnpm db:seed` memakai bcrypt untuk password default — **ganti password demo sebelum go-live**.
+2. **Auth**: aplikasi menandatangani token HS256 sendiri (`JWT_SECRET`). Tidak ada penyedia
+   identitas eksternal — satu-satunya sumber kebenaran sesi adalah tabel `users`. Di
+   `NODE_ENV=production` API **menolak start** bila `JWT_SECRET` kosong/masih nilai contoh atau
+   kurang dari 32 karakter (lihat `apps/api/src/load-env.ts`). Buat dengan `openssl rand -hex 32`.
+3. **Upload**: berkas thumbnail/media disimpan di disk VPS (`UPLOAD_DIR`) dan disajikan API pada
+   `UPLOAD_PUBLIC_PATH` (default `/uploads`). `UPLOAD_DIR` **wajib** berada di penyimpanan
+   persisten — jangan di folder yang dihapus saat deploy ulang. Web mem-proxy `/uploads/*`, jadi
+   port API tidak perlu dibuka ke publik. Batas ukuran: JPG/PNG/WebP 5 MB, GIF 8 MB,
+   MP4/WebM 25 MB; dapat diubah lewat env `UPLOAD_*_MAX_BYTES`.
+4. **Web**: `NEXT_PUBLIC_SITE_URL`, `API_INTERNAL_URL` (URL internal service API). Browser tetap
+   same-origin lewat rewrites (`/api/*` dan `/uploads/*`).
+5. **Seed**: `pnpm db:seed` memakai bcrypt untuk password default — **ganti password demo sebelum go-live**.
 
 ### Environment variables
 
-Lihat [`.env.example`](.env.example). Minimal production: `DATABASE_URL` (`mysql://…` atau `postgresql://…`), `JWT_SECRET` **atau** `SUPABASE_JWT_SECRET`, `CORS_ORIGIN`, `NEXT_PUBLIC_SITE_URL`, `API_INTERNAL_URL`. Untuk push skema ke Supabase: `SUPABASE_DATABASE_URL` (direct 5432).
+Lihat [`.env.example`](.env.example). Minimal production: `DATABASE_URL`, `JWT_SECRET`, `CORS_ORIGIN`, `NEXT_PUBLIC_SITE_URL`, `API_INTERNAL_URL`, dan `UPLOAD_DIR` bila folder unggahan bukan default.
 
 ### Catatan untuk Windows
 
@@ -105,23 +112,22 @@ pnpm install          # tanpa ini: Error "Cannot find module '@prisma/adapter-pg
 
 # Isi .env di ROOT repo (bukan .env.example — file itu cuma template, jangan isi kredensial asli!)
 # Lalu cukup:
-pnpm --filter=@mentari/database db:push:supabase   # buat tabel di Supabase
+pnpm --filter=@mentari/database db:push            # buat tabel di PostgreSQL
 pnpm --filter=@mentari/database db:seed            # isi data demo (opsional)
 ```
 
 Fallback kalau auto-load tidak bekerja (custom shell, dst): pakai syntax PowerShell:
-`$env:SUPABASE_DATABASE_URL="postgresql://…"; pnpm --filter=@mentari/database db:push:supabase`
+`$env:DATABASE_URL="postgresql://…"; pnpm --filter=@mentari/database db:push`
 
 ## Perintah database
 
-**Database target: Supabase (PostgreSQL).** SQLite sudah tidak didukung — semua perintah di
-bawah memakai `schema.postgres.prisma` dan membaca `SUPABASE_DATABASE_URL` (fallback
-`DATABASE_URL`) dari `.env` root.
+**Database target: PostgreSQL yang di-host sendiri.** SQLite sudah tidak didukung — semua
+perintah di bawah memakai `schema.postgres.prisma` dan membaca `DATABASE_URL` dari `.env` root.
 
 | Perintah | Fungsi |
 |---|---|
 | `pnpm db:check` | bandingkan URL vs provider klien Prisma yang ter-generate (tanpa mengubah apa pun) |
-| `pnpm db:push` | **buat skema di Supabase** — 25 tabel, satu transaksi; idempotent, aman diulang |
+| `pnpm db:push` | **buat skema di PostgreSQL** — 25 tabel, satu transaksi; idempotent, aman diulang |
 | `pnpm db:seed` | wipe & re-seed data demo (25 konten, 7 produk, 23 milestone, dst.) |
 | `pnpm db:reset` | hapus skema lalu buat ulang (`db:push --force`) |
 | `pnpm db:push:mysql` | push `schema.prisma` (MySQL) via Prisma CLI |
@@ -130,7 +136,7 @@ bawah memakai `schema.postgres.prisma` dan membaca `SUPABASE_DATABASE_URL` (fall
 | `pnpm --filter=@mentari/database use:mysql` | sama, untuk MySQL (`schema.prisma`) |
 
 > Catatan: `packages/database/src/generated` **di-commit** dan saat ini berisi klien
-> **PostgreSQL/Supabase**. Jalankan `pnpm db:check` untuk memastikannya cocok dengan `.env`.
+> **PostgreSQL**. Jalankan `pnpm db:check` untuk memastikannya cocok dengan `.env`.
 > Kalau kamu memakai MySQL, klien ikut berubah saat `use:mysql` — itu memang disengaja.
 
 > **Error `The Driver Adapter @prisma/adapter-pg ... is not compatible with the provider sqlite`**:
@@ -159,7 +165,7 @@ bawah memakai `schema.postgres.prisma` dan membaca `SUPABASE_DATABASE_URL` (fall
 > skema ini dibiarkan. Untuk reset total: `pnpm db:reset`.
 >
 > Kalau `db:push` tidak bisa konek ke database, pakai jalur manual:
-> `pnpm db:ddl:postgres` → tempel `prisma/schema.postgres.sql` ke Supabase SQL Editor.
+> `pnpm db:ddl:postgres` → terapkan `prisma/schema.postgres.sql` dengan `psql "$DATABASE_URL" -f ...`.
 
 > **Catatan engine Prisma**: `db:push` tidak memakai schema engine. DDL dibuat offline oleh
 > `scripts/export-ddl.mjs` (schema-engine WASM hanya untuk menghasilkan `CREATE TABLE`, tanpa
@@ -185,9 +191,49 @@ Rate-limit-friendly, validasi Zod di boundary (`@mentari/shared`), RBAC via `@Ro
 | Komunitas | `GET/POST /community/threads`, `GET /community/threads/:id`, `POST /community/threads/:id/comments`, `POST /community/threads/:id/like` |
 | Gamifikasi | `GET /gamification/me`, `GET /gamification/badges` |
 | Analytics | `POST /analytics/product-clicks` (public) |
+| Upload (`ADMIN`/`EDITOR`) | `POST /uploads?kind=image\|any&subdir=content\|product\|learning-path\|author\|child` (multipart field `file`), `DELETE /uploads?url=…`, `GET /uploads/rules`, `GET /uploads/usage` |
 | Admin (`ADMIN`/`EDITOR`) | `GET /admin/overview`, CRUD `/admin/contents` · `/admin/products` · `/admin/categories`, `DELETE /admin/products/:id` (soft-delete) + `PATCH /admin/products/:id/restore`, `GET /admin/users` + `PATCH /admin/users/:id/role` (ADMIN), content↔product mappings |
 
 Prioritas mesin rekomendasi: **1)** mapping manual konten↔produk (`ContentProduct`, relevanceScore) → **2)** kecocokan age-group produk↔konten → **3)** fallback produk unggulan.
+
+## Slug otomatis
+
+Slug **tidak pernah diisi manual**. API membuatnya dari judul/nama saat data dibuat
+(`uniqueSlug()` di `apps/api/src/admin/admin.service.ts`), dan menambahkan akhiran angka bila
+sudah dipakai: judul yang sama dua kali menghasilkan `cara-membuat-mpasi` dan
+`cara-membuat-mpasi-2`.
+
+Di form admin, kolom slug mengikuti judul sambil diketik dan **dibekukan saat mengedit** —
+mengubah slug pada data yang sudah tayang akan mematikan URL yang sudah dibagikan dan
+diindeks mesin pencari. Tombol "Ubah manual" tersedia bila memang perlu slug khusus.
+
+Simbol dan aksen dibersihkan: `Panduan 100% Ampuh: Si Kecil Tidur Nyenyak!` →
+`panduan-100-ampuh-si-kecil-tidur-nyenyak`.
+
+## Upload thumbnail & media
+
+Kolom thumbnail, cover produk, avatar penulis, dan thumbnail learning path memakai **input
+berkas**, bukan lagi tempel URL. Berkas disimpan di disk VPS dan disajikan API.
+
+**Aturan yang ditegakkan** (`apps/api/src/uploads/upload.rules.ts`):
+
+| Jenis | Format | Maksimum |
+|---|---|---|
+| Gambar | JPG, PNG, WebP | 5 MB |
+| Animasi | GIF | 8 MB |
+| Video | MP4, WebM | 25 MB |
+
+- **Format diperiksa dari isi berkas**, bukan dari nama atau `Content-Type`. Berkas HTML yang
+  dinamai `.jpg` ditolak; SVG juga ditolak karena bisa memuat skrip dalam domain yang sama.
+- Foto besar **dikecilkan otomatis di browser** ke sisi terpanjang 1600px (kualitas ~0.82)
+  sebelum diunggah, jadi foto kamera HP 6 MB biasanya menjadi ~300 KB.
+- Nama berkas disimpan sebagai UUID — nama asli kiriman tidak dipakai, sehingga tidak ada
+  `../` atau tabrakan nama.
+- Berkas lama dihapus saat diganti, supaya disk tidak menumpuk gambar yatim.
+- Header `X-Content-Type-Options: nosniff` dan CSP ketat dipasang pada semua berkas unggahan.
+
+Batas ukuran bisa diubah tanpa mengubah kode lewat `UPLOAD_IMAGE_MAX_BYTES`,
+`UPLOAD_GIF_MAX_BYTES`, `UPLOAD_VIDEO_MAX_BYTES`, dan `UPLOAD_HARD_LIMIT_BYTES`.
 
 ## Testing smoke
 

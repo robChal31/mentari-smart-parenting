@@ -27,8 +27,15 @@ const nextConfig: NextConfig = {
     },
   },
   // Browser calls same-origin /api/* → proxied to the NestJS API.
+  //
+  // /uploads/* juga wajib diproxy: berkas unggahan tinggal di disk VPS dan
+  // disajikan oleh API, tapi URL-nya relatif (`/uploads/content/abc.jpg`).
+  // Tanpa aturan ini browser meminta gambar ke origin web dan mendapat 404.
   async rewrites() {
-    return [{ source: "/api/:path*", destination: `${apiInternal}/api/:path*` }];
+    return [
+      { source: "/api/:path*", destination: `${apiInternal}/api/:path*` },
+      { source: "/uploads/:path*", destination: `${apiInternal}/uploads/:path*` },
+    ];
   },
   // Legacy Indonesian route slugs (pre-localisation) → permanent English slugs.
   async redirects() {

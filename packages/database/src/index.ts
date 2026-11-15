@@ -2,7 +2,7 @@
 // @mentari/database — Prisma client factory + shared instance
 //
 // Runtime selection is driven by DATABASE_URL:
-//   postgres://...  → PostgreSQL / Supabase via @prisma/adapter-pg  (DEFAULT)
+//   postgres://...  → PostgreSQL via @prisma/adapter-pg  (DEFAULT)
 //                     use the direct 5432 connection, or the pooler with
 //                     ?pgbouncer=true; pooled 6543 works for queries
 //   mysql://...     → MySQL via @prisma/adapter-mariadb (legacy production)
@@ -52,7 +52,7 @@ function withProviderHint(build: () => PrismaClient, target = '(unknown)'): Pris
         `Your DATABASE_URL targets: ${target}`,
         '',
         'Regenerate it for your target database, then rebuild & restart:',
-        '  • Supabase/Postgres: pnpm --filter=@mentari/database use:postgres',
+        '  • PostgreSQL:        pnpm --filter=@mentari/database use:postgres',
         '  • MySQL:             pnpm --filter=@mentari/database use:mysql',
         '  (each one regenerates the client and rebuilds the package)',
         '',
@@ -67,15 +67,14 @@ function withProviderHint(build: () => PrismaClient, target = '(unknown)'): Pris
 
 export function createPrismaClient(
   databaseUrl: string =
-    process.env.SUPABASE_DATABASE_URL ?? process.env.DATABASE_URL ?? '',
+    process.env.DATABASE_URL ?? '',
 ): PrismaClient {
   if (!databaseUrl) {
     throw new Error([
       'DATABASE_URL is not set.',
       '',
-      'This project targets Supabase. Add to the root .env:',
-      '  SUPABASE_DATABASE_URL="postgresql://postgres:<password>@db.<project-ref>.supabase.co:5432/postgres"',
-      '  DATABASE_URL="postgresql://postgres:<password>@db.<project-ref>.supabase.co:5432/postgres"',
+      'Add to the root .env:',
+      '  DATABASE_URL="postgresql://mentari:<password>@127.0.0.1:5432/mentari_smartparent"',
       '',
       'SQLite is no longer supported.',
     ].join('\n'));
@@ -89,7 +88,7 @@ export function createPrismaClient(
     return withProviderHint(() => new PrismaClient({ adapter }), 'postgresql');
   }
   throw new Error(
-    `Unsupported DATABASE_URL scheme. Use postgresql://… (Supabase) or mysql://user:pass@host:3306/db. Got: ${databaseUrl.replace(/:[^:@/]+@/, ':***@')}`,
+    `Unsupported DATABASE_URL scheme. Use postgresql://… or mysql://user:pass@host:3306/db. Got: ${databaseUrl.replace(/:[^:@/]+@/, ':***@')}`,
   );
 }
 

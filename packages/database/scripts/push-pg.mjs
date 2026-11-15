@@ -43,13 +43,13 @@ for (let dir = process.cwd(); ; ) {
   dir = parent;
 }
 
-const url = process.env.SUPABASE_DATABASE_URL ?? process.env.DATABASE_URL;
+const url = process.env.DATABASE_URL;
 if (!url) {
   console.error([
     'ERROR: no database URL configured.',
     '',
     'Add to the root .env:',
-    '  SUPABASE_DATABASE_URL="postgresql://postgres:<password>@db.<project-ref>.supabase.co:5432/postgres"',
+    '  DATABASE_URL="postgresql://mentari:<password>@127.0.0.1:5432/mentari_smartparent"',
     'Never commit this file — .env is gitignored.',
   ].join('\n'));
   process.exit(1);
@@ -79,7 +79,16 @@ const ddl = readFileSync(sqlPath, 'utf8');
 
 // ---- 2. connect -----------------------------------------------------------
 const { default: pg } = await import('pg');
-const client = new pg.Client({ connectionString: url, ssl: /supabase\.(co|com)/.test(url) ? { rejectUnauthorized: false } : undefined });
+// SSL: Postgres lokal di VPS yang sama tidak memakai TLS, sedangkan database
+// terkelola (atau Postgres dengan TLS aktif) memerlukannya. Dinyalakan bila
+// host bukan loopback, dan bisa dipaksa/dimatikan lewat DATABASE_SSL.
+const isLoopback = /@(127\.0\.0\.1|localhost|\[::1\]|::1)[:/]/.test(url);
+const sslSetting = process.env.DATABASE_SSL;
+const useSsl = sslSetting === 'true' ? true : sslSetting === 'false' ? false : !isLoopback;
+const client = new pg.Client({
+  connectionString: url,
+  ssl: useSsl ? { rejectUnauthorized: process.env.DATABASE_SSL_STRICT === 'true' } : undefined,
+});
 console.log(`Applying schema to ${masked} ...`);
 try {
   await client.connect();
@@ -89,7 +98,7 @@ try {
   console.error(`  ${String(error.message ?? error)}`);
   console.error('');
   console.error('Check the host/port in .env, that the project is running, and that');
-  console.error('your IP is allowed in Supabase → Settings → Database → Network.');
+  console.error('the database accepts connections from this machine (pg_hba.conf / firewall).');
   process.exit(1);
 }
 
