@@ -37,12 +37,28 @@ jobs:
       # Root `pnpm build` sudah mengurutkan sendiri: shared → database → api → web.
       # `--filter web build` saja akan gagal karena API meng-import
       # @mentari/shared dan @mentari/database dari folder dist/.
+      # PERINGATAN: rewrite Next (`/api/*`, `/uploads/*`) DIBEKUKAN di sini,
+      # saat build — bukan dibaca saat runtime. Kalau API_INTERNAL_URL tidak
+      # diset di step ini, nilainya jatuh ke default di next.config.ts.
+      # Tujuan hasil build terlihat di routes-manifest.json.
+      #
+      # Gejala kalau default-nya salah: nginx 502 di setiap halaman, karena
+      # Next mem-proxy /api/* ke port yang tidak ada yang mendengarkan.
+      # Env yang diset di ecosystem.config.js TIDAK bisa mengubah ini.
       - name: Build all packages
         run: pnpm build
+        env:
+          API_INTERNAL_URL: "http://127.0.0.1:4000"
+          NEXT_TELEMETRY_DISABLED: "1"
 
       - name: Prepare artifacts
         run: |
           set -euo pipefail
+
+          # `cp -r ... deploy/web` gagal kalau `deploy/` belum ada:
+          # "cannot create directory 'deploy/web': No such file or directory".
+          # Di runner folder itu belum pernah dibuat, jadi harus eksplisit.
+          mkdir -p deploy
 
           # Next.js standalone: berisi server.js + node_modules minimal.
           cp -r apps/web/.next/standalone deploy/web
@@ -52,12 +68,32 @@ jobs:
           # Struktur standalone mengikuti layout monorepo, jadi server.js ada di
           # deploy/web/apps/web/server.js — bukan di root.
 
-          # NestJS: hasil tsc (dist/) + package.json saja.
-          # node_modules TIDAK ikut: symlink pnpm workspace rusak saat di-SCP dan
-          # isinya devDependency. Dependency produksi dipasang di VPS.
-          mkdir -p deploy/api
-          cp -r apps/api/dist deploy/api/dist
-          cp apps/api/package.json deploy/api/package.json
+          # NestJS: JANGAN kirim package.json saja lalu `pnpm install` di VPS.
+          # Dependency-nya memakai protokol `workspace:*` (@mentari/shared,
+          # @mentari/database) yang HANYA bisa di-resolve di dalam workspace.
+          # Di VPS tanpa workspace, perintah itu selalu gagal:
+          #   Failed to resolve @mentari/database@workspace:*
+          # Akibatnya api/node_modules tidak pernah ada dan PM2 crash-loop
+          # dengan MODULE_NOT_FOUND → nginx 502.
+          #
+          # `pnpm deploy` menyelesaikan symlink workspace dan merakit node_modules
+          # produksi yang lengkap. Hasilnya diuji: API boot tanpa folder repo.
+          pnpm --filter=@mentari/api deploy --prod deploy/api
+
+          # `pnpm deploy` menyalin src/ dan tsconfig juga; tidak dipakai runtime.
+          rm -rf deploy/api/src deploy/api/tsconfig.json deploy/api/tsconfig.build.json
+
+          # ecosystem.config.js dirujuk oleh step PM2 di bawah. Tanpa baris ini
+          # file itu tidak pernah sampai ke VPS dan `pm2 reload` gagal karena
+          # file tidak ditemukan.
+          cp ecosystem.config.js deploy/ecosystem.config.js
+
+          echo "--- isi artefak ---"
+          du -sh deploy/web deploy/api
+          test -f deploy/web/apps/web/server.js
+          test -f deploy/api/dist/main.js
+          test -f deploy/ecosystem.config.js
+          echo "artefak lengkap"
 
       - name: Deploy to VPS via SCP
         uses: appleboy/scp-action@v0.1.7
@@ -81,13 +117,26 @@ jobs:
             set -euo pipefail
             cd /home/ubuntu/apps
 
-            # Pasang dependency API kalau belum ada (mis. setelah deploy pertama
-            # atau lockfile berubah).
-            if [ ! -d api/node_modules ]; then
-              cd api && pnpm install --prod --ignore-scripts && cd ..
-            fi
+            # node_modules API sudah ikut terkirim dari runner (lihat pnpm deploy
+            # di step Prepare artifacts), jadi tidak ada instalasi di VPS.
 
-            # `reload` = zero-downtime dan aman diulang. `start` pada deploy kedua
-            # gagal karena prosesnya sudah berjalan.
+            # `reload` zero-downtime dan aman diulang; `start` pada deploy kedua
+            # gagal dengan "already launched".
             pm2 reload ecosystem.config.js --update-env || pm2 start ecosystem.config.js
             pm2 save
+
+            # Jangan biarkan workflow hijau kalau prosesnya sebenarnya crash.
+            sleep 5
+            pm2 describe mentari-web >/dev/null || { pm2 logs mentari-web --lines 40 --nostream; exit 1; }
+            pm2 describe mentari-api >/dev/null || { pm2 logs mentari-api --lines 40 --nostream; exit 1; }
+
+            STATUS_WEB=$(pm2 jlist | node -e "let d='';process.stdin.on('data',c=>d+=c).on('end',()=>{const a=JSON.parse(d);const p=a.find(x=>x.name==='mentari-web');console.log(p?p.pm2_env.status:'missing')})")
+            STATUS_API=$(pm2 jlist | node -e "let d='';process.stdin.on('data',c=>d+=c).on('end',()=>{const a=JSON.parse(d);const p=a.find(x=>x.name==='mentari-api');console.log(p?p.pm2_env.status:'missing')})")
+            echo "mentari-web: $STATUS_WEB | mentari-api: $STATUS_API"
+            test "$STATUS_WEB" = "online"
+            test "$STATUS_API" = "online"
+
+            # Buktikan port benar-benar melayani, bukan cuma "online".
+            curl -fsS --retry 10 --retry-delay 2 --retry-connrefused http://127.0.0.1:3000/ >/dev/null
+            curl -fsS --retry 10 --retry-delay 2 --retry-connrefused http://127.0.0.1:4000/api/v1/categories >/dev/null
+            echo "web:3000 dan api:4000 merespons"

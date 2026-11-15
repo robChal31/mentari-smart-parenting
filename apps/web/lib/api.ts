@@ -37,7 +37,7 @@ function normaliseInternalUrl(raw: string): string {
 }
 
 const API_INTERNAL = normaliseInternalUrl(
-  process.env.API_INTERNAL_URL ?? "http://127.0.0.1:3001",
+  process.env.API_INTERNAL_URL ?? "http://127.0.0.1:4000",
 );
 
 export interface Paginated<T> {
@@ -71,7 +71,7 @@ function parseApiBody(text: string): { success?: boolean; data?: unknown; meta?:
 
 /**
  * The API is restarted by `node --watch` on every recompile, so a server render
- * can hit a 2–4 s window where port 3001 is closed (ECONNREFUSED). Retry those
+ * can hit a 2–4 s window where port 4000 is closed (ECONNREFUSED). Retry those
  * connection failures a few times — but never retry an HTTP error, since the
  * upstream already answered and repeating it changes nothing.
  *
