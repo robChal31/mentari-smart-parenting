@@ -56,7 +56,7 @@ export default async function AboutPage() {
         <Sparkles size={26} className="text-[#FFD9A0]" aria-hidden />
         <h2 className="mt-3 font-heading text-2xl font-extrabold">{dict.static.groupTitle}</h2>
         <p className="mt-2 max-w-2xl text-sm leading-7 text-white/80">{dict.static.groupText}</p>
-        <Link href="/products" className="mt-5 inline-flex items-center gap-2 rounded-2xl bg-accent px-6 py-3 text-sm font-bold text-secondary-deep transition hover:bg-accent-deep hover:text-white">
+        <Link href="/products" className="mt-5 inline-flex items-center gap-2 rounded-2xl bg-accent px-6 py-3 text-sm font-bold text-white transition hover:bg-accent-deep">
           <BookOpenText size={16} aria-hidden /> {dict.static.seeProducts} <ArrowRight size={15} aria-hidden />
         </Link>
       </section>
