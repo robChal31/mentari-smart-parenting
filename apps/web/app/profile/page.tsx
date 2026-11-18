@@ -8,6 +8,7 @@ import {
   Plus, Sparkles, Star, Trash2, TriangleAlert,
 } from "lucide-react";
 import { useAuth } from "@/components/auth-provider";
+import { ProfileSkeleton } from "@/components/page-skeleton";
 import { useDictionary, useLocale } from "@/components/i18n-provider";
 import { apiData, ApiError } from "@/lib/client-api";
 import { formatDate, formatViews } from "@/lib/format";
@@ -71,11 +72,8 @@ function ProfileContent() {
 
   if (isLoading || !user) {
     return (
-      <div className="mx-auto max-w-6xl px-4 py-16 sm:px-6" aria-busy="true" aria-label={dict.errors.loadingAria}>
-        <div className="skeleton h-10 w-64" />
-        <div className="mt-6 grid gap-5 lg:grid-cols-2">
-          {[0, 1].map((i) => <div key={i} className="skeleton h-56 rounded-3xl" />)}
-        </div>
+      <div className="mx-auto max-w-6xl px-4 py-8 sm:px-6" aria-busy="true" aria-label={dict.errors.loadingAria}>
+        <ProfileSkeleton />
       </div>
     );
   }

@@ -77,11 +77,35 @@ h1, h2, h3, h4, h5, .font-heading {
   0% { background-position: -400px 0; }
   100% { background-position: 400px 0; }
 }
+/* Skeleton loader.
+   Riwayat warna:
+     1. #f3ece6 — hex mati yang LEBIH GELAP dari cream (#FFF9F5); di halaman
+        krem terlihat seperti kotak abu-abu, bukan konten yang sedang dimuat.
+     2. sand -> cream — terlalu samar (1.11 vs cream), batas bloknya hilang.
+     3. SEKARANG: trough #EFE4DB (turun dari sand, tetap hangat) -> peak putih.
+        Kontras blok vs cream 1.20 dan vs kartu putih 1.25, jadi terbaca di
+        kedua latar tanpa terasa seperti kotak gelap.
+   Varian -on-card dipakai untuk blok DI DALAM kartu putih (sedikit lebih gelap
+   agar batasnya tetap terlihat di atas #FFFFFF). */
 .skeleton {
-  background: linear-gradient(90deg, #f3ece6 0%, #faf5ef 50%, #f3ece6 100%);
+  background: linear-gradient(90deg, #EFE4DB 0%, #FFFFFF 50%, #EFE4DB 100%);
   background-size: 800px 100%;
   animation: shimmer 1.4s infinite linear;
   border-radius: 0.75rem;
+}
+.skeleton-on-card {
+  background: linear-gradient(90deg, #EDE2D9 0%, #FBF7F3 50%, #EDE2D9 100%);
+  background-size: 800px 100%;
+  animation: shimmer 1.4s infinite linear;
+  border-radius: 0.5rem;
+}
+/* Hormati preferensi sistem: matikan kilau, sisakan blok statis yang tetap
+   terbaca sebagai "sedang memuat". */
+@media (prefers-reduced-motion: reduce) {
+  .skeleton,
+  .skeleton-on-card {
+    animation: none;
+  }
 }
 
 @keyframes fadeUp {

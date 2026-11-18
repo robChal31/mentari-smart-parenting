@@ -93,7 +93,7 @@ export function SiteHeader() {
   );
 
   return (
-    <header className="sticky top-0 z-50 border-b border-sand bg-primary-soft/70 backdrop-blur-lg">
+    <header className="sticky top-0 z-50 border-b border-primary/15 bg-primary-soft/70 backdrop-blur-lg">
       <div className="mx-auto max-w-7xl px-4 sm:px-6">
         <div className="flex h-16 items-center gap-3 sm:h-[4.25rem] sm:gap-6">
           <Logo />
@@ -107,7 +107,7 @@ export function SiteHeader() {
           </nav>
 
           <form onSubmit={submitSearch} className="ml-auto hidden min-w-0 flex-1 max-w-xs items-center md:flex" role="search">
-            <label className="group flex w-full items-center gap-2 rounded-full border border-sand bg-white px-4 py-2 shadow-sm transition focus-within:border-primary focus-within:ring-2 focus-within:ring-primary/20">
+            <label className="group flex w-full items-center gap-2 rounded-full border border-primary/20 bg-white px-4 py-2 shadow-sm transition focus-within:border-primary focus-within:ring-2 focus-within:ring-primary/20">
               <Search size={17} className="shrink-0 text-muted" aria-hidden />
               <input
                 type="search"
@@ -128,7 +128,7 @@ export function SiteHeader() {
               <div className="relative" ref={accountRef}>
                 <button
                   onClick={() => setAccountOpen((v) => !v)}
-                  className="flex items-center gap-2 rounded-full border border-sand bg-white py-1.5 pl-1.5 pr-3 shadow-sm transition hover:border-primary/40"
+                  className="flex items-center gap-2 rounded-full border border-primary/20 bg-white py-1.5 pl-1.5 pr-3 shadow-sm transition hover:border-primary/40"
                   aria-haspopup="menu"
                   aria-expanded={accountOpen}
                 >

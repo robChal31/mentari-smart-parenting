@@ -89,17 +89,105 @@ export async function ContentCard({ content, priority = false }: { content: Cont
   );
 }
 
+/**
+ * Skeleton kartu konten. Strukturnya sengaja ditiru dari ContentCard di atas:
+ * blok thumbnail (h-36 sm:h-40), badge tipe di tengah thumbnail, baris meta
+ * kategori+tanggal, judul 2 baris, excerpt 2 baris, lalu footer statistik.
+ * Versi sebelumnya hanya 5 garis acak, jadi saat konten asli muncul layoutnya
+ * "melompat" — tinggi dan jumlah barisnya tidak cocok.
+ */
 export function ContentCardSkeleton() {
   return (
-    <div className="overflow-hidden rounded-3xl border border-sand bg-white">
-      <div className="skeleton h-36 w-full rounded-none" />
-      <div className="space-y-3 p-4">
-        <div className="skeleton h-3 w-28" />
-        <div className="skeleton h-4 w-full" />
-        <div className="skeleton h-4 w-4/5" />
-        <div className="skeleton h-3 w-3/4" />
-        <div className="skeleton h-3 w-1/2" />
+    <div className="flex h-full flex-col overflow-hidden rounded-3xl border border-sand bg-white">
+      {/* Thumbnail: blok dasar pakai .skeleton (trough lebih gelap), sedangkan
+          badge di atasnya pakai putih solid supaya bentuk "badge" terbaca —
+          dulu badge memakai .skeleton-on-card di atas bg-sand (kontras 1.03,
+          praktis tak terlihat). */}
+      <div className="relative h-36 w-full sm:h-40">
+        <div className="skeleton absolute inset-0 rounded-none" />
+        <div className="absolute inset-0 flex flex-col items-center justify-center gap-2">
+          <div className="h-5 w-24 rounded-full bg-white" />
+          <div className="h-4 w-16 rounded-full bg-white/80" />
+        </div>
       </div>
+      <div className="flex flex-1 flex-col gap-2 p-4">
+        {/* kategori + tanggal */}
+        <div className="flex items-center gap-2">
+          <div className="skeleton-on-card h-4 w-20 rounded-full" />
+          <div className="skeleton-on-card h-3 w-16" />
+        </div>
+        {/* judul 2 baris */}
+        <div className="skeleton-on-card h-4 w-full" />
+        <div className="skeleton-on-card h-4 w-4/5" />
+        {/* excerpt 2 baris */}
+        <div className="skeleton-on-card h-3 w-11/12" />
+        <div className="skeleton-on-card h-3 w-2/3" />
+        {/* footer statistik */}
+        <div className="mt-auto flex items-center gap-3 border-t border-sand/80 pt-2.5">
+          <div className="skeleton-on-card h-3 w-12" />
+          <div className="skeleton-on-card h-3 w-16" />
+        </div>
+      </div>
+    </div>
+  );
+}
+
+/** Skeleton kartu produk — meniru ProductCard (thumbnail 4:3 + label tipe + nama). */
+export function ProductCardSkeleton({ compact = false }: { compact?: boolean }) {
+  if (compact) {
+    return (
+      <div className="flex w-full items-center gap-3 rounded-2xl border border-primary/12 bg-cream p-3">
+        <div className="skeleton-on-card h-16 w-16 shrink-0 rounded-xl" />
+        <div className="min-w-0 flex-1 space-y-1.5">
+          <div className="skeleton-on-card h-2.5 w-16" />
+          <div className="skeleton-on-card h-3 w-full" />
+          <div className="skeleton-on-card h-3 w-3/4" />
+        </div>
+      </div>
+    );
+  }
+  return (
+    <div className="flex h-full w-full flex-col gap-2 rounded-2xl border border-primary/12 bg-cream p-3">
+      <div className="skeleton-on-card aspect-[4/3] w-full rounded-xl" />
+      <div className="space-y-1.5">
+        <div className="skeleton-on-card h-2.5 w-20" />
+        <div className="skeleton-on-card h-3 w-full" />
+        <div className="skeleton-on-card h-3 w-2/3" />
+        <div className="skeleton-on-card mt-1 h-6 w-full rounded-full" />
+      </div>
+    </div>
+  );
+}
+
+/** Skeleton panel "Rekomendasi dari Mentari" — meniru RecommendationsPanel. */
+export function RecommendationsPanelSkeleton({ count = 3 }: { count?: number }) {
+  return (
+    <div className="rounded-3xl border border-primary/15 bg-gradient-to-b from-primary-soft/45 to-white p-4">
+      <div className="mb-3 flex items-start justify-between gap-2">
+        <div className="space-y-1.5">
+          <div className="skeleton-on-card h-4 w-40" />
+          <div className="skeleton-on-card h-3 w-52" />
+        </div>
+        <div className="skeleton-on-card h-4 w-16 rounded-full" />
+      </div>
+      <div className="flex flex-col gap-3">
+        {Array.from({ length: count }).map((_, i) => (
+          <ProductCardSkeleton key={i} />
+        ))}
+      </div>
+    </div>
+  );
+}
+
+/** Skeleton kartu learning path gelap — meniru kartu bg-secondary di beranda. */
+export function PathCardSkeleton() {
+  return (
+    <div className="rounded-3xl bg-secondary p-6">
+      <div className="h-2.5 w-32 rounded bg-white/20" />
+      <div className="mt-3 h-5 w-3/4 rounded bg-white/20" />
+      <div className="mt-2 h-3 w-full rounded bg-white/15" />
+      <div className="mt-1.5 h-3 w-2/3 rounded bg-white/15" />
+      <div className="mt-4 h-3 w-28 rounded bg-white/20" />
     </div>
   );
 }

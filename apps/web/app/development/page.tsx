@@ -8,6 +8,7 @@ import {
   Palette, Sparkles, Speech, TriangleAlert,
 } from "lucide-react";
 import { useAuth } from "@/components/auth-provider";
+import { DevelopmentPageSkeleton } from "@/components/page-skeleton";
 import { useDictionary } from "@/components/i18n-provider";
 import { apiData } from "@/lib/client-api";
 import { Combobox } from "@/components/combobox";
@@ -117,7 +118,11 @@ export default function DevelopmentPage() {
   const selectedChild = children.find((c) => c.id === selectedId);
 
   if (isLoading || !user) {
-    return <div className="mx-auto max-w-4xl px-4 py-16"><div className="skeleton h-10 w-72" /><div className="skeleton mt-6 h-96 rounded-3xl" /></div>;
+    return (
+      <div className="mx-auto max-w-4xl px-4 py-8 sm:px-6" aria-busy="true" aria-label={dict.errors.loadingAria}>
+        <DevelopmentPageSkeleton />
+      </div>
+    );
   }
 
   if (!loading && loadError) {
@@ -185,7 +190,27 @@ export default function DevelopmentPage() {
 
       {/* Milestones grouped by category */}
       {loading ? (
-        <div className="mt-6 space-y-4">{[0, 1, 2].map((i) => <div key={i} className="skeleton h-32 rounded-3xl" />)}</div>
+        <div className="mt-6 space-y-4">
+          {[0, 1, 2].map((i) => (
+            <div key={i} className="rounded-3xl border border-sand bg-white p-5">
+              <div className="flex items-center justify-between gap-3">
+                <div className="flex items-center gap-2">
+                  <div className="skeleton-on-card h-7 w-7 rounded-xl" />
+                  <div className="skeleton-on-card h-4 w-40" />
+                </div>
+                <div className="skeleton-on-card h-5 w-16 rounded-full" />
+              </div>
+              <div className="mt-4 space-y-3">
+                {[0, 1, 2].map((j) => (
+                  <div key={j} className="flex items-center gap-3">
+                    <div className="skeleton-on-card h-5 w-5 shrink-0 rounded-full" />
+                    <div className="skeleton-on-card h-3 flex-1" />
+                  </div>
+                ))}
+              </div>
+            </div>
+          ))}
+        </div>
       ) : (
         groups.map(([category, rows]) => {
           const meta = {
