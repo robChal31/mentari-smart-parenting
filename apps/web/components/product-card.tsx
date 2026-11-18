@@ -17,7 +17,7 @@ const TYPE_ICONS: Record<string, React.ReactNode> = {
 
 const PRODUCT_GRADIENTS = [
   "from-[#E3EEF7] to-[#C2D9EC] text-secondary",
-  "from-[#DFF7F4] to-[#B9EBE5] text-accent-deep",
+  "from-[#E2EEE7] to-[#CDE4D6] text-accent-deep",
   "from-[#FFF0D9] to-[#FFE0B3] text-[#B45309]",
   "from-[#F3E8FF] to-[#E2CCFB] text-purple-800",
 ];
@@ -82,14 +82,14 @@ export function ProductCard({
 
   return (
     <div
-      className={`flex w-full flex-col gap-2 rounded-2xl border border-primary/12 bg-cream p-3 ${
+      className={`flex w-full flex-col gap-2 rounded-2xl border border-primary/20 bg-white p-3 ${
         compact ? "" : "h-full"
       }`}
     >
       <div className={`flex ${compact ? "flex-row items-center gap-3" : "flex-col gap-2"}`}>
         {cover ? (
           <span
-            className={`relative shrink-0 overflow-hidden rounded-xl bg-cream ring-1 ring-black/5 ${
+            className={`relative shrink-0 overflow-hidden rounded-xl bg-sand ring-1 ring-black/5 ${
               compact ? "h-16 w-16" : "aspect-[4/3] w-full"
             }`}
           >

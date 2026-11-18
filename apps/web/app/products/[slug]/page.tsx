@@ -38,7 +38,7 @@ export default async function ProdukDetailPage({ params }: { params: Promise<{ s
       </nav>
 
       <div className="mt-6 grid gap-8 md:grid-cols-[380px_1fr]">
-        <div className="rounded-[2rem] border-2 border-accent/25 bg-accent-soft/40 p-8">
+        <div className="rounded-[2rem] border border-accent/20 bg-accent-soft/50 p-6 sm:p-8">
           <ProductCard product={product} source="BANNER" />
           {product.ageGroups && product.ageGroups.length > 0 && (
             <div className="mt-4 border-t border-accent/20 pt-4">

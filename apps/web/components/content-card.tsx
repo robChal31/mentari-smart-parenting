@@ -18,7 +18,7 @@ const TYPE_ICONS: Record<string, React.ReactNode> = {
 const THUMB_GRADIENTS = [
   "from-[#FFE3D3] via-[#FFD0BC] to-[#FFB89E]",
   "from-[#DFF0FA] via-[#C9E2F4] to-[#A9CDE9]",
-  "from-[#DFF7F4] via-[#C3EEE9] to-[#9FE0D7]",
+  "from-[#E2EEE7] via-[#D3E7DB] to-[#B8D9C6]",
   "from-[#FFF3C9] via-[#FFE8A3] to-[#FFD97A]",
   "from-[#F3E8FF] via-[#E5D4FB] to-[#D2B8F5]",
 ];
@@ -136,7 +136,7 @@ export function ContentCardSkeleton() {
 export function ProductCardSkeleton({ compact = false }: { compact?: boolean }) {
   if (compact) {
     return (
-      <div className="flex w-full items-center gap-3 rounded-2xl border border-primary/12 bg-cream p-3">
+      <div className="flex w-full items-center gap-3 rounded-2xl border border-primary/20 bg-white p-3">
         <div className="skeleton-on-card h-16 w-16 shrink-0 rounded-xl" />
         <div className="min-w-0 flex-1 space-y-1.5">
           <div className="skeleton-on-card h-2.5 w-16" />
@@ -147,7 +147,7 @@ export function ProductCardSkeleton({ compact = false }: { compact?: boolean }) 
     );
   }
   return (
-    <div className="flex h-full w-full flex-col gap-2 rounded-2xl border border-primary/12 bg-cream p-3">
+    <div className="flex h-full w-full flex-col gap-2 rounded-2xl border border-primary/20 bg-white p-3">
       <div className="skeleton-on-card aspect-[4/3] w-full rounded-xl" />
       <div className="space-y-1.5">
         <div className="skeleton-on-card h-2.5 w-20" />

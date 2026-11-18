@@ -184,7 +184,7 @@ export default function DevelopmentPage() {
           <span className="grid h-16 w-16 place-items-center rounded-2xl bg-white/10 font-heading text-xl font-extrabold text-[#FFD9A0]">{pct}%</span>
         </div>
         <div className="mt-4 h-2.5 w-full overflow-hidden rounded-full bg-white/15">
-          <div className="h-full rounded-full bg-gradient-to-r from-accent-on-dark to-[#7EF0E2] transition-all duration-500" style={{ width: `${pct}%` }} />
+          <div className="h-full rounded-full bg-gradient-to-r from-accent-on-dark to-[#8FE8B4] transition-all duration-500" style={{ width: `${pct}%` }} />
         </div>
       </div>
 
@@ -243,7 +243,7 @@ export default function DevelopmentPage() {
                         {busy ? (
                           <Loader2 size={20} className="mt-0.5 shrink-0 animate-spin text-primary" aria-hidden />
                         ) : checked ? (
-                          <CheckCircle2 size={20} className="mt-0.5 shrink-0 text-accent-deep" fill="#DFF7F4" aria-hidden />
+                          <CheckCircle2 size={20} className="mt-0.5 shrink-0 text-accent-deep" fill="#E2EEE7" aria-hidden />
                         ) : (
                           <Circle size={20} className="mt-0.5 shrink-0 text-sand" aria-hidden />
                         )}

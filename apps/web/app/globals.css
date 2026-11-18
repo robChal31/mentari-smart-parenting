@@ -11,17 +11,19 @@
    *                         tidak menopang teks: glow/blob (opacity),
    *                         gradient dekoratif, logo, dot pattern.
    *                         JANGAN dipakai sebagai latar teks.
-   *   --color-accent        teal untuk latar/badge. Kontras 5.47 vs putih.
+   *   --color-accent        hijau daun untuk latar/badge. Kontras 6.43 vs putih.
    *                         Untuk teks di atas accent-soft, pakai accent-deep.
-   *   --color-accent-bright teal terang (#2EC4B6). Sama seperti primary-bright:
+   *   --color-accent-bright hijau terang (#5FA97F). Sama seperti primary-bright:
    *                         HANYA glow/blob dekoratif, jangan untuk teks.
-   *   --color-accent-on-dark teal pucat (#8FF3E7). HANYA untuk TEKS di atas
+   *   --color-accent-on-dark hijau pucat (#B5EFCC). HANYA untuk TEKS di atas
    *                         latar gelap (navy). Jangan dipakai di latar terang
-   *                         (kontras cuma 1.30 vs putih).
+   *                         (kontras cuma 1.42 vs putih).
    *
    * Nilai lama (untuk rollback):
    *   primary #FF6B35 · primary-deep #E8551F · primary-soft #FFE8DD
    *   accent  #2EC4B6 · accent-deep  #1FA89A · accent-soft  #DFF7F4
+   *   (teal, dipakai sampai accent diganti hijau daun: accent #0F766E ·
+   *    deep #0B5F58 · soft #DFF7F4 · bright #2EC4B6 · on-dark #8FF3E7)
    * ------------------------------------------------------------------ */
   --color-primary: #BE3F0C;
   --color-primary-deep: #9A3007;
@@ -30,14 +32,19 @@
   --color-secondary: #004E89;
   --color-secondary-deep: #003A66;
   --color-secondary-soft: #E3EEF7;
-  --color-accent: #0F766E;
-  --color-accent-deep: #0B5F58;
-  --color-accent-soft: #DFF7F4;
-  --color-accent-bright: #2EC4B6;
-  /* Teal untuk TEKS di atas latar gelap (footer, kartu navy, panel progres).
-     accent & accent-deep terlalu gelap di sana (1.57 dan 1.14 vs #004E89).
-     Nilai ini 6.59 vs navy dan 8.98 vs navy-deep. */
-  --color-accent-on-dark: #8FF3E7;
+  /* Accent = forest green (hue 148°).
+     Sebelumnya teal #0F766E (hue 175°) hanya 30° dari secondary/navy (206°),
+     jadi kedua warna saling berebut wilayah dan terlihat "nyaris sama tapi
+     tidak sama". Hijau daun ini 58° dari navy dan 131° dari oranye, jadi
+     benar-benar berdiri sendiri sebagai aksen ketiga. */
+  --color-accent: #33694C;
+  --color-accent-deep: #24523B;
+  --color-accent-soft: #E2EEE7;
+  --color-accent-bright: #5FA97F;
+  /* Hijau pucat untuk TEKS di atas latar gelap (footer, kartu navy, panel
+     progres). accent & accent-deep terlalu gelap di sana (1.57 dan 1.14 vs
+     #004E89). Nilai ini 6.60 vs navy. */
+  --color-accent-on-dark: #B5EFCC;
   --color-cream: #FFF9F5;
   --color-sand: #F5EDE6;
   --color-ink: #263244;
