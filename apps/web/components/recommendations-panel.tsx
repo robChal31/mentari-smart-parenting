@@ -32,16 +32,16 @@ export async function RecommendationsPanel({
   return (
     <aside
       aria-label={dict.recommendations.sidebarAria}
-      className="rounded-3xl border-2 border-accent/25 bg-gradient-to-b from-accent-soft/50 to-white p-4"
+      className="rounded-3xl border border-primary/15 bg-gradient-to-b from-primary-soft/45 to-white p-4 shadow-[0_2px_10px_rgba(38,50,68,0.04)]"
     >
       <div className="mb-3 flex items-start justify-between gap-2">
         <div>
           <p className="inline-flex items-center gap-1.5 font-heading text-sm font-extrabold text-secondary">
-            <BadgeCheck size={16} className="text-accent-deep" aria-hidden /> {resolvedTitle}
+            <BadgeCheck size={16} className="text-primary" aria-hidden /> {resolvedTitle}
           </p>
           <p className="mt-0.5 text-[10px] leading-4 text-muted">{resolvedSubtitle}</p>
         </div>
-        <span className="shrink-0 rounded-full border border-accent/40 px-2 py-0.5 text-[8px] font-bold uppercase tracking-[0.14em] text-accent-deep">
+        <span className="shrink-0 rounded-full border border-primary/25 px-2 py-0.5 text-[8px] font-bold uppercase tracking-[0.14em] text-primary-deep">
           {dict.recommendations.sponsored}
         </span>
       </div>

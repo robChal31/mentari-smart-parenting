@@ -6,6 +6,7 @@ import {
   BarChart3, FileText, GraduationCap, MessagesSquare, Package, PenLine, ShieldAlert, Users,
 } from "lucide-react";
 import { useAuth } from "@/components/auth-provider";
+import { AdminDashboardSkeleton } from "@/components/page-skeleton";
 import { useDictionary } from "@/components/i18n-provider";
 import { OverviewTab } from "@/components/admin/overview-tab";
 import { ContentsTab } from "@/components/admin/contents-tab";
@@ -31,8 +32,13 @@ export default function AdminPage() {
   const isAdmin = user?.role === "ADMIN";
 
   if (isLoading || !user) {
-    return <div className="mx-auto max-w-6xl px-4 py-16" aria-busy="true"><div className="skeleton h-10 w-72" /></div>;
+    return (
+      <div className="mx-auto max-w-6xl px-4 py-8 sm:px-6" aria-busy="true" aria-label={dict.errors.loadingAria}>
+        <AdminDashboardSkeleton />
+      </div>
+    );
   }
+
   if (!allowed) {
     return (
       <div className="mx-auto max-w-md px-4 py-24 text-center">

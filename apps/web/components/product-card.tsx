@@ -82,7 +82,7 @@ export function ProductCard({
 
   return (
     <div
-      className={`flex w-full flex-col gap-2 rounded-2xl border border-accent/30 bg-accent-soft/40 p-3 ring-1 ring-accent/10 ${
+      className={`flex w-full flex-col gap-2 rounded-2xl border border-primary/12 bg-cream p-3 ${
         compact ? "" : "h-full"
       }`}
     >
@@ -112,7 +112,7 @@ export function ProductCard({
           </span>
         )}
         <div className="min-w-0">
-          <p className="text-[9px] font-extrabold uppercase tracking-[0.14em] text-accent-deep">
+          <p className="text-[9px] font-extrabold uppercase tracking-[0.14em] text-primary-deep">
             {(dict.productTypes as Record<string, string>)[product.type] ?? product.type}
           </p>
           <p className={`${compact ? "line-clamp-2 text-xs" : "line-clamp-2 text-[13px]"} font-bold leading-snug text-ink`}>

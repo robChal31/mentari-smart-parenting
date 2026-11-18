@@ -36,7 +36,33 @@ export function OverviewTab() {
 
   if (failed) return <AdminErrorBanner onRetry={load} />;
   if (!data) {
-    return <div className="grid gap-4 sm:grid-cols-4">{Array.from({ length: 8 }).map((_, i) => <div key={i} className="skeleton h-24 rounded-3xl" />)}</div>;
+    /* Ditiru dari grid kartu asli (2/3/6 kolom, tiap kartu: ikon 9x9, angka, label),
+       lalu dua panel grafik/tabel di bawahnya. Versi lama hanya 8 kotak h-24 datar. */
+    return (
+      <div className="space-y-6" aria-busy="true">
+        <div className="grid grid-cols-2 gap-4 sm:grid-cols-3 lg:grid-cols-6">
+          {Array.from({ length: 6 }).map((_, i) => (
+            <div key={i} className="rounded-3xl border border-sand bg-white p-4">
+              <div className="skeleton-on-card h-9 w-9 rounded-2xl" />
+              <div className="skeleton-on-card mt-2 h-6 w-12" />
+              <div className="skeleton-on-card mt-1.5 h-2.5 w-20" />
+            </div>
+          ))}
+        </div>
+        <div className="grid gap-4 lg:grid-cols-2">
+          {[0, 1].map((i) => (
+            <div key={i} className="rounded-3xl border border-sand bg-white p-5">
+              <div className="skeleton-on-card h-4 w-32" />
+              <div className="mt-4 flex items-end gap-2">
+                {[40, 68, 52, 80, 60, 90, 72].map((h, j) => (
+                  <div key={j} className="skeleton-on-card flex-1 rounded-t-lg" style={{ height: h }} />
+                ))}
+              </div>
+            </div>
+          ))}
+        </div>
+      </div>
+    );
   }
 
   const { stats, viewsByDay, topContents, topProducts } = data;
