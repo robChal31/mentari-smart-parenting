@@ -1,7 +1,7 @@
 import Link from "next/link";
 import Image from "next/image";
 import {
-  ArrowRight, Baby, BadgeCheck, BookOpenText, Flame, Lock, MessagesSquare,
+  ArrowRight, Baby, BadgeCheck, BookOpenText, Flame, Heart, Lock, MessagesSquare,
   Rocket, ShieldCheck, Sparkles, Stethoscope, UserRoundCheck,
 } from "lucide-react";
 import { api } from "@/lib/api";
@@ -36,8 +36,11 @@ export default async function HomePage() {
         <div aria-hidden className="pointer-events-none absolute -left-24 bottom-0 h-80 w-80 rounded-full bg-accent-bright/10 blur-3xl" />
         <div className="mx-auto grid max-w-7xl items-center gap-8 px-4 py-10 sm:px-6 lg:grid-cols-2 lg:gap-12 lg:py-16">
           <div className="fade-up">
-            <p className="inline-flex items-center gap-2 rounded-full border border-accent/30 bg-accent-soft px-3 py-1.5 text-[11px] font-bold uppercase tracking-[0.14em] text-accent-deep">
+            {/* <p className="inline-flex items-center gap-2 rounded-full border border-accent/30 bg-accent-soft px-3 py-1.5 text-[11px] font-bold uppercase tracking-[0.14em] text-accent-deep">
               <Stethoscope size={13} aria-hidden /> {dict.home.heroBadge}
+            </p> */}
+            <p className="inline-flex items-center gap-2 rounded-full border border-accent/30 bg-accent-soft px-3 py-1.5 text-[11px] font-bold uppercase tracking-[0.14em] text-accent-deep">
+              <Heart size={13} aria-hidden /> {dict.home.heroBadge2}
             </p>
             <h1 className="mt-5 font-heading text-4xl font-extrabold leading-[1.12] tracking-tight text-secondary sm:text-5xl xl:text-[3.6rem]">
               {dict.home.heroTitleA} <span className="text-primary">{dict.home.heroTitleB}</span>{dict.home.heroTitleC}

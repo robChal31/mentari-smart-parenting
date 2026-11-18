@@ -101,6 +101,7 @@ const en: Dictionary = {
   },
   home: {
     heroBadge: "Validated by psychologists & paediatricians",
+    heroBadge2: "Made with love by Mentari's expert team",
     heroTitleA: "Raise a",
     heroTitleB: "Bright & Happy",
     heroTitleC: " Child, Starting Today",

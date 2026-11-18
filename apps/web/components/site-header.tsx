@@ -93,7 +93,7 @@ export function SiteHeader() {
   );
 
   return (
-    <header className="sticky top-0 z-50 border-b border-sand bg-cream/90 backdrop-blur-lg">
+    <header className="sticky top-0 z-50 border-b border-sand bg-primary-soft/70 backdrop-blur-lg">
       <div className="mx-auto max-w-7xl px-4 sm:px-6">
         <div className="flex h-16 items-center gap-3 sm:h-[4.25rem] sm:gap-6">
           <Logo />

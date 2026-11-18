@@ -99,6 +99,7 @@ const id = {
   },
   home: {
     heroBadge: "Tervalidasi psikolog & dokter anak",
+    heroBadge2: "Dibuat dengan cinta oleh tim ahli Mentari",
     heroTitleA: "Tumbuhkan Anak",
     heroTitleB: "Cerdas & Bahagia",
     heroTitleC: ", Mulai Hari Ini",

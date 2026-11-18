@@ -38,10 +38,10 @@ export default async function RootLayout({ children }: { children: React.ReactNo
 
   return (
     <html lang={locale}>
-      <body className="flex min-h-screen flex-col bg-cream text-ink antialiased">
+      <body className="flex min-h-screen flex-col text-ink antialiased">
         <a
           href="#konten-utama"
-          className="sr-only focus:not-sr-only focus:absolute focus:left-4 focus:top-4 focus:z-[60] focus:rounded-xl focus:bg-secondary focus:px-4 focus:py-2 focus:text-white"
+          className="sr-only focus:not-sr-only focus:absolute focus:left-4 focus:top-4 focus:z-60 focus:rounded-xl focus:bg-secondary focus:px-4 focus:py-2 focus:text-white"
         >
           {dict.nav.skipToContent}
         </a>
