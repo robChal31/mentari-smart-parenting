@@ -28,7 +28,7 @@ export function PathProgress({ slug, total }: { slug: string; total: number }) {
         <span>{format(dict.paths.progressDetail, { done, total, pct })}</span>
       </div>
       <div className="mt-2 h-2.5 w-full overflow-hidden rounded-full bg-white/15">
-        <div className="h-full rounded-full bg-gradient-to-r from-accent to-[#7EF0E2] transition-all duration-700" style={{ width: `${pct}%` }} />
+        <div className="h-full rounded-full bg-gradient-to-r from-accent-on-dark to-[#7EF0E2] transition-all duration-700" style={{ width: `${pct}%` }} />
       </div>
     </div>
   );

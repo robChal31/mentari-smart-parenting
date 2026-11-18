@@ -71,7 +71,7 @@ export default async function LearningPathsPage() {
                   )}
                 </div>
                 <div className="relative flex min-w-0 flex-1 flex-col p-6 sm:p-7">
-                  <p className="inline-flex w-fit items-center gap-1.5 rounded-full bg-white/10 px-3 py-1.5 text-[9px] font-extrabold uppercase tracking-[0.18em] text-accent">
+                  <p className="inline-flex w-fit items-center gap-1.5 rounded-full bg-white/10 px-3 py-1.5 text-[9px] font-extrabold uppercase tracking-[0.18em] text-accent-on-dark">
                     {difficultyLabel(path.difficulty)}
                     {path.estimatedTime ? <span className="text-white/55"> · {format(dict.paths.minutesTotal, { minutes: path.estimatedTime })}</span> : null}
                   </p>
