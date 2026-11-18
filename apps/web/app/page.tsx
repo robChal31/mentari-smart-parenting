@@ -32,8 +32,8 @@ export default async function HomePage() {
     <>
       {/* ============ HERO ============ */}
       <section className="dot-grid relative overflow-hidden border-b border-sand">
-        <div aria-hidden className="pointer-events-none absolute -right-24 -top-24 h-96 w-96 rounded-full bg-primary/10 blur-3xl" />
-        <div aria-hidden className="pointer-events-none absolute -left-24 bottom-0 h-80 w-80 rounded-full bg-accent/10 blur-3xl" />
+        <div aria-hidden className="pointer-events-none absolute -right-24 -top-24 h-96 w-96 rounded-full bg-primary-bright/10 blur-3xl" />
+        <div aria-hidden className="pointer-events-none absolute -left-24 bottom-0 h-80 w-80 rounded-full bg-accent-bright/10 blur-3xl" />
         <div className="mx-auto grid max-w-7xl items-center gap-8 px-4 py-10 sm:px-6 lg:grid-cols-2 lg:gap-12 lg:py-16">
           <div className="fade-up">
             <p className="inline-flex items-center gap-2 rounded-full border border-accent/30 bg-accent-soft px-3 py-1.5 text-[11px] font-bold uppercase tracking-[0.14em] text-accent-deep">
@@ -190,7 +190,7 @@ export default async function HomePage() {
                 href={`/learning-paths/${path.slug}`}
                 className="group relative overflow-hidden rounded-3xl bg-secondary p-6 text-white transition hover:bg-secondary-deep"
               >
-                <div aria-hidden className="absolute -right-8 -top-8 h-36 w-36 rounded-full bg-accent/20 blur-2xl transition group-hover:bg-accent/30" />
+                <div aria-hidden className="absolute -right-8 -top-8 h-36 w-36 rounded-full bg-accent-bright/20 blur-2xl transition group-hover:bg-accent-bright/30" />
                 <p className="text-[10px] font-extrabold uppercase tracking-[0.18em] text-accent">{path.difficulty} · {path.estimatedTime} {dict.home.minutes}</p>
                 <h3 className="mt-2 font-heading text-xl font-extrabold leading-snug">{path.title}</h3>
                 {path.description && <p className="mt-2 line-clamp-2 max-w-md text-sm leading-6 text-white/75">{path.description}</p>}
@@ -271,7 +271,7 @@ export default async function HomePage() {
 
       {/* ============ FINAL CTA ============ */}
       <section className="mx-auto max-w-7xl px-4 pt-14 sm:px-6">
-        <div className="relative overflow-hidden rounded-[2rem] bg-gradient-to-br from-primary to-[#FF8E53] px-6 py-12 text-center text-white sm:px-12">
+        <div className="relative overflow-hidden rounded-[2rem] bg-gradient-to-br from-primary-bright to-[#FF8E53] px-6 py-12 text-center text-white sm:px-12">
           <div aria-hidden className="absolute -left-10 -top-10 h-40 w-40 rounded-full bg-white/10 blur-2xl" />
           <div aria-hidden className="absolute -bottom-12 right-0 h-48 w-48 rounded-full bg-secondary/20 blur-3xl" />
           <ShieldCheck size={40} className="mx-auto text-[#FFE27A]" aria-hidden />

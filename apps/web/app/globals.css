@@ -13,6 +13,8 @@
    *                         JANGAN dipakai sebagai latar teks.
    *   --color-accent        teal untuk latar/badge. Kontras 5.47 vs putih.
    *                         Untuk teks di atas accent-soft, pakai accent-deep.
+   *   --color-accent-bright teal terang (#2EC4B6). Sama seperti primary-bright:
+   *                         HANYA glow/blob dekoratif, jangan untuk teks.
    *
    * Nilai lama (untuk rollback):
    *   primary #FF6B35 · primary-deep #E8551F · primary-soft #FFE8DD
@@ -28,6 +30,7 @@
   --color-accent: #0F766E;
   --color-accent-deep: #0B5F58;
   --color-accent-soft: #DFF7F4;
+  --color-accent-bright: #2EC4B6;
   --color-cream: #FFF9F5;
   --color-sand: #F5EDE6;
   --color-ink: #263244;

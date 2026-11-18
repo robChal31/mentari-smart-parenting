@@ -264,7 +264,7 @@ function AuthorForm({
       </div>
       <div className="mt-4 flex flex-wrap items-center justify-between gap-3">
         <label className="flex cursor-pointer items-center gap-2 text-xs font-bold text-secondary">
-          <input type="checkbox" checked={isActive} onChange={(e) => setIsActive(e.target.checked)} className="h-4 w-4 accent-[#FF6B35]" />
+          <input type="checkbox" checked={isActive} onChange={(e) => setIsActive(e.target.checked)} className="h-4 w-4 accent-primary-bright" />
           {dict.admin.authorActiveLabel}
         </label>
         <div className="flex items-center gap-2">

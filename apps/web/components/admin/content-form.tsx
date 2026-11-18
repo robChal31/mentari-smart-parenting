@@ -455,7 +455,7 @@ export function ContentForm({
               type="checkbox"
               checked={isFeatured}
               onChange={(e) => setIsFeatured(e.target.checked)}
-              className="h-4 w-4 accent-[#FF6B35]"
+              className="h-4 w-4 accent-primary-bright"
             />
             {dict.admin.featuredContentLabel}
           </label>
@@ -464,7 +464,7 @@ export function ContentForm({
               type="checkbox"
               checked={isPremium}
               onChange={(e) => setIsPremium(e.target.checked)}
-              className="h-4 w-4 accent-[#FF6B35]"
+              className="h-4 w-4 accent-primary-bright"
             />
             {dict.admin.premiumContentLabel}
           </label>
