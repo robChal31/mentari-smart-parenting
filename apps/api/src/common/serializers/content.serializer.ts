@@ -143,7 +143,12 @@ export function serializeAdminContentDetail(c: any): AdminContentDetailDto {
     authorId: c.authorId ?? null,
     categorySlugs: (c.categories ?? []).map((row: any) => (row.category ?? row).slug),
     ageGroupSlugs: (c.ageGroups ?? []).map((row: any) => (row.ageGroup ?? row).slug),
-    recommendedProducts: [],
+    // Mapping manual yang tersimpan, urut sesuai sortOrder — dipakai form admin
+    // untuk menampilkan produk yang sudah dipilih.
+    recommendedProducts: (c.products ?? [])
+      .filter((row: any) => row.product)
+      .sort((a: any, b: any) => (a.sortOrder ?? 0) - (b.sortOrder ?? 0))
+      .map((row: any) => serializeProduct(row.product)),
     relatedContents: [],
   };
 }

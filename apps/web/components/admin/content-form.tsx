@@ -8,7 +8,7 @@ import { Combobox } from "@/components/combobox";
 import { SlugField } from "./slug-field";
 import { FileUploadField } from "./file-upload-field";
 import { normaliseVideoUrl } from "@/lib/format";
-import type { AdminContentDetailDto, AgeGroupDto, AuthorDto, CategoryDto } from "@mentari/shared";
+import type { AdminContentDetailDto, AgeGroupDto, AuthorDto, CategoryDto, ProductDto } from "@mentari/shared";
 
 const CONTENT_TYPES = ["ARTICLE", "VIDEO", "INFOGRAPHIC", "TIPS", "ACTIVITY"] as const;
 const STATUSES = ["DRAFT", "PUBLISHED", "ARCHIVED"] as const;
@@ -65,9 +65,15 @@ export function ContentForm({
     initial?.ageGroupSlugs ?? (initial?.ageGroups ?? []).map((g) => g.slug),
   );
 
+  // Produk yang dikurasi untuk konten ini, urut = urutan tampil.
+  const [selectedProducts, setSelectedProducts] = useState<string[]>(
+    (initial?.recommendedProducts ?? []).map((p) => p.id),
+  );
+
   const [categories, setCategories] = useState<CategoryDto[]>([]);
   const [ageGroups, setAgeGroups] = useState<AgeGroupDto[]>([]);
   const [authors, setAuthors] = useState<AuthorDto[]>([]);
+  const [products, setProducts] = useState<ProductDto[]>([]);
   const [busy, setBusy] = useState(false);
   const [error, setError] = useState<string | null>(null);
 
@@ -76,6 +82,10 @@ export function ContentForm({
       .then((rows) => setCategories(rows.flatMap((c) => [c, ...(c.children ?? [])])))
       .catch(() => undefined);
     apiData<AgeGroupDto[]>("/age-groups", { auth: false }).then(setAgeGroups).catch(() => undefined);
+    // limit besar: panel admin butuh seluruh katalog produk aktif untuk dipilih.
+    apiData<ProductDto[]>("/admin/products?limit=200")
+      .then((rows) => setProducts(rows))
+      .catch(() => undefined);
     apiData<AuthorDto[]>("/admin/authors?limit=100")
       .then((rows) => setAuthors(rows))
       .catch(() => undefined);
@@ -129,6 +139,7 @@ export function ContentForm({
       categorySlugs: selectedCategories,
       ageGroupSlugs: selectedAges,
       tags: tags.split(",").map((t) => t.trim()).filter(Boolean),
+      productIds: selectedProducts,
     };
 
     try {
@@ -358,6 +369,57 @@ export function ContentForm({
                 </button>
               );
             })}
+          </div>
+        </fieldset>
+      )}
+
+      {products.length > 0 && (
+        <fieldset className="mt-3">
+          <legend className={labelClass}>{dict.admin.contentProductsLabel}</legend>
+          <p className="mt-1 text-[10px] leading-4 text-muted">{dict.admin.contentProductsHint}</p>
+
+          {selectedProducts.length > 0 && (
+            <ol className="mt-2 flex flex-col gap-1.5">
+              {selectedProducts.map((id, index) => {
+                const product = products.find((row) => row.id === id);
+                return (
+                  <li
+                    key={id}
+                    className="flex items-center gap-2 rounded-xl border border-accent/30 bg-accent-soft/40 px-2.5 py-1.5"
+                  >
+                    <span className="grid h-5 w-5 shrink-0 place-items-center rounded-full bg-accent text-[10px] font-extrabold text-white">
+                      {index + 1}
+                    </span>
+                    <span className="flex-1 truncate text-[11px] font-bold text-secondary">
+                      {product?.name ?? id}
+                    </span>
+                    <button
+                      type="button"
+                      onClick={() => setSelectedProducts((prev) => prev.filter((p) => p !== id))}
+                      className="shrink-0 rounded-full px-1.5 text-[13px] font-bold leading-none text-muted transition hover:text-primary"
+                      aria-label={`${dict.admin.removeProduct}: ${product?.name ?? id}`}
+                    >
+                      ×
+                    </button>
+                  </li>
+                );
+              })}
+            </ol>
+          )}
+
+          <div className="mt-2 flex flex-wrap gap-1.5">
+            {products
+              .filter((product) => !selectedProducts.includes(product.id))
+              .map((product) => (
+                <button
+                  key={product.id}
+                  type="button"
+                  onClick={() => setSelectedProducts((prev) => [...prev, product.id])}
+                  className="rounded-full border border-sand bg-white px-3 py-1.5 text-[10px] font-bold text-secondary transition hover:border-accent/50 hover:text-accent-deep"
+                >
+                  + {product.name}
+                </button>
+              ))}
           </div>
         </fieldset>
       )}

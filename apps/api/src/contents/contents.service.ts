@@ -4,13 +4,15 @@ import type { ContentDetailDto, ContentListQuery } from '@mentari/shared';
 import {
   contentInclude,
   serializeContentSummary,
-  serializeProduct,
 } from '../common/serializers/content.serializer';
+import { RecommendationsService } from '../recommendations/recommendations.service';
 
 const PUBLISHED = 'PUBLISHED';
 
 @Injectable()
 export class ContentsService {
+  constructor(private readonly recommendations: RecommendationsService) {}
+
   async list(query: ContentListQuery & { page: number; limit: number }) {
     const { page, limit } = query;
     const where: Record<string, unknown> = {
@@ -69,7 +71,7 @@ export class ContentsService {
     });
     if (!row) return null;
 
-    const [relatedRaw, manualProducts] = await Promise.all([
+    const [relatedRaw, recommendedProducts] = await Promise.all([
       prisma.content.findMany({
         where: {
           status: PUBLISHED,
@@ -83,11 +85,10 @@ export class ContentsService {
         orderBy: { viewCount: 'desc' },
         take: 4,
       }),
-      prisma.contentProduct.findMany({
-        where: { contentId: row.id },
-        include: { product: { include: { ageGroups: { include: { ageGroup: true } } } } },
-        orderBy: [{ placement: 'asc' }, { relevanceScore: 'desc' }, { sortOrder: 'asc' }],
-      }),
+      // Satu sumber kebenaran: mapping manual dulu, lalu usia, lalu unggulan.
+      // Halaman hanya menampilkan 3, tapi API mengirim sampai 6 supaya klien
+      // lain (mis. app mobile) tidak perlu memanggil ulang.
+      this.recommendations.forContent(row.id, 6),
     ]);
 
     return {
@@ -96,7 +97,7 @@ export class ContentsService {
       videoUrl: row.videoUrl ?? null,
       metaTitle: row.metaTitle ?? null,
       metaDescription: row.metaDescription ?? null,
-      recommendedProducts: manualProducts.filter((r) => r.product && (r.product as any).isActive !== false && !(r.product as any).deletedAt).map((r) => serializeProduct(r.product)),
+      recommendedProducts: recommendedProducts.map((r) => r.product),
       relatedContents: relatedRaw.map(serializeContentSummary),
     };
   }

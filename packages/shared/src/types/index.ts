@@ -148,6 +148,11 @@ export interface AdminContentDetailDto extends ContentDetailDto {
   authorId: string | null;
   categorySlugs: string[];
   ageGroupSlugs: string[];
+  /**
+   * Mapping produk manual yang tersimpan (urut sesuai sortOrder).
+   * Diwarisi dari ContentDetailDto; di sini isinya HANYA mapping manual,
+   * tanpa fallback usia — form admin butuh tahu persis apa yang dikurasi.
+   */
 }
 
 export interface ContentListQuery {

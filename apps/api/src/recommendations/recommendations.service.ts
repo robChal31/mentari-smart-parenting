@@ -1,16 +1,28 @@
 import { Injectable } from '@nestjs/common';
 import { prisma } from '@mentari/database';
-import type { RecommendationDto } from '@mentari/shared';
+import type { ProductDto, RecommendationDto } from '@mentari/shared';
 import { serializeProduct } from '../common/serializers/content.serializer';
 
 /**
- * Recommendation strategy (priority order, per PRD §F3):
- *  1. Manual content↔product mappings (ContentProduct) — highest priority
- *  2. Products overlapping the content's age groups
- *  3. Featured products (fallback)
+ * Rekomendasi produk untuk sebuah konten.
+ *
+ * Aturan (permintaan produk, bukan sekadar default):
+ *   1. Kalau konten punya mapping manual (dipilih saat create/edit konten),
+ *      mapping itu yang dipakai — TIDAK ditambah apa pun lagi.
+ *   2. Kalau tidak ada mapping, ambil produk yang rentang usianya beririsan
+ *      dengan rentang usia yang dipilih di konten.
+ *   3. Kalau konten belum punya usia sama sekali (atau tidak ada produk yang
+ *      cocok), jatuh ke produk unggulan supaya panel tidak kosong.
+ *
+ * Poin 1 sengaja tidak menambal hasil manual dengan hasil usia: campuran
+ * keduanya membuat kurasi editor tidak bisa diprediksi.
  */
 @Injectable()
 export class RecommendationsService {
+  /**
+   * @param contentId id konten
+   * @param limit     jumlah maksimum yang dikembalikan
+   */
   async forContent(contentId: string, limit = 6): Promise<RecommendationDto[]> {
     const manual = await prisma.contentProduct.findMany({
       where: { contentId },
@@ -20,71 +32,82 @@ export class RecommendationsService {
       orderBy: [{ sortOrder: 'asc' }, { relevanceScore: 'desc' }],
     });
 
-    const results: RecommendationDto[] = manual
+    const manualProducts = manual
       .filter((row) => row.product && row.product.isActive !== false && !row.product.deletedAt)
-      .map((row) => ({
+      .map<RecommendationDto>((row) => ({
         product: serializeProduct(row.product),
         placement: row.placement as RecommendationDto['placement'],
         relevanceScore: row.relevanceScore,
         source: 'manual',
       }));
 
-    const needed = limit - results.length;
-    if (needed <= 0) return results.slice(0, limit);
-
-    const content = await prisma.content.findUnique({
-      where: { id: contentId },
-      include: { ageGroups: true },
+    // Prioritaskan yang placement-nya SIDEBAR (satu-satunya yang dirender UI),
+    // tapi jangan buang sisanya — urutan tetap deterministik.
+    manualProducts.sort((a, b) => {
+      if (a.placement === b.placement) return 0;
+      if (a.placement === 'SIDEBAR') return -1;
+      if (b.placement === 'SIDEBAR') return 1;
+      return 0;
     });
-    const ageGroupIds = content?.ageGroups.map((row) => row.ageGroupId) ?? [];
 
-    const existingIds = new Set(results.map((r) => r.product.id));
+    if (manualProducts.length > 0) return manualProducts.slice(0, limit);
 
-    if (ageGroupIds.length > 0) {
-      const matches = await prisma.product.findMany({
-        where: {
-          isActive: true,
-          deletedAt: null,
-          id: { notIn: [...existingIds] },
-          ageGroups: { some: { ageGroupId: { in: ageGroupIds } } },
-        },
-        include: { ageGroups: { include: { ageGroup: true } } },
-        orderBy: [{ sortOrder: 'asc' }],
-        take: needed,
-      });
-      for (const product of matches) {
-        results.push({
-          product: serializeProduct(product),
-          placement: 'SIDEBAR',
-          relevanceScore: 0.6,
-          source: 'age_group',
-        });
-        existingIds.add(product.id);
-      }
-    }
+    const byAge = await this.byContentAgeGroups(contentId, limit);
+    if (byAge.length > 0) return byAge;
 
-    const remaining = limit - results.length;
-    if (remaining > 0) {
-      const featured = await prisma.product.findMany({
-        where: { isActive: true, deletedAt: null, isFeatured: true, id: { notIn: [...existingIds] } },
-        include: { ageGroups: { include: { ageGroup: true } } },
-        orderBy: [{ sortOrder: 'asc' }],
-        take: remaining,
-      });
-      for (const product of featured) {
-        results.push({
-          product: serializeProduct(product),
-          placement: 'SIDEBAR',
-          relevanceScore: 0.4,
-          source: 'featured',
-        });
-      }
-    }
-
-    return results.slice(0, limit);
+    return this.featuredFallback(limit);
   }
 
-  /** Products recommended for a user based on their children's age groups. */
+  /** Produk yang age group-nya beririsan dengan age group konten. */
+  private async byContentAgeGroups(contentId: string, limit: number): Promise<RecommendationDto[]> {
+    const content = await prisma.content.findUnique({
+      where: { id: contentId },
+      select: { ageGroups: { select: { ageGroupId: true } } },
+    });
+    const ageGroupIds = content?.ageGroups.map((row) => row.ageGroupId) ?? [];
+    if (ageGroupIds.length === 0) return [];
+
+    const products = await prisma.product.findMany({
+      where: {
+        isActive: true,
+        deletedAt: null,
+        ageGroups: { some: { ageGroupId: { in: ageGroupIds } } },
+      },
+      include: { ageGroups: { include: { ageGroup: true } } },
+      orderBy: [{ isFeatured: 'desc' }, { sortOrder: 'asc' }, { name: 'asc' }],
+      take: limit,
+    });
+
+    return products.map((product) => ({
+      product: serializeProduct(product),
+      placement: 'SIDEBAR' as const,
+      relevanceScore: 0.6,
+      source: 'age_group' as const,
+    }));
+  }
+
+  private async featuredFallback(limit: number): Promise<RecommendationDto[]> {
+    const products = await prisma.product.findMany({
+      where: { isActive: true, deletedAt: null, isFeatured: true },
+      include: { ageGroups: { include: { ageGroup: true } } },
+      orderBy: [{ sortOrder: 'asc' }, { name: 'asc' }],
+      take: limit,
+    });
+    return products.map((product) => ({
+      product: serializeProduct(product),
+      placement: 'SIDEBAR' as const,
+      relevanceScore: 0.4,
+      source: 'featured' as const,
+    }));
+  }
+
+  /**
+   * Produk untuk seorang user, berdasarkan usia anak-anaknya.
+   *
+   * CATATAN: saat ini tidak dipanggil dari web (hanya tersedia sebagai
+   * endpoint). Dibiarkan apa adanya kecuali deduplikasi: anak dengan usia
+   * yang sama tidak boleh membuat produk yang sama muncul dua kali.
+   */
   async personalized(userId: string, limit = 6): Promise<RecommendationDto[]> {
     const children = await prisma.child.findMany({ where: { userId } });
     const now = new Date();
@@ -118,11 +141,18 @@ export class RecommendationsService {
           take: limit,
         });
 
-    return products.map((product) => ({
-      product: serializeProduct(product),
-      placement: 'SIDEBAR' as const,
-      relevanceScore: 0.7,
-      source: 'age_group' as const,
-    }));
+    const seen = new Set<string>();
+    const results: RecommendationDto[] = [];
+    for (const product of products) {
+      if (seen.has(product.id)) continue;
+      seen.add(product.id);
+      results.push({
+        product: serializeProduct(product) as ProductDto,
+        placement: 'SIDEBAR',
+        relevanceScore: 0.7,
+        source: 'age_group',
+      });
+    }
+    return results;
   }
 }
