@@ -30,7 +30,7 @@ export async function SiteFooter() {
           <p className="mt-3 text-sm leading-6 text-white/65">{dict.footer.tagline}</p>
         </div>
         <nav aria-label={dict.footer.exploreCol}>
-          <p className="text-xs font-bold uppercase tracking-[0.16em] text-accent">{dict.footer.exploreCol}</p>
+          <p className="text-xs font-bold uppercase tracking-[0.16em] text-accent-on-dark">{dict.footer.exploreCol}</p>
           <FooterLinks links={[
             ["/contents", dict.footer.articles],
             ["/learning-paths", dict.nav.learningPath],
@@ -40,7 +40,7 @@ export async function SiteFooter() {
           ]} />
         </nav>
         <nav aria-label={dict.footer.helpCol}>
-          <p className="text-xs font-bold uppercase tracking-[0.16em] text-accent">{dict.footer.helpCol}</p>
+          <p className="text-xs font-bold uppercase tracking-[0.16em] text-accent-on-dark">{dict.footer.helpCol}</p>
           <FooterLinks links={[
             ["/about", dict.footer.aboutUs],
             ["/help", dict.footer.helpFaq],
@@ -49,7 +49,7 @@ export async function SiteFooter() {
           ]} />
         </nav>
         <div>
-          <p className="text-xs font-bold uppercase tracking-[0.16em] text-accent">{dict.footer.parentsCol}</p>
+          <p className="text-xs font-bold uppercase tracking-[0.16em] text-accent-on-dark">{dict.footer.parentsCol}</p>
           <FooterLinks links={[
             ["/register", dict.footer.createAccount],
             ["/login", dict.nav.login],
@@ -60,7 +60,7 @@ export async function SiteFooter() {
       </div>
 
       <div className="border-t border-white/10">
-        <div className="mx-auto flex max-w-7xl flex-col gap-2 px-4 py-4 text-xs text-white/50 sm:flex-row sm:items-center sm:justify-center sm:px-6">
+        <div className="mx-auto flex max-w-7xl flex-col gap-2 px-4 py-4 text-xs text-white/70 sm:flex-row sm:items-center sm:justify-center sm:px-6">
           <p>© {new Date().getFullYear()} Mentari Smart Parent · Mentari Group. {dict.footer.rights}</p>
         </div>
       </div>

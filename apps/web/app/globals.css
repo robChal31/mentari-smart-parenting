@@ -15,6 +15,9 @@
    *                         Untuk teks di atas accent-soft, pakai accent-deep.
    *   --color-accent-bright teal terang (#2EC4B6). Sama seperti primary-bright:
    *                         HANYA glow/blob dekoratif, jangan untuk teks.
+   *   --color-accent-on-dark teal pucat (#8FF3E7). HANYA untuk TEKS di atas
+   *                         latar gelap (navy). Jangan dipakai di latar terang
+   *                         (kontras cuma 1.30 vs putih).
    *
    * Nilai lama (untuk rollback):
    *   primary #FF6B35 · primary-deep #E8551F · primary-soft #FFE8DD
@@ -31,6 +34,10 @@
   --color-accent-deep: #0B5F58;
   --color-accent-soft: #DFF7F4;
   --color-accent-bright: #2EC4B6;
+  /* Teal untuk TEKS di atas latar gelap (footer, kartu navy, panel progres).
+     accent & accent-deep terlalu gelap di sana (1.57 dan 1.14 vs #004E89).
+     Nilai ini 6.59 vs navy dan 8.98 vs navy-deep. */
+  --color-accent-on-dark: #8FF3E7;
   --color-cream: #FFF9F5;
   --color-sand: #F5EDE6;
   --color-ink: #263244;

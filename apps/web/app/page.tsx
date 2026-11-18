@@ -191,7 +191,7 @@ export default async function HomePage() {
                 className="group relative overflow-hidden rounded-3xl bg-secondary p-6 text-white transition hover:bg-secondary-deep"
               >
                 <div aria-hidden className="absolute -right-8 -top-8 h-36 w-36 rounded-full bg-accent-bright/20 blur-2xl transition group-hover:bg-accent-bright/30" />
-                <p className="text-[10px] font-extrabold uppercase tracking-[0.18em] text-accent">{path.difficulty} · {path.estimatedTime} {dict.home.minutes}</p>
+                <p className="text-[10px] font-extrabold uppercase tracking-[0.18em] text-accent-on-dark">{path.difficulty} · {path.estimatedTime} {dict.home.minutes}</p>
                 <h3 className="mt-2 font-heading text-xl font-extrabold leading-snug">{path.title}</h3>
                 {path.description && <p className="mt-2 line-clamp-2 max-w-md text-sm leading-6 text-white/75">{path.description}</p>}
                 <span className="mt-4 inline-flex items-center gap-2 text-xs font-bold text-[#FFD9A0]">
