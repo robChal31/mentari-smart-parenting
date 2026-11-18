@@ -180,6 +180,45 @@ export class AdminService {
     }
   }
 
+  /**
+   * Sinkronkan rekomendasi produk untuk konten ini.
+   *
+   * `undefined` = field tidak dikirim (PATCH parsial) → mapping lama dibiarkan.
+   * `[]`        = dikirim sebagai array kosong → semua mapping dihapus, sehingga
+   *               rekomendasi otomatis jatuh ke pencocokan rentang usia.
+   *
+   * Urutan array menentukan `sortOrder`, jadi urutan pilihan editor di form
+   * adalah urutan tampil di panel rekomendasi.
+   */
+  private async syncContentProducts(contentId: string, input: UpdateContentInput | CreateContentInput) {
+    if (input.productIds === undefined) return;
+
+    // Dedupe sambil mempertahankan urutan pilihan pertama.
+    const orderedIds = [...new Set(input.productIds)];
+
+    // Hanya produk yang benar-benar ada yang boleh masuk; id asing diabaikan
+    // supaya satu id salah tidak menggagalkan seluruh penyimpanan konten.
+    const found = orderedIds.length
+      ? await prisma.product.findMany({ where: { id: { in: orderedIds } }, select: { id: true } })
+      : [];
+    const valid = new Set(found.map((row) => row.id));
+
+    await prisma.contentProduct.deleteMany({ where: { contentId } });
+    if (valid.size === 0) return;
+
+    await prisma.contentProduct.createMany({
+      data: orderedIds
+        .filter((id) => valid.has(id))
+        .map((productId, index) => ({
+          contentId,
+          productId,
+          placement: 'SIDEBAR' as const,
+          relevanceScore: 1.0,
+          sortOrder: index,
+        })),
+    });
+  }
+
   async createContent(input: CreateContentInput) {
     const slug = input.slug ?? await uniqueSlug(input.title, async (s) => Boolean(await prisma.content.findUnique({ where: { slug: s } })));
     if (await prisma.content.findUnique({ where: { slug } })) {
@@ -197,12 +236,25 @@ export class AdminService {
       },
     });
     await this.syncContentTaxonomy(content.id, input);
+    await this.syncContentProducts(content.id, input);
     return await this.findContent(content.id);
   }
 
   /** Admin detail — includes drafts, body, video, SEO fields and taxonomy slugs. */
   async findContent(id: string) {
-    const content = await prisma.content.findUnique({ where: { id }, include: contentInclude });
+    const content = await prisma.content.findUnique({
+      where: { id },
+      // `products` hanya dibutuhkan form admin (menampilkan rekomendasi yang
+      // sudah dipilih). Tidak dimasukkan ke `contentInclude` global supaya
+      // listing publik tidak ikut menanggung join ini.
+      include: {
+        ...contentInclude,
+        products: {
+          include: { product: { include: { ageGroups: { include: { ageGroup: true } } } } },
+          orderBy: { sortOrder: 'asc' as const },
+        },
+      },
+    });
     if (!content) throw new NotFoundException({ code: 'NOT_FOUND', message: 'Konten tidak ditemukan.' });
     return serializeAdminContentDetail(content);
   }
@@ -218,6 +270,7 @@ export class AdminService {
     }
     await prisma.content.update({ where: { id }, data });
     await this.syncContentTaxonomy(id, input);
+    await this.syncContentProducts(id, input);
     return await this.findContent(id);
   }
 

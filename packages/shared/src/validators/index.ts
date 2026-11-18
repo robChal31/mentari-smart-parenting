@@ -62,6 +62,11 @@ export const createContentSchema = z.object({
   categorySlugs: z.array(z.string()).default([]),
   ageGroupSlugs: z.array(z.string()).default([]),
   tags: z.array(z.string()).default([]),
+  // Produk yang direkomendasikan untuk konten ini, dipilih saat membuat/
+  // mengedit konten. Urutan array = urutan tampil (sortOrder).
+  // `undefined` = jangan sentuh mapping yang sudah ada (penting untuk PATCH);
+  // `[]` = kosongkan semua mapping, sehingga rekomendasi jatuh ke usia.
+  productIds: z.array(uuidSchema).max(24).optional(),
 });
 export type CreateContentInput = z.infer<typeof createContentSchema>;
 export const updateContentSchema = createContentSchema.partial();

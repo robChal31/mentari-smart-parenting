@@ -573,6 +573,10 @@ const en: Dictionary = {
     tagsLabel: "Tags (comma separated)",
     thumbnailPreview: "Thumbnail preview",
     categoriesLabel: "Categories",
+    contentProductsLabel: "Product recommendations",
+    contentProductsHint:
+      "Pick the products shown in the \u201CRecommended by Mentari\u201D panel on this content. Selection order = display order. Leave empty to auto-match products by the \u201CSuitable ages\u201D above.",
+    removeProduct: "Remove product",
     seoSection: "SEO & metadata (optional)",
     metaTitleLabel: "Meta title",
     metaDescriptionLabel: "Meta description",

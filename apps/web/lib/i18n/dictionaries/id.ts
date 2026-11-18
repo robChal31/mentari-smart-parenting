@@ -571,6 +571,10 @@ const id = {
     tagsLabel: "Tag (pisahkan dengan koma)",
     thumbnailPreview: "Pratinjau thumbnail",
     categoriesLabel: "Kategori",
+    contentProductsLabel: "Rekomendasi produk",
+    contentProductsHint:
+      "Pilih produk yang tampil di panel \u201CRekomendasi dari Mentari\u201D pada konten ini. Urutan pilihan = urutan tampil. Kosongkan supaya sistem memilih otomatis dari \u201CCocok untuk usia\u201D di atas.",
+    removeProduct: "Hapus produk",
     seoSection: "SEO & metadata (opsional)",
     metaTitleLabel: "Meta title",
     metaDescriptionLabel: "Meta description",
