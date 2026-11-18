@@ -4,10 +4,18 @@ import { BadgeCheck } from "lucide-react";
 import { getDictionary } from "@/lib/i18n/get-dictionary";
 
 /**
- * "Rekomendasi dari Mentari" — visually distinct, non-intrusive rail for
- * Mentari Group products. Selalu diberi label sesuai panduan AGENTS.md.
- * Prices are intentionally never shown here (per product decision: rekomendasi
- * produk tidak relevan dengan harga).
+ * "Rekomendasi dari Mentari" — panel produk Mentari Group. Selalu diberi label
+ * sponsored sesuai panduan AGENTS.md. Harga sengaja tidak pernah ditampilkan
+ * (keputusan produk: rekomendasi tidak relevan dengan harga).
+ *
+ * Soal warna: sebelumnya panel memakai gradasi primary-soft/45 → putih dengan
+ * kartu bg-cream di dalamnya. Kontras kartu vs panel hanya 1.03, jadi kartu
+ * tidak terbaca sebagai kartu — semuanya melebur jadi satu bidang oranye pucat.
+ * Sekarang dipakai skala kedalaman cream → sand → putih:
+ *   halaman (cream #FFF9F5) → panel (sand #F2E8E0) → kartu (putih).
+ * Kartu jadi terlihat "naik" dari panel (kontras 1.21) tanpa menambah warna
+ * baru — sand sudah jadi token palet. Panel oranye ditolak karena oranye sudah
+ * dipakai 23 tempat untuk tombol, jadi akan terasa ramai.
  */
 export async function RecommendationsPanel({
   products,
@@ -32,16 +40,16 @@ export async function RecommendationsPanel({
   return (
     <aside
       aria-label={dict.recommendations.sidebarAria}
-      className="rounded-3xl border border-primary/15 bg-accent-soft to-white p-4 shadow-[0_2px_10px_rgba(38,50,68,0.04)]"
+      className="rounded-3xl border border-sand bg-[#F2E8E0] p-4 shadow-[0_2px_10px_rgba(38,50,68,0.04)]"
     >
       <div className="mb-3 flex items-start justify-between gap-2">
         <div>
           <p className="inline-flex items-center gap-1.5 font-heading text-sm font-extrabold text-secondary">
             <BadgeCheck size={16} className="text-primary" aria-hidden /> {resolvedTitle}
           </p>
-          <p className="mt-0.5 text-[10px] leading-4 text-muted">{resolvedSubtitle}</p>
+          <p className="mt-0.5 text-[10px] leading-4 text-ink/75">{resolvedSubtitle}</p>
         </div>
-        <span className="shrink-0 rounded-full border border-primary/25 px-2 py-0.5 text-[8px] font-bold uppercase tracking-[0.14em] text-primary-deep">
+        <span className="shrink-0 rounded-full border border-primary/30 bg-white px-2 py-0.5 text-[8px] font-bold uppercase tracking-[0.14em] text-primary-deep">
           {dict.recommendations.sponsored}
         </span>
       </div>

@@ -51,7 +51,7 @@ export default async function Loading() {
         <div className="skeleton h-6 w-48" />
         <div className="mt-4 grid grid-cols-2 gap-4 sm:grid-cols-3 lg:grid-cols-4">
           {Array.from({ length: 4 }).map((_, i) => (
-            <div key={i} className="rounded-2xl border border-primary/12 bg-cream p-3">
+            <div key={i} className="rounded-2xl border border-primary/20 bg-white p-3">
               <div className="skeleton-on-card aspect-[4/3] w-full rounded-xl" />
               <div className="skeleton-on-card mt-2 h-3 w-full" />
               <div className="skeleton-on-card mt-1.5 h-3 w-2/3" />
