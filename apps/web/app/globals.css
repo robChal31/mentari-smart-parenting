@@ -1,15 +1,36 @@
 @import "tailwindcss";
 
 @theme {
-  --color-primary: #FF6B35;
-  --color-primary-deep: #E8551F;
+  /* ------------------------------------------------------------------
+   * PALET — satu-satunya tempat warna didefinisikan.
+   *
+   * Aturan pakai (penting, jangan dicampur):
+   *   --color-primary       teks aksen & latar tombol. WAJIB cukup gelap
+   *                         untuk teks putih: kontras 5.38 vs #FFFFFF.
+   *   --color-primary-bright oranye terang. HANYA untuk elemen grafis yang
+   *                         tidak menopang teks: glow/blob (opacity),
+   *                         gradient dekoratif, logo, dot pattern.
+   *                         JANGAN dipakai sebagai latar teks.
+   *   --color-accent        teal untuk latar/badge. Kontras 5.47 vs putih.
+   *                         Untuk teks di atas accent-soft, pakai accent-deep.
+   *   --color-accent-bright teal terang (#2EC4B6). Sama seperti primary-bright:
+   *                         HANYA glow/blob dekoratif, jangan untuk teks.
+   *
+   * Nilai lama (untuk rollback):
+   *   primary #FF6B35 · primary-deep #E8551F · primary-soft #FFE8DD
+   *   accent  #2EC4B6 · accent-deep  #1FA89A · accent-soft  #DFF7F4
+   * ------------------------------------------------------------------ */
+  --color-primary: #BE3F0C;
+  --color-primary-deep: #9A3007;
   --color-primary-soft: #FFE8DD;
+  --color-primary-bright: #FF6B35;
   --color-secondary: #004E89;
   --color-secondary-deep: #003A66;
   --color-secondary-soft: #E3EEF7;
-  --color-accent: #2EC4B6;
-  --color-accent-deep: #1FA89A;
+  --color-accent: #0F766E;
+  --color-accent-deep: #0B5F58;
   --color-accent-soft: #DFF7F4;
+  --color-accent-bright: #2EC4B6;
   --color-cream: #FFF9F5;
   --color-sand: #F5EDE6;
   --color-ink: #263244;
@@ -41,7 +62,7 @@ h1, h2, h3, h4, h5, .font-heading {
 
 /* Soft dot pattern used behind hero */
 .dot-grid {
-  background-image: radial-gradient(#f3d9cb 1.25px, transparent 1.25px);
+  background-image: radial-gradient(color-mix(in srgb, var(--color-primary-bright) 22%, var(--color-cream)) 1.25px, transparent 1.25px);
   background-size: 22px 22px;
 }
 

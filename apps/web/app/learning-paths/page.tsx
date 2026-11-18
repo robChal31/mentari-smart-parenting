@@ -23,8 +23,8 @@ export default async function LearningPathsPage() {
     <div>
       {/* ===== header band (dot-grid, like the home hero) ===== */}
       <section className="dot-grid relative overflow-hidden border-b border-sand">
-        <div aria-hidden className="pointer-events-none absolute -right-24 -top-24 h-80 w-80 rounded-full bg-primary/10 blur-3xl" />
-        <div aria-hidden className="pointer-events-none absolute -left-24 bottom-0 h-72 w-72 rounded-full bg-accent/10 blur-3xl" />
+        <div aria-hidden className="pointer-events-none absolute -right-24 -top-24 h-80 w-80 rounded-full bg-primary-bright/10 blur-3xl" />
+        <div aria-hidden className="pointer-events-none absolute -left-24 bottom-0 h-72 w-72 rounded-full bg-accent-bright/10 blur-3xl" />
         <div className="relative mx-auto max-w-7xl px-4 py-10 sm:px-6 sm:py-14">
           <p className="inline-flex items-center gap-2 rounded-full border border-accent/30 bg-accent-soft px-3 py-1.5 text-[11px] font-bold uppercase tracking-[0.14em] text-accent-deep">
             <Rocket size={13} aria-hidden /> {dict.paths.kicker}
@@ -49,7 +49,7 @@ export default async function LearningPathsPage() {
                 href={`/learning-paths/${path.slug}`}
                 className="group relative flex flex-col overflow-hidden rounded-3xl bg-secondary text-white ring-1 ring-white/5 transition hover:bg-secondary-deep sm:flex-row"
               >
-                <div aria-hidden className="pointer-events-none absolute -right-10 -top-10 h-44 w-44 rounded-full bg-accent/20 blur-2xl transition group-hover:bg-accent/30" />
+                <div aria-hidden className="pointer-events-none absolute -right-10 -top-10 h-44 w-44 rounded-full bg-accent-bright/20 blur-2xl transition group-hover:bg-accent-bright/30" />
                 {/* artwork — top band on mobile, right panel on sm+ */}
                 <div className="relative h-36 w-full shrink-0 sm:hidden">
                   {path.thumbnailUrl ? (

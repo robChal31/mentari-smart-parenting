@@ -40,7 +40,7 @@ export default function RegisterPage() {
 
   return (
     <div className="mx-auto grid max-w-6xl gap-10 px-4 py-12 sm:px-6 lg:grid-cols-2 lg:py-16">
-      <aside className="hidden flex-col justify-between overflow-hidden rounded-[2rem] bg-gradient-to-br from-primary to-[#FF8E53] p-10 text-white lg:flex">
+      <aside className="hidden flex-col justify-between overflow-hidden rounded-[2rem] bg-gradient-to-br from-primary-bright to-[#FF8E53] p-10 text-white lg:flex">
         <div>
           <Sparkles size={36} className="text-[#FFE27A]" aria-hidden />
           <h1 className="mt-6 font-heading text-3xl font-extrabold leading-snug">{dict.auth.registerSideTitleA}<br />{dict.auth.registerSideTitleB}</h1>
@@ -74,7 +74,7 @@ export default function RegisterPage() {
             <input id="password" type="password" required minLength={8} value={password} onChange={(e) => setPassword(e.target.value)} autoComplete="new-password" placeholder="••••••••" className="mt-1.5 w-full rounded-2xl border border-sand bg-white px-4 py-3 text-sm outline-none transition focus:border-primary focus:ring-2 focus:ring-primary/15" />
           </div>
           <label className="flex cursor-pointer items-start gap-2 text-xs leading-5 text-muted">
-            <input type="checkbox" required checked={agree} onChange={(e) => setAgree(e.target.checked)} className="mt-0.5 h-4 w-4 accent-[#FF6B35]" />
+            <input type="checkbox" required checked={agree} onChange={(e) => setAgree(e.target.checked)} className="mt-0.5 h-4 w-4 accent-primary-bright" />
             <span>
               {dict.auth.agreePrefix} <Link href="/terms" className="font-bold text-secondary hover:underline">{dict.auth.agreeTerms}</Link> {dict.auth.agreeAnd} <Link href="/privacy" className="font-bold text-secondary hover:underline">{dict.auth.agreePrivacy}</Link>{dict.auth.agreeSuffix ? ` ${dict.auth.agreeSuffix}` : ""}
             </span>

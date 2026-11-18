@@ -59,8 +59,8 @@ export default async function LearningPathDetailPage({ params }: { params: Promi
           <>
             {/* subtle star dots (theme dot-grid on dark) */}
             <span aria-hidden className="absolute inset-0" style={{ backgroundImage: "radial-gradient(rgba(255,255,255,0.13) 1.25px, transparent 1.25px)", backgroundSize: "22px 22px" }} />
-            <span aria-hidden className="absolute -right-12 -top-16 h-64 w-64 rounded-full bg-accent/20 blur-3xl" />
-            <span aria-hidden className="absolute -bottom-14 left-1/3 h-56 w-56 rounded-full bg-primary/20 blur-3xl" />
+            <span aria-hidden className="absolute -right-12 -top-16 h-64 w-64 rounded-full bg-accent-bright/20 blur-3xl" />
+            <span aria-hidden className="absolute -bottom-14 left-1/3 h-56 w-56 rounded-full bg-primary-bright/20 blur-3xl" />
             <GraduationCap size={110} strokeWidth={1.1} aria-hidden className="absolute -right-4 bottom-2 text-accent/25" />
           </>
         )}

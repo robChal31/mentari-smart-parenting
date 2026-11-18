@@ -143,11 +143,11 @@ export function ProductForm({
       <div className="mt-4 flex flex-wrap items-center justify-between gap-3">
         <div className="flex flex-wrap items-center gap-4">
           <label className="flex cursor-pointer items-center gap-2 text-xs font-bold text-secondary">
-            <input type="checkbox" checked={isActive} onChange={(e) => setIsActive(e.target.checked)} className="h-4 w-4 accent-[#FF6B35]" />
+            <input type="checkbox" checked={isActive} onChange={(e) => setIsActive(e.target.checked)} className="h-4 w-4 accent-primary-bright" />
             {dict.admin.activeLabel}
           </label>
           <label className="flex cursor-pointer items-center gap-2 text-xs font-bold text-secondary">
-            <input type="checkbox" checked={isFeatured} onChange={(e) => setIsFeatured(e.target.checked)} className="h-4 w-4 accent-[#FF6B35]" />
+            <input type="checkbox" checked={isFeatured} onChange={(e) => setIsFeatured(e.target.checked)} className="h-4 w-4 accent-primary-bright" />
             {dict.admin.featuredLabel}
           </label>
         </div>

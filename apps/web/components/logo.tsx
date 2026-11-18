@@ -8,7 +8,7 @@ export function Logo({ compact = false }: { compact?: boolean }) {
   const dict = useDictionary();
   return (
     <Link href="/" className="group flex items-center gap-2.5" aria-label={dict.logo.homeAria}>
-      <span className="grid h-9 w-9 place-items-center rounded-2xl bg-linear-to-br from-primary to-[#FF8E53] text-white shadow-[0_4px_14px_rgba(255,107,53,0.4)] transition-transform group-hover:scale-105">
+      <span className="grid h-9 w-9 place-items-center rounded-2xl bg-linear-to-br from-primary-bright to-[#FF8E53] text-white shadow-[0_4px_14px_rgba(255,107,53,0.4)] transition-transform group-hover:scale-105">
         <Sun size={20} strokeWidth={2.4} fill="currentColor" className="text-[#FFE27A]" />
       </span>
       {!compact && (

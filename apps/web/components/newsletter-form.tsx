@@ -38,7 +38,7 @@ export function NewsletterForm({ compact = false }: { compact?: boolean }) {
       />
       <button
         type="submit"
-        className="inline-flex items-center justify-center gap-2 rounded-2xl bg-accent px-5 py-3 text-sm font-bold text-secondary-deep transition hover:bg-accent-deep hover:text-white"
+        className="inline-flex items-center justify-center gap-2 rounded-2xl bg-accent px-5 py-3 text-sm font-bold text-white transition hover:bg-accent-deep"
       >
         <Send size={16} aria-hidden /> {dict.footer.newsletterCta}
       </button>

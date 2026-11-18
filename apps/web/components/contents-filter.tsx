@@ -95,7 +95,7 @@ export function ContentsFilter({ q, type, category, ageGroup, sort, ageGroups, c
                   value={group.slug}
                   checked={age === group.slug}
                   onChange={() => setAge(group.slug)}
-                  className="accent-[#FF6B35]"
+                  className="accent-primary-bright"
                 />
                 {group.name}
               </label>
