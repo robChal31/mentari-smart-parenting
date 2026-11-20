@@ -51,7 +51,7 @@ export default async function HomePage() {
             <div className="mt-7 flex flex-wrap items-center gap-3">
               <Link
                 href="/contents"
-                className="inline-flex items-center gap-2 rounded-2xl bg-primary px-6 py-3.5 font-heading text-sm font-bold text-white shadow-[0_10px_28px_rgba(255,107,53,0.4)] transition hover:bg-primary-deep"
+                className="inline-flex items-center gap-2 rounded-2xl bg-primary px-6 py-3.5 font-heading text-sm font-bold text-white transition hover:bg-primary-deep"
               >
                 {dict.home.ctaExplore} <ArrowRight size={17} aria-hidden />
               </Link>

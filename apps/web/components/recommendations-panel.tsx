@@ -40,7 +40,7 @@ export async function RecommendationsPanel({
   return (
     <aside
       aria-label={dict.recommendations.sidebarAria}
-      className="rounded-3xl border border-sand bg-[#F2E8E0] p-4 shadow-[0_2px_10px_rgba(38,50,68,0.04)]"
+      className="rounded-3xl border border-accent/30 bg-accent-soft p-4 shadow-[0_2px_10px_rgba(38,50,68,0.04)]"
     >
       <div className="mb-3 flex items-start justify-between gap-2">
         <div>
