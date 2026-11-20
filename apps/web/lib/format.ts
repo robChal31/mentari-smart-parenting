@@ -47,28 +47,9 @@ export function formatRelativeTime(iso: string, locale: Locale, t: TimeDict): st
 }
 
 /**
- * Normalisasi tautan video menjadi URL yang bisa dipakai `iframe`.
- *
- * Karena video tidak diunggah, admin menempel tautan. Tapi orang menempel
- * berbagai bentuk: `youtu.be/abc`, `youtube.com/watch?v=abc`, atau
- * `youtube.com/shorts/abc`. `iframe` hanya menerima bentuk `/embed/abc`, jadi
- * tanpa normalisasi video akan tampil kosong padahal tautannya benar.
- *
- * Tautan non-YouTube (Vimeo, berkas .mp4 sendiri) dibiarkan apa adanya —
- * kita tidak menebak bentuk yang tidak dikenal.
+ * Normalisasi tautan video — sekarang ditangani `lib/video.ts` supaya satu
+ * sumber kebenaran untuk YouTube, TikTok, Instagram, dan berkas video langsung.
+ * Diekspor ulang di sini agar pemanggil lama (`content-form.tsx`) tidak perlu
+ * diubah impornya.
  */
-export function normaliseVideoUrl(raw: string): string {
-  const value = raw.trim();
-  if (!value) return "";
-
-  // Sudah bentuk embed — jangan disentuh.
-  if (/youtube(-nocookie)?\.com\/embed\//i.test(value)) return value;
-
-  const id =
-    value.match(/(?:youtube\.com\/watch\?(?:.*&)?v=)([A-Za-z0-9_-]{6,})/i)?.[1] ??
-    value.match(/youtu\.be\/([A-Za-z0-9_-]{6,})/i)?.[1] ??
-    value.match(/youtube\.com\/shorts\/([A-Za-z0-9_-]{6,})/i)?.[1] ??
-    value.match(/youtube\.com\/live\/([A-Za-z0-9_-]{6,})/i)?.[1];
-
-  return id ? `https://www.youtube.com/embed/${id}` : value;
-}
+export { normaliseVideoUrl } from "./video";

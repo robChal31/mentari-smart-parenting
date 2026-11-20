@@ -1,13 +1,14 @@
 "use client";
 
 import { useEffect, useMemo, useState } from "react";
-import { ArrowRight, Loader2, Save, Trash2 } from "lucide-react";
+import { ArrowRight, BadgeCheck, Loader2, Save, Trash2 } from "lucide-react";
 import { useDictionary } from "@/components/i18n-provider";
 import { apiData, ApiError } from "@/lib/client-api";
 import { Combobox } from "@/components/combobox";
+import { format } from "@/lib/i18n/format";
 import { SlugField } from "./slug-field";
 import { FileUploadField } from "./file-upload-field";
-import { normaliseVideoUrl } from "@/lib/format";
+import { normaliseVideoUrl, parseVideoUrl } from "@/lib/video";
 import type { AdminContentDetailDto, AgeGroupDto, AuthorDto, CategoryDto, ProductDto } from "@mentari/shared";
 
 const CONTENT_TYPES = ["ARTICLE", "VIDEO", "INFOGRAPHIC", "TIPS", "ACTIVITY"] as const;
@@ -54,6 +55,8 @@ export function ContentForm({
     initial?.videoDuration === null || initial?.videoDuration === undefined ? "" : String(initial.videoDuration),
   );
   const [isFeatured, setIsFeatured] = useState(Boolean(initial?.isFeatured));
+  /** Platform yang terdeteksi dari tautan video, untuk umpan balik di form. */
+  const detectedVideo = useMemo(() => parseVideoUrl(videoUrl), [videoUrl]);
   const [isPremium, setIsPremium] = useState(Boolean(initial?.isPremium));
   const [metaTitle, setMetaTitle] = useState(initial?.metaTitle ?? "");
   const [metaDescription, setMetaDescription] = useState(initial?.metaDescription ?? "");
@@ -279,14 +282,22 @@ export function ContentForm({
             value={videoUrl}
             onChange={(e) => setVideoUrl(e.target.value)}
             onBlur={(e) => setVideoUrl(normaliseVideoUrl(e.target.value))}
-            placeholder="https://youtu.be/… atau https://…/video.mp4"
+            placeholder="https://youtu.be/… · https://tiktok.com/@user/video/… · https://instagram.com/reel/…"
             className={`mt-1.5 w-full ${inputClass}`}
           />
           <span className="mt-1 block text-[10px] leading-relaxed text-muted">
-            Tempel link video — tidak perlu unggah berkas. Bentuk <code>youtu.be/…</code>,{" "}
-            <code>watch?v=…</code>, dan <code>shorts/…</code> otomatis diubah ke tautan embed saat
-            kolom ditinggalkan.
+            {dict.admin.videoUrlHint}
           </span>
+          {detectedVideo ? (
+            <span className="mt-1.5 inline-flex items-center gap-1.5 rounded-full border border-accent/25 bg-accent-soft px-2.5 py-1 text-[10px] font-bold text-accent-deep">
+              <BadgeCheck size={11} aria-hidden />
+              {format(dict.admin.videoDetected, { platform: detectedVideo.label })}
+            </span>
+          ) : videoUrl.trim() ? (
+            <span className="mt-1.5 block text-[10px] font-semibold leading-relaxed text-amber-700">
+              {dict.admin.videoUnrecognized}
+            </span>
+          ) : null}
         </label>
 
         <label>

@@ -2,10 +2,12 @@ import Link from "next/link";
 import { notFound } from "next/navigation";
 import type { Metadata } from "next";
 import {
-  BadgeCheck, CalendarDays, ChevronRight, Clock, Eye, Tag,
+  BadgeCheck, CalendarDays, ChevronRight, Clock, Eye, Play, Tag,
 } from "lucide-react";
 import { api } from "@/lib/api";
 import { renderContentBody } from "@/lib/content-body";
+import { parseVideoUrl } from "@/lib/video";
+import { VideoEmbed } from "@/components/video-embed";
 import { formatDate, formatDuration, formatViews } from "@/lib/format";
 import { getDictionary } from "@/lib/i18n/get-dictionary";
 import { format } from "@/lib/i18n/format";
@@ -50,15 +52,30 @@ export default async function ContentDetailPage({ params }: PageProps) {
   // inline/bottom placements were removed to declutter the article.
   const sidebarProducts = content.recommendedProducts.slice(0, 3);
   const duration = formatDuration(content.videoDuration, dict.time);
+  const videoSource = parseVideoUrl(content.videoUrl);
+
+  // VideoObject hanya tepat untuk video yang benar-benar bisa diputar langsung
+  // dari halaman ini. TikTok & Instagram adalah embed pihak ketiga, bukan media
+  // milik halaman — menandainya VideoObject akan bikin rich result Google
+  // ditolak. Untuk keduanya cukup Article biasa.
+  const isOwnVideo = videoSource?.provider === "youtube" || videoSource?.provider === "file";
 
   const jsonLd = {
     "@context": "https://schema.org",
-    "@type": content.type === "VIDEO" ? "VideoObject" : "Article",
+    "@type": isOwnVideo ? "VideoObject" : "Article",
     headline: content.title,
     description: content.excerpt,
     datePublished: content.publishedAt,
     author: content.authorName ? { "@type": "Person", name: content.authorName } : undefined,
     publisher: { "@type": "Organization", name: "MentariSmartParent" },
+    ...(isOwnVideo && videoSource
+      ? {
+          contentUrl: videoSource.originalUrl,
+          embedUrl: videoSource.embedUrl,
+          uploadDate: content.publishedAt,
+          ...(content.thumbnailUrl ? { thumbnailUrl: content.thumbnailUrl } : {}),
+        }
+      : {}),
   };
 
   return (
@@ -136,21 +153,30 @@ export default async function ContentDetailPage({ params }: PageProps) {
             </div>
           </div>
 
-          {/* Video embed */}
-          {content.type === "VIDEO" && content.videoUrl && (
-            <div className="mt-6 overflow-hidden rounded-3xl border border-sand shadow-sm">
-              <div className="aspect-video w-full bg-secondary">
-                <iframe
-                  src={content.videoUrl.includes("/embed/") ? content.videoUrl : `https://www.youtube.com/embed/${content.videoUrl}`}
-                  title={`Video: ${content.title}`}
-                  className="h-full w-full"
-                  allow="accelerometer; autoplay; clipboard-write; encrypted-media; gyroscope; picture-in-picture"
-                  allowFullScreen
-                  loading="lazy"
+          {/* Video: YouTube, TikTok, Instagram, atau berkas langsung.
+              Kalau tautannya tidak dikenali, jangan paksa jadi iframe kosong. */}
+          {content.videoUrl && (() => {
+            if (videoSource) {
+              return (
+                <VideoEmbed
+                  source={videoSource}
+                  title={content.title}
+                  playLabel={dict.contentDetail.playVideo}
+                  externalLabel={dict.contentDetail.watchOn.replace("{platform}", videoSource.label)}
                 />
-              </div>
-            </div>
-          )}
+              );
+            }
+            return (
+              <a
+                href={content.videoUrl}
+                target="_blank"
+                rel="noopener noreferrer"
+                className="mt-6 inline-flex items-center gap-2 rounded-2xl border border-sand bg-white px-4 py-3 text-sm font-semibold text-secondary transition hover:border-primary/40 hover:text-primary"
+              >
+                <Play size={15} aria-hidden /> {dict.contentDetail.watchVideo}
+              </a>
+            );
+          })()}
 
           {/* Body */}
           {content.body && (
