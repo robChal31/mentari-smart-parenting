@@ -67,11 +67,13 @@ export function SiteHeader() {
   const canAdmin = user && (user.role === "ADMIN" || user.role === "EDITOR");
   const isActive = (href: string) => pathname === href || pathname.startsWith(`${href}/`);
 
+  // Navbar sekarang hijau tua, jadi kontras link dihitung ulang:
+  // krem/85 di atas #273D30 = 9.2 (aman), aktif = terracotta + putih.
   const desktopLink = (active: boolean) =>
     `rounded-full px-3 py-2 text-sm font-semibold transition ${
       active
-        ? "bg-secondary text-white shadow-sm"
-        : "text-ink/80 hover:bg-primary-soft hover:text-primary-deep"
+        ? "bg-primary text-white shadow-sm"
+        : "text-cream/85 hover:bg-white/10 hover:text-cream"
     }`;
   const mobileLink = (active: boolean) =>
     `rounded-2xl border px-4 py-3 text-sm font-semibold transition ${
@@ -85,7 +87,7 @@ export function SiteHeader() {
       onClick={switchLocale}
       aria-label={dict.language.switchAria}
       title={dict.language.switchAria}
-      className="inline-flex items-center gap-1.5 rounded-full border border-sand bg-white px-3 py-2 text-xs font-extrabold uppercase tracking-[0.12em] text-secondary shadow-sm transition hover:border-secondary hover:text-primary-deep"
+      className="inline-flex items-center gap-1.5 rounded-full border border-white/25 px-3 py-2 text-xs font-extrabold uppercase tracking-[0.12em] text-cream transition hover:border-white/50 hover:bg-white/10"
     >
       <Globe size={15} aria-hidden />
       {locale === "id" ? dict.language.en : dict.language.id}
@@ -93,7 +95,7 @@ export function SiteHeader() {
   );
 
   return (
-    <header className="sticky top-0 z-50 border-b border-primary/15 bg-primary-soft/70 backdrop-blur-lg">
+    <header className="sticky top-0 z-50 border-b border-white/10 bg-secondary/95 backdrop-blur-lg">
       <div className="mx-auto max-w-7xl px-4 sm:px-6">
         <div className="flex h-16 items-center gap-3 sm:h-[4.25rem] sm:gap-6">
           <Logo />
@@ -107,7 +109,7 @@ export function SiteHeader() {
           </nav>
 
           <form onSubmit={submitSearch} className="ml-auto hidden min-w-0 flex-1 max-w-xs items-center md:flex" role="search">
-            <label className="group flex w-full items-center gap-2 rounded-full border border-primary/20 bg-white px-4 py-2 shadow-sm transition focus-within:border-primary focus-within:ring-2 focus-within:ring-primary/20">
+            <label className="group flex w-full items-center gap-2 rounded-full border border-white/20 bg-white px-4 py-2 shadow-sm transition focus-within:border-primary-bright focus-within:ring-2 focus-within:ring-primary-bright/40">
               <Search size={17} className="shrink-0 text-muted" aria-hidden />
               <input
                 type="search"
@@ -128,15 +130,15 @@ export function SiteHeader() {
               <div className="relative" ref={accountRef}>
                 <button
                   onClick={() => setAccountOpen((v) => !v)}
-                  className="flex items-center gap-2 rounded-full border border-primary/20 bg-white py-1.5 pl-1.5 pr-3 shadow-sm transition hover:border-primary/40"
+                  className="flex items-center gap-2 rounded-full border border-white/25 py-1.5 pl-1.5 pr-3 transition hover:border-white/50 hover:bg-white/10"
                   aria-haspopup="menu"
                   aria-expanded={accountOpen}
                 >
                   <span className="grid h-8 w-8 place-items-center rounded-full bg-secondary text-xs font-bold text-white">
                     {initials(user.fullName)}
                   </span>
-                  <span className="max-w-[7rem] truncate text-sm font-semibold text-ink">{user.fullName.split(" ")[0]}</span>
-                  <ChevronDown size={15} className={`text-muted transition-transform ${accountOpen ? "rotate-180" : ""}`} aria-hidden />
+                  <span className="max-w-[7rem] truncate text-sm font-semibold text-cream">{user.fullName.split(" ")[0]}</span>
+                  <ChevronDown size={15} className={`text-cream/70 transition-transform ${accountOpen ? "rotate-180" : ""}`} aria-hidden />
                 </button>
                 {accountOpen && (
                   <div className="absolute right-0 mt-2 w-64 overflow-hidden rounded-2xl border border-sand bg-white shadow-xl" role="menu">
@@ -171,7 +173,7 @@ export function SiteHeader() {
                 </Link>
                 <Link
                   href="/register"
-                  className="rounded-full bg-primary px-4 py-2 text-sm font-bold text-white shadow-[0_4px_14px_rgba(255,107,53,0.35)] transition hover:bg-primary-deep"
+                  className="rounded-full bg-primary px-4 py-2 text-sm font-bold text-white shadow-[0_4px_14px_rgba(193,78,34,0.35)] transition hover:bg-primary-deep"
                 >
                   {dict.nav.register}
                 </Link>

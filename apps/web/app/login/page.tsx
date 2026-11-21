@@ -48,7 +48,7 @@ function LoginForm() {
       {/* Side panel */}
       <aside className="hidden flex-col justify-between overflow-hidden rounded-[2rem] bg-secondary p-10 text-white lg:flex">
         <div>
-          <Sun size={40} className="text-[#FFD9A0]" fill="currentColor" aria-hidden />
+          <Sun size={40} className="text-accent-on-dark" fill="currentColor" aria-hidden />
           <h1 className="mt-6 font-heading text-3xl font-extrabold leading-snug">{dict.auth.loginSideTitleA}<br />{dict.auth.loginSideTitleB}</h1>
           <p className="mt-3 max-w-sm text-sm leading-6 text-white/75">{dict.auth.loginSideSub}</p>
         </div>

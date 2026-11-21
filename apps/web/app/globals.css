@@ -4,51 +4,56 @@
   /* ------------------------------------------------------------------
    * PALET — satu-satunya tempat warna didefinisikan.
    *
+   * Arah desain: "hangat & organik" — terracotta di atas krem kertas,
+   * dengan hijau tua sebagai jangkar gelap (navbar, footer, kartu).
+   * Semua nilai diturunkan dari referensi desain, lalu kontrasnya diukur
+   * sebelum dipakai; tidak ada warna yang dipilih dengan mata saja.
+   *
    * Aturan pakai (penting, jangan dicampur):
-   *   --color-primary       teks aksen & latar tombol. WAJIB cukup gelap
-   *                         untuk teks putih: kontras 5.38 vs #FFFFFF.
-   *   --color-primary-bright oranye terang. HANYA untuk elemen grafis yang
-   *                         tidak menopang teks: glow/blob (opacity),
-   *                         gradient dekoratif, logo, dot pattern.
-   *                         JANGAN dipakai sebagai latar teks.
-   *   --color-accent        hijau daun untuk latar/badge. Kontras 6.43 vs putih.
-   *                         Untuk teks di atas accent-soft, pakai accent-deep.
-   *   --color-accent-bright hijau terang (#5FA97F). Sama seperti primary-bright:
-   *                         HANYA glow/blob dekoratif, jangan untuk teks.
-   *   --color-accent-on-dark hijau pucat (#B5EFCC). HANYA untuk TEKS di atas
-   *                         latar gelap (navy). Jangan dipakai di latar terang
-   *                         (kontras cuma 1.42 vs putih).
+   *   --color-primary        terracotta untuk latar tombol & aksen teks.
+   *                          Putih di atasnya 4.79 (lulus AA).
+   *   --color-primary-deep   untuk teks di atas primary-soft (5.44) dan
+   *                          kondisi hover tombol (putih 6.75).
+   *   --color-primary-bright hanya glow/blob & gradient dekoratif.
+   *                          JANGAN dipakai sebagai latar teks.
+   *   --color-secondary      hijau tua: navbar, footer, kartu gelap.
+   *                          Krem di atasnya 11.07.
+   *   --color-accent         biru: aksen sekunder (badge, tombol alt).
+   *                          Putih di atasnya 7.76.
+   *   --color-accent-on-dark biru pucat, HANYA untuk teks di atas latar
+   *                          gelap (7.40 vs secondary).
+   *   --color-cream/sand     latar halaman & blok. Putih "naik" di atasnya.
    *
    * Nilai lama (untuk rollback):
-   *   primary #FF6B35 · primary-deep #E8551F · primary-soft #FFE8DD
-   *   accent  #2EC4B6 · accent-deep  #1FA89A · accent-soft  #DFF7F4
-   *   (teal, dipakai sampai accent diganti hijau daun: accent #0F766E ·
-   *    deep #0B5F58 · soft #DFF7F4 · bright #2EC4B6 · on-dark #8FF3E7)
+   *   primary #BE3F0C · primary-deep #9A3007 · primary-soft #FFE8DD
+   *   primary-bright #FF6B35
+   *   secondary #004E89 · secondary-deep #003A66 · secondary-soft #E3EEF7
+   *   accent #33694C · accent-deep #24523B · accent-soft #E2EEE7
+   *   accent-bright #5FA97F · accent-on-dark #B5EFCC
+   *   cream #FFF9F5 · sand #F5EDE6 · ink #263244 · muted #5B6B80
    * ------------------------------------------------------------------ */
-  --color-primary: #BE3F0C;
-  --color-primary-deep: #9A3007;
-  --color-primary-soft: #FFE8DD;
-  --color-primary-bright: #FF6B35;
-  --color-secondary: #004E89;
-  --color-secondary-deep: #003A66;
-  --color-secondary-soft: #E3EEF7;
-  /* Accent = forest green (hue 148°).
-     Sebelumnya teal #0F766E (hue 175°) hanya 30° dari secondary/navy (206°),
-     jadi kedua warna saling berebut wilayah dan terlihat "nyaris sama tapi
-     tidak sama". Hijau daun ini 58° dari navy dan 131° dari oranye, jadi
-     benar-benar berdiri sendiri sebagai aksen ketiga. */
-  --color-accent: #33694C;
-  --color-accent-deep: #24523B;
-  --color-accent-soft: #E2EEE7;
-  --color-accent-bright: #5FA97F;
-  /* Hijau pucat untuk TEKS di atas latar gelap (footer, kartu navy, panel
-     progres). accent & accent-deep terlalu gelap di sana (1.57 dan 1.14 vs
-     #004E89). Nilai ini 6.60 vs navy. */
-  --color-accent-on-dark: #B5EFCC;
-  --color-cream: #FFF9F5;
-  --color-sand: #F5EDE6;
-  --color-ink: #263244;
-  --color-muted: #5B6B80;
+  --color-primary: #C14E22;
+  --color-primary-deep: #9E3C16;
+  --color-primary-soft: #F7E3D8;
+  --color-primary-bright: #E06A35;
+  --color-secondary: #273D30;
+  --color-secondary-deep: #1B2B21;
+  --color-secondary-soft: #E3EADF;
+  --color-accent: #225779;
+  --color-accent-deep: #18425C;
+  --color-accent-soft: #DEE9F0;
+  --color-accent-bright: #3E7BA3;
+  /* Biru pucat untuk TEKS di atas latar gelap (footer, kartu hijau tua).
+     accent & accent-deep terlalu gelap di sana (1.79 dan 1.32 vs #273D30). */
+  --color-accent-on-dark: #A8D4EC;
+  /* Terracotta terang untuk TEKS/logo di atas latar hijau tua.
+     primary (#C14E22) hanya 1.79 dan primary-bright (#E06A35) 3.50 vs
+     #273D30 — keduanya gagal untuk teks. Nilai ini 4.68. */
+  --color-primary-on-dark: #EE8A55;
+  --color-cream: #FDF8F2;
+  --color-sand: #F2E1CD;
+  --color-ink: #2A2620;
+  --color-muted: #6B6459;
 
   --font-heading: "Plus Jakarta Sans", ui-sans-serif, system-ui, -apple-system, "Segoe UI", Roboto, sans-serif;
   --font-sans: "Inter", ui-sans-serif, system-ui, -apple-system, "Segoe UI", Roboto, sans-serif;
@@ -68,7 +73,7 @@ h1, h2, h3, h4, h5, .font-heading {
   letter-spacing: -0.015em;
 }
 
-::selection { background: #FFD9C7; }
+::selection { background: var(--color-primary-soft); }
 
 /* Thin scrollbars for horizontal chip rails */
 .chip-rail::-webkit-scrollbar { height: 6px; }

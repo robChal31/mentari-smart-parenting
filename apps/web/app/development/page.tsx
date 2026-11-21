@@ -181,7 +181,7 @@ export default function DevelopmentPage() {
             <p className="inline-flex items-center gap-1.5 text-[10px] font-extrabold uppercase tracking-[0.16em] text-accent-on-dark"><Sparkles size={12} aria-hidden /> {dict.development.overallTitle}</p>
             <p className="mt-1 font-heading text-2xl font-extrabold">{format(dict.development.milestonesDone, { done, total: milestones.length })}</p>
           </div>
-          <span className="grid h-16 w-16 place-items-center rounded-2xl bg-white/10 font-heading text-xl font-extrabold text-[#FFD9A0]">{pct}%</span>
+          <span className="grid h-16 w-16 place-items-center rounded-2xl bg-white/10 font-heading text-xl font-extrabold text-accent-on-dark">{pct}%</span>
         </div>
         <div className="mt-4 h-2.5 w-full overflow-hidden rounded-full bg-white/15">
           <div className="h-full rounded-full bg-gradient-to-r from-accent-on-dark to-[#8FE8B4] transition-all duration-500" style={{ width: `${pct}%` }} />

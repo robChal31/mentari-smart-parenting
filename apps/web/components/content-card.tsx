@@ -39,7 +39,7 @@ export async function ContentCard({ content, priority = false }: { content: Cont
   return (
     <Link
       href={`/contents/${content.slug}`}
-      className="group flex h-full flex-col overflow-hidden rounded-3xl border border-sand bg-white shadow-[0_2px_10px_rgba(38,50,68,0.05)] transition-all duration-200 hover:-translate-y-1 hover:border-primary/30 hover:shadow-[0_16px_40px_rgba(255,107,53,0.14)]"
+      className="group flex h-full flex-col overflow-hidden rounded-3xl border border-sand bg-white shadow-[0_2px_10px_rgba(38,50,68,0.05)] transition-all duration-200 hover:-translate-y-1 hover:border-primary/30 hover:shadow-[0_16px_40px_rgba(193,78,34,0.14)]"
     >
       <div className={`relative h-36 w-full overflow-hidden bg-gradient-to-br ${gradientFor(content.id)} sm:h-40`}>
         {content.thumbnailUrl && (
@@ -69,7 +69,7 @@ export async function ContentCard({ content, priority = false }: { content: Cont
       <div className="flex flex-1 flex-col gap-2 p-4">
         <div className="flex items-center gap-2 text-[10px] font-bold uppercase tracking-[0.12em]">
           {category && (
-            <span className="rounded-full px-2 py-0.5 text-secondary" style={{ background: (category.color ?? "#004E89") + "1A" }}>
+            <span className="rounded-full px-2 py-0.5 text-secondary" style={{ background: (category.color ?? "#273D30") + "1A" }}>
               {category.name}
             </span>
           )}

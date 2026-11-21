@@ -188,7 +188,7 @@ export function LearningPathForm({
           <textarea value={description} onChange={(e) => setDescription(e.target.value)} rows={3} maxLength={5000} placeholder={dict.admin.learningPathDescriptionPlaceholder} aria-label={dict.admin.learningPathDescriptionLabel} className="mt-1.5 w-full rounded-2xl border border-sand bg-cream/30 px-4 py-2.5 text-sm leading-6 outline-none focus:border-primary" />
         </label>
         <label className="flex cursor-pointer items-center gap-2 sm:col-span-2">
-          <input type="checkbox" checked={isPublished} onChange={(e) => setIsPublished(e.target.checked)} className="h-4 w-4 accent-[var(--color-primary,#be3f0c)]" />
+          <input type="checkbox" checked={isPublished} onChange={(e) => setIsPublished(e.target.checked)} className="h-4 w-4 accent-[var(--color-primary,#c14e22)]" />
           <span className="text-xs font-bold text-ink">{dict.admin.isPublishedLabel}</span>
         </label>
       </div>
@@ -226,7 +226,7 @@ export function LearningPathForm({
                 <span className="text-[9px] font-bold uppercase tracking-wide text-muted">{item.type}</span>
               </span>
               <label className="flex shrink-0 cursor-pointer items-center gap-1 text-[9px] font-bold text-ink/75" title={dict.admin.itemRequiredLabel}>
-                <input type="checkbox" checked={item.isRequired} onChange={() => toggleRequired(item.contentId)} className="h-3.5 w-3.5 accent-[var(--color-primary,#be3f0c)]" />
+                <input type="checkbox" checked={item.isRequired} onChange={() => toggleRequired(item.contentId)} className="h-3.5 w-3.5 accent-[var(--color-primary,#c14e22)]" />
                 {dict.admin.itemRequiredShort}
               </label>
               <button type="button" onClick={() => moveItem(index, -1)} disabled={index === 0} aria-label={dict.admin.moveUpAria} className="grid h-7 w-7 place-items-center rounded-lg text-muted hover:bg-sand disabled:opacity-30"><ArrowUp size={13} /></button>

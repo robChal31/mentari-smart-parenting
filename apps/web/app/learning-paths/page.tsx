@@ -83,7 +83,7 @@ export default async function LearningPathsPage() {
                     <span className="inline-flex items-center gap-1.5 rounded-full bg-white/10 px-3 py-1.5 text-[10px] font-bold text-white/85">
                       <ListChecks size={12} aria-hidden /> {format(dict.paths.modules, { count: itemCount })}
                     </span>
-                    <span className="inline-flex items-center gap-2 font-heading text-[12px] font-bold text-[#FFD9A0] transition group-hover:gap-3">
+                    <span className="inline-flex items-center gap-2 font-heading text-[12px] font-bold text-accent-on-dark transition group-hover:gap-3">
                       {dict.paths.startLearning} <ArrowRight size={15} aria-hidden />
                     </span>
                   </div>

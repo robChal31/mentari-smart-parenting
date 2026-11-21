@@ -110,7 +110,7 @@ export default async function ContentDetailPage({ params }: PageProps) {
                 key={category.slug}
                 href={`/contents?category=${category.slug}`}
                 className="rounded-full px-3 py-1 text-[10px] font-extrabold uppercase tracking-[0.14em] text-secondary"
-                style={{ background: (category.color ?? "#004E89") + "1F" }}
+                style={{ background: (category.color ?? "#273D30") + "1F" }}
               >
                 {category.name}
               </Link>

@@ -23,14 +23,14 @@ export async function SiteFooter() {
         <div>
           <div className="flex items-center gap-2">
             <span className="grid h-8 w-8 place-items-center rounded-xl bg-white/10">
-              <Sun size={17} className="text-[#FFD9A0]" fill="currentColor" aria-hidden />
+              <Sun size={17} className="text-accent-on-dark" fill="currentColor" aria-hidden />
             </span>
             <p className="font-heading font-extrabold text-white">Mentari Smart Parent</p>
           </div>
           <p className="mt-3 text-sm leading-6 text-white/65">{dict.footer.tagline}</p>
         </div>
         <nav aria-label={dict.footer.exploreCol}>
-          <p className="text-xs font-bold uppercase tracking-[0.16em] text-accent-on-dark">{dict.footer.exploreCol}</p>
+          <p className="text-xs font-bold uppercase tracking-[0.16em] text-primary-on-dark">{dict.footer.exploreCol}</p>
           <FooterLinks links={[
             ["/contents", dict.footer.articles],
             ["/learning-paths", dict.nav.learningPath],
@@ -40,7 +40,7 @@ export async function SiteFooter() {
           ]} />
         </nav>
         <nav aria-label={dict.footer.helpCol}>
-          <p className="text-xs font-bold uppercase tracking-[0.16em] text-accent-on-dark">{dict.footer.helpCol}</p>
+          <p className="text-xs font-bold uppercase tracking-[0.16em] text-primary-on-dark">{dict.footer.helpCol}</p>
           <FooterLinks links={[
             ["/about", dict.footer.aboutUs],
             ["/help", dict.footer.helpFaq],
@@ -49,7 +49,7 @@ export async function SiteFooter() {
           ]} />
         </nav>
         <div>
-          <p className="text-xs font-bold uppercase tracking-[0.16em] text-accent-on-dark">{dict.footer.parentsCol}</p>
+          <p className="text-xs font-bold uppercase tracking-[0.16em] text-primary-on-dark">{dict.footer.parentsCol}</p>
           <FooterLinks links={[
             ["/register", dict.footer.createAccount],
             ["/login", dict.nav.login],
