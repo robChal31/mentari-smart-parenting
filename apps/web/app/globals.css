@@ -207,6 +207,52 @@ h1, h2, h3, h4, h5, .font-heading {
 }
 
 /* ============================================================
+   BINGKAI KARTU UTAMA — "Konten Pilihan".
+
+   Kartu peringkat 01 berukuran jauh lebih besar daripada kartu di
+   sebelahnya, jadi kalau dibiarkan polos ia terbaca sebagai gambar
+   lepas, bukan sebagai sorotan. Bingkai ini memberi tiga lapis:
+
+   1. garis luar tipis warna krem (menegaskan tepi kartu terhadap
+      panel sand yang warnanya berdekatan),
+   2. pita sudut miring di pojok kanan atas (meniru lipatan sudut
+      halaman majalah),
+   3. bayangan dalam tipis di tepi bawah (memberi kesan foto
+      tercetak, bukan layar datar).
+
+   Semuanya dekoratif murni, jadi ditandai aria-hidden di markup dan
+   tidak membawa teks apa pun.
+   ============================================================ */
+.hero-frame::after {
+  content: "";
+  position: absolute;
+  inset: 0;
+  border-radius: inherit;
+  pointer-events: none;
+  box-shadow:
+    inset 0 0 0 1.5px rgba(253, 248, 242, 0.45),
+    inset 0 -28px 46px -30px rgba(27, 43, 33, 0.75);
+}
+
+/* Lipatan sudut: segitiga krem di pojok kanan atas. Dipotong diagonal
+   oleh border-width supaya tepinya lurus, bukan lengkung. */
+.hero-frame-fold {
+  position: absolute;
+  top: 0;
+  right: 0;
+  width: 4.25rem;
+  height: 4.25rem;
+  pointer-events: none;
+  background: linear-gradient(
+    225deg,
+    var(--color-sand) 0 50%,
+    transparent 50%
+  );
+  border-bottom-left-radius: 10px;
+  filter: drop-shadow(-2px 2px 3px rgba(42, 38, 32, 0.22));
+}
+
+/* ============================================================
    KELAS KOMPONEN — dipakai ulang di seluruh halaman.
    Tujuannya menyatukan radius, border, dan shadow yang tadinya
    ditulis ulang di 20 halaman dengan nilai sedikit berbeda-beda

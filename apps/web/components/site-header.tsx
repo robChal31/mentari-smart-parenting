@@ -168,7 +168,10 @@ export function SiteHeader() {
               </div>
             ) : (
               <>
-                <Link href="/login" className="rounded-full px-4 py-2 text-sm font-bold text-secondary transition hover:bg-secondary-soft">
+                <Link
+                  href="/login"
+                  className="rounded-full border border-white/25 px-4 py-2 text-sm font-bold text-cream transition hover:border-white/50 hover:bg-white/10"
+                >
                   {dict.nav.login}
                 </Link>
                 <Link
@@ -184,7 +187,7 @@ export function SiteHeader() {
           <div className="ml-auto flex items-center gap-2 md:hidden">
             {localeToggle}
             <button
-              className="rounded-xl p-2 text-ink"
+              className="rounded-xl p-2 text-cream transition hover:bg-white/10"
               onClick={() => setMenuOpen((v) => !v)}
               aria-label={menuOpen ? dict.nav.closeMenu : dict.nav.openMenu}
               aria-expanded={menuOpen}
