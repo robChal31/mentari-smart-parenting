@@ -28,7 +28,7 @@ export async function generateMetadata(): Promise<Metadata> {
 }
 
 export const viewport: Viewport = {
-  themeColor: "#FF6B35",
+  themeColor: "#273D30",
   width: "device-width",
   initialScale: 1,
 };

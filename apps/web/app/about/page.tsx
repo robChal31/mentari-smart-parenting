@@ -26,7 +26,7 @@ export default async function AboutPage() {
 
       <div className="mt-10 grid gap-4 sm:grid-cols-3">
         {dict.static.pillars.map((pillar, index) => (
-          <div key={pillar.title} className="rounded-3xl border border-sand bg-white p-6">
+          <div key={pillar.title} className="surface p-6">
             <span className="grid h-11 w-11 place-items-center rounded-2xl bg-accent-soft text-accent-deep">{pillarIcons[index]}</span>
             <h2 className="mt-3 font-heading text-base font-extrabold text-secondary">{pillar.title}</h2>
             <p className="mt-1 text-xs leading-6 text-muted">{pillar.desc}</p>
@@ -38,7 +38,7 @@ export default async function AboutPage() {
         <h2 className="inline-flex items-center gap-2 font-heading text-2xl font-extrabold text-secondary"><Users size={22} aria-hidden /> {dict.static.expertsTitle}</h2>
         <ul className="mt-5 grid gap-4 sm:grid-cols-2">
           {dict.static.experts.map(([name, role, bio]) => (
-            <li key={name} className="flex items-start gap-4 rounded-3xl border border-sand bg-white p-5">
+            <li key={name} className="flex items-start gap-4 surface p-5">
               <span className="grid h-14 w-14 shrink-0 place-items-center rounded-2xl bg-secondary text-base font-extrabold text-white">
                 {name.split(" ").filter(Boolean).slice(0, 2).map((w) => w[0]).join("")}
               </span>

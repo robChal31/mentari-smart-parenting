@@ -31,7 +31,7 @@ export default async function Loading() {
       {/* ===== GRID: filter + hasil ===== */}
       <div className="grid gap-6 lg:grid-cols-[260px_1fr]">
         {/* --- panel filter (meniru ContentsFilter) --- */}
-        <aside className="h-fit rounded-3xl border border-sand bg-white p-5">
+        <aside className="h-fit surface p-5">
           <div className="flex items-center justify-between">
             <div className="skeleton-on-card h-5 w-36" />
             <div className="skeleton-on-card h-5 w-5 rounded-full" />

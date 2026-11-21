@@ -158,7 +158,7 @@ export function SiteHeader() {
                         setAccountOpen(false);
                         router.push("/");
                       }}
-                      className="flex w-full items-center gap-2 border-t border-sand px-4 py-3 text-left text-sm font-medium text-red-600 transition hover:bg-red-50"
+                      className="flex w-full items-center gap-2 border-t border-sand px-4 py-3 text-left text-sm font-medium text-danger transition hover:bg-danger-soft"
                       role="menuitem"
                     >
                       <LogOut size={16} aria-hidden /> {dict.nav.logout}
@@ -235,7 +235,7 @@ export function SiteHeader() {
                       setMenuOpen(false);
                       router.push("/");
                     }}
-                    className="flex flex-1 items-center justify-center gap-2 rounded-2xl border border-sand bg-white px-4 py-3 text-sm font-bold text-red-600"
+                    className="flex flex-1 items-center justify-center gap-2 rounded-2xl border border-sand bg-white px-4 py-3 text-sm font-bold text-danger"
                   >
                     <LogOut size={16} /> {dict.nav.logout}
                   </button>

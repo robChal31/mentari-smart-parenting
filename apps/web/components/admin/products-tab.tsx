@@ -103,23 +103,23 @@ export function ProductsTab() {
       )}
 
       {confirmDelete && (
-        <div role="alertdialog" aria-label={dict.admin.deleteConfirmTitle} className="mt-3 flex flex-wrap items-center justify-between gap-3 rounded-3xl border border-red-200 bg-red-50 px-5 py-4">
+        <div role="alertdialog" aria-label={dict.admin.deleteConfirmTitle} className="mt-3 flex flex-wrap items-center justify-between gap-3 rounded-3xl status-danger border px-5 py-4">
           <div>
-            <p className="text-sm font-bold text-red-800">{dict.admin.deleteConfirmTitle} — {confirmDelete.name}</p>
-            <p className="mt-0.5 max-w-xl text-[11px] leading-5 text-red-700/90">{dict.admin.deleteConfirmBody}</p>
+            <p className="text-sm font-bold text-danger-deep">{dict.admin.deleteConfirmTitle} — {confirmDelete.name}</p>
+            <p className="mt-0.5 max-w-xl text-[11px] leading-5 text-danger/90">{dict.admin.deleteConfirmBody}</p>
           </div>
           <div className="flex items-center gap-2">
-            <button onClick={() => setConfirmDelete(null)} className="rounded-2xl border border-red-200 bg-white px-4 py-2 text-xs font-bold text-red-800 hover:bg-red-100">
+            <button onClick={() => setConfirmDelete(null)} className="rounded-2xl border border-danger-border bg-white px-4 py-2 text-xs font-bold text-danger-deep hover:bg-danger-soft">
               {dict.common.cancel}
             </button>
-            <button onClick={() => softDelete(confirmDelete)} disabled={deleting} className="inline-flex items-center gap-1.5 rounded-2xl bg-red-600 px-4 py-2 text-xs font-bold text-white hover:bg-red-700 disabled:opacity-60">
+            <button onClick={() => softDelete(confirmDelete)} disabled={deleting} className="btn-danger inline-flex items-center gap-1.5 px-4 py-2 text-xs">
               {deleting ? <Loader2 size={13} className="animate-spin" /> : <Trash2 size={13} />} {dict.admin.deleteConfirmYes}
             </button>
           </div>
         </div>
       )}
 
-      <div className="mt-4 overflow-hidden rounded-3xl border border-sand bg-white">
+      <div className="mt-4 overflow-hidden surface">
         <div className="border-b border-sand bg-cream/40 px-5 py-3 text-[10px] font-extrabold uppercase tracking-[0.14em] text-muted">
           <span>{busy ? dict.admin.loading : format(dict.admin.productsCount, { count: total })}</span>
         </div>
@@ -127,7 +127,7 @@ export function ProductsTab() {
           {items.map((product) => {
             const deleted = Boolean(product.deletedAt);
             return (
-              <li key={product.id} className={`flex flex-wrap items-center gap-3 px-5 py-3 ${deleted ? "bg-red-50/40" : ""}`}>
+              <li key={product.id} className={`flex flex-wrap items-center gap-3 px-5 py-3 ${deleted ? "bg-danger-soft/40" : ""}`}>
                 {(product.coverImageUrl ?? product.thumbnailUrl) ? (
                   /* eslint-disable-next-line @next/next/no-img-element */
                   <img
@@ -147,7 +147,7 @@ export function ProductsTab() {
                   <span className="line-clamp-1 block text-xs font-semibold text-ink">{product.name}</span>
                   <span className="mt-0.5 flex flex-wrap items-center gap-1.5 text-[9px] font-bold">
                     {deleted ? (
-                      <span className="inline-flex items-center gap-1 rounded-full bg-red-100 px-2 py-0.5 uppercase tracking-wide text-red-700"><Archive size={9} /> {dict.admin.deletedBadge}</span>
+                      <span className="inline-flex items-center gap-1 rounded-full bg-danger-soft px-2 py-0.5 uppercase tracking-wide text-danger"><Archive size={9} /> {dict.admin.deletedBadge}</span>
                     ) : product.isActive === false ? (
                       <span className="inline-flex items-center rounded-full bg-sand px-2 py-0.5 uppercase tracking-wide text-muted">{dict.admin.inactiveBadge}</span>
                     ) : (
@@ -163,13 +163,13 @@ export function ProductsTab() {
                     </button>
                   ) : (
                     <>
-                      <button onClick={() => toggleFeatured(product)} title={dict.admin.toggleFeaturedAria} aria-label={dict.admin.toggleFeaturedAria} className={`grid h-8 w-8 place-items-center rounded-lg transition ${product.isFeatured ? "text-amber-500 hover:bg-amber-50" : "text-muted hover:bg-sand"}`}>
+                      <button onClick={() => toggleFeatured(product)} title={dict.admin.toggleFeaturedAria} aria-label={dict.admin.toggleFeaturedAria} className={`grid h-8 w-8 place-items-center rounded-lg transition ${product.isFeatured ? "text-warning-bright hover:bg-warning-soft" : "text-muted hover:bg-sand"}`}>
                         <Star size={16} fill={product.isFeatured ? "currentColor" : "none"} />
                       </button>
                       <button onClick={() => startEdit(product)} title={dict.common.edit} aria-label={dict.common.edit} className="grid h-8 w-8 place-items-center rounded-lg text-secondary hover:bg-secondary-soft">
                         <Pencil size={15} />
                       </button>
-                      <button onClick={() => { setConfirmDelete(product); setShowForm(false); }} title={dict.admin.deleteProduct} aria-label={dict.admin.deleteProduct} className="grid h-8 w-8 place-items-center rounded-lg text-muted hover:bg-red-50 hover:text-red-600">
+                      <button onClick={() => { setConfirmDelete(product); setShowForm(false); }} title={dict.admin.deleteProduct} aria-label={dict.admin.deleteProduct} className="grid h-8 w-8 place-items-center rounded-lg text-muted hover:bg-danger-soft hover:text-danger">
                         <Trash2 size={16} />
                       </button>
                     </>

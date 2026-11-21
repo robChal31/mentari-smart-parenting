@@ -227,7 +227,7 @@ export function FileUploadField({
                   onChange("");
                   setNotice(null);
                 }}
-                className="inline-flex items-center gap-1 rounded-2xl border border-sand px-2.5 py-2 text-[11px] font-bold text-muted transition hover:text-red-600"
+                className="inline-flex items-center gap-1 rounded-2xl border border-sand px-2.5 py-2 text-[11px] font-bold text-muted transition hover:text-danger"
               >
                 <Trash2 size={12} /> Hapus
               </button>
@@ -258,7 +258,7 @@ export function FileUploadField({
           </p>
           {notice && <p className="mt-1 text-[10px] font-semibold text-accent-deep">{notice}</p>}
           {error && (
-            <p role="alert" className="mt-1 rounded-xl border border-red-200 bg-red-50 px-2.5 py-1.5 text-[10px] text-red-700">
+            <p role="alert" className="mt-1 rounded-xl status-danger border px-2.5 py-1.5 text-[10px] text-danger">
               {error}
             </p>
           )}

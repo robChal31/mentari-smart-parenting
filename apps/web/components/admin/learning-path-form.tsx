@@ -140,7 +140,7 @@ export function LearningPathForm({
   }
 
   return (
-    <form onSubmit={submit} className="mt-4 rounded-3xl border border-sand bg-white p-5">
+    <form onSubmit={submit} className="mt-4 surface p-5">
       <div className="flex flex-wrap items-center justify-between gap-3">
         <p className="text-sm font-extrabold text-secondary">{initial ? dict.admin.editLearningPath : dict.admin.addLearningPath}</p>
         <button type="button" onClick={onCancel} aria-label={dict.common.close} className="grid h-8 w-8 place-items-center rounded-lg text-muted hover:bg-sand">
@@ -231,14 +231,14 @@ export function LearningPathForm({
               </label>
               <button type="button" onClick={() => moveItem(index, -1)} disabled={index === 0} aria-label={dict.admin.moveUpAria} className="grid h-7 w-7 place-items-center rounded-lg text-muted hover:bg-sand disabled:opacity-30"><ArrowUp size={13} /></button>
               <button type="button" onClick={() => moveItem(index, 1)} disabled={index === items.length - 1} aria-label={dict.admin.moveDownAria} className="grid h-7 w-7 place-items-center rounded-lg text-muted hover:bg-sand disabled:opacity-30"><ArrowDown size={13} /></button>
-              <button type="button" onClick={() => removeItem(item.contentId)} aria-label={dict.admin.removeFromPathAria} className="grid h-7 w-7 place-items-center rounded-lg text-muted hover:bg-red-50 hover:text-red-600"><Trash2 size={14} /></button>
+              <button type="button" onClick={() => removeItem(item.contentId)} aria-label={dict.admin.removeFromPathAria} className="grid h-7 w-7 place-items-center rounded-lg text-muted hover:bg-danger-soft hover:text-danger"><Trash2 size={14} /></button>
             </li>
           ))}
           {items.length === 0 && <li className="px-4 py-6 text-center text-[11px] text-muted">{dict.admin.noPathItems}</li>}
         </ol>
       </div>
 
-      {error && <p role="alert" className="mt-3 rounded-2xl bg-red-50 px-4 py-2.5 text-[11px] font-semibold text-red-700">{error}</p>}
+      {error && <p role="alert" className="mt-3 rounded-2xl bg-danger-soft px-4 py-2.5 text-[11px] font-semibold text-danger">{error}</p>}
 
       <div className="mt-4 flex flex-wrap items-center gap-2">
         <button type="submit" disabled={busy} className="inline-flex items-center gap-1.5 rounded-2xl bg-primary px-5 py-2.5 text-xs font-bold text-white hover:bg-primary-deep disabled:opacity-60">

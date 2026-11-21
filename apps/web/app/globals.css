@@ -55,6 +55,65 @@
   --color-ink: #2A2620;
   --color-muted: #6B6459;
 
+  /* ------------------------------------------------------------------
+   * TOKEN SEMANTIK — dipakai halaman selain home.
+   *
+   * Halaman-halaman lain sebelumnya memakai warna Tailwind bawaan
+   * (red-600, amber-700, slate-500) dan shadow hardcoded. Di atas
+   * palet hangat ini, red-600 (#DC2626) terbaca biru-merah dan
+   * bertabrakan dengan terracotta: pengguna tidak bisa membedakan
+   * "tombol hapus" dari "tombol aksi utama".
+   *
+   * Token di bawah memisahkan MAKNA dari nilai. Warnanya tetap dari
+   * palet: danger memakai terracotta yang digelapkan, warning memakai
+   * oranye fase Bayi, success memakai hijau muda fase Prasekolah.
+   * ------------------------------------------------------------------ */
+
+  /* Border status: dijaga >= 1.6x cream (#FDF8F2) supaya garisnya
+     benar-benar terlihat. Nilai awal hanya 1.28-1.47 — praktis hilang
+     di layar redup. */
+
+  /* Permukaan: tiga tingkat, jadi halaman tidak perlu menebak putih/krem. */
+  --color-surface: #FFFFFF;          /* kartu di atas latar cream */
+  --color-surface-raised: #FFFDFA;   /* kartu di dalam kartu */
+  --color-surface-sunken: #F7EFE4;   /* area terkubur (tabel, code) */
+
+  /* Bahaya / hapus. #8E2A0C: putih di atasnya 8.45 (AA), dan cukup
+     berbeda dari primary #C14E22 (1.76) sehingga tombol hapus tidak
+     terbaca sebagai aksi utama.
+
+     danger-soft #F7CFC7 dipilih dengan Delta E, bukan mata: versi pucat
+     (#FCEBE4) hanya Delta E 3.6 terhadap primary-soft — praktis tidak
+     bisa dibedakan. Nilai ini Delta E 9.5 (jelas beda) dan teks danger
+     di atasnya tetap 5.91. */
+  --color-danger: #8E2A0C;
+  --color-danger-deep: #71210A;
+  --color-danger-soft: #F7CFC7;
+  --color-danger-border: #E6AC97;
+
+  /* Peringatan / sematan. Sengaja lebih kuning dari primary agar
+     "disematkan" dan "populer" tidak tertukar. warning-soft #F7EBC0
+     berjarak Delta E 16.5 dari primary-soft dan 12.0 dari sand —
+     versi (#FDF3DC) hanya 8.4 dan 5.9, terlalu dekat. */
+  --color-warning: #8A5A00;
+  --color-warning-soft: #F7EBC0;
+  --color-warning-border: #E3C88A;
+  --color-warning-bright: #E8A33D;
+
+  /* Sukses / selesai. Hijau tua, bukan hijau terang: di latar cream
+     hijau terang gagal kontras. */
+  --color-success: #2F6B3F;
+  --color-success-deep: #245431;
+  --color-success-soft: #DDEBDA;
+  --color-success-border: #A6C5A5;
+
+  /* Elevation. Semua bernuansa cokelat (#2A2620), bukan abu kebiruan:
+     bayangan abu-biru di atas krem terbaca kotor. */
+  --shadow-card: 0 2px 10px rgba(42, 38, 32, 0.06);
+  --shadow-card-hover: 0 14px 34px rgba(42, 38, 32, 0.13);
+  --shadow-pop: 0 18px 48px rgba(42, 38, 32, 0.18);
+  --shadow-accent: 0 10px 26px rgba(193, 78, 34, 0.14);
+
   --font-heading: "Plus Jakarta Sans", ui-sans-serif, system-ui, -apple-system, "Segoe UI", Roboto, sans-serif;
   --font-sans: "Inter", ui-sans-serif, system-ui, -apple-system, "Segoe UI", Roboto, sans-serif;
 }
@@ -145,4 +204,80 @@ h1, h2, h3, h4, h5, .font-heading {
    terbaca seperti kapsul, bukan potongan kertas. */
 .blob-frame {
   border-radius: 58% 42% 46% 54% / 52% 46% 54% 48%;
+}
+
+/* ============================================================
+   KELAS KOMPONEN — dipakai ulang di seluruh halaman.
+   Tujuannya menyatukan radius, border, dan shadow yang tadinya
+   ditulis ulang di 20 halaman dengan nilai sedikit berbeda-beda
+   (rounded-2xl/3xl campur, shadow-sm/md/lg campur).
+   ============================================================ */
+
+/* Permukaan standar: kartu, panel, kotak daftar.
+   Ditulis di @layer components supaya utility Tailwind (rounded-*,
+   border-*, shadow-*) tetap MENANG saat sengaja dipakai untuk
+   menimpa. Tanpa layer, urutan berkas yang menentukan dan hasilnya
+   bergantung pada ukuran CSS — sulit ditebak dan mudah rusak. */
+@layer components {
+  .surface {
+    background: var(--color-surface);
+    border: 1px solid var(--color-sand);
+    border-radius: 1.5rem;
+    box-shadow: var(--shadow-card);
+  }
+  /* Varian lebih besar untuk kartu utama (fitur, ajakan bertindak). */
+  .surface-lg { border-radius: 2rem; }
+}
+
+/* Permukaan yang bisa diklik: mengangkat diri saat hover. */
+@layer components {
+  .surface-link { transition: border-color .2s, box-shadow .2s, transform .2s; }
+  .surface-link:hover {
+    border-color: color-mix(in srgb, var(--color-primary) 32%, transparent);
+    box-shadow: var(--shadow-accent);
+    transform: translateY(-2px);
+  }
+}
+
+/* Panel status. Dipakai di alert, badge, dan kotak pesan. */
+.status-danger {
+  background: var(--color-danger-soft);
+  border: 1px solid var(--color-danger-border);
+  color: var(--color-danger);
+}
+.status-warning {
+  background: var(--color-warning-soft);
+  border: 1px solid var(--color-warning-border);
+  color: var(--color-warning);
+}
+.status-success {
+  background: var(--color-success-soft);
+  border: 1px solid var(--color-success-border);
+  color: var(--color-success);
+}
+
+/* Tombol bahaya (hapus). Dipisah dari .btn-primary karena aksinya
+   merusak — bentuk dan posisinya tidak boleh sama dengan aksi utama. */
+.btn-danger {
+  background: var(--color-danger);
+  color: #FFFFFF;
+  border-radius: 0.875rem;
+  font-weight: 700;
+  transition: background .15s;
+}
+.btn-danger:hover { background: var(--color-danger-deep); }
+.btn-danger:disabled { opacity: .55; cursor: not-allowed; }
+
+/* Fokus yang konsisten. Sebelumnya tiap halaman punya ring sendiri,
+   sebagian tidak ada — navigasi keyboard jadi tidak terlihat. */
+:where(a, button, input, select, textarea, [tabindex]):focus-visible {
+  outline: 2px solid var(--color-primary);
+  outline-offset: 2px;
+  border-radius: 0.5rem;
+}
+
+/* Hormati preferensi sistem. */
+@media (prefers-reduced-motion: reduce) {
+  .surface-link { transition: none; }
+  .surface-link:hover { transform: none; }
 }

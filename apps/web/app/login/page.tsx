@@ -66,7 +66,7 @@ function LoginForm() {
 
         <form onSubmit={onSubmit} className="mt-6 space-y-4">
           {error && (
-            <p role="alert" className="rounded-2xl border border-red-200 bg-red-50 px-4 py-3 text-sm font-medium text-red-700">
+            <p role="alert" className="status-danger rounded-2xl px-4 py-3 text-sm font-medium">
               {error}
             </p>
           )}

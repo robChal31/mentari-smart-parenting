@@ -99,14 +99,14 @@ function ProfileContent() {
 
       <div className="mt-6 grid gap-5 lg:grid-cols-2">
         {/* ===== Gamification ===== */}
-        <section className="rounded-3xl border border-sand bg-white p-6" aria-labelledby="gamification-heading">
+        <section className="surface p-6" aria-labelledby="gamification-heading">
           <h2 id="gamification-heading" className="inline-flex items-center gap-2 font-heading text-base font-extrabold text-secondary"><Sparkles size={17} className="text-primary" aria-hidden /> {dict.profile.gamificationTitle}</h2>
           {loadingData ? (
             <div className="skeleton mt-4 h-24 rounded-2xl" />
           ) : gamification ? (
             <>
               <div className="mt-4 grid grid-cols-3 gap-3 text-center">
-                <StatTile icon={<Star size={16} className="text-amber-500" fill="currentColor" />} value={gamification.totalPoints} label={dict.profile.points} />
+                <StatTile icon={<Star size={16} className="text-warning-bright" fill="currentColor" />} value={gamification.totalPoints} label={dict.profile.points} />
                 <StatTile icon={<Flame size={16} className="text-primary" fill="currentColor" />} value={gamification.currentStreak} label={dict.profile.streak} />
                 <StatTile icon={<Award size={16} className="text-accent-deep" />} value={`Lv ${gamification.level}`} label={dict.profile.level} />
               </div>
@@ -114,7 +114,7 @@ function ProfileContent() {
               <ul className="mt-2 grid grid-cols-3 gap-2">
                 {gamification.badges.map((badge) => (
                   <li key={badge.id} title={badge.description ?? badge.name} className="flex flex-col items-center gap-1 rounded-2xl border border-sand bg-cream px-2 py-3 text-center">
-                    <span className="grid h-10 w-10 place-items-center rounded-full bg-gradient-to-br from-amber-200 to-amber-400 text-lg">🏅</span>
+                    <span className="grid h-10 w-10 place-items-center rounded-full bg-gradient-to-br from-warning-soft to-warning-bright text-lg">🏅</span>
                     <span className="text-[9px] font-bold leading-tight text-ink/80">{badge.name}</span>
                   </li>
                 ))}
@@ -131,7 +131,7 @@ function ProfileContent() {
       </div>
 
       {/* ===== Bookmarks ===== */}
-      <section id="bookmark" className="mt-6 scroll-mt-24 rounded-3xl border border-sand bg-white p-6" aria-labelledby="bookmark-heading">
+      <section id="bookmark" className="mt-6 scroll-mt-24 surface p-6" aria-labelledby="bookmark-heading">
         <h2 id="bookmark-heading" className="inline-flex items-center gap-2 font-heading text-base font-extrabold text-secondary"><Bookmark size={17} className="text-primary" aria-hidden /> {format(dict.profile.bookmarksTitle, { count: bookmarks.length })}</h2>
         <div className="mt-4 grid gap-3 sm:grid-cols-2 lg:grid-cols-3">
           {bookmarks.map((row) => (
@@ -199,7 +199,7 @@ function ChildrenSection({ children, setChildren, loading }: { children: ChildDt
   }
 
   return (
-    <section className="rounded-3xl border border-sand bg-white p-6" aria-labelledby="children-heading">
+    <section className="surface p-6" aria-labelledby="children-heading">
       <h2 id="children-heading" className="inline-flex items-center gap-2 font-heading text-base font-extrabold text-secondary"><Baby size={17} className="text-primary" aria-hidden /> {dict.profile.childrenTitle}</h2>
       <ul className="mt-3 space-y-2">
         {loading && [0, 1].map((i) => <li key={i} className="skeleton h-16 rounded-2xl" />)}
@@ -214,7 +214,7 @@ function ChildrenSection({ children, setChildren, loading }: { children: ChildDt
               <Link href="/development" title={dict.nav.milestones} className="grid h-9 w-9 place-items-center rounded-xl text-secondary transition hover:bg-secondary-soft" aria-label={format(dict.profile.milestoneAria, { name: child.name })}>
                 <ChevronRight size={17} />
               </Link>
-              <button onClick={() => removeChild(child.id)} title={dict.common.delete} aria-label={format(dict.profile.removeAria, { name: child.name })} className="grid h-9 w-9 place-items-center rounded-xl text-muted transition hover:bg-red-50 hover:text-red-600">
+              <button onClick={() => removeChild(child.id)} title={dict.common.delete} aria-label={format(dict.profile.removeAria, { name: child.name })} className="grid h-9 w-9 place-items-center rounded-xl text-muted transition hover:bg-danger-soft hover:text-danger">
                 <Trash2 size={16} />
               </button>
             </div>
@@ -223,7 +223,7 @@ function ChildrenSection({ children, setChildren, loading }: { children: ChildDt
       </ul>
 
       <form onSubmit={addChild} className="mt-4 border-t border-sand pt-4">
-        {error && <p role="alert" className="mb-2 flex items-center gap-1.5 rounded-2xl bg-red-50 px-3 py-2 text-[11px] font-medium text-red-700"><TriangleAlert size={12} />{error}</p>}
+        {error && <p role="alert" className="mb-2 flex items-center gap-1.5 rounded-2xl bg-danger-soft px-3 py-2 text-[11px] font-medium text-danger"><TriangleAlert size={12} />{error}</p>}
         <p className="text-[10px] font-extrabold uppercase tracking-[0.16em] text-muted">{dict.profile.addChild}</p>
         <div className="mt-2 grid grid-cols-2 gap-2">
           <input required value={name} onChange={(e) => setName(e.target.value)} placeholder={dict.profile.childNamePlaceholder} aria-label={dict.profile.childNamePlaceholder} className="col-span-2 rounded-2xl border border-sand bg-cream px-4 py-2.5 text-sm outline-none focus:border-primary" />

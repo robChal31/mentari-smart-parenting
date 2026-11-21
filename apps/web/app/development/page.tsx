@@ -35,12 +35,16 @@ const CATEGORY_ICONS: Record<string, React.ReactNode> = {
   SOCIAL_EMOTIONAL: <HeartHandshake size={17} />,
   CREATIVE: <Palette size={17} />,
 };
+// Warna per domain perkembangan. Tiap domain tetap punya identitas sendiri,
+// tapi semuanya diambil dari palet — versi sebelumnya memakai orange/sky/
+// violet/rose yang tidak ada di palet dan terlihat asing di atas krem.
+// Semua pasangan teks-latar di bawah diukur lulus AA.
 const CATEGORY_TINTS: Record<string, string> = {
-  PHYSICAL: "bg-orange-100 text-orange-700",
-  LANGUAGE: "bg-sky-100 text-sky-800",
-  COGNITIVE: "bg-violet-100 text-violet-800",
-  SOCIAL_EMOTIONAL: "bg-rose-100 text-rose-800",
-  CREATIVE: "bg-emerald-100 text-emerald-800",
+  PHYSICAL: "bg-[#FBE7C8] text-[#7A4E00]",          // oranye fase Bayi
+  LANGUAGE: "bg-accent-soft text-accent-deep",        // biru
+  COGNITIVE: "bg-[#EDE4F2] text-[#5B3D6B]",          // ungu redup
+  SOCIAL_EMOTIONAL: "bg-danger-soft text-danger",     // merah muda hangat
+  CREATIVE: "bg-success-soft text-success",           // hijau
 };
 
 export default function DevelopmentPage() {
@@ -184,7 +188,7 @@ export default function DevelopmentPage() {
           <span className="grid h-16 w-16 place-items-center rounded-2xl bg-white/10 font-heading text-xl font-extrabold text-accent-on-dark">{pct}%</span>
         </div>
         <div className="mt-4 h-2.5 w-full overflow-hidden rounded-full bg-white/15">
-          <div className="h-full rounded-full bg-gradient-to-r from-accent-on-dark to-[#8FE8B4] transition-all duration-500" style={{ width: `${pct}%` }} />
+          <div className="h-full rounded-full bg-gradient-to-r from-accent-bright to-success transition-all duration-500" style={{ width: `${pct}%` }} />
         </div>
       </div>
 
@@ -192,7 +196,7 @@ export default function DevelopmentPage() {
       {loading ? (
         <div className="mt-6 space-y-4">
           {[0, 1, 2].map((i) => (
-            <div key={i} className="rounded-3xl border border-sand bg-white p-5">
+            <div key={i} className="surface p-5">
               <div className="flex items-center justify-between gap-3">
                 <div className="flex items-center gap-2">
                   <div className="skeleton-on-card h-7 w-7 rounded-xl" />
@@ -220,7 +224,7 @@ export default function DevelopmentPage() {
           };
           const completed = rows.filter((r) => r.isCompleted).length;
           return (
-            <section key={category} className="mt-6 overflow-hidden rounded-3xl border border-sand bg-white" aria-labelledby={`kat-${category}`}>
+            <section key={category} className="mt-6 overflow-hidden surface" aria-labelledby={`kat-${category}`}>
               <div className="flex items-center gap-3 border-b border-sand bg-cream/40 px-5 py-4">
                 <span className={`grid h-10 w-10 place-items-center rounded-2xl ${meta.tint}`}>{meta.icon}</span>
                 <div>
@@ -243,7 +247,7 @@ export default function DevelopmentPage() {
                         {busy ? (
                           <Loader2 size={20} className="mt-0.5 shrink-0 animate-spin text-primary" aria-hidden />
                         ) : checked ? (
-                          <CheckCircle2 size={20} className="mt-0.5 shrink-0 text-accent-deep" fill="#E2EEE7" aria-hidden />
+                          <CheckCircle2 size={20} className="mt-0.5 shrink-0 text-accent-deep" fill="var(--color-success-soft)" aria-hidden />
                         ) : (
                           <Circle size={20} className="mt-0.5 shrink-0 text-sand" aria-hidden />
                         )}

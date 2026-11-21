@@ -37,7 +37,7 @@ export default async function ThreadDetailPage({ params }: { params: Promise<{ i
 
       <article className="mt-5 rounded-[2rem] border border-sand bg-white p-6 sm:p-8">
         <div className="flex flex-wrap items-center gap-2 text-[10px] font-semibold text-muted">
-          {thread.isPinned && <span className="inline-flex items-center gap-1 rounded-full bg-amber-50 px-2 py-0.5 font-extrabold uppercase tracking-wider text-amber-700"><Pin size={9} /> {dict.community.pinned}</span>}
+          {thread.isPinned && <span className="inline-flex items-center gap-1 rounded-full bg-warning-soft px-2 py-0.5 font-extrabold uppercase tracking-wider text-warning"><Pin size={9} /> {dict.community.pinned}</span>}
           {thread.categorySlug && <span className="rounded-full bg-cream px-2.5 py-1 font-extrabold uppercase tracking-wider">#{thread.categorySlug}</span>}
           <span className="inline-flex items-center gap-1"><Eye size={11} /> {thread.viewCount} {dict.community.viewsSeen}</span>
         </div>
@@ -65,7 +65,7 @@ export default async function ThreadDetailPage({ params }: { params: Promise<{ i
         <h2 id="komentar-heading" className="font-heading text-lg font-extrabold text-secondary">{format(dict.community.commentsTitle, { count: comments.length })}</h2>
         <ol className="mt-4 space-y-3">
           {comments.map((comment) => (
-            <li key={comment.id} className="flex items-start gap-3 rounded-3xl border border-sand bg-white p-5">
+            <li key={comment.id} className="flex items-start gap-3 surface p-5">
               <span className="grid h-10 w-10 shrink-0 place-items-center rounded-2xl bg-accent-soft text-[11px] font-extrabold text-accent-deep">
                 {comment.author.fullName.split(" ").filter(Boolean).slice(0, 2).map((w) => w[0]).join("").toUpperCase()}
               </span>

@@ -42,7 +42,7 @@ export function OverviewTab() {
       <div className="space-y-6" aria-busy="true">
         <div className="grid grid-cols-2 gap-4 sm:grid-cols-3 lg:grid-cols-6">
           {Array.from({ length: 6 }).map((_, i) => (
-            <div key={i} className="rounded-3xl border border-sand bg-white p-4">
+            <div key={i} className="surface p-4">
               <div className="skeleton-on-card h-9 w-9 rounded-2xl" />
               <div className="skeleton-on-card mt-2 h-6 w-12" />
               <div className="skeleton-on-card mt-1.5 h-2.5 w-20" />
@@ -51,7 +51,7 @@ export function OverviewTab() {
         </div>
         <div className="grid gap-4 lg:grid-cols-2">
           {[0, 1].map((i) => (
-            <div key={i} className="rounded-3xl border border-sand bg-white p-5">
+            <div key={i} className="surface p-5">
               <div className="skeleton-on-card h-4 w-32" />
               <div className="mt-4 flex items-end gap-2">
                 {[40, 68, 52, 80, 60, 90, 72].map((h, j) => (
@@ -80,7 +80,7 @@ export function OverviewTab() {
     <div className="space-y-6">
       <div className="grid grid-cols-2 gap-4 sm:grid-cols-3 lg:grid-cols-6">
         {cards.map((card) => (
-          <div key={card.label} className="rounded-3xl border border-sand bg-white p-4">
+          <div key={card.label} className="surface p-4">
             <span className="grid h-9 w-9 place-items-center rounded-2xl bg-primary-soft text-primary-deep">{card.icon}</span>
             <p className="mt-2 font-heading text-xl font-extrabold text-secondary">{card.value}</p>
             <p className="text-[9px] font-extrabold uppercase tracking-[0.12em] text-muted">{card.label}</p>
@@ -88,14 +88,14 @@ export function OverviewTab() {
         ))}
       </div>
 
-      <section className="rounded-3xl border border-sand bg-white p-6" aria-label={dict.admin.views14Aria}>
+      <section className="surface p-6" aria-label={dict.admin.views14Aria}>
         <h2 className="font-heading text-sm font-extrabold text-secondary">{dict.admin.views14}</h2>
         <div className="mt-4 flex h-36 items-end gap-1.5 sm:gap-3">
           {viewsByDay.map((day) => (
             <div key={day.date} className="group flex h-full flex-1 flex-col items-center justify-end gap-1">
               <span className="text-[9px] font-bold text-secondary opacity-0 transition group-hover:opacity-100">{day.views}</span>
               <div
-                className="w-full rounded-t-lg bg-gradient-to-t from-primary-bright to-[#FF9A62] transition-all duration-300"
+                className="w-full rounded-t-lg bg-gradient-to-t from-primary to-primary-bright transition-all duration-300"
                 style={{ height: `${Math.max(4, (day.views / maxViews) * 100)}%` }}
                 title={`${formatDate(day.date, locale)}: ${day.views}`}
               />
@@ -106,7 +106,7 @@ export function OverviewTab() {
       </section>
 
       <div className="grid gap-5 lg:grid-cols-2">
-        <section className="rounded-3xl border border-sand bg-white p-6" aria-label={dict.admin.topContents}>
+        <section className="surface p-6" aria-label={dict.admin.topContents}>
           <h2 className="font-heading text-sm font-extrabold text-secondary">{dict.admin.topContents}</h2>
           <ol className="mt-3 divide-y divide-sand/70">
             {topContents.map((content, index) => (
@@ -118,7 +118,7 @@ export function OverviewTab() {
             ))}
           </ol>
         </section>
-        <section className="rounded-3xl border border-sand bg-white p-6" aria-label={dict.admin.topProductsClicked}>
+        <section className="surface p-6" aria-label={dict.admin.topProductsClicked}>
           <h2 className="font-heading text-sm font-extrabold text-secondary">{dict.admin.topProductsClicked}</h2>
           <ol className="mt-3 divide-y divide-sand/70">
             {topProducts.map((product, index) => (

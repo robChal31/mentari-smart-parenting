@@ -71,9 +71,9 @@ export function CommentForm({ threadId }: { threadId: string }) {
 
   return (
     <form onSubmit={submit} className="mt-2">
-      {error && <p role="alert" className="mb-2 rounded-2xl border border-red-200 bg-red-50 px-4 py-2.5 text-xs text-red-700">{error}</p>}
+      {error && <p role="alert" className="mb-2 rounded-2xl status-danger border px-4 py-2.5 text-xs text-danger">{error}</p>}
       <label htmlFor="comment" className="sr-only">{dict.community.commentAria}</label>
-      <div className="flex items-end gap-2 rounded-3xl border border-sand bg-white p-2 focus-within:border-primary">
+      <div className="flex items-end gap-2 surface p-2 focus-within:border-primary">
         <MessageCircle size={18} className="mb-2 ml-2 shrink-0 text-muted" aria-hidden />
         <textarea id="comment" rows={2} value={body} onChange={(e) => setBody(e.target.value)} placeholder={dict.community.commentPlaceholder} className="w-full resize-none bg-transparent py-2 text-sm outline-none" />
         <button type="submit" disabled={busy || body.trim().length < 2} aria-label={dict.community.commentSubmitAria} className="mb-1 grid h-11 w-11 shrink-0 place-items-center rounded-2xl bg-primary text-white transition hover:bg-primary-deep disabled:opacity-40">

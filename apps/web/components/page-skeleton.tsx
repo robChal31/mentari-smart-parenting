@@ -71,7 +71,7 @@ export function AuthPageSkeleton() {
 export function NarrowCardSkeleton() {
   return (
     <div className="mx-auto max-w-md px-4 py-16 sm:px-6">
-      <div className="rounded-3xl border border-sand bg-white p-7">
+      <div className="surface p-7">
         <div className="skeleton-on-card h-5 w-40" />
         <div className="skeleton-on-card mt-2 h-3 w-full" />
         <div className="skeleton-on-card mt-1.5 h-3 w-3/4" />
@@ -105,7 +105,7 @@ export function AdminDashboardSkeleton() {
       </div>
       <div className="mt-6 grid grid-cols-2 gap-4 sm:grid-cols-3 lg:grid-cols-6">
         {Array.from({ length: 6 }).map((_, i) => (
-          <div key={i} className="rounded-3xl border border-sand bg-white p-4">
+          <div key={i} className="surface p-4">
             <div className="skeleton-on-card h-9 w-9 rounded-2xl" />
             <div className="skeleton-on-card mt-2 h-6 w-12" />
             <div className="skeleton-on-card mt-1.5 h-2.5 w-20" />
@@ -133,7 +133,7 @@ export function ProfileSkeleton() {
       </header>
       <div className="mt-6 grid gap-5 lg:grid-cols-2">
         {[0, 1].map((i) => (
-          <div key={i} className="rounded-3xl border border-sand bg-white p-6">
+          <div key={i} className="surface p-6">
             <div className="skeleton-on-card h-5 w-40" />
             <div className="mt-4 grid grid-cols-3 gap-3">
               {[0, 1, 2].map((j) => (
@@ -149,7 +149,7 @@ export function ProfileSkeleton() {
           </div>
         ))}
       </div>
-      <div className="mt-6 rounded-3xl border border-sand bg-white p-6">
+      <div className="mt-6 surface p-6">
         <div className="skeleton-on-card h-5 w-44" />
         <div className="mt-4 grid gap-3 sm:grid-cols-2 lg:grid-cols-3">
           {[0, 1, 2].map((i) => (
@@ -185,7 +185,7 @@ export function DevelopmentPageSkeleton() {
       </div>
       <div className="mt-6 space-y-4">
         {[0, 1, 2].map((i) => (
-          <div key={i} className="rounded-3xl border border-sand bg-white p-5">
+          <div key={i} className="surface p-5">
             <div className="flex items-center gap-2">
               <div className="skeleton-on-card h-7 w-7 rounded-xl" />
               <div className="skeleton-on-card h-4 w-40" />

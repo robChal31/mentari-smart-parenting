@@ -39,7 +39,7 @@ export async function ContentCard({ content, priority = false }: { content: Cont
   return (
     <Link
       href={`/contents/${content.slug}`}
-      className="group flex h-full flex-col overflow-hidden rounded-3xl border border-sand bg-white shadow-[0_2px_10px_rgba(38,50,68,0.05)] transition-all duration-200 hover:-translate-y-1 hover:border-primary/30 hover:shadow-[0_16px_40px_rgba(193,78,34,0.14)]"
+      className="group flex h-full flex-col overflow-hidden surface shadow-[var(--shadow-card)] transition-all duration-200 hover:-translate-y-1 hover:border-primary/30 hover:shadow-[var(--shadow-accent)]"
     >
       <div className={`relative h-36 w-full overflow-hidden bg-gradient-to-br ${gradientFor(content.id)} sm:h-40`}>
         {content.thumbnailUrl && (
@@ -98,7 +98,7 @@ export async function ContentCard({ content, priority = false }: { content: Cont
  */
 export function ContentCardSkeleton() {
   return (
-    <div className="flex h-full flex-col overflow-hidden rounded-3xl border border-sand bg-white">
+    <div className="flex h-full flex-col overflow-hidden surface">
       {/* Thumbnail: blok dasar pakai .skeleton (trough lebih gelap), sedangkan
           badge di atasnya pakai putih solid supaya bentuk "badge" terbaca —
           dulu badge memakai .skeleton-on-card di atas bg-sand (kontras 1.03,

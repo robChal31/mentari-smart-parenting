@@ -29,8 +29,8 @@ function statusLabel(status: string, dict: ReturnType<typeof useDictionary>) {
 const STATUS_CLASSES: Record<string, string> = {
   PUBLISHED: "bg-accent-soft text-accent-deep",
   DRAFT: "bg-sand text-muted",
-  ARCHIVED: "bg-slate-100 text-slate-500",
-  SCHEDULED: "bg-amber-100 text-amber-800",
+  ARCHIVED: "bg-surface-sunken text-muted",
+  SCHEDULED: "bg-warning-soft text-warning",
 };
 
 export function ContentsTab() {
@@ -118,7 +118,7 @@ export function ContentsTab() {
     <div className="space-y-2">
       {loadError && <AdminErrorBanner onRetry={load} />}
       {openError && (
-        <p role="alert" className="rounded-2xl border border-red-200 bg-red-50 px-4 py-2.5 text-xs text-red-700">
+        <p role="alert" className="rounded-2xl status-danger border px-4 py-2.5 text-xs text-danger">
           {openError}
         </p>
       )}
@@ -160,7 +160,7 @@ export function ContentsTab() {
         />
       )}
 
-      <div className="mt-4 overflow-hidden rounded-3xl border border-sand bg-white">
+      <div className="mt-4 overflow-hidden surface">
         <div className="flex items-center justify-between border-b border-sand bg-cream/40 px-5 py-3 text-[10px] font-extrabold uppercase tracking-[0.14em] text-muted">
           <span>{busy ? dict.admin.loading : format(dict.admin.contentsCount, { count: total })}</span>
         </div>
@@ -169,7 +169,7 @@ export function ContentsTab() {
             const isPublished = content.status === "PUBLISHED";
             return (
               <li key={content.id} className="flex flex-wrap items-center gap-3 px-5 py-3">
-                <span className={`rounded-full px-2 py-0.5 text-[8px] font-extrabold uppercase tracking-[0.14em] ${content.isFeatured ? "bg-amber-100 text-amber-800" : "bg-sand text-muted"}`}>
+                <span className={`rounded-full px-2 py-0.5 text-[8px] font-extrabold uppercase tracking-[0.14em] ${content.isFeatured ? "bg-warning-soft text-warning" : "bg-sand text-muted"}`}>
                   {(dict.contentTypes as Record<string, string>)[content.type] ?? content.type}
                 </span>
                 <span className={`rounded-full px-2 py-0.5 text-[8px] font-extrabold uppercase tracking-[0.14em] ${STATUS_CLASSES[content.status] ?? "bg-sand text-muted"}`}>

@@ -12,7 +12,7 @@ import { getDictionary } from "@/lib/i18n/get-dictionary";
  * kartu bg-cream di dalamnya. Kontras kartu vs panel hanya 1.03, jadi kartu
  * tidak terbaca sebagai kartu — semuanya melebur jadi satu bidang oranye pucat.
  * Sekarang dipakai skala kedalaman cream → sand → putih:
- *   halaman (cream #FFF9F5) → panel (sand #F2E8E0) → kartu (putih).
+ *   halaman (cream #FDF8F2) → panel (sand #F2E1CD) → kartu (putih).
  * Kartu jadi terlihat "naik" dari panel (kontras 1.21) tanpa menambah warna
  * baru — sand sudah jadi token palet. Panel oranye ditolak karena oranye sudah
  * dipakai 23 tempat untuk tombol, jadi akan terasa ramai.
@@ -40,7 +40,7 @@ export async function RecommendationsPanel({
   return (
     <aside
       aria-label={dict.recommendations.sidebarAria}
-      className="rounded-3xl border border-accent/30 bg-accent-soft p-4 shadow-[0_2px_10px_rgba(38,50,68,0.04)]"
+      className="rounded-3xl border border-accent/30 bg-accent-soft p-4 shadow-[var(--shadow-card)]"
     >
       <div className="mb-3 flex items-start justify-between gap-2">
         <div>

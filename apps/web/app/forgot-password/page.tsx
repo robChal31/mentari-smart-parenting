@@ -43,7 +43,7 @@ export default function ForgotPasswordPage() {
           <h1 className="mt-5 font-heading text-2xl font-extrabold text-secondary">{dict.auth.forgotTitle}</h1>
           <p className="mt-1 text-sm text-muted">{dict.auth.forgotSub}</p>
           <form onSubmit={onSubmit} className="mt-6 space-y-4">
-            {error && <p role="alert" className="rounded-2xl border border-red-200 bg-red-50 px-4 py-3 text-sm text-red-700">{error}</p>}
+            {error && <p role="alert" className="status-danger rounded-2xl px-4 py-3 text-sm font-medium">{error}</p>}
             <div>
               <label htmlFor="email" className="text-[11px] font-extrabold uppercase tracking-[0.14em] text-muted">{dict.auth.email}</label>
               <input id="email" type="email" required value={email} onChange={(e) => setEmail(e.target.value)} autoComplete="email" placeholder={dict.auth.emailPlaceholder} className="mt-1.5 w-full rounded-2xl border border-sand bg-white px-4 py-3 text-sm outline-none focus:border-primary" />

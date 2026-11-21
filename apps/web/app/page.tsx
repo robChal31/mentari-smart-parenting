@@ -282,7 +282,7 @@ export default async function HomePage() {
               return (
                 <Link
                   href={`/contents/${hero.slug}`}
-                  className="group relative flex min-h-[22rem] flex-col justify-end overflow-hidden rounded-[1.75rem] border border-sand bg-white shadow-[0_2px_12px_rgba(42,38,32,0.06)] transition hover:shadow-[0_20px_50px_rgba(193,78,34,0.16)] lg:min-h-[26rem]"
+                  className="group relative flex min-h-[22rem] flex-col justify-end overflow-hidden rounded-[1.75rem] border border-sand bg-white shadow-[0_2px_12px_rgba(42,38,32,0.06)] transition hover:shadow-[var(--shadow-accent)] lg:min-h-[26rem]"
                 >
                   {/* thumbnail: gradient yang sudah ada, tidak diubah */}
                   <div className={`absolute inset-0 bg-gradient-to-br ${FEATURED_GRADIENTS[0]}`} />
@@ -336,7 +336,7 @@ export default async function HomePage() {
                   <li key={item.id}>
                     <Link
                       href={`/contents/${item.slug}`}
-                      className="group flex items-center gap-4 rounded-2xl border border-sand bg-white p-3 transition hover:-translate-y-0.5 hover:border-primary/30 hover:shadow-[0_10px_26px_rgba(193,78,34,0.10)] sm:gap-5 sm:p-4"
+                      className="group flex items-center gap-4 rounded-2xl border border-sand bg-white p-3 transition hover:-translate-y-0.5 hover:border-primary/30 hover:shadow-[var(--shadow-accent)] sm:gap-5 sm:p-4"
                     >
                       {/* thumbnail kecil */}
                       <span className={`relative hidden h-20 w-24 shrink-0 overflow-hidden rounded-xl bg-gradient-to-br sm:block ${FEATURED_GRADIENTS[(index + 1) % FEATURED_GRADIENTS.length]}`}>
@@ -519,10 +519,10 @@ export default async function HomePage() {
               <Link
                 key={thread.id}
                 href={`/community/${thread.id}`}
-                className="flex h-full flex-col rounded-3xl border border-sand bg-white p-5 transition hover:border-primary/30 hover:shadow-md"
+                className="flex h-full flex-col surface surface-link p-5"
               >
                 {thread.isPinned && (
-                  <span className="mb-2 inline-flex w-fit items-center gap-1 rounded-full bg-amber-50 px-2 py-0.5 text-[9px] font-extrabold uppercase tracking-[0.14em] text-amber-700">
+                  <span className="mb-2 inline-flex w-fit items-center gap-1 rounded-full bg-warning-soft px-2 py-0.5 text-[9px] font-extrabold uppercase tracking-[0.14em] text-warning">
                     📌 {dict.home.pinned}
                   </span>
                 )}

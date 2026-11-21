@@ -181,7 +181,7 @@ export function ContentForm({
       </div>
 
       {error && (
-        <p role="alert" className="mt-2 rounded-2xl border border-red-200 bg-red-50 px-4 py-2.5 text-xs text-red-700">
+        <p role="alert" className="mt-2 rounded-2xl status-danger border px-4 py-2.5 text-xs text-danger">
           {error}
         </p>
       )}
@@ -294,7 +294,7 @@ export function ContentForm({
               {format(dict.admin.videoDetected, { platform: detectedVideo.label })}
             </span>
           ) : videoUrl.trim() ? (
-            <span className="mt-1.5 block text-[10px] font-semibold leading-relaxed text-amber-700">
+            <span className="mt-1.5 block text-[10px] font-semibold leading-relaxed text-warning">
               {dict.admin.videoUnrecognized}
             </span>
           ) : null}

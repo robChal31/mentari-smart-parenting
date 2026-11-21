@@ -58,7 +58,7 @@ export function ContentsFilter({ q, type, category, ageGroup, sort, ageGroups, c
   ];
 
   return (
-    <aside className="h-fit rounded-3xl border border-sand bg-white p-5 lg:sticky lg:top-24">
+    <aside className="h-fit surface p-5 lg:sticky lg:top-24">
       <form onSubmit={apply} className="space-y-5">
         <div className="flex items-center justify-between">
           <p className="inline-flex items-center gap-2 font-heading text-sm font-extrabold text-secondary">
