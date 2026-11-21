@@ -1,8 +1,9 @@
+import type { ReactNode } from "react";
 import Link from "next/link";
 import Image from "next/image";
 import {
-  ArrowRight, Baby, Backpack, BadgeCheck, BookOpenText, Flame, Footprints,
-  MessagesSquare, Puzzle, Rocket, ShieldCheck, Sun, UserRoundCheck,
+  ArrowRight, Baby, BadgeCheck, BookOpenText, Flame, Lightbulb, MessagesSquare,
+  NotebookPen, Play, Rocket, ShieldCheck, Sparkle, Sun, UserRoundCheck,
 } from "lucide-react";
 import { api } from "@/lib/api";
 import { ContentCard } from "@/components/content-card";
@@ -16,6 +17,49 @@ export const dynamic = "force-dynamic";
 // Label yang mengikuti busur tepi foto hero. Karakter disebar di busur oleh
 // CSS (.curved-label); spasi tetap dihitung supaya jaraknya rata.
 const CURVED_LABEL = "TIM AHLI MENTARI";
+
+/**
+ * Ilustrasi + warna untuk tiap fase usia.
+ *
+ * Dipetakan lewat SLUG, bukan urutan array: `ageGroups` datang dari API dan
+ * urutannya bisa berubah kalau admin menambah atau menyusun ulang fase.
+ * Memakai index berarti gambar bayi bisa muncul di pil SD Akhir tanpa ada
+ * yang sadar. Fallback dipakai untuk fase yang belum punya ilustrasi.
+ *
+ * Keenam figur digambar sekali dengan gaya seragam (outline tebal, palet
+ * hangat) lalu dipotong latarnya, jadi bisa duduk di atas warna pil apa pun
+ * tanpa kotak putih di sekelilingnya.
+ */
+const AGE_STAGE_STYLE: Record<string, { art?: string; bg: string; fg: string }> = {
+  bayi:        { art: "/images/stage-baby.webp",      bg: "bg-[#EBB666]", fg: "text-secondary" },
+  batita:      { art: "/images/stage-toddler.webp",   bg: "bg-[#C14E22]", fg: "text-cream" },
+  prasekolah:  { art: "/images/stage-preschool.webp", bg: "bg-[#A3C377]", fg: "text-secondary" },
+  "sd-awal":   { art: "/images/stage-school.webp",    bg: "bg-accent",    fg: "text-cream" },
+  // Dua fase terakhir belum punya ilustrasi sendiri. Warnanya tetap
+  // dibedakan supaya keenam pil tidak terlihat seragam.
+  "sd-akhir":  { bg: "bg-[#8FA9C4]", fg: "text-secondary-deep" },
+  "semua-usia":{ bg: "bg-sand",      fg: "text-secondary" },
+};
+const AGE_STAGE_FALLBACK = { bg: "bg-sand", fg: "text-secondary" };
+
+/**
+ * Label + ikon tipe konten.
+ *
+ * Section "Konten Pilihan" mencampur artikel, video, dan infografis. Tanpa
+ * label tipe, pengunjung tidak tahu apakah tautan akan membuka bacaan atau
+ * pemutar video — dan judul section lama ("bahan bacaan") jadi menyesatkan.
+ */
+// `icon` sengaja disimpan sebagai elemen, bukan komponen: ukurannya selalu
+// 10px dan tidak pernah berubah, jadi tidak perlu render ulang per pemakaian.
+type TypeBadge = { icon: ReactNode; key: keyof Awaited<ReturnType<typeof getDictionary>>["dict"]["contentTypes"] };
+
+const TYPE_BADGE: Record<string, TypeBadge> = {
+  ARTICLE:     { icon: <BookOpenText size={10} />, key: "ARTICLE" },
+  VIDEO:       { icon: <Play size={10} fill="currentColor" />, key: "VIDEO" },
+  INFOGRAPHIC: { icon: <Sparkle size={10} />, key: "INFOGRAPHIC" },
+  TIPS:        { icon: <Lightbulb size={10} />, key: "TIPS" },
+  ACTIVITY:    { icon: <NotebookPen size={10} />, key: "ACTIVITY" },
+};
 
 // Gradient kartu besar. Diambil dari palet agar tidak menambah warna baru,
 // dan urutannya sengaja tidak mengulang gradient thumbnail ContentCard.
@@ -205,9 +249,9 @@ export default async function HomePage() {
       </section>
 
       {/* ============ BAND FASE USIA ============ */}
-      {/* Di referensi, empat fase usia ini duduk di atas pita kertas
-          bergelombang — bukan rail chip polos. Ikon per fase dipakai supaya
-          tiap chip bisa dikenali tanpa harus membaca labelnya. */}
+      {/* Referensi memakai pil yang memuat ilustrasi anak, bukan ikon garis.
+          Figurnya setengah keluar dari tepi pil, jadi bentuknya terasa
+          seperti stiker yang ditempel, bukan avatar di dalam lingkaran. */}
       {ageGroups && ageGroups.length > 0 && (
         <section aria-label={dict.home.ageRailAria} className="relative mt-12">
           {/* Tepi atas gelombang: warna sand naik ke latar cream. */}
@@ -220,27 +264,46 @@ export default async function HomePage() {
             </div>
           </div>
           <div className="relative bg-sand pb-1">
-            <div className="chip-rail mx-auto flex max-w-7xl items-center gap-2.5 overflow-x-auto px-4 pb-2 pt-4 sm:gap-3 sm:px-6">
-              {ageGroups.map((group, index) => {
-                // Tiap fase punya warna + ikon sendiri, mengikuti referensi:
-                // oranye, terracotta, hijau muda, biru tua.
-                const stages = [
-                  { bg: "bg-[#EBB666]", fg: "text-secondary", Icon: Baby },
-                  { bg: "bg-[#C14E22]", fg: "text-cream", Icon: Footprints },
-                  { bg: "bg-[#A3C377]", fg: "text-secondary", Icon: Puzzle },
-                  { bg: "bg-accent", fg: "text-cream", Icon: Backpack },
-                ];
-                const stage = stages[index % stages.length];
-                const Icon = stage.Icon;
+            <div className="chip-rail mx-auto flex max-w-7xl items-center gap-3 overflow-x-auto px-4 pb-3 pt-5 sm:gap-4 sm:px-6">
+              {/* API mengurutkan berdasarkan min_age, dan "Semua Usia" punya
+                  min_age 0 — jadi ia menyelip di antara Bayi dan Batita.
+                  Di sini urutannya diperbaiki: fase berurutan dari bayi,
+                  "Semua Usia" ditaruh paling akhir karena ia bukan fase
+                  melainkan pintasan. */}
+              {[...ageGroups]
+                .sort((a, b) => {
+                  const rank = (g: { slug: string }) => (g.slug === "semua-usia" ? 1 : 0);
+                  return rank(a) - rank(b) || a.minAge - b.minAge;
+                })
+                .map((group) => {
+                const stage = AGE_STAGE_STYLE[group.slug] ?? AGE_STAGE_FALLBACK;
                 return (
                   <Link
                     key={group.id}
                     href={`/contents?ageGroup=${group.slug}`}
-                    className={`group inline-flex shrink-0 items-center gap-2.5 rounded-full ${stage.bg} ${stage.fg} py-2.5 pl-3 pr-5 text-xs font-extrabold shadow-[0_3px_10px_rgba(42,38,32,0.10)] ring-2 ring-white/50 transition hover:-translate-y-0.5 hover:shadow-[0_8px_18px_rgba(42,38,32,0.18)]`}
+                    className={`group relative inline-flex shrink-0 items-center rounded-full ${stage.bg} ${stage.fg} py-2.5 pl-3 pr-6 text-xs font-extrabold shadow-[0_4px_14px_rgba(42,38,32,0.12)] ring-2 ring-white/40 transition hover:-translate-y-0.5 hover:shadow-[0_10px_24px_rgba(42,38,32,0.20)] sm:text-sm`}
                   >
-                    <span className="grid h-7 w-7 place-items-center rounded-full bg-white/85 text-secondary transition group-hover:scale-105">
-                      <Icon size={15} aria-hidden />
-                    </span>
+                    {stage.art ? (
+                      // Ilustrasi sudah dipotong latarnya. Diberi tinggi tetap
+                      // dan sedikit keluar dari pil supaya terasa tiga dimensi.
+                      <Image
+                        src={stage.art}
+                        alt=""
+                        width={120}
+                        height={200}
+                        aria-hidden
+                        className="mr-2 h-11 w-auto shrink-0 -translate-y-1 transition-transform duration-200 group-hover:-translate-y-2 group-hover:scale-105 sm:h-12"
+                      />
+                    ) : (
+                      // Fase tanpa ilustrasi: pakai inisial supaya lebarnya
+                      // tetap sebanding, tidak mendadak gepeng.
+                      <span
+                        aria-hidden
+                        className="mr-2 grid h-9 w-9 shrink-0 place-items-center rounded-full bg-white/35 font-heading text-[11px] font-extrabold sm:h-10 sm:w-10 sm:text-xs"
+                      >
+                        {group.name.charAt(0)}
+                      </span>
+                    )}
                     {group.name}
                   </Link>
                 );
@@ -253,129 +316,149 @@ export default async function HomePage() {
         </section>
       )}
 
-      {/* ============ BAHAN BACAAN TERFAVORIT ============ */}
-      {/* Referensi memakai komposisi asimetris: satu kartu besar di kiri
-          (= peringkat 01) dan tiga artikel bernomor 02/03/04 di kanan.
-          Nomor besar berwarna terracotta pucat itu yang membuat section ini
-          terasa seperti daftar kurasi, bukan grid kartu biasa. */}
+      {/* ============ KONTEN PILIHAN ============ */}
+      {/* Referensi menyusun ini sebagai majalah: satu kartu besar (= 01) di
+          kiri, tiga konten bernomor di kanan. Namanya bukan "bahan bacaan"
+          lagi karena isinya campuran — artikel, video, dan infografis —
+          jadi label tipe ditampilkan di tiap kartu.
+
+          Seluruh section duduk di atas panel sand bergelombang, supaya
+          terpisah dari latar cream dan terasa seperti satu bagian utuh,
+          bukan deretan kartu lepas. */}
       {featuredItems.length > 0 && (
-        <section className="mx-auto max-w-7xl px-4 pt-14 sm:px-6" aria-labelledby="favorites-heading">
-          <div className="mb-6 flex flex-wrap items-end justify-between gap-3 border-b border-sand pb-4">
-            <div>
-              <p className="text-[11px] font-extrabold uppercase tracking-[0.16em] text-primary">
-                {dict.home.favoritesKicker}
-              </p>
-              <h2 id="favorites-heading" className="mt-1 font-heading text-2xl font-extrabold tracking-tight text-secondary sm:text-[1.75rem]">
-                {dict.home.favoritesTitle}
-              </h2>
-            </div>
-            <Link href="/contents?sort=popular" className="inline-flex shrink-0 items-center gap-1 text-sm font-bold text-primary transition hover:gap-2">
-              {dict.home.viewAll} <ArrowRight size={15} aria-hidden />
-            </Link>
-          </div>
-
-          <div className="grid gap-6 lg:grid-cols-[minmax(0,1.05fr)_minmax(0,1fr)] lg:gap-8">
-            {/* --- kartu besar --- */}
-            {(() => {
-              const hero = featuredItems[0];
-              const heroCategory = hero.categories[0];
-              return (
-                <Link
-                  href={`/contents/${hero.slug}`}
-                  className="group relative flex min-h-[22rem] flex-col justify-end overflow-hidden rounded-[1.75rem] border border-sand bg-white shadow-[0_2px_12px_rgba(42,38,32,0.06)] transition hover:shadow-[var(--shadow-accent)] lg:min-h-[26rem]"
-                >
-                  {/* thumbnail: gradient yang sudah ada, tidak diubah */}
-                  <div className={`absolute inset-0 bg-gradient-to-br ${FEATURED_GRADIENTS[0]}`} />
-                  {hero.thumbnailUrl && (
-                    <ThumbImg src={hero.thumbnailUrl} className="absolute inset-0 h-full w-full object-cover" />
-                  )}
-                  {/* taburan cahaya lembut, bukan ornamen */}
-                  <span aria-hidden className="absolute -left-10 -top-12 h-48 w-48 rounded-full bg-white/45 blur-3xl" />
-                  <span aria-hidden className="absolute right-0 top-1/4 h-40 w-40 rounded-full bg-white/30 blur-3xl" />
-                  {/* gradasi gelap di bawah supaya teks putih terbaca */}
-                  <div aria-hidden className="absolute inset-x-0 bottom-0 h-3/5 bg-gradient-to-t from-secondary-deep/90 via-secondary-deep/45 to-transparent" />
-
-                  <span className="absolute left-4 top-4 inline-flex items-center gap-1 rounded-full bg-primary px-2.5 py-1 text-[10px] font-extrabold uppercase tracking-wide text-white shadow">
-                    <Flame size={11} fill="currentColor" aria-hidden /> {dict.home.popularToggle}
-                  </span>
-                  {/* Kartu besar adalah peringkat 01 — nomornya diletakkan di
-                      sudut kanan atas, sejajar dengan badge Populer di kiri. */}
-                  <span
-                    aria-hidden
-                    className="absolute right-4 top-3 font-heading text-2xl font-extrabold leading-none text-white/45 sm:text-3xl"
-                  >
-                    01
-                  </span>
-
-                  <div className="relative p-5 sm:p-6">
-                    <div className="mb-2 flex flex-wrap items-center gap-2">
-                      {heroCategory && (
-                        <span className="rounded-full bg-white/95 px-2.5 py-1 text-[10px] font-extrabold uppercase tracking-[0.12em] text-primary-deep">
-                          {heroCategory.name}
-                        </span>
-                      )}
-                    </div>
-                    <h3 className="font-heading text-xl font-extrabold leading-snug text-white sm:text-2xl">
-                      {hero.title}
-                    </h3>
-                    {hero.excerpt && (
-                      <p className="mt-2 line-clamp-2 max-w-md text-xs leading-5 text-white/80 sm:text-sm">
-                        {hero.excerpt}
-                      </p>
-                    )}
-                  </div>
+        <section className="mt-16" aria-labelledby="favorites-heading">
+          <WaveEdge className="block h-5 w-full text-sand sm:h-7" />
+          <div className="bg-sand py-8 sm:py-10">
+            <div className="mx-auto max-w-7xl px-4 sm:px-6">
+              <div className="mb-6 flex flex-wrap items-end justify-between gap-3">
+                <div>
+                  <p className="text-[11px] font-extrabold uppercase tracking-[0.16em] text-primary-deep">
+                    {dict.home.favoritesKicker}
+                  </p>
+                  <h2 id="favorites-heading" className="mt-1 flex items-center gap-2 font-heading text-2xl font-extrabold tracking-tight text-secondary sm:text-[1.9rem]">
+                    {dict.home.favoritesTitle}
+                    <Sparkle size={18} className="text-primary" fill="currentColor" aria-hidden />
+                  </h2>
+                  <p className="mt-1.5 max-w-lg text-xs leading-5 text-secondary/70 sm:text-sm">
+                    {dict.home.favoritesSub}
+                  </p>
+                </div>
+                <Link href="/contents?sort=popular" className="inline-flex shrink-0 items-center gap-1 rounded-full bg-secondary px-4 py-2 text-xs font-bold text-cream transition hover:gap-2 hover:bg-secondary-deep sm:text-sm">
+                  {dict.home.viewAll} <ArrowRight size={14} aria-hidden />
                 </Link>
-              );
-            })()}
+              </div>
 
-            {/* --- daftar bernomor --- */}
-            <ol className="flex flex-col gap-3">
-              {featuredItems.slice(1, 4).map((item, index) => {
-                const category = item.categories[0];
-                return (
-                  <li key={item.id}>
+              <div className="grid gap-5 lg:grid-cols-[minmax(0,1.08fr)_minmax(0,1fr)] lg:gap-7">
+                {/* --- kartu besar (peringkat 01) --- */}
+                {(() => {
+                  const hero = featuredItems[0];
+                  const heroCategory = hero.categories[0];
+                  return (
                     <Link
-                      href={`/contents/${item.slug}`}
-                      className="group flex items-center gap-4 rounded-2xl border border-sand bg-white p-3 transition hover:-translate-y-0.5 hover:border-primary/30 hover:shadow-[var(--shadow-accent)] sm:gap-5 sm:p-4"
+                      href={`/contents/${hero.slug}`}
+                      className="group relative flex min-h-[20rem] flex-col justify-end overflow-hidden rounded-[1.75rem] bg-secondary shadow-[0_18px_44px_rgba(42,38,32,0.22)] ring-1 ring-white/15 transition hover:shadow-[0_24px_56px_rgba(42,38,32,0.30)] lg:min-h-[25rem]"
                     >
-                      {/* thumbnail kecil */}
-                      <span className={`relative hidden h-20 w-24 shrink-0 overflow-hidden rounded-xl bg-gradient-to-br sm:block ${FEATURED_GRADIENTS[(index + 1) % FEATURED_GRADIENTS.length]}`}>
-                        {item.thumbnailUrl && (
-                          <ThumbImg src={item.thumbnailUrl} className="h-full w-full object-cover" />
-                        )}
+                      <div className={`absolute inset-0 bg-gradient-to-br ${FEATURED_GRADIENTS[0]}`} />
+                      {hero.thumbnailUrl && (
+                        <ThumbImg src={hero.thumbnailUrl} className="absolute inset-0 h-full w-full object-cover" />
+                      )}
+                      <span aria-hidden className="absolute -left-10 -top-12 h-48 w-48 rounded-full bg-white/35 blur-3xl" />
+                      <div aria-hidden className="absolute inset-x-0 bottom-0 h-3/5 bg-gradient-to-t from-secondary-deep/95 via-secondary-deep/50 to-transparent" />
+
+                      <div className="absolute left-4 top-4 flex flex-wrap items-center gap-2">
+                        <span className="inline-flex items-center gap-1 rounded-full bg-primary px-2.5 py-1 text-[10px] font-extrabold uppercase tracking-wide text-white shadow">
+                          <Flame size={11} fill="currentColor" aria-hidden /> {dict.home.popularToggle}
+                        </span>
+                        {/* label tipe: video/artikel/infografis — inilah yang
+                            membuat "konten" lebih tepat daripada "bacaan" */}
+                        <span className="inline-flex items-center gap-1 rounded-full bg-white/90 px-2.5 py-1 text-[10px] font-extrabold uppercase tracking-wide text-secondary backdrop-blur">
+                          {TYPE_BADGE[hero.type]?.icon}
+                          {dict.contentTypes[TYPE_BADGE[hero.type]?.key ?? "ARTICLE"] ?? hero.type}
+                        </span>
+                      </div>
+                      <span aria-hidden className="absolute right-4 top-3 font-heading text-2xl font-extrabold leading-none text-white/40 sm:text-3xl">
+                        01
                       </span>
 
-                      <span className="min-w-0 flex-1">
-                        <span className="mb-1 flex flex-wrap items-center gap-2 text-[10px] font-extrabold uppercase tracking-[0.12em]">
-                          {category && (
-                            <span className="rounded-full bg-primary-soft px-2 py-0.5 text-primary-deep">
-                              {category.name}
-                            </span>
-                          )}
-                        </span>
-                        <span className="block font-heading text-sm font-bold leading-snug text-ink transition group-hover:text-secondary sm:text-[0.95rem]">
-                          {item.title}
-                        </span>
-                        {item.excerpt && (
-                          <span className="mt-1 line-clamp-1 block text-[11px] leading-4 text-muted">
-                            {item.excerpt}
+                      <div className="relative p-5 sm:p-6">
+                        {heroCategory && (
+                          <span className="mb-2 inline-block rounded-full bg-white/95 px-2.5 py-1 text-[10px] font-extrabold uppercase tracking-[0.12em] text-primary-deep">
+                            {heroCategory.name}
                           </span>
                         )}
-                      </span>
-
-                      {/* nomor urut — besar, terracotta pucat */}
-                      <span
-                        aria-hidden
-                        className="shrink-0 font-heading text-3xl font-extrabold leading-none text-primary/25 transition group-hover:text-primary/45 sm:text-[2.5rem]"
-                      >
-                        {String(index + 2).padStart(2, "0")}
-                      </span>
+                        <h3 className="font-heading text-xl font-extrabold leading-snug text-white sm:text-2xl">
+                          {hero.title}
+                        </h3>
+                        {hero.excerpt && (
+                          <p className="mt-2 line-clamp-2 max-w-md text-xs leading-5 text-white/80 sm:text-sm">
+                            {hero.excerpt}
+                          </p>
+                        )}
+                      </div>
                     </Link>
-                  </li>
-                );
-              })}
-            </ol>
+                  );
+                })()}
+
+                {/* --- daftar bernomor --- */}
+                <ol className="flex flex-col gap-3">
+                  {featuredItems.slice(1, 4).map((item, index) => {
+                    const category = item.categories[0];
+                    const badge = TYPE_BADGE[item.type];
+                    return (
+                      <li key={item.id} className="flex-1">
+                        <Link
+                          href={`/contents/${item.slug}`}
+                          className="group flex h-full items-center gap-4 rounded-2xl border border-white/60 bg-cream/90 p-3 shadow-[0_2px_8px_rgba(42,38,32,0.06)] transition hover:-translate-y-0.5 hover:border-primary/40 hover:bg-cream hover:shadow-[0_10px_26px_rgba(42,38,32,0.14)] sm:gap-4 sm:p-4"
+                        >
+                          <span className={`relative hidden h-20 w-24 shrink-0 overflow-hidden rounded-xl bg-gradient-to-br sm:block ${FEATURED_GRADIENTS[(index + 1) % FEATURED_GRADIENTS.length]}`}>
+                            {item.thumbnailUrl && (
+                              <ThumbImg src={item.thumbnailUrl} className="h-full w-full object-cover" />
+                            )}
+                          </span>
+
+                          <span className="min-w-0 flex-1">
+                            <span className="mb-1 flex flex-wrap items-center gap-1.5 text-[10px] font-extrabold uppercase tracking-[0.12em]">
+                              {badge && (
+                                <span className="inline-flex items-center gap-1 rounded-full bg-secondary/10 px-2 py-0.5 text-secondary">
+                                  {badge.icon}
+                                  {dict.contentTypes[badge.key] ?? item.type}
+                                </span>
+                              )}
+                              {category && (
+                                <span className="rounded-full bg-primary-soft px-2 py-0.5 text-primary-deep">
+                                  {category.name}
+                                </span>
+                              )}
+                            </span>
+                            <span className="block font-heading text-sm font-bold leading-snug text-ink transition group-hover:text-secondary sm:text-[0.95rem]">
+                              {item.title}
+                            </span>
+                            {item.excerpt && (
+                              <span className="mt-1 line-clamp-1 block text-[11px] leading-4 text-muted">
+                                {item.excerpt}
+                              </span>
+                            )}
+                          </span>
+
+                          <span
+                            aria-hidden
+                            className="shrink-0 font-heading text-3xl font-extrabold leading-none text-primary/30 transition group-hover:text-primary/55 sm:text-[2.5rem]"
+                          >
+                            {String(index + 2).padStart(2, "0")}
+                          </span>
+                        </Link>
+                      </li>
+                    );
+                  })}
+                </ol>
+              </div>
+
+              <p className="mt-5 text-center text-[11px] font-semibold uppercase tracking-[0.14em] text-secondary/50">
+                {dict.home.favoritesTypeHint}
+              </p>
+            </div>
           </div>
+          <WaveEdge className="block h-5 w-full text-sand sm:h-7" flip />
         </section>
       )}
 
