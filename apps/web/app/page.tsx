@@ -2,7 +2,7 @@ import type { ReactNode } from "react";
 import Link from "next/link";
 import Image from "next/image";
 import {
-  ArrowRight, Baby, BadgeCheck, BookOpenText, Flame, Lightbulb, MessagesSquare,
+  ArrowRight, BadgeCheck, BookOpenText, Flame, Lightbulb, MessagesSquare,
   NotebookPen, Play, Rocket, ShieldCheck, Sparkle, Sun, UserRoundCheck,
 } from "lucide-react";
 import { api } from "@/lib/api";
@@ -14,9 +14,10 @@ import { getDictionary } from "@/lib/i18n/get-dictionary";
 
 export const dynamic = "force-dynamic";
 
-// Label yang mengikuti busur tepi foto hero. Karakter disebar di busur oleh
-// CSS (.curved-label); spasi tetap dihitung supaya jaraknya rata.
-const CURVED_LABEL = "TIM AHLI MENTARI";
+// Nama tim yang menandai konten telah ditinjau. Dulu teks ini melengkung
+// mengikuti tepi foto hero; sekarang hero memakai foto penuh sehingga
+// acuan busurnya hilang, jadi ditampilkan sebagai pil biasa.
+const EXPERT_LABEL = "TIM AHLI MENTARI";
 
 /**
  * Ilustrasi + warna untuk tiap fase usia.
@@ -35,10 +36,10 @@ const AGE_STAGE_STYLE: Record<string, { art?: string; bg: string; fg: string }> 
   batita:      { art: "/images/stage-toddler.webp",   bg: "bg-[#C14E22]", fg: "text-cream" },
   prasekolah:  { art: "/images/stage-preschool.webp", bg: "bg-[#A3C377]", fg: "text-secondary" },
   "sd-awal":   { art: "/images/stage-school.webp",    bg: "bg-accent",    fg: "text-cream" },
-  // Dua fase terakhir belum punya ilustrasi sendiri. Warnanya tetap
-  // dibedakan supaya keenam pil tidak terlihat seragam.
-  "sd-akhir":  { bg: "bg-[#8FA9C4]", fg: "text-secondary-deep" },
-  "semua-usia":{ bg: "bg-sand",      fg: "text-secondary" },
+  "sd-akhir":  { art: "/images/stage-sd-akhir.webp",  bg: "bg-[#8FA9C4]", fg: "text-secondary-deep" },
+  // "Semua Usia" bukan satu anak, jadi ilustrasinya satu keluarga utuh —
+  // itu yang membedakannya dari lima pil fase di sebelahnya.
+  "semua-usia":{ art: "/images/stage-semua-usia.webp", bg: "bg-sand", fg: "text-secondary" },
 };
 const AGE_STAGE_FALLBACK = { bg: "bg-sand", fg: "text-secondary" };
 
@@ -119,130 +120,127 @@ export default async function HomePage() {
   return (
     <>
       {/* ============ HERO ============ */}
-      <section className="relative overflow-hidden border-b border-sand bg-gradient-to-b from-primary-soft/40 via-cream to-cream">
-        <div aria-hidden className="pointer-events-none absolute -right-24 -top-24 h-96 w-96 rounded-full bg-primary-bright/10 blur-3xl" />
-        <div aria-hidden className="pointer-events-none absolute -left-24 bottom-0 h-80 w-80 rounded-full bg-secondary/5 blur-3xl" />
-        <div className="mx-auto grid max-w-7xl items-center gap-8 px-4 py-10 sm:px-6 lg:grid-cols-2 lg:gap-12 lg:py-16">
-          <div className="fade-up">
-            {/* <p className="inline-flex items-center gap-2 rounded-full border border-accent/30 bg-accent-soft px-3 py-1.5 text-[11px] font-bold uppercase tracking-[0.14em] text-accent-deep">
-              <Stethoscope size={13} aria-hidden /> {dict.home.heroBadge}
-            </p> */}
-            <p className="inline-flex items-center gap-2 text-[11px] font-extrabold uppercase tracking-[0.18em] text-primary-deep">
-              <Sun size={13} aria-hidden /> {dict.home.heroBadge2}
-            </p>
-            <h1 className="mt-5 font-heading text-4xl font-extrabold leading-[1.12] tracking-tight text-secondary sm:text-5xl xl:text-[3.6rem]">
-              {dict.home.heroTitleA}{" "}
-              <span className="relative inline-block text-primary">
-                {dict.home.heroTitleB}
-                {/* garis coretan hangat di bawah kata kunci, seperti referensi */}
-                <span
-                  aria-hidden
-                  className="absolute inset-x-0 bottom-1 h-2.5 -rotate-[0.6deg] rounded-[40%_60%_50%_50%/60%_40%_60%_40%] bg-primary/25 sm:h-3"
-                />
-              </span>
-              {dict.home.heroTitleC}
-            </h1>
-            <p className="mt-5 max-w-lg text-base leading-7 text-muted sm:text-lg">
-              {dict.home.heroSub}
-            </p>
-            <div className="mt-7 flex flex-wrap items-center gap-3">
-              <Link
-                href="/contents"
-                className="inline-flex items-center gap-2 rounded-2xl bg-primary px-6 py-3.5 font-heading text-sm font-bold text-white transition hover:bg-primary-deep"
-              >
-                {dict.home.ctaExplore} <ArrowRight size={17} aria-hidden />
-              </Link>
-              <Link
-                href="/learning-paths"
-                className="inline-flex items-center gap-2 rounded-2xl border-2 border-secondary/15 bg-white px-6 py-3.5 font-heading text-sm font-bold text-secondary transition hover:border-secondary/35 hover:bg-secondary-soft"
-              >
-                <Rocket size={17} aria-hidden /> {dict.home.ctaPath}
-              </Link>
-            </div>
-            <dl className="mt-8 flex flex-wrap items-center gap-x-8 gap-y-4 text-secondary">
-              <div>
-                <dt className="sr-only">{dict.home.statSrContents}</dt>
-                <dd className="font-heading text-2xl font-extrabold">250+</dd>
-                <dd className="text-[11px] font-semibold uppercase tracking-wide text-muted">{dict.home.statContents}</dd>
-              </div>
-              <div>
-                <dt className="sr-only">{dict.home.statSrMilestones}</dt>
-                <dd className="font-heading text-2xl font-extrabold">23</dd>
-                <dd className="text-[11px] font-semibold uppercase tracking-wide text-muted">{dict.home.statMilestones}</dd>
-              </div>
-              <div>
-                <dt className="sr-only">{dict.home.statSrFree}</dt>
-                <dd className="font-heading text-2xl font-extrabold">100%</dd>
-                <dd className="text-[11px] font-semibold uppercase tracking-wide text-muted">{dict.home.statFree}</dd>
-              </div>
-            </dl>
-          </div>
+      {/* Dulu foto dan teks berdiri di dua kolom terpisah, jadi terbaca
+          sebagai dua bagian yang kebetulan bersebelahan, bukan satu
+          pembuka. Sekarang keduanya duduk di SATU kartu: teks di kiri,
+          foto mengisi kolom kanan sampai ke tepi kartu — tanpa bingkai
+          blob sendiri. Bingkai di sekeliling foto itulah yang tadinya
+          membuatnya terasa terpisah.
 
-          <div className="relative mx-auto w-full max-w-[34rem]">
-            {/* Label busur di tepi atas foto. Tiap huruf diputar pada
-                titik pusat lingkaran yang jauh di bawahnya, lalu ditarik
-                keluar sepanjang jari-jari. Dengan begitu lengkungnya
-                mengikuti bentuk tepi blob. Busur 80° + radius 8.2rem
-                menaruh seluruh huruf di atas tepi foto (ujung busur -1px,
-                tengah -31px), jadi tidak ada huruf yang tertimpa foto. */}
-            <div
-              aria-hidden
-              className="pointer-events-none absolute -top-3 left-1/2 h-56 w-56 -translate-x-1/2 sm:-top-4"
-            >
-              {CURVED_LABEL.split("").map((char, i) => {
-                const total = CURVED_LABEL.length;
-                const spread = 80;
-                const angle = -spread / 2 + (i / (total - 1)) * spread;
-                return (
-                  <span
-                    key={i}
-                    className="absolute left-1/2 top-1/2 font-heading text-[0.7rem] font-extrabold uppercase tracking-[0.06em] text-primary-deep transition-transform"
-                    style={{
-                      transform: `translate(-50%, -50%) rotate(${angle}deg) translateY(-8.2rem)`,
-                      opacity: char === " " ? 0 : 1,
-                    }}
-                  >
-                    {char === " " ? "\u00A0" : char}
+          Foto sengaja TIDAK dipakai sebagai latar penuh. Fotonya potret
+          (2:3); kalau dibentang selebar kartu ia terpotong jadi jalur
+          tipis dan wajah keluar dari frame. Kontainer foto di sini yang
+          menentukan tinggi, jadi rasio aslinya terjaga. */}
+      <section className="bg-cream px-4 pb-4 pt-6 sm:px-6 sm:pt-8">
+        <div className="mx-auto max-w-7xl">
+          <div className="relative overflow-hidden rounded-[2rem] bg-primary-soft/35 shadow-[0_30px_70px_rgba(42,38,32,0.18)] sm:rounded-[2.5rem]">
+            <div className="grid lg:grid-cols-[minmax(0,1.02fr)_minmax(0,1fr)]">
+
+              {/* ---- teks ---- */}
+              <div className="fade-up px-5 py-10 sm:px-10 sm:py-14 lg:px-14 lg:py-16">
+                <p className="inline-flex items-center gap-2 text-[11px] font-extrabold uppercase tracking-[0.18em] text-primary-deep">
+                  <Sun size={13} aria-hidden /> {dict.home.heroBadge2}
+                </p>
+                <h1 className="mt-4 font-heading text-4xl font-extrabold leading-[1.1] tracking-tight text-secondary sm:text-5xl xl:text-[3.4rem]">
+                  {dict.home.heroTitleA}{" "}
+                  <span className="relative inline-block text-primary">
+                    {dict.home.heroTitleB}
+                    {/* garis coretan hangat di bawah kata kunci */}
+                    <span
+                      aria-hidden
+                      className="absolute inset-x-0 bottom-1 h-2.5 -rotate-[0.6deg] rounded-[40%_60%_50%_50%/60%_40%_60%_40%] bg-primary/25 sm:h-3"
+                    />
                   </span>
-                );
-              })}
-            </div>
-
-            {/* Foto: mask blob asimetris, seperti potongan kertas di referensi.
-                Bingkai putih dibuat sebagai padding pada pembungkus dan blob
-                diterapkan pada anaknya — bukan ring-* (box-shadow), karena
-                box-shadow tidak ikut terpotong overflow-hidden sehingga
-                akan tampak sebagai kotak di sekeliling blob. */}
-            <div className="blob-frame bg-white p-[7px] shadow-[0_34px_80px_rgba(39,61,48,0.20)]">
-              <div className="blob-frame relative overflow-hidden bg-sand">
-                <Image
-                  src="/images/hero-keluarga.webp"
-                  alt={dict.home.heroAlt}
-                  width={880}
-                  height={880}
-                  priority
-                  className="h-full w-full object-cover"
-                />
+                  {dict.home.heroTitleC}
+                </h1>
+                <p className="mt-4 max-w-md text-base leading-7 text-muted sm:text-lg">
+                  {dict.home.heroSub}
+                </p>
+                <div className="mt-6 flex flex-wrap items-center gap-3">
+                  <Link
+                    href="/contents"
+                    className="inline-flex items-center gap-2 rounded-2xl bg-primary px-6 py-3.5 font-heading text-sm font-bold text-white transition hover:bg-primary-deep"
+                  >
+                    {dict.home.ctaExplore} <ArrowRight size={17} aria-hidden />
+                  </Link>
+                  <Link
+                    href="/learning-paths"
+                    className="inline-flex items-center gap-2 rounded-2xl border-2 border-secondary/15 bg-white px-6 py-3.5 font-heading text-sm font-bold text-secondary transition hover:border-secondary/35 hover:bg-secondary-soft"
+                  >
+                    <Rocket size={17} aria-hidden /> {dict.home.ctaPath}
+                  </Link>
+                </div>
+                <dl className="mt-8 flex flex-wrap items-center gap-x-8 gap-y-4 text-secondary">
+                  <div>
+                    <dt className="sr-only">{dict.home.statSrContents}</dt>
+                    <dd className="font-heading text-2xl font-extrabold">250+</dd>
+                    <dd className="text-[11px] font-semibold uppercase tracking-wide text-muted">{dict.home.statContents}</dd>
+                  </div>
+                  <div>
+                    <dt className="sr-only">{dict.home.statSrMilestones}</dt>
+                    <dd className="font-heading text-2xl font-extrabold">23</dd>
+                    <dd className="text-[11px] font-semibold uppercase tracking-wide text-muted">{dict.home.statMilestones}</dd>
+                  </div>
+                  <div>
+                    <dt className="sr-only">{dict.home.statSrFree}</dt>
+                    <dd className="font-heading text-2xl font-extrabold">100%</dd>
+                    <dd className="text-[11px] font-semibold uppercase tracking-wide text-muted">{dict.home.statFree}</dd>
+                  </div>
+                </dl>
               </div>
-            </div>
-            {/* floating cards */}
-            <div className="absolute -left-3 top-6 flex items-center gap-2 rounded-2xl border border-sand bg-white/95 px-3 py-2 shadow-[0_10px_30px_rgba(42,38,32,0.12)] backdrop-blur sm:-left-6">
-              <span className="grid h-9 w-9 place-items-center rounded-xl bg-accent-soft text-accent-deep">
-                <BadgeCheck size={18} aria-hidden />
-              </span>
-              <span>
-                <span className="block text-[11px] font-extrabold text-secondary">{dict.home.milestoneCardTitle}</span>
-                <span className="block text-[9px] font-medium text-muted">{dict.home.milestoneCardSub}</span>
-              </span>
-            </div>
-            <div className="absolute -right-2 bottom-8 flex items-center gap-2 rounded-2xl border border-sand bg-white/95 px-3 py-2 shadow-lg backdrop-blur sm:-right-5">
-              <span className="grid h-9 w-9 place-items-center rounded-xl bg-primary-soft text-primary">
-                <Flame size={18} aria-hidden />
-              </span>
-              <span>
-                <span className="block text-[11px] font-extrabold text-secondary">{dict.home.streakCardTitle}</span>
-                <span className="block text-[9px] font-medium text-muted">{dict.home.streakCardSub}</span>
-              </span>
+
+              {/* ---- foto ---- */}
+              <div className="relative min-h-[17rem] sm:min-h-[23rem] lg:min-h-[34rem]">
+                <Image
+                  src="/images/hero-family.webp"
+                  alt={dict.home.heroAlt}
+                  fill
+                  priority
+                  sizes="(max-width: 1023px) 100vw, 45vw"
+                  className="object-cover object-[50%_38%]"
+                />
+                {/* Garis lebur: tepi foto dibuat melebur ke warna kartu,
+                    supaya tidak terbaca sebagai gambar yang ditempel.
+                    Disembunyikan di layar kecil karena di sana tepinya
+                    sudah bertemu langsung dengan batas kartu. */}
+                <div
+                  aria-hidden
+                  className="pointer-events-none absolute inset-x-0 top-0 h-16 bg-gradient-to-b from-primary-soft/60 to-transparent lg:hidden"
+                />
+
+                {/* Pil "Tim Ahli". Dulu teks ini melengkung mengikuti tepi
+                    blob foto; sekarang blob-nya tidak ada, jadi bentuknya
+                    pil biasa dengan teks yang sama. */}
+                <span className="absolute left-4 top-4 inline-flex items-center gap-1.5 rounded-full bg-white/90 px-3 py-1.5 text-[10px] font-extrabold uppercase tracking-[0.14em] text-primary-deep shadow-sm backdrop-blur">
+                  <BadgeCheck size={13} aria-hidden /> {EXPERT_LABEL}
+                </span>
+
+                {/* Kartu streak: pojok kanan atas kolom foto, di bawah
+                    pil "Tim Ahli". Sengaja tidak dibuat menumpuk keluar
+                    kolom — kartu induk memakai overflow-hidden, jadi
+                    bagian yang keluar akan terpotong. */}
+                <div className="absolute right-4 top-16 hidden items-center gap-2 rounded-2xl border border-white/70 bg-white/95 px-3 py-2 shadow-[0_10px_30px_rgba(42,38,32,0.16)] backdrop-blur xl:flex">
+                  <span className="grid h-9 w-9 place-items-center rounded-xl bg-primary-soft text-primary">
+                    <Flame size={18} aria-hidden />
+                  </span>
+                  <span>
+                    <span className="block text-[11px] font-extrabold text-secondary">{dict.home.streakCardTitle}</span>
+                    <span className="block text-[9px] font-medium text-muted">{dict.home.streakCardSub}</span>
+                  </span>
+                </div>
+
+                {/* Kartu mengambang: sekarang menempel di dalam kartu hero
+                    yang sama, jadi terasa bagian dari panel. */}
+                <div className="absolute bottom-5 left-4 hidden items-center gap-2 rounded-2xl border border-white/70 bg-white/95 px-3 py-2 shadow-[0_10px_30px_rgba(42,38,32,0.16)] backdrop-blur sm:left-6 sm:flex">
+                  <span className="grid h-9 w-9 place-items-center rounded-xl bg-accent-soft text-accent-deep">
+                    <BadgeCheck size={18} aria-hidden />
+                  </span>
+                  <span>
+                    <span className="block text-[11px] font-extrabold text-secondary">{dict.home.milestoneCardTitle}</span>
+                    <span className="block text-[9px] font-medium text-muted">{dict.home.milestoneCardSub}</span>
+                  </span>
+                </div>
+              </div>
             </div>
           </div>
         </div>
@@ -356,13 +354,15 @@ export default async function HomePage() {
                   return (
                     <Link
                       href={`/contents/${hero.slug}`}
-                      className="group relative flex min-h-[20rem] flex-col justify-end overflow-hidden rounded-[1.75rem] bg-secondary shadow-[0_18px_44px_rgba(42,38,32,0.22)] ring-1 ring-white/15 transition hover:shadow-[0_24px_56px_rgba(42,38,32,0.30)] lg:min-h-[25rem]"
+                      className="hero-frame group relative flex min-h-[20rem] flex-col justify-end overflow-hidden rounded-[1.75rem] bg-secondary shadow-[0_18px_44px_rgba(42,38,32,0.22)] ring-1 ring-white/15 transition hover:shadow-[0_24px_56px_rgba(42,38,32,0.30)] lg:min-h-[25rem]"
                     >
                       <div className={`absolute inset-0 bg-gradient-to-br ${FEATURED_GRADIENTS[0]}`} />
                       {hero.thumbnailUrl && (
                         <ThumbImg src={hero.thumbnailUrl} className="absolute inset-0 h-full w-full object-cover" />
                       )}
                       <span aria-hidden className="absolute -left-10 -top-12 h-48 w-48 rounded-full bg-white/35 blur-3xl" />
+                      {/* Hiasan bingkai: lipatan sudut ala halaman majalah. */}
+                      <span aria-hidden className="hero-frame-fold z-20 rounded-tr-[1.75rem]" />
                       <div aria-hidden className="absolute inset-x-0 bottom-0 h-3/5 bg-gradient-to-t from-secondary-deep/95 via-secondary-deep/50 to-transparent" />
 
                       <div className="absolute left-4 top-4 flex flex-wrap items-center gap-2">
@@ -376,11 +376,8 @@ export default async function HomePage() {
                           {dict.contentTypes[TYPE_BADGE[hero.type]?.key ?? "ARTICLE"] ?? hero.type}
                         </span>
                       </div>
-                      <span aria-hidden className="absolute right-4 top-3 font-heading text-2xl font-extrabold leading-none text-white/40 sm:text-3xl">
-                        01
-                      </span>
 
-                      <div className="relative p-5 sm:p-6">
+                      <div className="relative p-5 pr-14 sm:p-6 sm:pr-16">
                         {heroCategory && (
                           <span className="mb-2 inline-block rounded-full bg-white/95 px-2.5 py-1 text-[10px] font-extrabold uppercase tracking-[0.12em] text-primary-deep">
                             {heroCategory.name}
@@ -395,6 +392,15 @@ export default async function HomePage() {
                           </p>
                         )}
                       </div>
+
+                      {/* Nomor halaman majalah. Ditaruh di bawah karena pojok
+                          kanan atas sudah dipakai lipatan sudut. */}
+                      <span
+                        aria-hidden
+                        className="absolute bottom-5 right-5 z-20 font-heading text-2xl font-extrabold leading-none text-white/45 sm:bottom-6 sm:right-6 sm:text-3xl"
+                      >
+                        01
+                      </span>
                     </Link>
                   );
                 })()}
