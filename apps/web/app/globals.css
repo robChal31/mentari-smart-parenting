@@ -125,3 +125,24 @@ h1, h2, h3, h4, h5, .font-heading {
   to { opacity: 1; transform: translateY(0); }
 }
 .fade-up { animation: fadeUp 0.55s ease both; }
+
+/* ============================================================
+   BENTUK ORGANIK (home)
+   Referensi memakai tepi bergelombang dan foto ber-mask blob.
+
+   Gelombang dibuat dari SVG path (lihat WaveEdge di page.tsx),
+   bukan border-radius: radius elips maksimum 50% hanya
+   menghasilkan lonjakan di ujung, sementara referensi memakai
+   gelombang sinus penuh di sepanjang tepi. SVG discalakan
+   (preserveAspectRatio="none"), jadi biaya render-nya nol dan
+   bentuknya identik di semua lebar layar.
+
+   Batasan "minimal" tetap dipegang: ini pembatas bidang, bukan
+   ornamen. Tidak ada daun, bintang, atau panah coretan.
+   ============================================================ */
+
+/* Blob foto hero. Asimetris dengan sengaja — bentuk simetris
+   terbaca seperti kapsul, bukan potongan kertas. */
+.blob-frame {
+  border-radius: 58% 42% 46% 54% / 52% 46% 54% 48%;
+}
