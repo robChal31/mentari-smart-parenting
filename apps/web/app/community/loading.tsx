@@ -29,7 +29,7 @@ export default async function Loading() {
       {/* daftar thread */}
       <div className="mt-6 flex flex-col gap-3">
         {Array.from({ length: 6 }).map((_, i) => (
-          <div key={i} className="rounded-3xl border border-sand bg-white p-5">
+          <div key={i} className="surface p-5">
             <div className="flex items-start gap-4">
               <div className="skeleton-on-card h-11 w-11 shrink-0 rounded-2xl" />
               <div className="min-w-0 flex-1 space-y-2">

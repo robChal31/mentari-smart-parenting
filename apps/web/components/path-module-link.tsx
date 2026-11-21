@@ -26,7 +26,7 @@ export function PathModuleLink({
     <Link
       href={href}
       onClick={markVisited}
-      className="group flex items-start gap-4 rounded-3xl border border-sand bg-white p-5 transition hover:border-primary/30 hover:shadow-md"
+      className="group flex items-start gap-4 surface surface-link p-5"
     >
       {children}
     </Link>

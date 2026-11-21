@@ -154,21 +154,21 @@ export function CommunityTab() {
       </div>
 
       {confirmDelete && (
-        <div role="alertdialog" aria-label={dict.admin.deleteThreadTitle} className="mt-3 flex flex-wrap items-center justify-between gap-3 rounded-3xl border border-red-200 bg-red-50 px-5 py-4">
-          <p className="max-w-xl text-[11px] leading-5 text-red-700/90">
-            <span className="block text-sm font-bold text-red-800">{dict.admin.deleteThreadTitle} — {confirmDelete.title.slice(0, 80)}</span>
+        <div role="alertdialog" aria-label={dict.admin.deleteThreadTitle} className="mt-3 flex flex-wrap items-center justify-between gap-3 rounded-3xl status-danger border px-5 py-4">
+          <p className="max-w-xl text-[11px] leading-5 text-danger/90">
+            <span className="block text-sm font-bold text-danger-deep">{dict.admin.deleteThreadTitle} — {confirmDelete.title.slice(0, 80)}</span>
             {dict.admin.deleteThreadBody}
           </p>
           <div className="flex items-center gap-2">
-            <button onClick={() => setConfirmDelete(null)} className="rounded-2xl border border-red-200 bg-white px-4 py-2 text-xs font-bold text-red-800 hover:bg-red-100">{dict.common.cancel}</button>
-            <button onClick={() => removeThread(confirmDelete)} disabled={deleting} className="inline-flex items-center gap-1.5 rounded-2xl bg-red-600 px-4 py-2 text-xs font-bold text-white hover:bg-red-700 disabled:opacity-60">
+            <button onClick={() => setConfirmDelete(null)} className="rounded-2xl border border-danger-border bg-white px-4 py-2 text-xs font-bold text-danger-deep hover:bg-danger-soft">{dict.common.cancel}</button>
+            <button onClick={() => removeThread(confirmDelete)} disabled={deleting} className="btn-danger inline-flex items-center gap-1.5 px-4 py-2 text-xs">
               {deleting ? <Loader2 size={13} className="animate-spin" /> : <Trash2 size={13} />} {dict.admin.deleteConfirmYes}
             </button>
           </div>
         </div>
       )}
 
-      <div className="mt-4 overflow-hidden rounded-3xl border border-sand bg-white">
+      <div className="mt-4 overflow-hidden surface">
         <div className="border-b border-sand bg-cream/40 px-5 py-3 text-[10px] font-extrabold uppercase tracking-[0.14em] text-muted">
           <span>{busy ? dict.admin.loading : format(dict.admin.threadsCount, { count: total })}</span>
         </div>
@@ -180,7 +180,7 @@ export function CommunityTab() {
                   <div className="flex flex-wrap items-center gap-1.5">
                     {thread.isPinned && <span className="inline-flex items-center gap-1 rounded-full bg-secondary-soft px-2 py-0.5 text-[8px] font-extrabold uppercase tracking-wide text-secondary"><Pin size={9} /> {dict.admin.pinnedBadge}</span>}
                     {thread.isLocked && <span className="inline-flex items-center gap-1 rounded-full bg-sand px-2 py-0.5 text-[8px] font-extrabold uppercase tracking-wide text-muted"><Lock size={9} /> {dict.admin.lockedBadge}</span>}
-                    {thread.flags > 0 && <span className="inline-flex items-center gap-1 rounded-full bg-amber-100 px-2 py-0.5 text-[8px] font-extrabold uppercase tracking-wide text-amber-800"><Flag size={9} /> {format(dict.admin.flaggedBadge, { count: thread.flags })}</span>}
+                    {thread.flags > 0 && <span className="inline-flex items-center gap-1 rounded-full bg-warning-soft px-2 py-0.5 text-[8px] font-extrabold uppercase tracking-wide text-warning"><Flag size={9} /> {format(dict.admin.flaggedBadge, { count: thread.flags })}</span>}
                   </div>
                   <p className="mt-1 line-clamp-1 text-xs font-semibold text-ink">{thread.title}</p>
                   <p className="mt-0.5 text-[10px] font-medium text-muted">
@@ -200,10 +200,10 @@ export function CommunityTab() {
                   <button onClick={() => togglePin(thread)} title={thread.isPinned ? dict.admin.unpinThread : dict.admin.pinThread} aria-label={thread.isPinned ? dict.admin.unpinThread : dict.admin.pinThread} aria-pressed={thread.isPinned} className={`grid h-8 w-8 place-items-center rounded-lg transition ${thread.isPinned ? "text-secondary hover:bg-secondary-soft" : "text-muted hover:bg-sand"}`}>
                     {thread.isPinned ? <PinOff size={15} /> : <Pin size={15} />}
                   </button>
-                  <button onClick={() => toggleLock(thread)} title={thread.isLocked ? dict.admin.unlockThread : dict.admin.lockThread} aria-label={thread.isLocked ? dict.admin.unlockThread : dict.admin.lockThread} aria-pressed={thread.isLocked} className={`grid h-8 w-8 place-items-center rounded-lg transition ${thread.isLocked ? "text-amber-700 hover:bg-amber-50" : "text-muted hover:bg-sand"}`}>
+                  <button onClick={() => toggleLock(thread)} title={thread.isLocked ? dict.admin.unlockThread : dict.admin.lockThread} aria-label={thread.isLocked ? dict.admin.unlockThread : dict.admin.lockThread} aria-pressed={thread.isLocked} className={`grid h-8 w-8 place-items-center rounded-lg transition ${thread.isLocked ? "text-warning hover:bg-warning-soft" : "text-muted hover:bg-sand"}`}>
                     {thread.isLocked ? <LockOpen size={15} /> : <Lock size={15} />}
                   </button>
-                  <button onClick={() => { setConfirmDelete(thread); setExpandedId(null); }} title={dict.admin.deleteThread} aria-label={dict.admin.deleteThread} className="grid h-8 w-8 place-items-center rounded-lg text-muted hover:bg-red-50 hover:text-red-600">
+                  <button onClick={() => { setConfirmDelete(thread); setExpandedId(null); }} title={dict.admin.deleteThread} aria-label={dict.admin.deleteThread} className="grid h-8 w-8 place-items-center rounded-lg text-muted hover:bg-danger-soft hover:text-danger">
                     <Trash2 size={16} />
                   </button>
                 </div>
@@ -220,17 +220,17 @@ export function CommunityTab() {
                       <li key={comment.id} className="flex items-start gap-2 rounded-xl border border-sand/70 bg-white px-3 py-2">
                         <div className="min-w-0 flex-1">
                           <p className="text-[10px] font-bold text-secondary">{comment.author.fullName} <span className="font-medium text-muted">· {formatDate(comment.createdAt, locale)}</span>
-                            {comment.flags > 0 && <span className="ml-1.5 inline-flex items-center gap-1 rounded-full bg-amber-100 px-1.5 py-0.5 text-[8px] font-extrabold uppercase text-amber-800"><Flag size={8} /> {comment.flags}</span>}
+                            {comment.flags > 0 && <span className="ml-1.5 inline-flex items-center gap-1 rounded-full bg-warning-soft px-1.5 py-0.5 text-[8px] font-extrabold uppercase text-warning"><Flag size={8} /> {comment.flags}</span>}
                           </p>
                           <p className="mt-1 whitespace-pre-line text-[11px] leading-5 text-ink/85">{comment.body}</p>
                         </div>
                         {confirmDeleteCommentId === comment.id ? (
                           <span className="flex shrink-0 items-center gap-1.5">
                             <button onClick={() => setConfirmDeleteCommentId(null)} className="rounded-lg border border-sand px-2 py-1 text-[10px] font-bold text-muted hover:bg-sand">{dict.common.cancel}</button>
-                            <button onClick={() => removeComment(comment.id)} className="rounded-lg bg-red-600 px-2 py-1 text-[10px] font-bold text-white hover:bg-red-700">{dict.common.delete}</button>
+                            <button onClick={() => removeComment(comment.id)} className="rounded-lg bg-danger px-2 py-1 text-[10px] font-bold text-white hover:bg-danger-deep">{dict.common.delete}</button>
                           </span>
                         ) : (
-                          <button onClick={() => setConfirmDeleteCommentId(comment.id)} title={dict.admin.deleteComment} aria-label={dict.admin.deleteComment} className="grid h-7 w-7 shrink-0 place-items-center rounded-lg text-muted hover:bg-red-50 hover:text-red-600">
+                          <button onClick={() => setConfirmDeleteCommentId(comment.id)} title={dict.admin.deleteComment} aria-label={dict.admin.deleteComment} className="grid h-7 w-7 shrink-0 place-items-center rounded-lg text-muted hover:bg-danger-soft hover:text-danger">
                             <Trash2 size={13} />
                           </button>
                         )}

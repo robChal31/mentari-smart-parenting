@@ -103,23 +103,23 @@ export function AuthorsTab() {
       )}
 
       {confirmDelete && (
-        <div role="alertdialog" aria-label={dict.admin.deleteAuthorTitle} className="mt-3 flex flex-wrap items-center justify-between gap-3 rounded-3xl border border-red-200 bg-red-50 px-5 py-4">
+        <div role="alertdialog" aria-label={dict.admin.deleteAuthorTitle} className="mt-3 flex flex-wrap items-center justify-between gap-3 rounded-3xl status-danger border px-5 py-4">
           <div>
-            <p className="text-sm font-bold text-red-800">{dict.admin.deleteAuthorTitle} — {confirmDelete.name}</p>
-            <p className="mt-0.5 max-w-xl text-[11px] leading-5 text-red-700/90">{dict.admin.deleteAuthorBody}</p>
+            <p className="text-sm font-bold text-danger-deep">{dict.admin.deleteAuthorTitle} — {confirmDelete.name}</p>
+            <p className="mt-0.5 max-w-xl text-[11px] leading-5 text-danger/90">{dict.admin.deleteAuthorBody}</p>
           </div>
           <div className="flex items-center gap-2">
-            <button onClick={() => setConfirmDelete(null)} className="rounded-2xl border border-red-200 bg-white px-4 py-2 text-xs font-bold text-red-800 hover:bg-red-100">
+            <button onClick={() => setConfirmDelete(null)} className="rounded-2xl border border-danger-border bg-white px-4 py-2 text-xs font-bold text-danger-deep hover:bg-danger-soft">
               {dict.common.cancel}
             </button>
-            <button onClick={() => remove(confirmDelete)} disabled={deleting} className="inline-flex items-center gap-1.5 rounded-2xl bg-red-600 px-4 py-2 text-xs font-bold text-white hover:bg-red-700 disabled:opacity-60">
+            <button onClick={() => remove(confirmDelete)} disabled={deleting} className="btn-danger inline-flex items-center gap-1.5 px-4 py-2 text-xs">
               {deleting ? <Loader2 size={13} className="animate-spin" /> : <Trash2 size={13} />} {dict.admin.deleteConfirmYes}
             </button>
           </div>
         </div>
       )}
 
-      <div className="mt-4 overflow-hidden rounded-3xl border border-sand bg-white">
+      <div className="mt-4 overflow-hidden surface">
         <div className="border-b border-sand bg-cream/40 px-5 py-3 text-[10px] font-extrabold uppercase tracking-[0.14em] text-muted">
           <span>{busy ? dict.admin.loading : format(dict.admin.authorsCount, { count: total })}</span>
         </div>
@@ -142,7 +142,7 @@ export function AuthorsTab() {
                     <UserRound size={9} /> {format(dict.admin.authorContentCount, { count: author.contentCount ?? 0 })}
                   </span>
                   {!author.isActive && (
-                    <span className="inline-flex items-center rounded-full bg-red-100 px-2 py-0.5 uppercase tracking-wide text-red-700">
+                    <span className="inline-flex items-center rounded-full bg-danger-soft px-2 py-0.5 uppercase tracking-wide text-danger">
                       {dict.admin.inactiveBadge}
                     </span>
                   )}
@@ -152,7 +152,7 @@ export function AuthorsTab() {
                 <button onClick={() => startEdit(author)} title={dict.common.edit} aria-label={`${dict.common.edit}: ${author.name}`} className="grid h-8 w-8 place-items-center rounded-lg text-secondary hover:bg-secondary-soft">
                   <Pencil size={15} />
                 </button>
-                <button onClick={() => { setConfirmDelete(author); setShowForm(false); }} title={dict.admin.deleteAuthor} aria-label={`${dict.admin.deleteAuthor}: ${author.name}`} className="grid h-8 w-8 place-items-center rounded-lg text-muted hover:bg-red-50 hover:text-red-600">
+                <button onClick={() => { setConfirmDelete(author); setShowForm(false); }} title={dict.admin.deleteAuthor} aria-label={`${dict.admin.deleteAuthor}: ${author.name}`} className="grid h-8 w-8 place-items-center rounded-lg text-muted hover:bg-danger-soft hover:text-danger">
                   <Trash2 size={16} />
                 </button>
               </div>
@@ -225,7 +225,7 @@ function AuthorForm({
         {initial ? dict.admin.editAuthor : dict.admin.newAuthor}
       </p>
       {error && (
-        <p role="alert" className="mt-2 rounded-2xl border border-red-200 bg-red-50 px-4 py-2.5 text-xs text-red-700">
+        <p role="alert" className="mt-2 rounded-2xl status-danger border px-4 py-2.5 text-xs text-danger">
           {error}
         </p>
       )}

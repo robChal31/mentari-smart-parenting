@@ -79,7 +79,7 @@ export function Combobox({
         <div
           id={listId}
           role="listbox"
-          className={`absolute z-50 mt-2 w-full min-w-[11rem] overflow-hidden rounded-2xl border border-sand bg-white shadow-[0_18px_48px_rgba(38,50,68,0.18)] ${panelClassName ?? ""}`}
+          className={`absolute z-50 mt-2 w-full min-w-[11rem] overflow-hidden rounded-2xl border border-sand bg-white shadow-[var(--shadow-pop)] ${panelClassName ?? ""}`}
         >
           <Command
             filter={(itemValue, search) => {

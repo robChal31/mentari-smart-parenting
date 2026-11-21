@@ -59,8 +59,8 @@ export function NewThreadForm() {
   }
 
   return (
-    <form onSubmit={submit} className="w-full rounded-3xl border border-sand bg-white p-5 shadow-sm">
-      {error && <p role="alert" className="mb-3 rounded-2xl border border-red-200 bg-red-50 px-4 py-3 text-xs text-red-700">{error}</p>}
+    <form onSubmit={submit} className="w-full surface p-5 shadow-sm">
+      {error && <p role="alert" className="mb-3 rounded-2xl status-danger border px-4 py-3 text-xs text-danger">{error}</p>}
       <label htmlFor="thread-title" className="text-[11px] font-extrabold uppercase tracking-[0.14em] text-muted">{dict.community.newThreadTitle}</label>
       <input id="thread-title" required minLength={8} value={title} onChange={(e) => setTitle(e.target.value)} placeholder={dict.community.newThreadTitlePlaceholder} className="mt-1.5 w-full rounded-2xl border border-sand bg-cream px-4 py-3 text-sm outline-none focus:border-primary" />
       <label htmlFor="thread-body" className="mt-4 block text-[11px] font-extrabold uppercase tracking-[0.14em] text-muted">{dict.community.newThreadBody}</label>

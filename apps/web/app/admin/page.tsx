@@ -42,7 +42,7 @@ export default function AdminPage() {
   if (!allowed) {
     return (
       <div className="mx-auto max-w-md px-4 py-24 text-center">
-        <ShieldAlert size={44} className="mx-auto text-red-400" aria-hidden />
+        <ShieldAlert size={44} className="mx-auto text-danger" aria-hidden />
         <h1 className="mt-4 font-heading text-2xl font-extrabold text-secondary">{dict.admin.forbiddenTitle}</h1>
         <p className="mt-2 text-sm text-muted">{dict.admin.forbiddenSub}</p>
       </div>

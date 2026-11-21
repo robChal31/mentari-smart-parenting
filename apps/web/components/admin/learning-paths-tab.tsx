@@ -100,23 +100,23 @@ export function LearningPathsTab() {
       )}
 
       {confirmDelete && (
-        <div role="alertdialog" aria-label={dict.admin.deleteLearningPathConfirmTitle} className="mt-3 flex flex-wrap items-center justify-between gap-3 rounded-3xl border border-red-200 bg-red-50 px-5 py-4">
+        <div role="alertdialog" aria-label={dict.admin.deleteLearningPathConfirmTitle} className="mt-3 flex flex-wrap items-center justify-between gap-3 rounded-3xl status-danger border px-5 py-4">
           <div>
-            <p className="text-sm font-bold text-red-800">{dict.admin.deleteLearningPathConfirmTitle} — {confirmDelete.title}</p>
-            <p className="mt-0.5 max-w-xl text-[11px] leading-5 text-red-700/90">{dict.admin.deleteLearningPathConfirmBody}</p>
+            <p className="text-sm font-bold text-danger-deep">{dict.admin.deleteLearningPathConfirmTitle} — {confirmDelete.title}</p>
+            <p className="mt-0.5 max-w-xl text-[11px] leading-5 text-danger/90">{dict.admin.deleteLearningPathConfirmBody}</p>
           </div>
           <div className="flex items-center gap-2">
-            <button onClick={() => setConfirmDelete(null)} className="rounded-2xl border border-red-200 bg-white px-4 py-2 text-xs font-bold text-red-800 hover:bg-red-100">
+            <button onClick={() => setConfirmDelete(null)} className="rounded-2xl border border-danger-border bg-white px-4 py-2 text-xs font-bold text-danger-deep hover:bg-danger-soft">
               {dict.common.cancel}
             </button>
-            <button onClick={() => remove(confirmDelete)} disabled={deleting} className="inline-flex items-center gap-1.5 rounded-2xl bg-red-600 px-4 py-2 text-xs font-bold text-white hover:bg-red-700 disabled:opacity-60">
+            <button onClick={() => remove(confirmDelete)} disabled={deleting} className="btn-danger inline-flex items-center gap-1.5 px-4 py-2 text-xs">
               {deleting ? <Loader2 size={13} className="animate-spin" /> : <Trash2 size={13} />} {dict.admin.deleteConfirmYes}
             </button>
           </div>
         </div>
       )}
 
-      <div className="mt-4 overflow-hidden rounded-3xl border border-sand bg-white">
+      <div className="mt-4 overflow-hidden surface">
         <div className="border-b border-sand bg-cream/40 px-5 py-3 text-[10px] font-extrabold uppercase tracking-[0.14em] text-muted">
           <span>{busy ? dict.admin.loading : format(dict.admin.learningPathsCount, { count: total })}</span>
         </div>
@@ -151,7 +151,7 @@ export function LearningPathsTab() {
                 <button onClick={() => startEditWithItems(path)} title={dict.common.edit} aria-label={dict.common.edit} className="grid h-8 w-8 place-items-center rounded-lg text-secondary hover:bg-secondary-soft">
                   <Pencil size={15} />
                 </button>
-                <button onClick={() => { setConfirmDelete(path); setShowForm(false); }} title={dict.admin.deleteLearningPath} aria-label={dict.admin.deleteLearningPath} className="grid h-8 w-8 place-items-center rounded-lg text-muted hover:bg-red-50 hover:text-red-600">
+                <button onClick={() => { setConfirmDelete(path); setShowForm(false); }} title={dict.admin.deleteLearningPath} aria-label={dict.admin.deleteLearningPath} className="grid h-8 w-8 place-items-center rounded-lg text-muted hover:bg-danger-soft hover:text-danger">
                   <Trash2 size={16} />
                 </button>
               </div>

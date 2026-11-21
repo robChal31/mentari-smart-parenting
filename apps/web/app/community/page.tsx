@@ -33,7 +33,7 @@ export default async function CommunityPage() {
       <ol className="mt-8 space-y-4">
         {threads.map((thread) => (
           <li key={thread.id}>
-            <Link href={`/community/${thread.id}`} className="block rounded-3xl border border-sand bg-white p-5 transition hover:border-primary/30 hover:shadow-md">
+            <Link href={`/community/${thread.id}`} className="block surface surface-link p-5">
               <div className="flex items-start gap-4">
                 <span className="grid h-11 w-11 shrink-0 place-items-center rounded-2xl bg-secondary-soft text-xs font-extrabold text-secondary">
                   {thread.author.fullName.split(" ").filter(Boolean).slice(0, 2).map((w) => w[0]).join("").toUpperCase()}
@@ -43,7 +43,7 @@ export default async function CommunityPage() {
                     <span className="font-bold text-secondary">{thread.author.fullName}</span>
                     · {formatRelativeTime(thread.createdAt, locale, dict.time)}
                     {thread.categorySlug && <span className="rounded-full bg-cream px-2 py-0.5 text-[9px] font-extrabold uppercase tracking-wider text-muted">#{thread.categorySlug}</span>}
-                    {thread.isPinned && <span className="inline-flex items-center gap-0.5 rounded-full bg-amber-50 px-2 py-0.5 text-[9px] font-extrabold uppercase tracking-wider text-amber-700"><Pin size={9} /> {dict.community.pinned}</span>}
+                    {thread.isPinned && <span className="inline-flex items-center gap-0.5 rounded-full bg-warning-soft px-2 py-0.5 text-[9px] font-extrabold uppercase tracking-wider text-warning"><Pin size={9} /> {dict.community.pinned}</span>}
                   </span>
                   <span className="mt-1.5 block font-heading text-base font-bold leading-snug text-ink">{thread.title}</span>
                   <span className="mt-2 flex flex-wrap items-center gap-4 text-[10px] font-medium text-muted">

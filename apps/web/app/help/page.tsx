@@ -15,7 +15,7 @@ export default function HelpPage() {
       <h1 className="mt-5 font-heading text-3xl font-extrabold text-secondary">{dict.help.title}</h1>
       <p className="mt-2 text-sm leading-6 text-muted">{dict.help.sub}</p>
 
-      <div className="mt-8 divide-y divide-sand overflow-hidden rounded-3xl border border-sand bg-white">
+      <div className="mt-8 divide-y divide-sand overflow-hidden surface">
         {dict.help.items.map((item, index) => {
           const isOpen = open === index;
           return (

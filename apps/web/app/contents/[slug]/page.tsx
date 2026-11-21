@@ -232,7 +232,7 @@ export default async function ContentDetailPage({ params }: PageProps) {
                 subtitle={dict.recommendations.subtitleContent}
               />
             )}
-            <div className="rounded-3xl border border-sand bg-white p-5">
+            <div className="surface p-5">
               <p className="font-heading text-sm font-extrabold text-secondary">{dict.contentDetail.aboutTitle}</p>
               <p className="mt-1.5 text-xs leading-5 text-muted">
                 {dict.contentDetail.aboutText}

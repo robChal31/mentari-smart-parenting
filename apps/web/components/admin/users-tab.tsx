@@ -54,7 +54,7 @@ export function UsersTab() {
   return (
     <div className="space-y-2">
       {loadError && <AdminErrorBanner onRetry={load} />}
-    <div className="overflow-x-auto rounded-3xl border border-sand bg-white md:overflow-visible">      <table className="w-full min-w-[720px] text-left text-xs">
+    <div className="overflow-x-auto surface md:overflow-visible">      <table className="w-full min-w-[720px] text-left text-xs">
         <thead className="bg-cream/50 text-[9px] font-extrabold uppercase tracking-[0.16em] text-muted">
           <tr>
             <th className="px-5 py-3">{dict.admin.usersName}</th>

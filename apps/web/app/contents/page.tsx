@@ -127,9 +127,9 @@ export default async function ContentsPage({ searchParams }: PageProps) {
           </div>
 
           {apiFailed ? (
-            <div className="rounded-3xl border border-red-200 bg-red-50 px-6 py-16 text-center">
-              <p className="font-heading text-lg font-bold text-red-800">{dict.common.loadError}</p>
-              <Link href="/contents" className="mt-5 inline-block rounded-2xl bg-red-600 px-6 py-3 text-sm font-bold text-white hover:bg-red-700">
+            <div className="rounded-3xl status-danger border px-6 py-16 text-center">
+              <p className="font-heading text-lg font-bold text-danger-deep">{dict.common.loadError}</p>
+              <Link href="/contents" className="mt-5 inline-block rounded-2xl bg-danger px-6 py-3 text-sm font-bold text-white hover:bg-danger-deep">
                 {dict.common.retry}
               </Link>
             </div>

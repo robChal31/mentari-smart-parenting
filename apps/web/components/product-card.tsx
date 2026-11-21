@@ -18,8 +18,8 @@ const TYPE_ICONS: Record<string, React.ReactNode> = {
 const PRODUCT_GRADIENTS = [
   "from-secondary-soft to-[#C9D8CE] text-secondary",
   "from-[#E2EEE7] to-[#CDE4D6] text-accent-deep",
-  "from-[#FFF0D9] to-[#FFE0B3] text-[#B45309]",
-  "from-[#F3E8FF] to-[#E2CCFB] text-purple-800",
+  "from-[#FFF0D9] to-[#FFE0B3] text-[#7A4E00]",  // 5.68-6.42 di atas gradient
+  "from-[#EDE4F2] to-[#DCCCE7] text-[#5B3D6B]",
 ];
 
 function gradientFor(id: string): string {
