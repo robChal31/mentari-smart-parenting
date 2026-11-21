@@ -31,10 +31,10 @@ const AGE_STAGE_STYLE: Record<string, { art?: string; bg: string; fg: string }> 
   batita:      { art: "/images/stage-toddler.webp",   bg: "bg-[#C14E22]", fg: "text-cream" },
   prasekolah:  { art: "/images/stage-preschool.webp", bg: "bg-[#A3C377]", fg: "text-secondary" },
   "sd-awal":   { art: "/images/stage-school.webp",    bg: "bg-accent",    fg: "text-cream" },
-  "sd-akhir":  { art: "/images/stage-sd-akhir.webp",  bg: "bg-[#8FA9C4]", fg: "text-secondary-deep" },
+  "sd-akhir":  { art: "/images/stage-sd-akhir-v2.webp",  bg: "bg-[#8FA9C4]", fg: "text-secondary-deep" },
   // "Semua Usia" bukan satu anak, jadi ilustrasinya satu keluarga utuh —
   // itu yang membedakannya dari lima pil fase di sebelahnya.
-  "semua-usia":{ art: "/images/stage-semua-usia.webp", bg: "bg-sand", fg: "text-secondary" },
+  "semua-usia":{ art: "/images/stage-semua-usia-v2.webp", bg: "bg-sand", fg: "text-secondary" },
 };
 const AGE_STAGE_FALLBACK = { bg: "bg-sand", fg: "text-secondary" };
 
@@ -129,7 +129,13 @@ export default async function HomePage() {
           Kartu milestone & streak dihapus: di referensi tidak ada, dan
           keduanya memang tidak menambah informasi apa pun di banner. */}
       <section className="relative">
-        <div className="relative overflow-hidden bg-cream lg:min-h-[27rem]">
+        {/* Lebar hero disamakan dengan navbar dan section lain: kontainer
+            max-w-7xl + padding yang sama. Sebelumnya banner ini
+            full-bleed, jadi tepinya lebih lebar daripada navbar dan
+            seluruh isi halaman — terlihat seperti elemen yang lepas dari
+            grid, bukan bagian dari halaman. */}
+        <div className="mx-auto max-w-7xl px-4 pt-5 sm:px-6 sm:pt-6">
+        <div className="relative overflow-hidden rounded-[1.5rem] bg-cream sm:rounded-[2rem] lg:min-h-[26rem]">
 
           {/* Foto: di layar kecil berdiri sendiri sebagai band di atas
               teks, karena foto 3:1 kalau dipaksa mengisi kotak tinggi
@@ -198,6 +204,7 @@ export default async function HomePage() {
               className="mx-auto mt-2 block h-1.5 w-14 -rotate-2 rounded-full bg-primary/45"
             />
           </div>
+        </div>
         </div>
       </section>
 
