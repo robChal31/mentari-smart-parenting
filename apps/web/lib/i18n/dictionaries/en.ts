@@ -181,7 +181,7 @@ const en: Dictionary = {
     minutesRead: "{minutes} min read",
     viewsSeen: "{views} views",
     verifiedAuthor: "Verified Author",
-    authorBoxText: "Every Mentari Smart Parent article is written or reviewed by licensed professionals and updated regularly to match the latest guidance.",
+    authorBoxText: "This article is part of Mentari Smart Parent, which shares information, insights, and inspiration on parenting and children's education.",
     aboutTitle: "About Mentari Smart Parent",
     aboutText: "A parenting platform for Indonesian families — evidence-based content, Mentari Group product recommendations, and a warm parent community.",
     knowMore: "Get to know us →",

@@ -179,7 +179,7 @@ const id = {
     minutesRead: "{minutes} mnt baca",
     viewsSeen: "{views} dilihat",
     verifiedAuthor: "Penulis Terverifikasi",
-    authorBoxText: "Seluruh konten Mentari Smart Parent ditulis atau ditinjau oleh tenaga ahli berlisensi dan diperbarui berkala sesuai panduan terbaru.",
+    authorBoxText: "Artikel ini merupakan bagian dari Mentari Smart Parent, yang menghadirkan informasi, wawasan, dan inspirasi seputar parenting serta pendidikan anak.",
     aboutTitle: "Tentang Mentari Smart Parent",
     aboutText: "Platform parenting untuk keluarga Indonesia — konten berbasis bukti, rekomendasi produk Mentari Group, dan komunitas orang tua yang hangat.",
     knowMore: "Kenali kami lebih dekat →",
