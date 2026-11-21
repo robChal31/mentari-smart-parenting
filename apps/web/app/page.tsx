@@ -31,19 +31,28 @@ export default async function HomePage() {
   return (
     <>
       {/* ============ HERO ============ */}
-      <section className="dot-grid relative overflow-hidden border-b border-sand">
+      <section className="relative overflow-hidden border-b border-sand bg-gradient-to-b from-primary-soft/40 via-cream to-cream">
         <div aria-hidden className="pointer-events-none absolute -right-24 -top-24 h-96 w-96 rounded-full bg-primary-bright/10 blur-3xl" />
-        <div aria-hidden className="pointer-events-none absolute -left-24 bottom-0 h-80 w-80 rounded-full bg-accent-bright/10 blur-3xl" />
+        <div aria-hidden className="pointer-events-none absolute -left-24 bottom-0 h-80 w-80 rounded-full bg-secondary/5 blur-3xl" />
         <div className="mx-auto grid max-w-7xl items-center gap-8 px-4 py-10 sm:px-6 lg:grid-cols-2 lg:gap-12 lg:py-16">
           <div className="fade-up">
             {/* <p className="inline-flex items-center gap-2 rounded-full border border-accent/30 bg-accent-soft px-3 py-1.5 text-[11px] font-bold uppercase tracking-[0.14em] text-accent-deep">
               <Stethoscope size={13} aria-hidden /> {dict.home.heroBadge}
             </p> */}
-            <p className="inline-flex items-center gap-2 rounded-full border border-accent/30 bg-accent-soft px-3 py-1.5 text-[11px] font-bold uppercase tracking-[0.14em] text-accent-deep">
+            <p className="inline-flex items-center gap-2 rounded-full border border-primary/25 bg-primary-soft px-3 py-1.5 text-[11px] font-bold uppercase tracking-[0.14em] text-primary-deep">
               <Heart size={13} aria-hidden /> {dict.home.heroBadge2}
             </p>
             <h1 className="mt-5 font-heading text-4xl font-extrabold leading-[1.12] tracking-tight text-secondary sm:text-5xl xl:text-[3.6rem]">
-              {dict.home.heroTitleA} <span className="text-primary">{dict.home.heroTitleB}</span>{dict.home.heroTitleC}
+              {dict.home.heroTitleA}{" "}
+              <span className="relative inline-block text-primary">
+                {dict.home.heroTitleB}
+                {/* garis coretan hangat di bawah kata kunci, seperti referensi */}
+                <span
+                  aria-hidden
+                  className="absolute inset-x-0 -bottom-1 h-2 rounded-full bg-primary/20 sm:h-2.5"
+                />
+              </span>
+              {dict.home.heroTitleC}
             </h1>
             <p className="mt-5 max-w-lg text-base leading-7 text-muted sm:text-lg">
               {dict.home.heroSub}
@@ -82,9 +91,9 @@ export default async function HomePage() {
           </div>
 
           <div className="relative mx-auto w-full max-w-[34rem]">
-            <div className="relative overflow-hidden rounded-[2.5rem] border-4 border-white shadow-[0_30px_80px_rgba(0,78,137,0.25)]">
+            <div className="relative overflow-hidden rounded-[2.75rem] border-[8px] border-white bg-sand shadow-[0_30px_70px_rgba(39,61,48,0.16)]">
               <Image
-                src="/images/hero-keluarga.png"
+                src="/images/hero-keluarga.webp"
                 alt={dict.home.heroAlt}
                 width={880}
                 height={880}
@@ -93,7 +102,7 @@ export default async function HomePage() {
               />
             </div>
             {/* floating cards */}
-            <div className="absolute -left-3 top-6 flex items-center gap-2 rounded-2xl border border-sand bg-white/95 px-3 py-2 shadow-lg backdrop-blur sm:-left-6">
+            <div className="absolute -left-3 top-6 flex items-center gap-2 rounded-2xl border border-sand bg-white/95 px-3 py-2 shadow-[0_10px_30px_rgba(42,38,32,0.12)] backdrop-blur sm:-left-6">
               <span className="grid h-9 w-9 place-items-center rounded-xl bg-accent-soft text-accent-deep">
                 <BadgeCheck size={18} aria-hidden />
               </span>
@@ -122,15 +131,26 @@ export default async function HomePage() {
             <span className="inline-flex shrink-0 items-center gap-1.5 text-xs font-extrabold uppercase tracking-[0.14em] text-muted">
               <Baby size={15} aria-hidden /> {dict.home.ageRailLabel}
             </span>
-            {ageGroups.map((group) => (
-              <Link
-                key={group.id}
-                href={`/contents?ageGroup=${group.slug}`}
-                className="shrink-0 rounded-full border border-sand bg-white px-4 py-2 text-xs font-bold text-secondary transition hover:border-primary hover:bg-primary-soft hover:text-primary-deep"
-              >
-                {group.name}
-              </Link>
-            ))}
+            {ageGroups.map((group, index) => {
+              // Warna bergilir mengikuti referensi: tiap fase usia punya
+              // identitas warna sendiri, jadi rail terasa hidup tanpa
+              // menambah token baru — semuanya dari palet.
+              const tones = [
+                "bg-sand text-secondary hover:bg-sand/70",
+                "bg-accent-soft text-accent-deep hover:bg-accent-soft/70",
+                "bg-secondary-soft text-secondary hover:bg-secondary-soft/70",
+                "bg-primary-soft text-primary-deep hover:bg-primary-soft/70",
+              ];
+              return (
+                <Link
+                  key={group.id}
+                  href={`/contents?ageGroup=${group.slug}`}
+                  className={`shrink-0 rounded-full px-4 py-2 text-xs font-bold transition ${tones[index % tones.length]}`}
+                >
+                  {group.name}
+                </Link>
+              );
+            })}
           </div>
         </section>
       )}
@@ -197,7 +217,7 @@ export default async function HomePage() {
                 <p className="text-[10px] font-extrabold uppercase tracking-[0.18em] text-accent-on-dark">{path.difficulty} · {path.estimatedTime} {dict.home.minutes}</p>
                 <h3 className="mt-2 font-heading text-xl font-extrabold leading-snug">{path.title}</h3>
                 {path.description && <p className="mt-2 line-clamp-2 max-w-md text-sm leading-6 text-white/75">{path.description}</p>}
-                <span className="mt-4 inline-flex items-center gap-2 text-xs font-bold text-[#FFD9A0]">
+                <span className="mt-4 inline-flex items-center gap-2 text-xs font-bold text-accent-on-dark">
                   {dict.home.startThisPath} <ArrowRight size={13} className="transition group-hover:translate-x-1" aria-hidden />
                 </span>
               </Link>
@@ -274,10 +294,10 @@ export default async function HomePage() {
 
       {/* ============ FINAL CTA ============ */}
       <section className="mx-auto max-w-7xl px-4 pt-14 sm:px-6">
-        <div className="relative overflow-hidden rounded-[2rem] bg-gradient-to-br from-primary-bright to-[#FF8E53] px-6 py-12 text-center text-white sm:px-12">
+        <div className="relative overflow-hidden rounded-[2rem] bg-gradient-to-br from-primary-bright to-primary-bright px-6 py-12 text-center text-white sm:px-12">
           <div aria-hidden className="absolute -left-10 -top-10 h-40 w-40 rounded-full bg-white/10 blur-2xl" />
           <div aria-hidden className="absolute -bottom-12 right-0 h-48 w-48 rounded-full bg-secondary/20 blur-3xl" />
-          <ShieldCheck size={40} className="mx-auto text-[#FFE27A]" aria-hidden />
+          <ShieldCheck size={40} className="mx-auto text-cream" aria-hidden />
           <h2 className="mt-4 font-heading text-2xl font-extrabold sm:text-3xl">{dict.home.finalTitle}</h2>
           <p className="mx-auto mt-2 max-w-lg text-sm text-white/85">
             {dict.home.finalSub}

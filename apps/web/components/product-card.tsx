@@ -16,7 +16,7 @@ const TYPE_ICONS: Record<string, React.ReactNode> = {
 };
 
 const PRODUCT_GRADIENTS = [
-  "from-[#E3EEF7] to-[#C2D9EC] text-secondary",
+  "from-secondary-soft to-[#C9D8CE] text-secondary",
   "from-[#E2EEE7] to-[#CDE4D6] text-accent-deep",
   "from-[#FFF0D9] to-[#FFE0B3] text-[#B45309]",
   "from-[#F3E8FF] to-[#E2CCFB] text-purple-800",

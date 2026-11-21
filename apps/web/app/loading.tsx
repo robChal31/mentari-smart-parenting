@@ -14,7 +14,7 @@ export default async function Loading() {
   return (
     <div aria-busy="true" aria-label={dict.errors.loadingAria}>
       {/* ===== HERO ===== */}
-      <section className="dot-grid border-b border-sand">
+      <section className="border-b border-sand bg-gradient-to-b from-primary-soft/40 via-cream to-cream">
         <div className="mx-auto grid max-w-7xl items-center gap-8 px-4 py-10 sm:px-6 lg:grid-cols-2 lg:gap-12 lg:py-16">
           <div>
             {/* badge */}
@@ -46,7 +46,7 @@ export default async function Loading() {
             </div>
           </div>
           {/* gambar hero */}
-          <div className="skeleton mx-auto aspect-square w-full max-w-[34rem] rounded-[2.5rem]" />
+          <div className="skeleton mx-auto aspect-square w-full max-w-[34rem] rounded-[2.75rem]" />
         </div>
       </section>
 

@@ -65,7 +65,7 @@ export default async function LearningPathDetailPage({ params }: { params: Promi
           </>
         )}
         <div className="relative p-6 sm:p-9">
-          <span className="inline-flex items-center gap-2 text-[10px] font-extrabold uppercase tracking-[0.18em] text-[#FFD9A0]">
+          <span className="inline-flex items-center gap-2 text-[10px] font-extrabold uppercase tracking-[0.18em] text-accent-on-dark">
             <Rocket size={12} aria-hidden /> {dict.paths.kicker} · {difficultyLabel}
           </span>
           <h1 className="mt-3 max-w-xl font-heading text-3xl font-extrabold leading-[1.15] sm:text-4xl">{path.title}</h1>

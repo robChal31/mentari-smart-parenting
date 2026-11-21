@@ -40,15 +40,15 @@ export default function RegisterPage() {
 
   return (
     <div className="mx-auto grid max-w-6xl gap-10 px-4 py-12 sm:px-6 lg:grid-cols-2 lg:py-16">
-      <aside className="hidden flex-col justify-between overflow-hidden rounded-[2rem] bg-gradient-to-br from-primary-bright to-[#FF8E53] p-10 text-white lg:flex">
+      <aside className="hidden flex-col justify-between overflow-hidden rounded-[2rem] bg-gradient-to-br from-primary-bright to-primary-bright p-10 text-white lg:flex">
         <div>
-          <Sparkles size={36} className="text-[#FFE27A]" aria-hidden />
+          <Sparkles size={36} className="text-cream" aria-hidden />
           <h1 className="mt-6 font-heading text-3xl font-extrabold leading-snug">{dict.auth.registerSideTitleA}<br />{dict.auth.registerSideTitleB}</h1>
           <p className="mt-3 max-w-sm text-sm leading-6 text-white/85">{dict.auth.registerSideSub}</p>
         </div>
         <ul className="mt-8 space-y-3 text-sm text-white/90">
           {dict.auth.registerSidePoints.map((point) => (
-            <li key={point} className="flex items-start gap-2"><CheckCircle2 size={17} className="mt-0.5 shrink-0 text-[#FFE27A]" aria-hidden />{point}</li>
+            <li key={point} className="flex items-start gap-2"><CheckCircle2 size={17} className="mt-0.5 shrink-0 text-cream" aria-hidden />{point}</li>
           ))}
         </ul>
       </aside>
