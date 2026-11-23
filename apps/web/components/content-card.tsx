@@ -41,7 +41,7 @@ export async function ContentCard({ content, priority = false }: { content: Cont
       href={`/contents/${content.slug}`}
       className="group flex h-full flex-col overflow-hidden surface shadow-[var(--shadow-card)] transition-all duration-200 hover:-translate-y-1 hover:border-primary/30 hover:shadow-[var(--shadow-accent)]"
     >
-      <div className={`relative h-36 w-full overflow-hidden bg-gradient-to-br ${gradientFor(content.id)} sm:h-40`}>
+      <div className={`relative h-36 w-full overflow-hidden bg-linear-to-br ${gradientFor(content.id)} sm:h-40`}>
         {content.thumbnailUrl && (
           <ThumbImg src={content.thumbnailUrl} className="absolute inset-0 h-full w-full object-cover" />
         )}
@@ -67,13 +67,21 @@ export async function ContentCard({ content, priority = false }: { content: Cont
       </div>
 
       <div className="flex flex-1 flex-col gap-2 p-4">
+        {/* Nama kategori bisa panjang ("Aktivitas & Kreativitas") dan di
+            layar sempit dulu pecah jadi dua baris — pilnya ikut melar
+            vertikal dan bentuknya rusak. Sekarang pilnya tidak boleh
+            pecah, teks yang kepanjangan dipotong dengan elipsis. Tanggal
+            diberi shrink-0 supaya tidak ikut tergencet. */}
         <div className="flex items-center gap-2 text-[10px] font-bold uppercase tracking-[0.12em]">
           {category && (
-            <span className="rounded-full px-2 py-0.5 text-secondary" style={{ background: (category.color ?? "#273D30") + "1A" }}>
+            <span
+              className="min-w-0 truncate rounded-full px-2 py-0.5 text-secondary"
+              style={{ background: (category.color ?? "#273D30") + "1A" }}
+            >
               {category.name}
             </span>
           )}
-          <span className="text-muted">{formatDate(content.publishedAt, locale)}</span>
+          <span className="shrink-0 whitespace-nowrap text-muted">{formatDate(content.publishedAt, locale)}</span>
         </div>
         <h3 className="line-clamp-2 font-heading text-[0.98rem] font-bold leading-snug text-ink transition-colors group-hover:text-secondary">
           {content.title}
@@ -162,7 +170,7 @@ export function ProductCardSkeleton({ compact = false }: { compact?: boolean }) 
 /** Skeleton panel "Rekomendasi dari Mentari" — meniru RecommendationsPanel. */
 export function RecommendationsPanelSkeleton({ count = 3 }: { count?: number }) {
   return (
-    <div className="rounded-3xl border border-primary/15 bg-gradient-to-b from-primary-soft/45 to-white p-4">
+    <div className="rounded-3xl border border-primary/15 bg-linear-to-b from-primary-soft/45 to-white p-4">
       <div className="mb-3 flex items-start justify-between gap-2">
         <div className="space-y-1.5">
           <div className="skeleton-on-card h-4 w-40" />

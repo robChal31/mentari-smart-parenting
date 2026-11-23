@@ -104,7 +104,7 @@ export function ProductCard({
         ) : (
           <span
             aria-hidden
-            className={`grid shrink-0 place-items-center rounded-xl bg-gradient-to-br ${gradientFor(product.id)} ${
+            className={`grid shrink-0 place-items-center rounded-xl bg-linear-to-br ${gradientFor(product.id)} ${
               compact ? "h-16 w-16" : "h-24 w-full"
             }`}
           >

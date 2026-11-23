@@ -155,16 +155,19 @@ export default async function HomePage() {
                 perlu penjaga kontras. */}
             <div
               aria-hidden
-              className="absolute inset-0 hidden bg-gradient-to-r from-cream via-cream/85 to-cream/10 lg:block lg:via-cream/70 lg:to-transparent"
+              className="absolute inset-0 hidden bg-linear-to-r from-cream via-cream/85 to-cream/10 lg:block lg:via-cream/70 lg:to-transparent"
             />
           </div>
 
-          <div className="relative mx-auto flex max-w-7xl items-center px-4 py-9 sm:px-6 sm:py-10 lg:min-h-[27rem] lg:py-14">
+          <div className="relative mx-auto flex max-w-7xl items-center px-4 py-8 sm:px-6 sm:py-10 lg:min-h-[27rem] lg:py-14">
             <div className="fade-up max-w-xl lg:max-w-[34rem]">
-              <p className="text-[11px] font-extrabold uppercase tracking-[0.22em] text-primary-deep">
+              <p className="text-[10px] font-extrabold uppercase tracking-[0.16em] text-primary-deep sm:text-[11px] sm:tracking-[0.22em]">
                 {dict.home.heroBadge2}
               </p>
-              <h1 className="mt-3 font-heading text-[2rem] font-extrabold leading-[1.08] tracking-tight text-secondary sm:text-[2.6rem] lg:text-[2.9rem]">
+              {/* Di layar 390px judul ini memakan 5 baris dan mendorong
+                  CTA hampir keluar layar. Ukurannya diturunkan sedikit di
+                  mobile saja; dari sm ke atas kembali besar. */}
+              <h1 className="mt-3 font-heading text-[1.6rem] font-extrabold leading-[1.12] tracking-tight text-secondary sm:text-[2.5rem] sm:leading-[1.08] lg:text-[2.9rem]">
                 {dict.home.heroTitleA}{" "}
                 <span className="text-primary">{dict.home.heroTitleB}{" "}</span>
                 <span className="relative inline-block">
@@ -224,7 +227,10 @@ export default async function HomePage() {
             </div>
           </div>
           <div className="relative bg-sand pb-1">
-            <div className="chip-rail mx-auto flex max-w-7xl items-center gap-3 overflow-x-auto px-4 pb-3 pt-5 sm:gap-4 sm:px-6">
+            {/* pr-6 + elemen penutup 12px (.chip-rail::after). Dengan
+                begitu pil terakhir tidak menempel di tepi layar saat
+                digulir sampai ujung, dan pembaca melihat masih ada isi. */}
+            <div className="chip-rail mx-auto flex max-w-7xl items-center gap-2.5 overflow-x-auto px-4 pb-3 pt-5 sm:gap-4 sm:px-6">
               {/* API mengurutkan berdasarkan min_age, dan "Semua Usia" punya
                   min_age 0 — jadi ia menyelip di antara Bayi dan Batita.
                   Di sini urutannya diperbaiki: fase berurutan dari bayi,
@@ -241,7 +247,7 @@ export default async function HomePage() {
                   <Link
                     key={group.id}
                     href={`/contents?ageGroup=${group.slug}`}
-                    className={`group relative inline-flex shrink-0 items-center rounded-full ${stage.bg} ${stage.fg} py-2.5 pl-3 pr-6 text-xs font-extrabold shadow-[0_4px_14px_rgba(42,38,32,0.12)] ring-2 ring-white/40 transition hover:-translate-y-0.5 hover:shadow-[0_10px_24px_rgba(42,38,32,0.20)] sm:text-sm`}
+                    className={`group relative inline-flex shrink-0 items-center whitespace-nowrap rounded-full ${stage.bg} ${stage.fg} py-2.5 pl-3 pr-5 text-xs font-extrabold shadow-[0_4px_14px_rgba(42,38,32,0.12)] ring-2 ring-white/40 transition hover:-translate-y-0.5 hover:shadow-[0_10px_24px_rgba(42,38,32,0.20)] sm:pr-6 sm:text-sm`}
                   >
                     {stage.art ? (
                       // Ilustrasi sudah dipotong latarnya. Diberi tinggi tetap
@@ -309,7 +315,7 @@ export default async function HomePage() {
               </h2>
               <Link
                 href="/contents?sort=popular"
-                className="inline-flex shrink-0 items-center gap-1.5 text-xs font-bold text-primary transition hover:gap-2.5 hover:text-primary-deep sm:text-sm"
+                className="-my-2 inline-flex min-h-11 shrink-0 items-center gap-1.5 py-2 text-xs font-bold text-primary transition hover:gap-2.5 hover:text-primary-deep sm:text-sm"
               >
                 {dict.home.viewAll} <ArrowRight size={15} aria-hidden />
               </Link>
@@ -333,11 +339,11 @@ export default async function HomePage() {
                         pembungkus + overflow-hidden pada anaknya, bukan
                         border — supaya sudut foto ikut membulat rapi. */}
                     <div className="relative flex min-h-[19rem] flex-1 flex-col justify-end overflow-hidden rounded-[1.5rem] bg-secondary sm:min-h-[24rem] sm:rounded-[1.75rem]">
-                      <div className={`absolute inset-0 bg-gradient-to-br ${FEATURED_GRADIENTS[0]}`} />
+                      <div className={`absolute inset-0 bg-linear-to-br ${FEATURED_GRADIENTS[0]}`} />
                       {hero.thumbnailUrl && (
                         <ThumbImg src={hero.thumbnailUrl} className="absolute inset-0 h-full w-full object-cover" />
                       )}
-                      <div aria-hidden className="absolute inset-x-0 bottom-0 h-3/5 bg-gradient-to-t from-secondary-deep/90 via-secondary-deep/45 to-transparent" />
+                      <div aria-hidden className="absolute inset-x-0 bottom-0 h-3/5 bg-linear-to-t from-secondary-deep/90 via-secondary-deep/45 to-transparent" />
 
                       {/* label tipe di kiri atas, pil kecil putih */}
                       <div className="absolute left-4 top-4 flex flex-wrap items-center gap-2">
@@ -379,7 +385,7 @@ export default async function HomePage() {
                         className="group flex items-center gap-4 py-4 sm:gap-5"
                       >
                         {/* thumbnail kecil membulat */}
-                        <span className={`relative hidden h-[4.6rem] w-[5.6rem] shrink-0 overflow-hidden rounded-2xl bg-gradient-to-br sm:block ${FEATURED_GRADIENTS[(index + 1) % FEATURED_GRADIENTS.length]}`}>
+                        <span className={`relative hidden h-[4.6rem] w-[5.6rem] shrink-0 overflow-hidden rounded-2xl bg-linear-to-br sm:block ${FEATURED_GRADIENTS[(index + 1) % FEATURED_GRADIENTS.length]}`}>
                           {item.thumbnailUrl && (
                             <ThumbImg src={item.thumbnailUrl} className="h-full w-full object-cover" />
                           )}
@@ -450,7 +456,7 @@ export default async function HomePage() {
                   <span aria-hidden className="absolute inset-x-0 -bottom-0.5 h-1.5 rounded-full bg-primary/20" />
                 </span>
               </h2>
-              <Link href="/contents" className="mt-3 inline-flex items-center gap-1.5 text-sm font-bold text-primary transition hover:gap-2.5">
+              <Link href="/contents" className="-my-2 mt-1 inline-flex min-h-11 items-center gap-1.5 py-2 text-sm font-bold text-primary transition hover:gap-2.5">
                 {dict.home.viewAll} <ArrowRight size={14} aria-hidden />
               </Link>
             </div>

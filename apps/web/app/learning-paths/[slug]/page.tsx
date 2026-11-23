@@ -52,8 +52,8 @@ export default async function LearningPathDetailPage({ params }: { params: Promi
               className="absolute inset-0 h-full w-full object-cover object-center"
             />
             {/* double overlay: keeps every word readable on any artwork */}
-            <span aria-hidden className="absolute inset-0 bg-gradient-to-r from-secondary/95 via-secondary/70 to-secondary/10" />
-            <span aria-hidden className="absolute inset-0 bg-gradient-to-t from-secondary/80 via-secondary/15 to-transparent" />
+            <span aria-hidden className="absolute inset-0 bg-linear-to-r from-secondary/95 via-secondary/70 to-secondary/10" />
+            <span aria-hidden className="absolute inset-0 bg-linear-to-t from-secondary/80 via-secondary/15 to-transparent" />
           </>
         ) : (
           <>

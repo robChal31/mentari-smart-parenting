@@ -114,7 +114,7 @@ function ProfileContent() {
               <ul className="mt-2 grid grid-cols-3 gap-2">
                 {gamification.badges.map((badge) => (
                   <li key={badge.id} title={badge.description ?? badge.name} className="flex flex-col items-center gap-1 rounded-2xl border border-sand bg-cream px-2 py-3 text-center">
-                    <span className="grid h-10 w-10 place-items-center rounded-full bg-gradient-to-br from-warning-soft to-warning-bright text-lg">🏅</span>
+                    <span className="grid h-10 w-10 place-items-center rounded-full bg-linear-to-br from-warning-soft to-warning-bright text-lg">🏅</span>
                     <span className="text-[9px] font-bold leading-tight text-ink/80">{badge.name}</span>
                   </li>
                 ))}

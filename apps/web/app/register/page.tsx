@@ -40,7 +40,7 @@ export default function RegisterPage() {
 
   return (
     <div className="mx-auto grid max-w-6xl gap-10 px-4 py-12 sm:px-6 lg:grid-cols-2 lg:py-16">
-      <aside className="hidden flex-col justify-between overflow-hidden rounded-[2rem] bg-gradient-to-br from-primary-bright to-primary-bright p-10 text-white lg:flex">
+      <aside className="hidden flex-col justify-between overflow-hidden rounded-[2rem] bg-linear-to-br from-primary-bright to-primary-bright p-10 text-white lg:flex">
         <div>
           <Sparkles size={36} className="text-cream" aria-hidden />
           <h1 className="mt-6 font-heading text-3xl font-extrabold leading-snug">{dict.auth.registerSideTitleA}<br />{dict.auth.registerSideTitleB}</h1>
