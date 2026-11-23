@@ -34,7 +34,7 @@ const AGE_STAGE_STYLE: Record<string, { art?: string; bg: string; fg: string }> 
   "sd-akhir":  { art: "/images/stage-sd-akhir-v2.webp",  bg: "bg-[#8FA9C4]", fg: "text-secondary-deep" },
   // "Semua Usia" bukan satu anak, jadi ilustrasinya satu keluarga utuh —
   // itu yang membedakannya dari lima pil fase di sebelahnya.
-  "semua-usia":{ art: "/images/stage-semua-usia-v2.webp", bg: "bg-sand", fg: "text-secondary" },
+  "semua-usia":{ art: "/images/stage-semua-usia-v2.webp", bg: "bg-cream", fg: "text-secondary" },
 };
 const AGE_STAGE_FALLBACK = { bg: "bg-sand", fg: "text-secondary" };
 
@@ -134,8 +134,8 @@ export default async function HomePage() {
             full-bleed, jadi tepinya lebih lebar daripada navbar dan
             seluruh isi halaman — terlihat seperti elemen yang lepas dari
             grid, bukan bagian dari halaman. */}
-        <div className="mx-auto max-w-7xl px-4 pt-5 sm:px-6 sm:pt-6">
-        <div className="relative overflow-hidden rounded-[1.5rem] bg-cream sm:rounded-[2rem] lg:min-h-[26rem]">
+        <div className="mx-auto max-w-7xl">
+        <div className="relative overflow-hidden rounded-b-[1.5rem] bg-cream sm:rounded-b-[2rem] lg:min-h-[26rem]">
 
           {/* Foto: di layar kecil berdiri sendiri sebagai band di atas
               teks, karena foto 3:1 kalau dipaksa mengisi kotak tinggi
@@ -166,7 +166,7 @@ export default async function HomePage() {
               </p>
               <h1 className="mt-3 font-heading text-[2rem] font-extrabold leading-[1.08] tracking-tight text-secondary sm:text-[2.6rem] lg:text-[2.9rem]">
                 {dict.home.heroTitleA}{" "}
-                {dict.home.heroTitleB}{" "}
+                <span className="text-primary">{dict.home.heroTitleB}{" "}</span>
                 <span className="relative inline-block">
                   {dict.home.heroTitleC}
                   {/* garis coretan hangat di bawah kata kunci */}
