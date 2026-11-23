@@ -95,7 +95,7 @@ export function OverviewTab() {
             <div key={day.date} className="group flex h-full flex-1 flex-col items-center justify-end gap-1">
               <span className="text-[9px] font-bold text-secondary opacity-0 transition group-hover:opacity-100">{day.views}</span>
               <div
-                className="w-full rounded-t-lg bg-gradient-to-t from-primary to-primary-bright transition-all duration-300"
+                className="w-full rounded-t-lg bg-linear-to-t from-primary to-primary-bright transition-all duration-300"
                 style={{ height: `${Math.max(4, (day.views / maxViews) * 100)}%` }}
                 title={`${formatDate(day.date, locale)}: ${day.views}`}
               />

@@ -135,6 +135,21 @@ h1, h2, h3, h4, h5, .font-heading {
 ::selection { background: var(--color-primary-soft); }
 
 /* Thin scrollbars for horizontal chip rails */
+/* Rail horizontal (pil fase usia, topik populer).
+   Dua hal yang dirapikan untuk layar sentuh:
+   1. scroll-snap — pil berhenti di posisi rapi, tidak setengah terpotong.
+   2. padding kanan dinaikkan lewat mask supaya pil terakhir tidak
+      menempel di tepi layar tanpa ruang untuk "bernapas". */
+.chip-rail {
+  scroll-snap-type: x proximity;
+  scrollbar-width: thin;
+  scrollbar-color: #e4d8cd transparent;
+  -webkit-overflow-scrolling: touch;
+  overscroll-behavior-x: contain;
+}
+.chip-rail > * { scroll-snap-align: start; }
+.chip-rail::after { content: ""; display: block; flex: 0 0 0.75rem; }
+
 .chip-rail::-webkit-scrollbar { height: 6px; }
 .chip-rail::-webkit-scrollbar-thumb { background: #e4d8cd; border-radius: 999px; }
 

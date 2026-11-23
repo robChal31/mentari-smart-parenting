@@ -61,10 +61,10 @@ export default async function LearningPathsPage() {
                         loading="lazy"
                         className="absolute inset-0 h-full w-full object-cover"
                       />
-                      <span aria-hidden className="absolute inset-0 bg-gradient-to-t from-secondary via-secondary/35 to-transparent" />
+                      <span aria-hidden className="absolute inset-0 bg-linear-to-t from-secondary via-secondary/35 to-transparent" />
                     </>
                   ) : (
-                    <div aria-hidden className={`absolute inset-0 bg-gradient-to-br ${gradientFor(path.id)} opacity-90`}>
+                    <div aria-hidden className={`absolute inset-0 bg-linear-to-br ${gradientFor(path.id)} opacity-90`}>
                       <span className="absolute inset-0 bg-secondary/25" />
                       <GraduationCap size={48} strokeWidth={1.4} className="absolute bottom-3 left-5 text-white/45" />
                     </div>
@@ -99,10 +99,10 @@ export default async function LearningPathsPage() {
                         loading="lazy"
                         className="absolute inset-0 h-full w-full object-cover"
                       />
-                      <span aria-hidden className="absolute inset-0 bg-gradient-to-r from-secondary via-secondary/35 to-transparent" />
+                      <span aria-hidden className="absolute inset-0 bg-linear-to-r from-secondary via-secondary/35 to-transparent" />
                     </>
                   ) : (
-                    <div aria-hidden className={`absolute inset-0 bg-gradient-to-br ${gradientFor(path.id)} opacity-90`}>
+                    <div aria-hidden className={`absolute inset-0 bg-linear-to-br ${gradientFor(path.id)} opacity-90`}>
                       <span className="absolute inset-0 bg-secondary/25" />
                       <GraduationCap size={56} strokeWidth={1.4} className="absolute bottom-4 right-4 text-white/45" />
                     </div>

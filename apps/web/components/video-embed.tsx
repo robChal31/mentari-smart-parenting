@@ -43,7 +43,7 @@ const PROVIDER_STYLE: Record<
   },
   instagram: {
     icon: <Camera size={26} strokeWidth={1.8} aria-hidden />,
-    tint: "bg-gradient-to-br from-[#F58529] via-[#DD2A7B] to-[#8134AF]",
+    tint: "bg-linear-to-br from-[#F58529] via-[#DD2A7B] to-[#8134AF]",
     ring: "ring-[#DD2A7B]/25",
   },
   file: {
@@ -137,7 +137,7 @@ export function VideoEmbed({
         aria-label={`${playLabel} — ${source.label}: ${title}`}
       >
         <div
-          className={`${ASPECT_CLASS[source.aspect]} relative grid w-full place-items-center bg-gradient-to-br from-secondary-deep via-secondary to-[#0B3E68]`}
+          className={`${ASPECT_CLASS[source.aspect]} relative grid w-full place-items-center bg-linear-to-br from-secondary-deep via-secondary to-[#0B3E68]`}
         >
           {/* pola titik halus, senada dengan hero */}
           <span aria-hidden className="dot-grid absolute inset-0 opacity-40" />

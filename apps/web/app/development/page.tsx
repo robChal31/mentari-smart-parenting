@@ -188,7 +188,7 @@ export default function DevelopmentPage() {
           <span className="grid h-16 w-16 place-items-center rounded-2xl bg-white/10 font-heading text-xl font-extrabold text-accent-on-dark">{pct}%</span>
         </div>
         <div className="mt-4 h-2.5 w-full overflow-hidden rounded-full bg-white/15">
-          <div className="h-full rounded-full bg-gradient-to-r from-accent-bright to-success transition-all duration-500" style={{ width: `${pct}%` }} />
+          <div className="h-full rounded-full bg-linear-to-r from-accent-bright to-success transition-all duration-500" style={{ width: `${pct}%` }} />
         </div>
       </div>
 

@@ -87,7 +87,7 @@ export function SiteHeader() {
       onClick={switchLocale}
       aria-label={dict.language.switchAria}
       title={dict.language.switchAria}
-      className="inline-flex items-center gap-1.5 rounded-full border border-white/25 px-3 py-2 text-xs font-extrabold uppercase tracking-[0.12em] text-cream transition hover:border-white/50 hover:bg-white/10"
+      className="inline-flex h-10 items-center gap-1.5 rounded-full border border-white/25 px-3 text-xs font-extrabold uppercase tracking-[0.12em] text-cream transition hover:border-white/50 hover:bg-white/10"
     >
       <Globe size={15} aria-hidden />
       {locale === "id" ? dict.language.en : dict.language.id}
@@ -187,7 +187,7 @@ export function SiteHeader() {
           <div className="ml-auto flex items-center gap-2 md:hidden">
             {localeToggle}
             <button
-              className="rounded-xl p-2 text-cream transition hover:bg-white/10"
+              className="grid h-11 w-11 place-items-center rounded-xl text-cream transition hover:bg-white/10"
               onClick={() => setMenuOpen((v) => !v)}
               aria-label={menuOpen ? dict.nav.closeMenu : dict.nav.openMenu}
               aria-expanded={menuOpen}
