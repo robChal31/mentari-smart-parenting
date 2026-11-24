@@ -141,17 +141,19 @@ export default async function HomePage() {
               teks, karena foto 3:1 kalau dipaksa mengisi kotak tinggi
               hanya menyisakan potongan sempit. Di layar lebar baru foto
               ini jadi latar penuh dengan teks menimpanya. */}
-          {/* Foto hero di mobile dulu 224px — cukup kecil sehingga wajah
-              keluarga terpotong di bagian atas. 248px memberi ruang lebih
-              lega tanpa mendorong teks terlalu jauh ke bawah. */}
-          <div className="relative h-64 w-full sm:h-72 lg:absolute lg:inset-0 lg:h-full">
+          {/* Foto hero di mobile.
+              256px ternyata terlalu tinggi: hero jadi 611px (72% dari layar
+              844px) dan wajah ibu di kanan terpotong tepi. 224px dengan
+              fokus 70%/45% memuat ketiga wajah utuh dan membuat hero muat
+              lebih awal — CTA terlihat tanpa perlu menggulir. */}
+          <div className="relative h-56 w-full sm:h-72 lg:absolute lg:inset-0 lg:h-full">
             <Image
               src="/images/hero-banner.webp"
               alt={dict.home.heroAlt}
               fill
               priority
               sizes="100vw"
-              className="object-cover object-[62%_center]"
+              className="object-cover object-[70%_45%] lg:object-[62%_center]"
             />
             {/* Selubung hanya di layar lebar, tempat teks menimpa foto.
                 Di layar kecil foto dan teks tidak bertumpuk, jadi tidak
@@ -162,42 +164,43 @@ export default async function HomePage() {
             />
           </div>
 
-          <div className="relative mx-auto flex max-w-7xl items-center px-4 py-8 sm:px-6 sm:py-10 lg:min-h-[27rem] lg:py-14">
+          <div className="relative mx-auto flex max-w-7xl items-center px-4 py-6 sm:px-6 sm:py-10 lg:min-h-[27rem] lg:py-14">
             <div className="fade-up max-w-xl lg:max-w-[34rem]">
-              <p className="text-[11px] font-extrabold uppercase tracking-[0.14em] text-primary-deep sm:tracking-[0.22em]">
+              <p className="text-[10.5px] font-extrabold uppercase tracking-[0.14em] text-primary-deep sm:text-[11px] sm:tracking-[0.22em]">
                 {dict.home.heroBadge2}
               </p>
-              {/* Di layar 390px judul ini memakan 5 baris dan mendorong
-                  CTA hampir keluar layar. Ukurannya diturunkan sedikit di
-                  mobile saja; dari sm ke atas kembali besar. */}
-              {/* Ukuran mobile dipilih dari pengukuran di 320/360/390/412/430,
-                  bukan kira-kira. 7vw (dibatasi 20.8–27.2px) selalu
-                  menghasilkan 4 baris; di 360px dan 390px baris terakhirnya
-                  utuh "Tumbuh Kembang Anak". Ukuran tetap 27.2px membuat
-                  kata "Anak" tertinggal sendirian di 360px. Di 320px dan
-                  412px baris terakhir memang lebih pendek, itu wajar. */}
+              {/* Skala judul mobile. Sebelumnya 27.2px — untuk teks sependek
+                  ini di layar 390px hasilnya terasa seperti poster, bukan
+                  header. Turun ke 21–23px (clamp 5.7vw): lebih tenang, tetap
+                  3–4 baris, dan hero jadi jauh lebih ringkas. Dari sm ke atas
+                  ukurannya kembali seperti semula. */}
               <h1
-                className="mt-3 font-heading text-[clamp(1.3rem,7vw,1.7rem)] font-extrabold leading-[1.16] tracking-tight text-secondary sm:text-[2.5rem] sm:leading-[1.08] lg:text-[2.9rem]"
+                className="mt-2.5 font-heading text-[clamp(1.3rem,5.7vw,1.45rem)] font-extrabold leading-[1.2] tracking-[-0.01em] text-secondary sm:mt-3 sm:text-[2.5rem] sm:leading-[1.08] sm:tracking-tight lg:text-[2.9rem]"
                 style={{ textWrap: "balance" }}
               >
                 {dict.home.heroTitleA}{" "}
                 <span className="text-primary">{dict.home.heroTitleB}{" "}</span>
-                <span className="relative inline-block">
-                  {dict.home.heroTitleC}
-                  {/* garis coretan hangat di bawah kata kunci */}
-                  <span
-                    aria-hidden
-                    className="absolute inset-x-0 -bottom-1 h-2 -rotate-[0.6deg] rounded-[40%_60%_50%_50%/60%_40%_60%_40%] bg-primary/30 sm:h-2.5"
-                  />
-                </span>
+                {dict.home.heroTitleC}
               </h1>
-              <p className="mt-4 max-w-md text-[0.9375rem] leading-[1.6] text-ink/75 sm:text-base sm:leading-7">
+              {/* Garis coretan hangat di bawah judul.
+                  Dulu ia ditempel sebagai anak position:absolute dari span
+                  pembungkus frasa terakhir. Itu rapuh: begitu pembungkusnya
+                  dibuat inline (perlu, supaya pemenggalan baris di mobile
+                  natural), span inline yang membungkus lebih dari satu baris
+                  tidak punya kotak layout — anak absolutnya mengukur ke lebar
+                  0 dan garisnya lenyap di locale EN. Sebagai elemen mandiri,
+                  lebarnya pasti dan tidak bergantung pada perilaku inline. */}
+              <span
+                aria-hidden
+                className="mt-2 block h-2 w-40 -rotate-[0.6deg] rounded-[40%_60%_50%_50%/60%_40%_60%_40%] bg-primary/30 sm:mt-3 sm:h-2.5 sm:w-56"
+              />
+              <p className="mt-3 max-w-md text-[0.875rem] leading-[1.5] text-ink/75 sm:mt-4 sm:text-base sm:leading-7">
                 {dict.home.heroSub}
               </p>
-              <div className="mt-6">
+              <div className="mt-5 sm:mt-6">
                 <Link
                   href="/contents"
-                  className="inline-flex min-h-12 items-center gap-2 rounded-full bg-primary px-6 py-3 font-heading text-[0.9375rem] font-bold text-white shadow-[0_10px_24px_rgba(193,78,34,0.28)] transition hover:bg-primary-deep sm:min-h-0 sm:text-sm"
+                  className="inline-flex min-h-11 items-center gap-2 rounded-full bg-primary px-5 py-2.5 font-heading text-[0.875rem] font-bold text-white shadow-[0_10px_24px_rgba(193,78,34,0.28)] transition hover:bg-primary-deep sm:min-h-0 sm:px-6 sm:py-3 sm:text-sm"
                 >
                   {dict.home.ctaExplore} <ArrowRight size={16} aria-hidden />
                 </Link>
@@ -228,12 +231,12 @@ export default async function HomePage() {
           Figurnya setengah keluar dari tepi pil, jadi bentuknya terasa
           seperti stiker yang ditempel, bukan avatar di dalam lingkaran. */}
       {ageGroups && ageGroups.length > 0 && (
-        <section aria-label={dict.home.ageRailAria} className="relative mt-12">
+        <section aria-label={dict.home.ageRailAria} className="relative mt-8 sm:mt-12">
           {/* Tepi atas gelombang: warna sand naik ke latar cream. */}
           <WaveEdge className="block h-5 w-full text-sand sm:h-7" />
           <div className="bg-sand pb-2 pt-2">
             <div className="mx-auto max-w-7xl px-4 sm:px-6">
-              <h2 className="font-heading text-xl font-extrabold tracking-tight text-secondary sm:text-2xl">
+              <h2 className="font-heading text-[1.0625rem] font-extrabold tracking-tight text-secondary sm:text-2xl">
                 {dict.home.ageRailLabel}
               </h2>
             </div>
@@ -259,7 +262,7 @@ export default async function HomePage() {
                   <Link
                     key={group.id}
                     href={`/contents?ageGroup=${group.slug}`}
-                    className={`group relative inline-flex shrink-0 items-center whitespace-nowrap rounded-full ${stage.bg} ${stage.fg} py-2 pl-2.5 pr-4 text-[0.8125rem] font-extrabold shadow-[0_4px_14px_rgba(42,38,32,0.12)] ring-2 ring-white/40 transition hover:-translate-y-0.5 hover:shadow-[0_10px_24px_rgba(42,38,32,0.20)] sm:py-2.5 sm:pl-3 sm:pr-6 sm:text-sm`}
+                    className={`group relative inline-flex shrink-0 items-center whitespace-nowrap rounded-full ${stage.bg} ${stage.fg} py-1.5 pl-2 pr-3.5 text-[0.75rem] font-extrabold shadow-[0_4px_14px_rgba(42,38,32,0.12)] ring-2 ring-white/40 transition hover:-translate-y-0.5 hover:shadow-[0_10px_24px_rgba(42,38,32,0.20)] sm:py-2.5 sm:pl-3 sm:pr-6 sm:text-sm`}
                   >
                     {stage.art ? (
                       // Ilustrasi sudah dipotong latarnya. Diberi tinggi tetap
@@ -270,14 +273,14 @@ export default async function HomePage() {
                         width={120}
                         height={200}
                         aria-hidden
-                        className="mr-1.5 h-9 w-auto shrink-0 -translate-y-0.5 transition-transform duration-200 group-hover:-translate-y-1 group-hover:scale-105 sm:mr-2 sm:h-12 sm:-translate-y-1 sm:group-hover:-translate-y-2"
+                        className="mr-1 h-7 w-auto shrink-0 -translate-y-px transition-transform duration-200 group-hover:-translate-y-1 group-hover:scale-105 sm:mr-2 sm:h-12 sm:-translate-y-1 sm:group-hover:-translate-y-2"
                       />
                     ) : (
                       // Fase tanpa ilustrasi: pakai inisial supaya lebarnya
                       // tetap sebanding, tidak mendadak gepeng.
                       <span
                         aria-hidden
-                        className="mr-2 grid h-9 w-9 shrink-0 place-items-center rounded-full bg-white/35 font-heading text-[11px] font-extrabold sm:h-10 sm:w-10 sm:text-xs"
+                        className="mr-1 grid h-7 w-7 shrink-0 place-items-center rounded-full bg-white/35 font-heading text-[10px] font-extrabold sm:mr-2 sm:h-10 sm:w-10 sm:text-xs"
                       >
                         {group.name.charAt(0)}
                       </span>
@@ -313,14 +316,14 @@ export default async function HomePage() {
           lanjutan penomoran kartu besar. */}
 
       {featuredItems.length > 0 && (
-        <section className="mt-14 sm:mt-16" aria-labelledby="favorites-heading">
+        <section className="mt-10 sm:mt-16" aria-labelledby="favorites-heading">
           <div className="mx-auto max-w-7xl px-4 sm:px-6">
 
             {/* ---- kepala section ---- */}
             <div className="flex flex-wrap items-center justify-between gap-x-6 gap-y-2">
               <h2
                 id="favorites-heading"
-                className="flex items-center gap-2 font-heading text-[1.5rem] font-extrabold leading-tight tracking-tight text-secondary sm:text-[2.1rem]"
+                className="flex items-center gap-2 font-heading text-[1.25rem] font-extrabold leading-tight tracking-tight text-secondary sm:text-[2.1rem]"
               >
                 {dict.home.favoritesTitle}
                 <Sparkle size={20} className="shrink-0 text-primary" fill="currentColor" aria-hidden />
@@ -353,7 +356,7 @@ export default async function HomePage() {
                     {/* Di mobile kartu ini dulu 304px. Dengan thumbnails kecil
                         di daftar bawahnya, 240px sudah cukup gagah dan
                         membuat section ini tidak terlalu mendominasi. */}
-                    <div className="relative flex min-h-[15rem] flex-1 flex-col justify-end overflow-hidden rounded-[1.5rem] bg-secondary sm:min-h-[24rem] sm:rounded-[1.75rem]">
+                    <div className="relative flex min-h-[13.5rem] flex-1 flex-col justify-end overflow-hidden rounded-[1.5rem] bg-secondary sm:min-h-[24rem] sm:rounded-[1.75rem]">
                       <div className={`absolute inset-0 bg-linear-to-br ${FEATURED_GRADIENTS[0]}`} />
                       {hero.thumbnailUrl && (
                         <ThumbImg src={hero.thumbnailUrl} className="absolute inset-0 h-full w-full object-cover" />
@@ -362,10 +365,10 @@ export default async function HomePage() {
 
                       {/* label tipe di kiri atas, pil kecil putih */}
                       <div className="absolute left-4 top-4 flex flex-wrap items-center gap-2">
-                        <span className="inline-flex min-h-6 items-center gap-1 rounded-full bg-primary px-2.5 py-1 text-[11px] font-extrabold uppercase tracking-wide text-white shadow sm:min-h-0 sm:text-[10px]">
+                        <span className="inline-flex min-h-6 items-center gap-1 rounded-full bg-primary px-2.5 py-1 text-[10px] font-extrabold uppercase tracking-wide text-white shadow sm:min-h-0">
                           <Flame size={11} fill="currentColor" aria-hidden /> {dict.home.popularToggle}
                         </span>
-                        <span className="inline-flex min-h-6 items-center gap-1 rounded-full bg-white/90 px-2.5 py-1 text-[11px] font-extrabold uppercase tracking-wide text-secondary backdrop-blur sm:min-h-0 sm:text-[10px]">
+                        <span className="inline-flex min-h-6 items-center gap-1 rounded-full bg-white/90 px-2.5 py-1 text-[10px] font-extrabold uppercase tracking-wide text-secondary backdrop-blur sm:min-h-0">
                           {TYPE_BADGE[hero.type]?.icon}
                           {dict.contentTypes[TYPE_BADGE[hero.type]?.key ?? "ARTICLE"] ?? hero.type}
                         </span>
@@ -375,11 +378,11 @@ export default async function HomePage() {
                           tepat di atas judul, seperti di referensi. */}
                       <div className="relative p-4 sm:p-6">
                         {heroCategory && (
-                          <span className="mb-2.5 inline-flex min-h-6 items-center rounded-full bg-primary px-3 py-1 text-[11px] font-extrabold uppercase tracking-[0.09em] text-white sm:text-[10px] sm:tracking-[0.1em]">
+                          <span className="mb-2.5 inline-flex min-h-6 items-center rounded-full bg-primary px-2.5 py-1 text-[10px] font-extrabold uppercase tracking-[0.09em] text-white sm:px-3 sm:tracking-[0.1em]">
                             {heroCategory.name}
                           </span>
                         )}
-                        <h3 className="font-heading text-[1.15rem] font-extrabold leading-snug text-white sm:text-[1.6rem]">
+                        <h3 className="font-heading text-[1.0625rem] font-extrabold leading-snug text-white sm:text-[1.6rem]">
                           {hero.title}
                         </h3>
                       </div>
@@ -465,10 +468,10 @@ export default async function HomePage() {
           ditentukan dari hash slug, jadi stabil antar-render (tidak
           berkedip saat revalidate) tetapi tetap terasa acak. */}
       {flatCategories.length > 0 && (
-        <section className="mx-auto max-w-7xl px-4 pt-14 sm:px-6" aria-labelledby="topik-heading">
+        <section className="mx-auto max-w-7xl px-4 pt-10 sm:pt-14 sm:px-6" aria-labelledby="topik-heading">
           <div className="flex flex-col gap-6 lg:flex-row lg:items-center lg:gap-10">
             <div className="shrink-0 lg:max-w-[15rem]">
-              <h2 id="topik-heading" className="font-heading text-[1.375rem] font-extrabold leading-tight tracking-tight text-secondary sm:text-[1.75rem]">
+              <h2 id="topik-heading" className="font-heading text-[1.1875rem] font-extrabold leading-tight tracking-tight text-secondary sm:text-[1.75rem]">
                 {dict.home.topicsTitleA}{" "}
                 <span className="relative inline-block text-primary">
                   {dict.home.topicsTitleB}
@@ -504,13 +507,13 @@ export default async function HomePage() {
                 // pil minimal 36px tinggi agar nyaman disentuh jari.
                 const size =
                   hash % 3 === 0
-                    ? "text-[0.8125rem] sm:text-base px-4 py-2 sm:px-5 sm:py-2.5"
-                    : "text-xs sm:text-sm px-3.5 py-2";
+                    ? "text-[0.78125rem] sm:text-base px-3.5 py-1.5 sm:px-5 sm:py-2.5"
+                    : "text-[0.71875rem] sm:text-sm px-3 py-1.5";
                 return (
                   <li key={category.id}>
                     <Link
                       href={`/contents?category=${category.slug}`}
-                      className={`inline-flex min-h-9 items-center rounded-full font-extrabold shadow-[0_2px_8px_rgba(42,38,32,0.08)] transition hover:-translate-y-0.5 hover:shadow-[0_8px_18px_rgba(42,38,32,0.16)] sm:min-h-0 ${tone} ${size}`}
+                      className={`inline-flex min-h-8 items-center rounded-full font-extrabold shadow-[0_2px_8px_rgba(42,38,32,0.08)] transition hover:-translate-y-0.5 hover:shadow-[0_8px_18px_rgba(42,38,32,0.16)] sm:min-h-0 ${tone} ${size}`}
                     >
                       {category.name}
                     </Link>
@@ -524,13 +527,13 @@ export default async function HomePage() {
 
       {/* ============ LEARNING PATHS ============ */}
       {learningPaths && learningPaths.length > 0 && (
-        <section className="mx-auto max-w-7xl px-4 pt-12 sm:px-6" aria-labelledby="paths-heading">
+        <section className="mx-auto max-w-7xl px-4 pt-9 sm:pt-12 sm:px-6" aria-labelledby="paths-heading">
           <div className="mb-5 flex items-end justify-between gap-4">
             <div>
               <p className="inline-flex items-center gap-1.5 text-[11px] font-extrabold uppercase tracking-[0.12em] sm:tracking-[0.16em] text-accent-deep">
                 <Rocket size={13} aria-hidden /> {dict.home.pathsKicker}
               </p>
-              <h2 id="paths-heading" className="mt-1 font-heading text-[1.375rem] font-extrabold text-secondary sm:text-2xl">{dict.home.pathsTitle}</h2>
+              <h2 id="paths-heading" className="mt-1 font-heading text-[1.1875rem] font-extrabold text-secondary sm:text-2xl">{dict.home.pathsTitle}</h2>
             </div>
             <Link href="/learning-paths" className="hidden shrink-0 items-center gap-1 text-sm font-bold text-primary transition hover:gap-2 sm:inline-flex">
               {dict.home.allPaths} <ArrowRight size={15} aria-hidden />
@@ -557,13 +560,13 @@ export default async function HomePage() {
       )}
 
       {/* ============ ARTIKEL TERBARU ============ */}
-      <section className="mx-auto max-w-7xl px-4 pt-12 sm:px-6" aria-labelledby="latest-heading">
+      <section className="mx-auto max-w-7xl px-4 pt-9 sm:pt-12 sm:px-6" aria-labelledby="latest-heading">
         <div className="mb-5 flex items-end justify-between gap-4">
           <div>
             <p className="inline-flex items-center gap-1.5 text-[11px] font-extrabold uppercase tracking-[0.12em] sm:tracking-[0.16em] text-secondary">
               <BookOpenText size={13} aria-hidden /> {dict.home.latestKicker}
             </p>
-            <h2 id="latest-heading" className="mt-1 font-heading text-[1.375rem] font-extrabold text-secondary sm:text-2xl">{dict.home.latestTitle}</h2>
+            <h2 id="latest-heading" className="mt-1 font-heading text-[1.1875rem] font-extrabold text-secondary sm:text-2xl">{dict.home.latestTitle}</h2>
           </div>
           <Link href="/contents?sort=latest" className="hidden shrink-0 items-center gap-1 text-sm font-bold text-primary transition hover:gap-2 sm:inline-flex">
             {dict.home.viewAll} <ArrowRight size={15} aria-hidden />
@@ -576,7 +579,7 @@ export default async function HomePage() {
 
       {/* ============ PRODUK MENTARI ============ */}
       {products && products.length > 0 && (
-        <section className="mx-auto max-w-7xl px-4 pt-12 sm:px-6">
+        <section className="mx-auto max-w-7xl px-4 pt-9 sm:pt-12 sm:px-6">
           <RecommendationsPanel
             products={products.slice(0, 4)}
             source="BANNER"
@@ -588,13 +591,13 @@ export default async function HomePage() {
 
       {/* ============ KOMUNITAS ============ */}
       {threads.items.length > 0 && (
-        <section className="mx-auto max-w-7xl px-4 pt-12 sm:px-6" aria-labelledby="komunitas-heading">
+        <section className="mx-auto max-w-7xl px-4 pt-9 sm:pt-12 sm:px-6" aria-labelledby="komunitas-heading">
           <div className="mb-5 flex items-end justify-between gap-4">
             <div>
               <p className="inline-flex items-center gap-1.5 text-[11px] font-extrabold uppercase tracking-[0.12em] sm:tracking-[0.16em] text-primary">
                 <MessagesSquare size={13} aria-hidden /> {dict.home.communityKicker}
               </p>
-              <h2 id="komunitas-heading" className="mt-1 font-heading text-[1.375rem] font-extrabold text-secondary sm:text-2xl">{dict.home.communityTitle}</h2>
+              <h2 id="komunitas-heading" className="mt-1 font-heading text-[1.1875rem] font-extrabold text-secondary sm:text-2xl">{dict.home.communityTitle}</h2>
             </div>
             <Link href="/community" className="hidden shrink-0 items-center gap-1 text-sm font-bold text-primary transition hover:gap-2 sm:inline-flex">
               {dict.home.joinDiscussion} <ArrowRight size={15} aria-hidden />
@@ -625,14 +628,14 @@ export default async function HomePage() {
       {/* ============ PITA CTA ============ */}
       {/* Referensi memakai pita terracotta bergelombang yang menembus
           tepi layar — bukan kartu rounded di dalam container. */}
-      <section className="mt-16">
+      <section className="mt-12 sm:mt-16">
         <WaveEdge className="block h-6 w-full text-primary sm:h-9" />
         <div className="bg-primary py-10 text-center text-white sm:py-14">
           <div className="mx-auto max-w-3xl px-5 sm:px-6">
             <p className="inline-flex items-center gap-2 rounded-full border border-white/30 px-3.5 py-2 text-[11px] font-extrabold uppercase tracking-[0.12em] text-white/95 sm:tracking-[0.18em]">
               <ShieldCheck size={13} aria-hidden /> {dict.home.finalNote}
             </p>
-            <h2 className="mt-4 font-heading text-[1.375rem] font-extrabold leading-tight sm:text-[2rem]">
+            <h2 className="mt-4 font-heading text-[1.1875rem] font-extrabold leading-tight sm:text-[2rem]">
               {dict.home.finalTitle}
             </h2>
             <p className="mx-auto mt-2.5 max-w-xl text-[0.875rem] leading-[1.5rem] text-white/85 sm:text-sm sm:leading-6">
