@@ -146,7 +146,7 @@ export function VideoEmbed({
           >
             {style.icon}
           </span>
-          <span className="absolute bottom-3 left-3 inline-flex items-center gap-1.5 rounded-full bg-white/15 px-2.5 py-1 text-[10px] font-extrabold uppercase tracking-[0.14em] text-white/90 backdrop-blur">
+          <span className="absolute bottom-3 left-3 inline-flex items-center gap-1.5 rounded-full bg-white/15 px-2.5 py-1 text-[11px] sm:text-[10px] font-extrabold uppercase tracking-[0.14em] text-white/90 backdrop-blur">
             {source.label}
           </span>
         </div>
@@ -155,7 +155,7 @@ export function VideoEmbed({
             <Play size={13} aria-hidden className="fill-current" />
             {playLabel}
           </span>
-          <span className="text-[10px] font-semibold text-white/55">{externalLabel}</span>
+          <span className="text-[11px] sm:text-[10px] font-semibold text-white/55">{externalLabel}</span>
         </span>
       </button>
     </figure>

@@ -117,7 +117,7 @@ export function LearningPathsTab() {
       )}
 
       <div className="mt-4 overflow-hidden surface">
-        <div className="border-b border-sand bg-cream/40 px-5 py-3 text-[10px] font-extrabold uppercase tracking-[0.14em] text-muted">
+        <div className="border-b border-sand bg-cream/40 px-5 py-3 text-[11px] sm:text-[10px] font-extrabold uppercase tracking-[0.14em] text-muted">
           <span>{busy ? dict.admin.loading : format(dict.admin.learningPathsCount, { count: total })}</span>
         </div>
         <ul className="divide-y divide-sand/70">
@@ -141,7 +141,7 @@ export function LearningPathsTab() {
                   ) : (
                     <span className="inline-flex items-center gap-1 rounded-full bg-sand px-2 py-0.5 uppercase tracking-wide text-muted">{dict.admin.draft}</span>
                   )}
-                  <span className="text-[10px] font-medium text-muted">{format(dict.admin.contentsCount, { count: path.itemCount ?? 0 })}{path.estimatedTime ? ` · ${path.estimatedTime}′` : ""}</span>
+                  <span className="text-[11px] sm:text-[10px] font-medium text-muted">{format(dict.admin.contentsCount, { count: path.itemCount ?? 0 })}{path.estimatedTime ? ` · ${path.estimatedTime}′` : ""}</span>
                 </span>
               </span>
               <div className="ml-auto flex items-center gap-1.5">

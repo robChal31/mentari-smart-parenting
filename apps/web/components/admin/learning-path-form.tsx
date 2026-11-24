@@ -150,14 +150,14 @@ export function LearningPathForm({
 
       <div className="mt-4 grid gap-4 sm:grid-cols-2">
         <label className="block sm:col-span-2">
-          <span className="text-[10px] font-extrabold uppercase tracking-[0.14em] text-muted">{dict.admin.learningPathTitleLabel}</span>
+          <span className="text-[11px] sm:text-[10px] font-extrabold uppercase tracking-[0.14em] text-muted">{dict.admin.learningPathTitleLabel}</span>
           <input value={title} onChange={(e) => setTitle(e.target.value)} required minLength={3} maxLength={200} placeholder={dict.admin.learningPathTitlePlaceholder} aria-label={dict.admin.learningPathTitleLabel} className="mt-1.5 w-full rounded-2xl border border-sand bg-cream/30 px-4 py-2.5 text-sm outline-none focus:border-primary" />
         </label>
         <div className="block">
           <SlugField title={title} slug={slug} onChange={setSlug} locked={Boolean(initial)} label={dict.admin.slugLabel} />
         </div>
         <div className="block">
-          <span className="text-[10px] font-extrabold uppercase tracking-[0.14em] text-muted">{dict.admin.difficultyLabel}</span>
+          <span className="text-[11px] sm:text-[10px] font-extrabold uppercase tracking-[0.14em] text-muted">{dict.admin.difficultyLabel}</span>
           <div className="mt-1.5 grid grid-cols-3 gap-1.5">
             {(["BEGINNER", "INTERMEDIATE", "ADVANCED"] as const).map((level) => (
               <button key={level} type="button" onClick={() => setDifficulty(level)} aria-pressed={difficulty === level} className={`rounded-2xl border px-3 py-2.5 text-[11px] font-bold transition ${difficulty === level ? "border-primary bg-primary text-white" : "border-sand bg-white text-ink/75 hover:border-primary/50"}`}>
@@ -167,11 +167,11 @@ export function LearningPathForm({
           </div>
         </div>
         <label className="block">
-          <span className="text-[10px] font-extrabold uppercase tracking-[0.14em] text-muted">{dict.admin.estimatedTimeLabel}</span>
+          <span className="text-[11px] sm:text-[10px] font-extrabold uppercase tracking-[0.14em] text-muted">{dict.admin.estimatedTimeLabel}</span>
           <input value={estimatedTime} onChange={(e) => setEstimatedTime(e.target.value)} type="number" min={1} inputMode="numeric" placeholder={dict.admin.estimatedTimePlaceholder} aria-label={dict.admin.estimatedTimeLabel} className="mt-1.5 w-full rounded-2xl border border-sand bg-cream/30 px-4 py-2.5 text-sm outline-none focus:border-primary" />
         </label>
         <label className="block">
-          <span className="text-[10px] font-extrabold uppercase tracking-[0.14em] text-muted">{dict.admin.sortOrderLabel}</span>
+          <span className="text-[11px] sm:text-[10px] font-extrabold uppercase tracking-[0.14em] text-muted">{dict.admin.sortOrderLabel}</span>
           <input value={sortOrder} onChange={(e) => setSortOrder(e.target.value)} type="number" inputMode="numeric" aria-label={dict.admin.sortOrderAria} className="mt-1.5 w-full rounded-2xl border border-sand bg-cream/30 px-4 py-2.5 text-sm outline-none focus:border-primary" />
         </label>
         <div className="block sm:col-span-2">
@@ -184,7 +184,7 @@ export function LearningPathForm({
           />
         </div>
         <label className="block sm:col-span-2">
-          <span className="text-[10px] font-extrabold uppercase tracking-[0.14em] text-muted">{dict.admin.learningPathDescriptionLabel}</span>
+          <span className="text-[11px] sm:text-[10px] font-extrabold uppercase tracking-[0.14em] text-muted">{dict.admin.learningPathDescriptionLabel}</span>
           <textarea value={description} onChange={(e) => setDescription(e.target.value)} rows={3} maxLength={5000} placeholder={dict.admin.learningPathDescriptionPlaceholder} aria-label={dict.admin.learningPathDescriptionLabel} className="mt-1.5 w-full rounded-2xl border border-sand bg-cream/30 px-4 py-2.5 text-sm leading-6 outline-none focus:border-primary" />
         </label>
         <label className="flex cursor-pointer items-center gap-2 sm:col-span-2">
@@ -195,7 +195,7 @@ export function LearningPathForm({
 
       {/* ----- items (urutan belajar) ----- */}
       <div className="mt-5">
-        <p className="text-[10px] font-extrabold uppercase tracking-[0.14em] text-muted">{dict.admin.learningPathItemsLabel}</p>
+        <p className="text-[11px] sm:text-[10px] font-extrabold uppercase tracking-[0.14em] text-muted">{dict.admin.learningPathItemsLabel}</p>
         <div className="relative mt-1.5">
           <Search size={15} className="pointer-events-none absolute left-4 top-1/2 -translate-y-1/2 text-muted" aria-hidden />
           <input value={query} onChange={(e) => setQuery(e.target.value)} placeholder={dict.admin.contentSearchPlaceholder} aria-label={dict.admin.contentSearchPlaceholder} className="w-full rounded-2xl border border-sand bg-cream/30 py-2.5 pl-11 pr-4 text-sm outline-none focus:border-primary" />
@@ -220,7 +220,7 @@ export function LearningPathForm({
         <ol className="mt-2 divide-y divide-sand/70 overflow-hidden rounded-2xl border border-sand bg-cream/20">
           {items.map((item, index) => (
             <li key={item.contentId} className="flex items-center gap-2 px-3 py-2">
-              <span className="w-6 shrink-0 text-center text-[10px] font-extrabold text-muted">{index + 1}</span>
+              <span className="w-6 shrink-0 text-center text-[11px] sm:text-[10px] font-extrabold text-muted">{index + 1}</span>
               <span className="min-w-0 flex-1">
                 <span className="line-clamp-1 block text-[11px] font-semibold text-ink">{item.title}</span>
                 <span className="text-[9px] font-bold uppercase tracking-wide text-muted">{item.type}</span>

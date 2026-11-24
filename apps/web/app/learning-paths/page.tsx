@@ -80,7 +80,7 @@ export default async function LearningPathsPage() {
                   </h2>
                   {path.description && <p className="mt-2 line-clamp-3 text-sm leading-6 text-white/75">{path.description}</p>}
                   <div className="mt-auto flex items-center justify-between gap-3 pt-6">
-                    <span className="inline-flex items-center gap-1.5 rounded-full bg-white/10 px-3 py-1.5 text-[10px] font-bold text-white/85">
+                    <span className="inline-flex items-center gap-1.5 rounded-full bg-white/10 px-3 py-1.5 text-[11px] sm:text-[10px] font-bold text-white/85">
                       <ListChecks size={12} aria-hidden /> {format(dict.paths.modules, { count: itemCount })}
                     </span>
                     <span className="inline-flex items-center gap-2 font-heading text-[12px] font-bold text-accent-on-dark transition group-hover:gap-3">

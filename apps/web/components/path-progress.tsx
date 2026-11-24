@@ -23,7 +23,7 @@ export function PathProgress({ slug, total }: { slug: string; total: number }) {
 
   return (
     <div className="mt-6">
-      <div className="flex items-center justify-between text-[10px] font-bold uppercase tracking-[0.16em] text-white/70">
+      <div className="flex items-center justify-between text-[11px] sm:text-[10px] font-bold uppercase tracking-[0.16em] text-white/70">
         <span>{dict.paths.progressLabel}</span>
         <span>{format(dict.paths.progressDetail, { done, total, pct })}</span>
       </div>

@@ -169,7 +169,7 @@ export function CommunityTab() {
       )}
 
       <div className="mt-4 overflow-hidden surface">
-        <div className="border-b border-sand bg-cream/40 px-5 py-3 text-[10px] font-extrabold uppercase tracking-[0.14em] text-muted">
+        <div className="border-b border-sand bg-cream/40 px-5 py-3 text-[11px] sm:text-[10px] font-extrabold uppercase tracking-[0.14em] text-muted">
           <span>{busy ? dict.admin.loading : format(dict.admin.threadsCount, { count: total })}</span>
         </div>
         <ul className="divide-y divide-sand/70">
@@ -183,11 +183,11 @@ export function CommunityTab() {
                     {thread.flags > 0 && <span className="inline-flex items-center gap-1 rounded-full bg-warning-soft px-2 py-0.5 text-[8px] font-extrabold uppercase tracking-wide text-warning"><Flag size={9} /> {format(dict.admin.flaggedBadge, { count: thread.flags })}</span>}
                   </div>
                   <p className="mt-1 line-clamp-1 text-xs font-semibold text-ink">{thread.title}</p>
-                  <p className="mt-0.5 text-[10px] font-medium text-muted">
+                  <p className="mt-0.5 text-[11px] sm:text-[10px] font-medium text-muted">
                     {thread.author.fullName} · {formatDate(thread.createdAt, locale)}
                     {thread.author.email ? ` · ${thread.author.email}` : ""}
                   </p>
-                  <p className="mt-0.5 flex flex-wrap items-center gap-2.5 text-[10px] font-semibold text-muted">
+                  <p className="mt-0.5 flex flex-wrap items-center gap-2.5 text-[11px] sm:text-[10px] font-semibold text-muted">
                     <span className="inline-flex items-center gap-1"><MessageCircle size={10} /> {thread.commentCount}</span>
                     <span className="inline-flex items-center gap-1"><Heart size={10} /> {thread.likeCount}</span>
                     <span className="inline-flex items-center gap-1"><Eye size={10} /> {thread.viewCount}</span>
@@ -213,21 +213,21 @@ export function CommunityTab() {
                 <div className="mt-3 rounded-2xl border border-sand bg-cream/30 p-4">
                   <p className="whitespace-pre-line text-[11px] leading-5 text-ink/85">{thread.body}</p>
                   <p className="mt-3 text-[9px] font-extrabold uppercase tracking-[0.16em] text-muted">{format(dict.admin.commentsTitle, { count: thread.commentCount })}</p>
-                  {detailBusy && <p className="mt-2 inline-flex items-center gap-1.5 text-[10px] font-semibold text-muted"><Loader2 size={11} className="animate-spin" /> {dict.admin.loading}</p>}
-                  {detail && detail.comments.length === 0 && <p className="mt-2 text-[10px] text-muted">{dict.admin.noComments}</p>}
+                  {detailBusy && <p className="mt-2 inline-flex items-center gap-1.5 text-[11px] sm:text-[10px] font-semibold text-muted"><Loader2 size={11} className="animate-spin" /> {dict.admin.loading}</p>}
+                  {detail && detail.comments.length === 0 && <p className="mt-2 text-[11px] sm:text-[10px] text-muted">{dict.admin.noComments}</p>}
                   <ul className="mt-2 space-y-2">
                     {(detail?.comments ?? []).map((comment) => (
                       <li key={comment.id} className="flex items-start gap-2 rounded-xl border border-sand/70 bg-white px-3 py-2">
                         <div className="min-w-0 flex-1">
-                          <p className="text-[10px] font-bold text-secondary">{comment.author.fullName} <span className="font-medium text-muted">· {formatDate(comment.createdAt, locale)}</span>
+                          <p className="text-[11px] sm:text-[10px] font-bold text-secondary">{comment.author.fullName} <span className="font-medium text-muted">· {formatDate(comment.createdAt, locale)}</span>
                             {comment.flags > 0 && <span className="ml-1.5 inline-flex items-center gap-1 rounded-full bg-warning-soft px-1.5 py-0.5 text-[8px] font-extrabold uppercase text-warning"><Flag size={8} /> {comment.flags}</span>}
                           </p>
                           <p className="mt-1 whitespace-pre-line text-[11px] leading-5 text-ink/85">{comment.body}</p>
                         </div>
                         {confirmDeleteCommentId === comment.id ? (
                           <span className="flex shrink-0 items-center gap-1.5">
-                            <button onClick={() => setConfirmDeleteCommentId(null)} className="rounded-lg border border-sand px-2 py-1 text-[10px] font-bold text-muted hover:bg-sand">{dict.common.cancel}</button>
-                            <button onClick={() => removeComment(comment.id)} className="rounded-lg bg-danger px-2 py-1 text-[10px] font-bold text-white hover:bg-danger-deep">{dict.common.delete}</button>
+                            <button onClick={() => setConfirmDeleteCommentId(null)} className="rounded-lg border border-sand px-2 py-1 text-[11px] sm:text-[10px] font-bold text-muted hover:bg-sand">{dict.common.cancel}</button>
+                            <button onClick={() => removeComment(comment.id)} className="rounded-lg bg-danger px-2 py-1 text-[11px] sm:text-[10px] font-bold text-white hover:bg-danger-deep">{dict.common.delete}</button>
                           </span>
                         ) : (
                           <button onClick={() => setConfirmDeleteCommentId(comment.id)} title={dict.admin.deleteComment} aria-label={dict.admin.deleteComment} className="grid h-7 w-7 shrink-0 place-items-center rounded-lg text-muted hover:bg-danger-soft hover:text-danger">

@@ -120,7 +120,7 @@ export function AuthorsTab() {
       )}
 
       <div className="mt-4 overflow-hidden surface">
-        <div className="border-b border-sand bg-cream/40 px-5 py-3 text-[10px] font-extrabold uppercase tracking-[0.14em] text-muted">
+        <div className="border-b border-sand bg-cream/40 px-5 py-3 text-[11px] sm:text-[10px] font-extrabold uppercase tracking-[0.14em] text-muted">
           <span>{busy ? dict.admin.loading : format(dict.admin.authorsCount, { count: total })}</span>
         </div>
         <ul className="divide-y divide-sand/70">
@@ -217,7 +217,7 @@ function AuthorForm({
   }
 
   const inputClass = "rounded-2xl border border-sand bg-white px-4 py-2.5 text-sm outline-none transition focus:border-primary";
-  const labelClass = "text-[10px] font-extrabold uppercase tracking-[0.14em] text-muted";
+  const labelClass = "text-[11px] sm:text-[10px] font-extrabold uppercase tracking-[0.14em] text-muted";
 
   return (
     <form onSubmit={submit} className="mt-4 rounded-3xl border border-primary/25 bg-primary-soft/30 p-5">

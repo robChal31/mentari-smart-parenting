@@ -109,7 +109,7 @@ export default async function ContentDetailPage({ params }: PageProps) {
               <Link
                 key={category.slug}
                 href={`/contents?category=${category.slug}`}
-                className="rounded-full px-3 py-1 text-[10px] font-extrabold uppercase tracking-[0.14em] text-secondary"
+                className="rounded-full px-3 py-1 text-[11px] sm:text-[10px] font-extrabold uppercase tracking-[0.14em] text-secondary"
                 style={{ background: (category.color ?? "#273D30") + "1F" }}
               >
                 {category.name}
@@ -119,7 +119,7 @@ export default async function ContentDetailPage({ params }: PageProps) {
               <Link
                 key={group.slug}
                 href={`/contents?ageGroup=${group.slug}`}
-                className="rounded-full bg-cream px-3 py-1 text-[10px] font-bold text-muted transition hover:text-primary"
+                className="rounded-full bg-cream px-3 py-1 text-[11px] sm:text-[10px] font-bold text-muted transition hover:text-primary"
               >
                 {group.name}
               </Link>
@@ -208,7 +208,7 @@ export default async function ContentDetailPage({ params }: PageProps) {
                 {content.authorName.split(" ").filter(Boolean).slice(0, 2).map((w) => w[0]).join("").toUpperCase()}
               </span>
               <div>
-                <p className="inline-flex items-center gap-1.5 text-[10px] font-extrabold uppercase tracking-[0.16em] text-accent-deep">
+                <p className="inline-flex items-center gap-1.5 text-[11px] sm:text-[10px] font-extrabold uppercase tracking-[0.16em] text-accent-deep">
                   <BadgeCheck size={12} aria-hidden /> {dict.contentDetail.verifiedAuthor}
                 </p>
                 <p className="mt-1 font-heading text-base font-bold text-secondary">{content.authorName}</p>

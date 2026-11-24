@@ -69,7 +69,7 @@ export function SlugField({
   return (
     <div>
       <div className="flex items-center justify-between gap-2">
-        <span className="text-[10px] font-extrabold uppercase tracking-[0.14em] text-muted">{label}</span>
+        <span className="text-[11px] sm:text-[10px] font-extrabold uppercase tracking-[0.14em] text-muted">{label}</span>
         <button
           type="button"
           onClick={() => {
@@ -79,7 +79,7 @@ export function SlugField({
               lastAuto.current = "";
             }
           }}
-          className="inline-flex items-center gap-1 text-[10px] font-bold text-secondary/70 transition hover:text-secondary"
+          className="inline-flex items-center gap-1 text-[11px] sm:text-[10px] font-bold text-secondary/70 transition hover:text-secondary"
         >
           {isAuto ? <Lock size={10} /> : <Unlock size={10} />}
           {isAuto ? "Ubah manual" : "Ikuti judul lagi"}
@@ -104,7 +104,7 @@ export function SlugField({
         />
       </div>
 
-      <p className="mt-1 text-[10px] leading-relaxed text-muted">
+      <p className="mt-1 text-[11px] sm:text-[10px] leading-relaxed text-muted">
         {isAuto
           ? "Dibuat otomatis dari judul. Kamu tidak perlu mengisinya."
           : locked

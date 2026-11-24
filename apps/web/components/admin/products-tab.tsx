@@ -120,7 +120,7 @@ export function ProductsTab() {
       )}
 
       <div className="mt-4 overflow-hidden surface">
-        <div className="border-b border-sand bg-cream/40 px-5 py-3 text-[10px] font-extrabold uppercase tracking-[0.14em] text-muted">
+        <div className="border-b border-sand bg-cream/40 px-5 py-3 text-[11px] sm:text-[10px] font-extrabold uppercase tracking-[0.14em] text-muted">
           <span>{busy ? dict.admin.loading : format(dict.admin.productsCount, { count: total })}</span>
         </div>
         <ul className="divide-y divide-sand/70">
@@ -153,12 +153,12 @@ export function ProductsTab() {
                     ) : (
                       <span className="inline-flex items-center rounded-full bg-accent-soft px-2 py-0.5 uppercase tracking-wide text-accent-deep">{dict.admin.activeBadge}</span>
                     )}
-                    <span className="text-[10px] font-medium text-muted">{product.isFeatured ? `⭐ ${dict.admin.featured}` : dict.admin.regularCatalog}</span>
+                    <span className="text-[11px] sm:text-[10px] font-medium text-muted">{product.isFeatured ? `⭐ ${dict.admin.featured}` : dict.admin.regularCatalog}</span>
                   </span>
                 </span>
                 <div className="ml-auto flex items-center gap-1.5">
                   {deleted ? (
-                    <button onClick={() => restore(product)} title={dict.admin.restore} aria-label={dict.admin.restore} className="inline-flex h-8 items-center gap-1 rounded-lg px-2 text-[10px] font-bold text-accent-deep hover:bg-accent-soft">
+                    <button onClick={() => restore(product)} title={dict.admin.restore} aria-label={dict.admin.restore} className="inline-flex h-8 items-center gap-1 rounded-lg px-2 text-[11px] sm:text-[10px] font-bold text-accent-deep hover:bg-accent-soft">
                       <RotateCcw size={14} /> {dict.admin.restore}
                     </button>
                   ) : (

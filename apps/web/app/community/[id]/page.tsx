@@ -36,7 +36,7 @@ export default async function ThreadDetailPage({ params }: { params: Promise<{ i
       </nav>
 
       <article className="mt-5 rounded-[2rem] border border-sand bg-white p-6 sm:p-8">
-        <div className="flex flex-wrap items-center gap-2 text-[10px] font-semibold text-muted">
+        <div className="flex flex-wrap items-center gap-2 text-[11px] sm:text-[10px] font-semibold text-muted">
           {thread.isPinned && <span className="inline-flex items-center gap-1 rounded-full bg-warning-soft px-2 py-0.5 font-extrabold uppercase tracking-wider text-warning"><Pin size={9} /> {dict.community.pinned}</span>}
           {thread.categorySlug && <span className="rounded-full bg-cream px-2.5 py-1 font-extrabold uppercase tracking-wider">#{thread.categorySlug}</span>}
           <span className="inline-flex items-center gap-1"><Eye size={11} /> {thread.viewCount} {dict.community.viewsSeen}</span>
@@ -72,7 +72,7 @@ export default async function ThreadDetailPage({ params }: { params: Promise<{ i
               <div className="min-w-0">
                 <p className="text-[11px] font-bold text-secondary">{comment.author.fullName} <span className="font-medium text-muted">· {formatRelativeTime(comment.createdAt, locale, dict.time)}</span></p>
                 <p className="mt-1.5 whitespace-pre-line text-sm leading-6 text-ink/90">{comment.body}</p>
-                {comment.likeCount > 0 && <p className="mt-2 inline-flex items-center gap-1 text-[10px] font-semibold text-muted"><Heart size={10} aria-hidden /> {comment.likeCount}</p>}
+                {comment.likeCount > 0 && <p className="mt-2 inline-flex items-center gap-1 text-[11px] sm:text-[10px] font-semibold text-muted"><Heart size={10} aria-hidden /> {comment.likeCount}</p>}
               </div>
             </li>
           ))}

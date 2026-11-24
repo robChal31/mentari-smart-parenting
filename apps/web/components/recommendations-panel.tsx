@@ -47,7 +47,7 @@ export async function RecommendationsPanel({
           <p className="inline-flex items-center gap-1.5 font-heading text-sm font-extrabold text-secondary">
             <BadgeCheck size={16} className="text-primary" aria-hidden /> {resolvedTitle}
           </p>
-          <p className="mt-0.5 text-[10px] leading-4 text-ink/75">{resolvedSubtitle}</p>
+          <p className="mt-0.5 text-[11px] sm:text-[10px] leading-4 text-ink/75">{resolvedSubtitle}</p>
         </div>
         <span className="shrink-0 rounded-full border border-primary/30 bg-white px-2 py-0.5 text-[8px] font-bold uppercase tracking-[0.14em] text-primary-deep">
           {dict.recommendations.sponsored}

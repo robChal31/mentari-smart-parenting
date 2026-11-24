@@ -182,7 +182,7 @@ export default function DevelopmentPage() {
       <div className="mt-6 rounded-3xl bg-secondary p-6 text-white">
         <div className="flex items-center justify-between gap-4">
           <div>
-            <p className="inline-flex items-center gap-1.5 text-[10px] font-extrabold uppercase tracking-[0.16em] text-accent-on-dark"><Sparkles size={12} aria-hidden /> {dict.development.overallTitle}</p>
+            <p className="inline-flex items-center gap-1.5 text-[11px] sm:text-[10px] font-extrabold uppercase tracking-[0.16em] text-accent-on-dark"><Sparkles size={12} aria-hidden /> {dict.development.overallTitle}</p>
             <p className="mt-1 font-heading text-2xl font-extrabold">{format(dict.development.milestonesDone, { done, total: milestones.length })}</p>
           </div>
           <span className="grid h-16 w-16 place-items-center rounded-2xl bg-white/10 font-heading text-xl font-extrabold text-accent-on-dark">{pct}%</span>
@@ -229,7 +229,7 @@ export default function DevelopmentPage() {
                 <span className={`grid h-10 w-10 place-items-center rounded-2xl ${meta.tint}`}>{meta.icon}</span>
                 <div>
                   <h2 id={`kat-${category}`} className="font-heading text-sm font-extrabold text-secondary">{meta.label}</h2>
-                  <p className="text-[10px] font-semibold text-muted">{format(dict.development.achievedOf, { done: completed, total: rows.length })}</p>
+                  <p className="text-[11px] sm:text-[10px] font-semibold text-muted">{format(dict.development.achievedOf, { done: completed, total: rows.length })}</p>
                 </div>
               </div>
               <ul className="divide-y divide-sand/70">
@@ -253,7 +253,7 @@ export default function DevelopmentPage() {
                         )}
                         <span>
                           <span className={`block text-sm font-semibold leading-snug ${checked ? "text-muted line-through decoration-accent/60" : "text-ink"}`}>{milestone.title}</span>
-                          <span className="mt-0.5 block text-[10px] font-medium text-muted">{milestone.ageGroupName}</span>
+                          <span className="mt-0.5 block text-[11px] sm:text-[10px] font-medium text-muted">{milestone.ageGroupName}</span>
                           {milestone.description && <span className="mt-1 block text-[11px] leading-5 text-muted">{milestone.description}</span>}
                         </span>
                       </button>

@@ -84,7 +84,7 @@ export default function RegisterPage() {
             {busy ? dict.auth.registerBusy : dict.auth.registerSubmit}
           </button>
         </form>
-        <p className="mt-4 inline-flex items-center gap-1.5 text-[10px] font-semibold uppercase tracking-[0.16em] text-muted"><Rocket size={11} aria-hidden /> {dict.auth.badgeWaiting}</p>
+        <p className="mt-4 inline-flex items-center gap-1.5 text-[11px] sm:text-[10px] font-semibold uppercase tracking-[0.16em] text-muted"><Rocket size={11} aria-hidden /> {dict.auth.badgeWaiting}</p>
       </div>
     </div>
   );

@@ -64,7 +64,7 @@ export function ContentsFilter({ q, type, category, ageGroup, sort, ageGroups, c
           <p className="inline-flex items-center gap-2 font-heading text-sm font-extrabold text-secondary">
             <SlidersHorizontal size={15} aria-hidden /> {dict.contents.filterTitle}
             {activeFilters > 0 && (
-              <span className="grid h-5 w-5 place-items-center rounded-full bg-primary text-[10px] font-bold text-white">{activeFilters}</span>
+              <span className="grid h-5 w-5 place-items-center rounded-full bg-primary text-[11px] sm:text-[10px] font-bold text-white">{activeFilters}</span>
             )}
           </p>
           {activeFilters > 0 && (
@@ -73,7 +73,7 @@ export function ContentsFilter({ q, type, category, ageGroup, sort, ageGroups, c
         </div>
 
         <div>
-          <label htmlFor="q" className="text-[10px] font-extrabold uppercase tracking-[0.14em] text-muted">{dict.contents.keyword}</label>
+          <label htmlFor="q" className="text-[11px] sm:text-[10px] font-extrabold uppercase tracking-[0.14em] text-muted">{dict.contents.keyword}</label>
           <input
             id="q"
             name="q"
@@ -85,7 +85,7 @@ export function ContentsFilter({ q, type, category, ageGroup, sort, ageGroups, c
         </div>
 
         <fieldset>
-          <legend className="text-[10px] font-extrabold uppercase tracking-[0.14em] text-muted">{dict.contents.ageLegend}</legend>
+          <legend className="text-[11px] sm:text-[10px] font-extrabold uppercase tracking-[0.14em] text-muted">{dict.contents.ageLegend}</legend>
           <div className="mt-1.5 space-y-1">
             {ageGroups.map((group) => (
               <label key={group.id} className="flex cursor-pointer items-center gap-2 rounded-xl px-2 py-1.5 text-xs font-medium text-ink/85 transition hover:bg-cream">
@@ -104,7 +104,7 @@ export function ContentsFilter({ q, type, category, ageGroup, sort, ageGroups, c
         </fieldset>
 
         <div>
-          <span id="type-label" className="text-[10px] font-extrabold uppercase tracking-[0.14em] text-muted">{dict.contents.typeLabel}</span>
+          <span id="type-label" className="text-[11px] sm:text-[10px] font-extrabold uppercase tracking-[0.14em] text-muted">{dict.contents.typeLabel}</span>
           <Combobox
             className="mt-1.5"
             ariaLabel={dict.contents.typeLabel}
@@ -116,7 +116,7 @@ export function ContentsFilter({ q, type, category, ageGroup, sort, ageGroups, c
         </div>
 
         <div>
-          <span id="category-label" className="text-[10px] font-extrabold uppercase tracking-[0.14em] text-muted">{dict.contents.categoryLabel}</span>
+          <span id="category-label" className="text-[11px] sm:text-[10px] font-extrabold uppercase tracking-[0.14em] text-muted">{dict.contents.categoryLabel}</span>
           <Combobox
             className="mt-1.5"
             ariaLabel={dict.contents.categoryLabel}

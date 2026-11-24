@@ -44,7 +44,7 @@ export default async function AboutPage() {
               </span>
               <span>
                 <span className="block font-heading text-sm font-bold text-secondary">{name}</span>
-                <span className="block text-[10px] font-bold uppercase tracking-[0.12em] text-accent-deep">{role}</span>
+                <span className="block text-[11px] sm:text-[10px] font-bold uppercase tracking-[0.12em] text-accent-deep">{role}</span>
                 <span className="mt-1.5 block text-xs leading-5 text-muted">{bio}</span>
               </span>
             </li>

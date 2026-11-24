@@ -120,7 +120,7 @@ export function ProductForm({
 
       {ageGroups.length > 0 && (
         <fieldset className="mt-4">
-          <legend className="text-[10px] font-extrabold uppercase tracking-[0.14em] text-muted">{dict.admin.ageGroupsLabel}</legend>
+          <legend className="text-[11px] sm:text-[10px] font-extrabold uppercase tracking-[0.14em] text-muted">{dict.admin.ageGroupsLabel}</legend>
           <div className="mt-1.5 flex flex-wrap gap-1.5">
             {ageGroups.map((group) => {
               const active = selectedAges.includes(group.slug);
@@ -130,7 +130,7 @@ export function ProductForm({
                   type="button"
                   aria-pressed={active}
                   onClick={() => toggleAge(group.slug)}
-                  className={`rounded-full px-3 py-1.5 text-[10px] font-bold transition ${active ? "bg-secondary text-white" : "border border-sand bg-white text-secondary hover:border-secondary/40"}`}
+                  className={`rounded-full px-3 py-1.5 text-[11px] sm:text-[10px] font-bold transition ${active ? "bg-secondary text-white" : "border border-sand bg-white text-secondary hover:border-secondary/40"}`}
                 >
                   {group.name}
                 </button>

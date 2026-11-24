@@ -65,7 +65,7 @@ export default async function LearningPathDetailPage({ params }: { params: Promi
           </>
         )}
         <div className="relative p-6 sm:p-9">
-          <span className="inline-flex items-center gap-2 text-[10px] font-extrabold uppercase tracking-[0.18em] text-accent-on-dark">
+          <span className="inline-flex items-center gap-2 text-[11px] sm:text-[10px] font-extrabold uppercase tracking-[0.18em] text-accent-on-dark">
             <Rocket size={12} aria-hidden /> {dict.paths.kicker} · {difficultyLabel}
           </span>
           <h1 className="mt-3 max-w-xl font-heading text-3xl font-extrabold leading-[1.15] sm:text-4xl">{path.title}</h1>
@@ -90,7 +90,7 @@ export default async function LearningPathDetailPage({ params }: { params: Promi
         <h2 className="inline-flex items-center gap-2 text-[11px] font-extrabold uppercase tracking-[0.16em] text-secondary">
           <ListChecks size={14} aria-hidden className="text-primary" /> {dict.paths.modulesHeading}
         </h2>
-        <span className="rounded-full bg-secondary-soft px-3 py-1 text-[10px] font-extrabold uppercase tracking-[0.14em] text-secondary">
+        <span className="rounded-full bg-secondary-soft px-3 py-1 text-[11px] sm:text-[10px] font-extrabold uppercase tracking-[0.14em] text-secondary">
           {format(dict.paths.modules, { count: items.length })}
         </span>
       </div>

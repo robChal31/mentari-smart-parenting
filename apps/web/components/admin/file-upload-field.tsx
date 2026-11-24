@@ -178,7 +178,7 @@ export function FileUploadField({
 
   return (
     <div>
-      <span className="text-[10px] font-extrabold uppercase tracking-[0.14em] text-muted">{label}</span>
+      <span className="text-[11px] sm:text-[10px] font-extrabold uppercase tracking-[0.14em] text-muted">{label}</span>
 
       <div className="mt-1.5 flex items-start gap-3">
         {value ? (
@@ -253,12 +253,12 @@ export function FileUploadField({
             className="mt-2 w-full rounded-2xl border border-sand bg-white px-3 py-2 text-[11px] text-muted outline-none transition focus:border-primary"
           />
 
-          <p className="mt-1 text-[10px] leading-relaxed text-muted">
+          <p className="mt-1 text-[11px] sm:text-[10px] leading-relaxed text-muted">
             {hint ?? "JPG, PNG, WebP (maks 5 MB) atau GIF (maks 8 MB). Foto besar dikecilkan otomatis ke 1600px."}
           </p>
-          {notice && <p className="mt-1 text-[10px] font-semibold text-accent-deep">{notice}</p>}
+          {notice && <p className="mt-1 text-[11px] sm:text-[10px] font-semibold text-accent-deep">{notice}</p>}
           {error && (
-            <p role="alert" className="mt-1 rounded-xl status-danger border px-2.5 py-1.5 text-[10px] text-danger">
+            <p role="alert" className="mt-1 rounded-xl status-danger border px-2.5 py-1.5 text-[11px] sm:text-[10px] text-danger">
               {error}
             </p>
           )}

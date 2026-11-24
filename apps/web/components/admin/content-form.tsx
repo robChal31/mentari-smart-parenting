@@ -160,7 +160,7 @@ export function ContentForm({
 
   const inputClass =
     "rounded-2xl border border-sand bg-white px-4 py-2.5 text-sm outline-none transition focus:border-primary";
-  const labelClass = "text-[10px] font-extrabold uppercase tracking-[0.14em] text-muted";
+  const labelClass = "text-[11px] sm:text-[10px] font-extrabold uppercase tracking-[0.14em] text-muted";
 
   return (
     <form onSubmit={submit} className="mt-4 rounded-3xl border border-primary/25 bg-primary-soft/30 p-5">
@@ -173,7 +173,7 @@ export function ContentForm({
             href={`/contents/${initial?.slug}`}
             target="_blank"
             rel="noopener noreferrer"
-            className="inline-flex items-center gap-1 rounded-full border border-sand bg-white px-3 py-1 text-[10px] font-bold text-secondary hover:border-secondary/40"
+            className="inline-flex items-center gap-1 rounded-full border border-sand bg-white px-3 py-1 text-[11px] sm:text-[10px] font-bold text-secondary hover:border-secondary/40"
           >
             {dict.admin.openPublicPage} <ArrowRight size={11} />
           </a>
@@ -263,7 +263,7 @@ export function ContentForm({
             placeholder={dict.admin.bodyPlaceholder}
             className={`mt-1.5 w-full font-mono text-[13px] leading-6 ${inputClass}`}
           />
-          <span className="mt-1 block text-[10px] text-muted">{dict.admin.bodyHint}</span>
+          <span className="mt-1 block text-[11px] sm:text-[10px] text-muted">{dict.admin.bodyHint}</span>
         </label>
 
         <div className="sm:col-span-2">
@@ -285,16 +285,16 @@ export function ContentForm({
             placeholder="https://youtu.be/… · https://tiktok.com/@user/video/… · https://instagram.com/reel/…"
             className={`mt-1.5 w-full ${inputClass}`}
           />
-          <span className="mt-1 block text-[10px] leading-relaxed text-muted">
+          <span className="mt-1 block text-[11px] sm:text-[10px] leading-relaxed text-muted">
             {dict.admin.videoUrlHint}
           </span>
           {detectedVideo ? (
-            <span className="mt-1.5 inline-flex items-center gap-1.5 rounded-full border border-accent/25 bg-accent-soft px-2.5 py-1 text-[10px] font-bold text-accent-deep">
+            <span className="mt-1.5 inline-flex items-center gap-1.5 rounded-full border border-accent/25 bg-accent-soft px-2.5 py-1 text-[11px] sm:text-[10px] font-bold text-accent-deep">
               <BadgeCheck size={11} aria-hidden />
               {format(dict.admin.videoDetected, { platform: detectedVideo.label })}
             </span>
           ) : videoUrl.trim() ? (
-            <span className="mt-1.5 block text-[10px] font-semibold leading-relaxed text-warning">
+            <span className="mt-1.5 block text-[11px] sm:text-[10px] font-semibold leading-relaxed text-warning">
               {dict.admin.videoUnrecognized}
             </span>
           ) : null}
@@ -322,7 +322,7 @@ export function ContentForm({
             placeholder="480"
             className={`mt-1.5 w-full ${inputClass}`}
           />
-          <span className="mt-1 block text-[10px] text-muted">{dict.admin.videoDurationHint}</span>
+          <span className="mt-1 block text-[11px] sm:text-[10px] text-muted">{dict.admin.videoDurationHint}</span>
         </label>
 
         <label>
@@ -348,7 +348,7 @@ export function ContentForm({
                   type="button"
                   aria-pressed={active}
                   onClick={() => toggle(selectedCategories, category.slug, setSelectedCategories)}
-                  className={`rounded-full px-3 py-1.5 text-[10px] font-bold transition ${
+                  className={`rounded-full px-3 py-1.5 text-[11px] sm:text-[10px] font-bold transition ${
                     active ? "bg-secondary text-white" : "border border-sand bg-white text-secondary hover:border-secondary/40"
                   }`}
                 >
@@ -372,7 +372,7 @@ export function ContentForm({
                   type="button"
                   aria-pressed={active}
                   onClick={() => toggle(selectedAges, group.slug, setSelectedAges)}
-                  className={`rounded-full px-3 py-1.5 text-[10px] font-bold transition ${
+                  className={`rounded-full px-3 py-1.5 text-[11px] sm:text-[10px] font-bold transition ${
                     active ? "bg-accent text-white" : "border border-sand bg-white text-accent-deep hover:border-accent/40"
                   }`}
                 >
@@ -387,7 +387,7 @@ export function ContentForm({
       {products.length > 0 && (
         <fieldset className="mt-3">
           <legend className={labelClass}>{dict.admin.contentProductsLabel}</legend>
-          <p className="mt-1 text-[10px] leading-4 text-muted">{dict.admin.contentProductsHint}</p>
+          <p className="mt-1 text-[11px] sm:text-[10px] leading-4 text-muted">{dict.admin.contentProductsHint}</p>
 
           {selectedProducts.length > 0 && (
             <ol className="mt-2 flex flex-col gap-1.5">
@@ -398,7 +398,7 @@ export function ContentForm({
                     key={id}
                     className="flex items-center gap-2 rounded-xl border border-accent/30 bg-accent-soft/40 px-2.5 py-1.5"
                   >
-                    <span className="grid h-5 w-5 shrink-0 place-items-center rounded-full bg-accent text-[10px] font-extrabold text-white">
+                    <span className="grid h-5 w-5 shrink-0 place-items-center rounded-full bg-accent text-[11px] sm:text-[10px] font-extrabold text-white">
                       {index + 1}
                     </span>
                     <span className="flex-1 truncate text-[11px] font-bold text-secondary">
@@ -426,7 +426,7 @@ export function ContentForm({
                   key={product.id}
                   type="button"
                   onClick={() => setSelectedProducts((prev) => [...prev, product.id])}
-                  className="rounded-full border border-sand bg-white px-3 py-1.5 text-[10px] font-bold text-secondary transition hover:border-accent/50 hover:text-accent-deep"
+                  className="rounded-full border border-sand bg-white px-3 py-1.5 text-[11px] sm:text-[10px] font-bold text-secondary transition hover:border-accent/50 hover:text-accent-deep"
                 >
                   + {product.name}
                 </button>

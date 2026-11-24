@@ -66,7 +66,7 @@ export default function AdminPage() {
           <p className="text-[11px] font-extrabold uppercase tracking-[0.16em] text-primary">{dict.admin.cmsKicker}</p>
           <h1 className="mt-1 font-heading text-3xl font-extrabold text-secondary">{dict.admin.dashboardTitle}</h1>
         </div>
-        <span className="inline-flex items-center gap-1.5 rounded-full bg-secondary-soft px-3 py-1.5 text-[10px] font-extrabold uppercase tracking-[0.16em] text-secondary">
+        <span className="inline-flex items-center gap-1.5 rounded-full bg-secondary-soft px-3 py-1.5 text-[11px] sm:text-[10px] font-extrabold uppercase tracking-[0.16em] text-secondary">
           {user.role} · {user.fullName.split(" ")[0]}
         </span>
       </header>
