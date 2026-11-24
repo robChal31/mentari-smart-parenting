@@ -161,7 +161,7 @@ export function ContentsTab() {
       )}
 
       <div className="mt-4 overflow-hidden surface">
-        <div className="flex items-center justify-between border-b border-sand bg-cream/40 px-5 py-3 text-[10px] font-extrabold uppercase tracking-[0.14em] text-muted">
+        <div className="flex items-center justify-between border-b border-sand bg-cream/40 px-5 py-3 text-[11px] sm:text-[10px] font-extrabold uppercase tracking-[0.14em] text-muted">
           <span>{busy ? dict.admin.loading : format(dict.admin.contentsCount, { count: total })}</span>
         </div>
         <ul className="divide-y divide-sand/70">

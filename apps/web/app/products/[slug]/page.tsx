@@ -42,20 +42,20 @@ export default async function ProdukDetailPage({ params }: { params: Promise<{ s
           <ProductCard product={product} source="BANNER" />
           {product.ageGroups && product.ageGroups.length > 0 && (
             <div className="mt-4 border-t border-accent/20 pt-4">
-              <p className="inline-flex items-center gap-1.5 text-[10px] font-extrabold uppercase tracking-[0.14em] text-accent-deep"><Tag size={11} aria-hidden /> {dict.products.suitableAge}</p>
+              <p className="inline-flex items-center gap-1.5 text-[11px] sm:text-[10px] font-extrabold uppercase tracking-[0.14em] text-accent-deep"><Tag size={11} aria-hidden /> {dict.products.suitableAge}</p>
               <div className="mt-2 flex flex-wrap gap-1.5">
                 {product.ageGroups.map((group) => (
-                  <Link key={group.slug} href={`/contents?ageGroup=${group.slug}`} className="rounded-full bg-white px-3 py-1 text-[10px] font-bold text-secondary">{group.name}</Link>
+                  <Link key={group.slug} href={`/contents?ageGroup=${group.slug}`} className="rounded-full bg-white px-3 py-1 text-[11px] sm:text-[10px] font-bold text-secondary">{group.name}</Link>
                 ))}
               </div>
             </div>
           )}
         </div>
         <div>
-          <p className="text-[10px] font-extrabold uppercase tracking-[0.18em] text-accent-deep">{(dict.productTypes as Record<string, string>)[product.type] ?? product.type}</p>
+          <p className="text-[11px] sm:text-[10px] font-extrabold uppercase tracking-[0.18em] text-accent-deep">{(dict.productTypes as Record<string, string>)[product.type] ?? product.type}</p>
           <h1 className="mt-1 font-heading text-3xl font-extrabold text-secondary">{product.name}</h1>
           <p className="mt-3 font-heading text-2xl font-extrabold text-ink">{formatPrice(product.price, locale, dict.products, product.currency)}</p>
-          <p className="mt-1 inline-flex items-center gap-1.5 text-[10px] font-bold uppercase tracking-[0.14em] text-muted"><BadgeCheck size={12} className="text-accent-deep" aria-hidden /> {dict.products.officialBadge}</p>
+          <p className="mt-1 inline-flex items-center gap-1.5 text-[11px] sm:text-[10px] font-bold uppercase tracking-[0.14em] text-muted"><BadgeCheck size={12} className="text-accent-deep" aria-hidden /> {dict.products.officialBadge}</p>
           {product.description && <div className="mt-5 space-y-3 text-sm leading-7 text-ink/85">{product.description.split(/\n{2,}/).map((p, i) => <p key={i}>{p}</p>)}</div>}
           <p className="mt-6 rounded-2xl bg-cream p-4 text-xs leading-5 text-muted">
             {dict.products.priceNote}

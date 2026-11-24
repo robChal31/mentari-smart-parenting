@@ -110,7 +110,7 @@ function ProfileContent() {
                 <StatTile icon={<Flame size={16} className="text-primary" fill="currentColor" />} value={gamification.currentStreak} label={dict.profile.streak} />
                 <StatTile icon={<Award size={16} className="text-accent-deep" />} value={`Lv ${gamification.level}`} label={dict.profile.level} />
               </div>
-              <p className="mt-4 text-[10px] font-extrabold uppercase tracking-[0.16em] text-muted">{format(dict.profile.badges, { count: gamification.badges.length })}</p>
+              <p className="mt-4 text-[11px] sm:text-[10px] font-extrabold uppercase tracking-[0.16em] text-muted">{format(dict.profile.badges, { count: gamification.badges.length })}</p>
               <ul className="mt-2 grid grid-cols-3 gap-2">
                 {gamification.badges.map((badge) => (
                   <li key={badge.id} title={badge.description ?? badge.name} className="flex flex-col items-center gap-1 rounded-2xl border border-sand bg-cream px-2 py-3 text-center">
@@ -138,7 +138,7 @@ function ProfileContent() {
             <Link key={row.id} href={`/contents/${row.content.slug}`} className="group rounded-2xl border border-sand bg-cream/40 p-4 transition hover:border-primary/30">
               <span className="text-[9px] font-extrabold uppercase tracking-[0.14em] text-muted">{(dict.contentTypes as Record<string, string>)[row.content.type] ?? row.content.type}</span>
               <span className="mt-1 line-clamp-2 block text-xs font-bold leading-snug text-ink group-hover:text-secondary">{row.content.title}</span>
-              <span className="mt-2 block text-[10px] font-medium text-muted">{formatViews(row.content.viewCount, dict.time)} {dict.profile.viewsSeen} · {formatDate(row.createdAt, locale)}</span>
+              <span className="mt-2 block text-[11px] sm:text-[10px] font-medium text-muted">{formatViews(row.content.viewCount, dict.time)} {dict.profile.viewsSeen} · {formatDate(row.createdAt, locale)}</span>
             </Link>
           ))}
           {!loadingData && bookmarks.length === 0 && (
@@ -208,7 +208,7 @@ function ChildrenSection({ children, setChildren, loading }: { children: ChildDt
             <span className="grid h-11 w-11 shrink-0 place-items-center rounded-2xl bg-primary-soft text-sm font-extrabold text-primary-deep">{child.name.slice(0, 1).toUpperCase()}</span>
             <span className="min-w-0">
               <span className="block text-sm font-bold text-ink">{child.name}</span>
-              <span className="block text-[10px] font-medium text-muted">{child.ageLabel} · {child.ageGroupSlug}</span>
+              <span className="block text-[11px] sm:text-[10px] font-medium text-muted">{child.ageLabel} · {child.ageGroupSlug}</span>
             </span>
             <div className="ml-auto flex items-center gap-1">
               <Link href="/development" title={dict.nav.milestones} className="grid h-9 w-9 place-items-center rounded-xl text-secondary transition hover:bg-secondary-soft" aria-label={format(dict.profile.milestoneAria, { name: child.name })}>
@@ -224,7 +224,7 @@ function ChildrenSection({ children, setChildren, loading }: { children: ChildDt
 
       <form onSubmit={addChild} className="mt-4 border-t border-sand pt-4">
         {error && <p role="alert" className="mb-2 flex items-center gap-1.5 rounded-2xl bg-danger-soft px-3 py-2 text-[11px] font-medium text-danger"><TriangleAlert size={12} />{error}</p>}
-        <p className="text-[10px] font-extrabold uppercase tracking-[0.16em] text-muted">{dict.profile.addChild}</p>
+        <p className="text-[11px] sm:text-[10px] font-extrabold uppercase tracking-[0.16em] text-muted">{dict.profile.addChild}</p>
         <div className="mt-2 grid grid-cols-2 gap-2">
           <input required value={name} onChange={(e) => setName(e.target.value)} placeholder={dict.profile.childNamePlaceholder} aria-label={dict.profile.childNamePlaceholder} className="col-span-2 rounded-2xl border border-sand bg-cream px-4 py-2.5 text-sm outline-none focus:border-primary" />
           <input required type="date" value={birthDate} onChange={(e) => setBirthDate(e.target.value)} aria-label={dict.profile.childBirthLabel} max={new Date().toISOString().slice(0, 10)} className="rounded-2xl border border-sand bg-cream px-4 py-2.5 text-sm outline-none focus:border-primary" />

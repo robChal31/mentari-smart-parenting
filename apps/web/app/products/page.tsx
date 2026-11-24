@@ -33,7 +33,7 @@ export default async function ProductsPage() {
         <p className="mt-2 text-sm leading-6 text-muted">
           {dict.products.catalogSub}
         </p>
-        <p className="mt-3 inline-flex items-center gap-1.5 rounded-full border border-accent/25 bg-accent-soft px-3 py-1.5 text-[10px] font-bold uppercase tracking-[0.14em] text-accent-deep">
+        <p className="mt-3 inline-flex items-center gap-1.5 rounded-full border border-accent/25 bg-accent-soft px-3 py-1.5 text-[11px] sm:text-[10px] font-bold uppercase tracking-[0.14em] text-accent-deep">
           <BadgeCheck size={12} aria-hidden /> {dict.products.officialNote}
         </p>
       </header>

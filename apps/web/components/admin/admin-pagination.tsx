@@ -35,7 +35,7 @@ export function AdminPagination({
       aria-label={dict.admin.paginationAria}
       className="flex flex-wrap items-center justify-between gap-3 border-t border-sand px-5 py-3"
     >
-      <p className="text-[10px] font-semibold text-muted">
+      <p className="text-[11px] sm:text-[10px] font-semibold text-muted">
         {format(dict.admin.paginationRange, { first, last, total })}
       </p>
       <div className="flex items-center gap-1.5">

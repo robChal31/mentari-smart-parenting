@@ -41,7 +41,10 @@ export async function ContentCard({ content, priority = false }: { content: Cont
       href={`/contents/${content.slug}`}
       className="group flex h-full flex-col overflow-hidden surface shadow-[var(--shadow-card)] transition-all duration-200 hover:-translate-y-1 hover:border-primary/30 hover:shadow-[var(--shadow-accent)]"
     >
-      <div className={`relative h-36 w-full overflow-hidden bg-linear-to-br ${gradientFor(content.id)} sm:h-40`}>
+      {/* Rasio thumbnail: sebelumnya 144px untuk lebar ~358px di mobile,
+          terlihat gepeng seperti pita. Dinaikkan ke 160px supaya
+          proporsinya lebih tenang — dan tetap sama dengan versi desktop. */}
+      <div className={`relative h-40 w-full overflow-hidden bg-linear-to-br ${gradientFor(content.id)}`}>
         {content.thumbnailUrl && (
           <ThumbImg src={content.thumbnailUrl} className="absolute inset-0 h-full w-full object-cover" />
         )}
@@ -49,17 +52,17 @@ export async function ContentCard({ content, priority = false }: { content: Cont
         <span aria-hidden className="absolute -left-6 -top-8 h-28 w-28 rounded-full bg-white/40 blur-2xl" />
         <span aria-hidden className="absolute -bottom-10 right-6 h-32 w-32 rounded-full bg-white/30 blur-2xl" />
         <div className="absolute inset-0 flex flex-col items-center justify-center gap-2 p-4 text-center">
-          <span className="inline-flex items-center gap-1.5 rounded-full bg-white/85 px-3 py-1 text-[10px] font-extrabold uppercase tracking-[0.14em] text-secondary backdrop-blur">
+          <span className="inline-flex min-h-6 items-center gap-1.5 rounded-full bg-white/85 px-3 py-1 text-[11px] font-extrabold uppercase tracking-[0.12em] text-secondary backdrop-blur sm:min-h-0 sm:text-[10px] sm:tracking-[0.14em]">
             {typeIcon} {typeLabel}
           </span>
           {duration && (
-            <span className="inline-flex items-center gap-1 rounded-full bg-secondary/85 px-2.5 py-0.5 text-[10px] font-bold text-white">
+            <span className="inline-flex items-center gap-1 rounded-full bg-secondary/85 px-2.5 py-1 text-[11px] font-bold text-white sm:py-0.5 sm:text-[10px]">
               <Clock size={10} /> {duration}
             </span>
           )}
         </div>
         {content.isFeatured && (
-          <span className="absolute right-3 top-3 inline-flex items-center gap-1 rounded-full bg-primary px-2.5 py-1 text-[10px] font-extrabold uppercase tracking-wide text-white shadow">
+          <span className="absolute right-3 top-3 inline-flex min-h-6 items-center gap-1 rounded-full bg-primary px-2.5 py-1 text-[11px] font-extrabold uppercase tracking-wide text-white shadow sm:min-h-0 sm:text-[10px]">
             <Flame size={11} fill="currentColor" /> {dict.contentCard.featured}
           </span>
         )}
@@ -72,10 +75,10 @@ export async function ContentCard({ content, priority = false }: { content: Cont
             vertikal dan bentuknya rusak. Sekarang pilnya tidak boleh
             pecah, teks yang kepanjangan dipotong dengan elipsis. Tanggal
             diberi shrink-0 supaya tidak ikut tergencet. */}
-        <div className="flex items-center gap-2 text-[10px] font-bold uppercase tracking-[0.12em]">
+        <div className="flex flex-wrap items-center gap-x-2 gap-y-1 text-[11px] font-bold uppercase tracking-[0.1em] sm:flex-nowrap sm:gap-2 sm:text-[10px] sm:tracking-[0.12em]">
           {category && (
             <span
-              className="min-w-0 truncate rounded-full px-2 py-0.5 text-secondary"
+              className="min-h-6 max-w-full truncate rounded-full px-2.5 py-1 text-secondary sm:min-h-0 sm:min-w-0 sm:px-2 sm:py-0.5"
               style={{ background: (category.color ?? "#273D30") + "1A" }}
             >
               {category.name}
@@ -83,11 +86,11 @@ export async function ContentCard({ content, priority = false }: { content: Cont
           )}
           <span className="shrink-0 whitespace-nowrap text-muted">{formatDate(content.publishedAt, locale)}</span>
         </div>
-        <h3 className="line-clamp-2 font-heading text-[0.98rem] font-bold leading-snug text-ink transition-colors group-hover:text-secondary">
+        <h3 className="line-clamp-2 font-heading text-[1.05rem] font-bold leading-snug text-ink transition-colors group-hover:text-secondary sm:text-[0.98rem]">
           {content.title}
         </h3>
-        {content.excerpt && <p className="line-clamp-2 text-xs leading-5 text-muted">{content.excerpt}</p>}
-        <div className="mt-auto flex items-center gap-3 border-t border-sand/80 pt-2.5 text-[10px] font-medium text-muted">
+        {content.excerpt && <p className="line-clamp-2 text-[0.8125rem] leading-[1.35rem] text-muted sm:text-xs sm:leading-5">{content.excerpt}</p>}
+        <div className="mt-auto flex items-center gap-3 border-t border-sand/80 pt-2.5 text-[11px] font-medium text-muted sm:text-[10px]">
           <span className="inline-flex items-center gap-1"><Eye size={11} /> {formatViews(content.viewCount, dict.time)}</span>
           {content.readTime && <span className="inline-flex items-center gap-1"><Headphones size={11} className="hidden" />{format(dict.contentCard.minutesRead, { minutes: content.readTime })}</span>}
           {content.authorName && <span className="truncate">· {content.authorName.split(",")[0]}</span>}
@@ -99,7 +102,7 @@ export async function ContentCard({ content, priority = false }: { content: Cont
 
 /**
  * Skeleton kartu konten. Strukturnya sengaja ditiru dari ContentCard di atas:
- * blok thumbnail (h-36 sm:h-40), badge tipe di tengah thumbnail, baris meta
+ * blok thumbnail (h-40), badge tipe di tengah thumbnail, baris meta
  * kategori+tanggal, judul 2 baris, excerpt 2 baris, lalu footer statistik.
  * Versi sebelumnya hanya 5 garis acak, jadi saat konten asli muncul layoutnya
  * "melompat" — tinggi dan jumlah barisnya tidak cocok.
@@ -111,7 +114,10 @@ export function ContentCardSkeleton() {
           badge di atasnya pakai putih solid supaya bentuk "badge" terbaca —
           dulu badge memakai .skeleton-on-card di atas bg-sand (kontras 1.03,
           praktis tak terlihat). */}
-      <div className="relative h-36 w-full sm:h-40">
+      {/* Tinggi thumbnail di sini sengaja mengikuti ContentCard (h-40)
+          supaya saat konten asli muncul tidak ada lompatan layout.
+          Struktur isinya tidak diubah. */}
+      <div className="relative h-40 w-full">
         <div className="skeleton absolute inset-0 rounded-none" />
         <div className="absolute inset-0 flex flex-col items-center justify-center gap-2">
           <div className="h-5 w-24 rounded-full bg-white" />

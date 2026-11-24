@@ -39,14 +39,14 @@ export default async function CommunityPage() {
                   {thread.author.fullName.split(" ").filter(Boolean).slice(0, 2).map((w) => w[0]).join("").toUpperCase()}
                 </span>
                 <span className="min-w-0">
-                  <span className="flex flex-wrap items-center gap-2 text-[10px] font-semibold text-muted">
+                  <span className="flex flex-wrap items-center gap-2 text-[11px] sm:text-[10px] font-semibold text-muted">
                     <span className="font-bold text-secondary">{thread.author.fullName}</span>
                     · {formatRelativeTime(thread.createdAt, locale, dict.time)}
                     {thread.categorySlug && <span className="rounded-full bg-cream px-2 py-0.5 text-[9px] font-extrabold uppercase tracking-wider text-muted">#{thread.categorySlug}</span>}
                     {thread.isPinned && <span className="inline-flex items-center gap-0.5 rounded-full bg-warning-soft px-2 py-0.5 text-[9px] font-extrabold uppercase tracking-wider text-warning"><Pin size={9} /> {dict.community.pinned}</span>}
                   </span>
                   <span className="mt-1.5 block font-heading text-base font-bold leading-snug text-ink">{thread.title}</span>
-                  <span className="mt-2 flex flex-wrap items-center gap-4 text-[10px] font-medium text-muted">
+                  <span className="mt-2 flex flex-wrap items-center gap-4 text-[11px] sm:text-[10px] font-medium text-muted">
                     <span className="inline-flex items-center gap-1"><MessageCircle size={11} /> {thread.commentCount} {dict.community.comments}</span>
                     <span className="inline-flex items-center gap-1"><Heart size={11} /> {thread.likeCount}</span>
                     <span className="inline-flex items-center gap-1"><Eye size={11} /> {thread.viewCount}</span>
