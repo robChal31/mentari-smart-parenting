@@ -45,7 +45,7 @@ export async function SiteFooter() {
             ["/about", dict.footer.aboutUs],
             ["/help", dict.footer.helpFaq],
             ["/privacy", dict.footer.privacy],
-            ["/terms", dict.footer.terms],
+            // ["/terms", dict.footer.terms],
           ]} />
         </nav>
         <div>
